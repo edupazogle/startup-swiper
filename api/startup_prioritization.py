@@ -47,13 +47,26 @@ class StartupPrioritizer:
         "automation": 45,
         "saas": 40,
         "enterprise": 35,
+        
+        # Excluded consumer categories (very low priority)
+        "excluded_consumer": 10,
     }
+
+    # Exclusion keywords for non-B2B consumer apps
+    EXCLUSION_KEYWORDS = [
+        "gaming", "esports", "mobile game", "video game",
+        "consumer app", "social media", "influencer marketing",
+        "fashion retail", "food delivery", "restaurant",
+        "dating", "entertainment venue", "nightlife",
+        "consumer shopping", "e-commerce marketplace", "retail shopping"
+    ]
 
     # Keywords for automatic categorization
     CATEGORY_KEYWORDS = {
         "agentic_platform_enabler": [
             "agentic platform", "ai agents", "autonomous agents", "multi-agent",
-            "agent framework", "agent orchestration", "langchain", "autogen"
+            "agent framework", "agent orchestration", "langchain", "autogen",
+            "agentic ai", "agent builder", "enterprise automation"
         ],
         "agentic_marketing": [
             "marketing automation", "content generation", "campaign automation",
@@ -116,6 +129,11 @@ class StartupPrioritizer:
         ]
         combined_text = " ".join(text_fields).lower()
 
+        # Check for excluded categories first (non-B2B)
+        for keyword in self.EXCLUSION_KEYWORDS:
+            if keyword.lower() in combined_text:
+                return ["excluded_consumer"]
+
         # Check against keywords
         for category, keywords in self.CATEGORY_KEYWORDS.items():
             for keyword in keywords:
@@ -167,7 +185,8 @@ class StartupPrioritizer:
         return 1.5 if startup_id not in voted_ids else 1.0
 
     def calculate_personalization_score(self, startup: Dict[str, Any],
-                                        user_votes: List[Dict[str, Any]]) -> float:
+                                        user_votes: List[Dict[str, Any]],
+                                        all_startups: List[Dict[str, Any]]) -> float:
         """
         Calculate personalization based on user's voting history
         """
@@ -181,9 +200,24 @@ class StartupPrioritizer:
 
         for vote in user_votes:
             if vote.get("interested"):
-                # Would need to fetch startup details from vote.startupId
-                # For now, simplified version
-                pass
+                startup_id = vote.get("startupId")
+                # Find the startup from all_startups by ID
+                voted_startup = next(
+                    (s for s in all_startups if str(s.get("id")) == str(startup_id)),
+                    None
+                )
+                if voted_startup:
+                    # Extract categories from liked startup
+                    categories = self.categorize_startup(voted_startup)
+                    liked_categories.update(categories)
+                    
+                    # Extract stage preference
+                    if voted_startup.get("stage"):
+                        liked_stages.add(voted_startup.get("stage"))
+                    
+                    # Extract technology preferences
+                    if voted_startup.get("technologies"):
+                        liked_techs.update(voted_startup.get("technologies", []))
 
         # Match startup against preferences
         score_modifier = 1.0
@@ -227,7 +261,8 @@ class StartupPrioritizer:
     def calculate_final_score(self, startup: Dict[str, Any],
                              user_votes: List[Dict[str, Any]],
                              recently_shown: List[Dict[str, Any]],
-                             position: int) -> float:
+                             position: int,
+                             all_startups: List[Dict[str, Any]]) -> float:
         """
         Calculate final priority score combining all factors
         """
@@ -241,7 +276,7 @@ class StartupPrioritizer:
         freshness_score = self.calculate_freshness_score(startup, user_votes)
 
         # Personalization
-        personalization_score = self.calculate_personalization_score(startup, user_votes)
+        personalization_score = self.calculate_personalization_score(startup, user_votes, all_startups)
 
         # Diversity penalty
         diversity_penalty = self.calculate_diversity_penalty(startup, recently_shown)
@@ -269,10 +304,17 @@ class StartupPrioritizer:
     def prioritize_startups(self,
                            all_startups: List[Dict[str, Any]],
                            user_votes: List[Dict[str, Any]] = None,
-                           limit: int = 50) -> List[Dict[str, Any]]:
+                           limit: int = 50,
+                           min_score: float = 30.0) -> List[Dict[str, Any]]:
         """
         Main prioritization function
         Returns startups sorted by priority
+        
+        Args:
+            all_startups: List of all startup dictionaries
+            user_votes: User voting history for personalization
+            limit: Maximum number of startups to return
+            min_score: Minimum score threshold to filter out very low-relevance startups
         """
         user_votes = user_votes or []
         recently_shown = []
@@ -284,7 +326,8 @@ class StartupPrioritizer:
                 startup,
                 user_votes,
                 recently_shown,
-                idx
+                idx,
+                all_startups
             )
 
             scored_startups.append({
@@ -296,6 +339,9 @@ class StartupPrioritizer:
 
         # Sort by score (descending)
         scored_startups.sort(key=lambda x: x["score"], reverse=True)
+        
+        # Filter by minimum score threshold
+        scored_startups = [s for s in scored_startups if s["score"] >= min_score]
 
         # Apply final diversity pass for top 10
         top_startups = self._ensure_top10_diversity(scored_startups[:20])

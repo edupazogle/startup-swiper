@@ -517,8 +517,9 @@ def get_all_startups(skip: int = 0, limit: int = 100):
 
 @app.get("/startups/prioritized")
 def get_prioritized_startups(
-    user_id: Optional[int] = None,
-    limit: int = 50,
+    user_id: Optional[str] = None,
+    limit: int = 100,
+    min_score: float = 30.0,
     db: Session = Depends(get_db)
 ):
     """
@@ -529,25 +530,32 @@ def get_prioritized_startups(
     4. Insurance-specific tech
     5. User preferences (based on voting history)
     6. Diversity (stage, category variety)
+    
+    Args:
+        user_id: User ID for personalization (string or int)
+        limit: Maximum number of startups to return
+        min_score: Minimum score threshold (filters out very low-relevance startups)
     """
     # Get user's voting history if user_id provided
     user_votes = []
     if user_id:
-        user_votes = crud.get_votes(db, skip=0, limit=1000)
-        user_votes = [v for v in user_votes if v.userId == user_id]
+        all_votes = crud.get_votes(db, skip=0, limit=1000)
+        user_votes = [v for v in all_votes if str(v.userId) == str(user_id)]
 
     # Get prioritized list
     prioritized = prioritizer.prioritize_startups(
         ALL_STARTUPS,
         user_votes=[{"startupId": v.startupId, "interested": v.interested} for v in user_votes],
-        limit=limit
+        limit=limit,
+        min_score=min_score
     )
 
     return {
         "total": len(ALL_STARTUPS),
         "prioritized_count": len(prioritized),
         "user_id": user_id,
-        "personalized": user_id is not None,
+        "personalized": user_id is not None and len(user_votes) > 0,
+        "votes_count": len(user_votes),
         "startups": prioritized
     }
 

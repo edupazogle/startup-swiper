@@ -1,0 +1,73 @@
+{
+  "generated_at": "2025-11-14T16:55:51.828396",
+  "total_selected": 1,
+  "selections": [
+    {
+      "startup": {
+        "id": 45533,
+        "name": "Earthian AI",
+        "country": "NL",
+        "city": "Enschede",
+        "industry": "fintech",
+        "website": "https://earthianai.com/",
+        "description": "Earthian AI is a global leader in AI-native infrastructure for the property and casualty (P&C) insurance industry. Our ecosystem powers data and intelligent agents for the world’s largest insurers, co",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 88,
+        "tier": "Tier 1: Must Meet",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Insurance-Specific Solutions"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 12,
+            "confidence": 30,
+            "keywords": []
+          },
+          "Insurance-Specific Solutions": {
+            "score": 35,
+            "confidence": 100,
+            "keywords": [
+              "insurance",
+              "claims",
+              "underwriting",
+              "policy"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 35,
+          "multi_rule_bonus": 10,
+          "traction": 20,
+          "innovation": 5,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "hello@earthianai.com"
+        ],
+        "phones": [
+          "",
+          "81",
+          "464",
+          "619",
+          "91."
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/earthianaii&quot;]}]]],&quot;mobile&quot;:[0,{&quot;top&quot;:[0,800],&quot;left&quot;:[0,0],&quot;width&quot;:[0,158],&quot;height&quot;:[0,24]}],&quot;desktop&quot;:[0,{&quot;top&quot;:[0,216],&quot;left&quot;:[0,0],&quot;width&quot;:[0,152],&quot;height&quot;:[0,24]}],&quot;settings&quot;:[0,{&quot;styles&quot;:[0,{&quot;icon-size&quot;:[0,&quot;24px&quot;],&quot;icon-color&quot;:[0,&quot;#ffffff&quot;],&quot;icon-spacing&quot;:[0,&quot;space-between&quot;],&quot;icon-direction&quot;:[0,&quot;row&quot;],&quot;icon-color-hover&quot;:[0,&quot;#ffffff&quot;],&quot;m-element-margin&quot;:[0,&quot;0"
+        }
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    }
+  ]
+}

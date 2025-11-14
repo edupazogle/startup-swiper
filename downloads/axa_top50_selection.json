@@ -1,0 +1,3207 @@
+{
+  "generated_at": "2025-11-14T16:55:27.736567",
+  "total_selected": 50,
+  "selections": [
+    {
+      "startup": {
+        "id": 45533,
+        "name": "Earthian AI",
+        "country": "NL",
+        "city": "Enschede",
+        "industry": "fintech",
+        "website": "https://earthianai.com/",
+        "description": "Earthian AI is a global leader in AI-native infrastructure for the property and casualty (P&C) insurance industry. Our ecosystem powers data and intelligent agents for the world’s largest insurers, co",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 88,
+        "tier": "Tier 1: Must Meet",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Insurance-Specific Solutions"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 12,
+            "confidence": 30,
+            "keywords": []
+          },
+          "Insurance-Specific Solutions": {
+            "score": 35,
+            "confidence": 100,
+            "keywords": [
+              "insurance",
+              "claims",
+              "underwriting",
+              "policy"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 35,
+          "multi_rule_bonus": 10,
+          "traction": 20,
+          "innovation": 5,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "hello@earthianai.com"
+        ],
+        "phones": [
+          "",
+          "81",
+          "464",
+          "619",
+          "91."
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/earthianaii&quot;]}]]],&quot;mobile&quot;:[0,{&quot;top&quot;:[0,800],&quot;left&quot;:[0,0],&quot;width&quot;:[0,158],&quot;height&quot;:[0,24]}],&quot;desktop&quot;:[0,{&quot;top&quot;:[0,216],&quot;left&quot;:[0,0],&quot;width&quot;:[0,152],&quot;height&quot;:[0,24]}],&quot;settings&quot;:[0,{&quot;styles&quot;:[0,{&quot;icon-size&quot;:[0,&quot;24px&quot;],&quot;icon-color&quot;:[0,&quot;#ffffff&quot;],&quot;icon-spacing&quot;:[0,&quot;space-between&quot;],&quot;icon-direction&quot;:[0,&quot;row&quot;],&quot;icon-color-hover&quot;:[0,&quot;#ffffff&quot;],&quot;m-element-margin&quot;:[0,&quot;0"
+        }
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 43600,
+        "name": "co.brick ",
+        "country": "PL",
+        "city": "Gliwice",
+        "industry": "manufacturingMaterials",
+        "website": "https://www.cobrick.com",
+        "description": "Industrial operations observability platform",
+        "employees": "51-100",
+        "funding": 3.0,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/780f022c-97d6-448a-8cc9-c0d7bae61f12.png"
+      },
+      "scoring": {
+        "total_score": 77,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 32,
+            "confidence": 80,
+            "keywords": [
+              "observability",
+              "multi-agent"
+            ]
+          },
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 32,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 0,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "hello@cobrick.com",
+          "sales@cobrick.com"
+        ],
+        "phones": [
+          "",
+          "225",
+          "91.",
+          "28.",
+          "616"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/cobrick1",
+          "facebook": "https://facebook.com/cobrick.io",
+          "instagram": "https://instagram.com/co.brick"
+        }
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 43143,
+        "name": "Solace Care",
+        "country": "SE",
+        "city": "Stockholm",
+        "industry": "fintech",
+        "website": "https://solace.care/",
+        "description": "Digital end-of-life planning platform",
+        "employees": "1-10",
+        "funding": null,
+        "maturity": "1 - Emerging",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/dd08b2c4-3390-4456-9cf1-d52aec123799-7314d57d9d604d0abed079859b42a32d.jpeg"
+      },
+      "scoring": {
+        "total_score": 75,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers",
+          "Insurance-Specific Solutions"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 8,
+            "confidence": 20,
+            "keywords": []
+          },
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          },
+          "Insurance-Specific Solutions": {
+            "score": 35,
+            "confidence": 100,
+            "keywords": [
+              "insurance",
+              "claims",
+              "policy"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 35,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "1080info@solace.careFollow"
+        ],
+        "phones": [],
+        "social_media": {
+          "linkedin": "https://www.linkedin.com/company/solacecare/"
+        }
+      },
+      "tech_stack": [
+        "Framer 8c094e5",
+        "Google Tag Manager"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45522,
+        "name": "Aadrila Technologies Private Limited",
+        "country": "IN",
+        "city": "Mumbai",
+        "industry": "fintech",
+        "website": "https://www.aadrila.com/",
+        "description": "Aadrila Technologies is building AI-first solutions that help insurers and financial institutions streamline operations and elevate customer experiences. Our platform spans across four key areas: clai",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "scaleup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 75,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers",
+          "Insurance-Specific Solutions"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 8,
+            "confidence": 20,
+            "keywords": []
+          },
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          },
+          "Insurance-Specific Solutions": {
+            "score": 35,
+            "confidence": 100,
+            "keywords": [
+              "claims",
+              "underwriting",
+              "claims automation",
+              "underwriting automation"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 35,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 10,
+          "geography": 0,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "support@aadrila.com"
+        ],
+        "phones": [
+          "",
+          "6",
+          "000",
+          "204",
+          "20"
+        ],
+        "social_media": {}
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45169,
+        "name": "Possibia AS",
+        "country": "NO",
+        "city": "Oslo",
+        "industry": "health",
+        "website": "https://possibia.com",
+        "description": "Clinical trials are the backbone of medical innovation — yet 90% of eligible patients never hear about them. The rest of the system is also fragmented: hospitals drown in admin, sponsors struggle to r",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 74,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 36,
+            "confidence": 90,
+            "keywords": [
+              "rag",
+              "ai platform"
+            ]
+          },
+          "Health Innovations": {
+            "score": 9,
+            "confidence": 30,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 36,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 5,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "81",
+          "549",
+          "72",
+          "248"
+        ],
+        "social_media": {}
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 34104,
+        "name": "Root Signals",
+        "country": "US",
+        "city": "Palo Alto, Helsinki",
+        "industry": "enterpriseSoftware",
+        "website": "https://rootsignals.ai",
+        "description": "AI platform for scalable LLM automation.",
+        "employees": "1-10",
+        "funding": 2.91,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/de4ea8f4-dcb2-435f-b1e4-b1e446d2edd5-32e30148b74247e5acf1734a0eafde30"
+      },
+      "scoring": {
+        "total_score": 73,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 36,
+            "confidence": 90,
+            "keywords": [
+              "observability",
+              "ai platform"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 36,
+          "multi_rule_bonus": 0,
+          "traction": 15,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 2,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "hello@rootsignals.ai"
+        ],
+        "phones": [
+          "",
+          "075",
+          "786",
+          "315",
+          "213"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/root-signals"
+        }
+      },
+      "tech_stack": [
+        "Angular",
+        "Rails"
+      ]
+    },
+    {
+      "startup": {
+        "id": 43772,
+        "name": "Leida",
+        "country": "FI",
+        "city": "Tampere",
+        "industry": "medtechPharma",
+        "website": "https://www.leida.ai",
+        "description": "Leida provides an AI-powered compliance platform for medical device regulation, enabling faster market access, reduced costs, and continuous monitoring for startups, enterprises, and consultants.",
+        "employees": "1-10",
+        "funding": 0.1,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/d3fc9820-635d-4137-8563-e0e32fee6859.png"
+      },
+      "scoring": {
+        "total_score": 73,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 28,
+            "confidence": 70,
+            "keywords": [
+              "monitoring",
+              "rag"
+            ]
+          },
+          "Health Innovations": {
+            "score": 6,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 28,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 5,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "135."
+        ],
+        "social_media": {}
+      },
+      "tech_stack": []
+    },
+    {
+      "startup": {
+        "id": 45543,
+        "name": "RAE.",
+        "country": "GB",
+        "city": "London",
+        "industry": "fintech",
+        "website": "https://www.wearerae.com/",
+        "description": "RAE is a next-generation InsurTech that provides personalised, data-driven insurance powered by AI underwriting. We’re starting with e-commerce founders, integrating seamlessly with the platforms and ",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 73,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Insurance-Specific Solutions"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 16,
+            "confidence": 40,
+            "keywords": [
+              "rag"
+            ]
+          },
+          "Insurance-Specific Solutions": {
+            "score": 35,
+            "confidence": 100,
+            "keywords": [
+              "insurance",
+              "insurtech",
+              "underwriting"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 35,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 5,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "18d2f96d279149989b95faf0a4b41882@sentry-next.wixpress.com",
+          "0fd2930120484402ac9adfb9e05cacd5@o37417.ingest.sentry.io",
+          "78f7996315bc402f9dcb8a2f974b82d1@sentry.wixpress.com",
+          "9a65e97ebe8141fca0c4fd686f70996b@sentry.wixpress.com",
+          "605a7baede844d278b89dc95ae0a9123@sentry-next.wixpress.com"
+        ],
+        "phones": [
+          "",
+          "099.",
+          "28.",
+          "34-",
+          "+011"
+        ],
+        "social_media": {}
+      },
+      "tech_stack": [
+        "React",
+        "Angular",
+        "WordPress",
+        "Wix"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45570,
+        "name": "Salute360",
+        "country": "IT",
+        "city": "Milan",
+        "industry": "health",
+        "website": "https://salute360business.eu/en/",
+        "description": "Salute360 is a digital health company that simplifies how patients and healthcare professionals connect and manage care. Through one unified platform, it integrates telemedicine, pharmacy e-commerce, ",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 73,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 16,
+            "confidence": 40,
+            "keywords": [
+              "rag"
+            ]
+          },
+          "Health Innovations": {
+            "score": 30,
+            "confidence": 100,
+            "keywords": [
+              "telemedicine",
+              "digital health",
+              "preventive health"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 30,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 5,
+          "stage": 8,
+          "geography": 0,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "business@salute360.cloud",
+          "agora.srl@pec.cloud"
+        ],
+        "phones": [
+          "",
+          "101",
+          "224 ",
+          "112-",
+          "777"
+        ],
+        "social_media": {}
+      },
+      "tech_stack": [
+        "Angular",
+        "WordPress"
+      ]
+    },
+    {
+      "startup": {
+        "id": 42880,
+        "name": "Nolana AI",
+        "country": "GB",
+        "city": "London, UK",
+        "industry": "ai",
+        "website": "https://nolana.com",
+        "description": "AI workflow automation for financial services",
+        "employees": "1-10",
+        "funding": 0.47,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/5d2b40af-6d99-401e-8738-d23d6f1a7048-2dcd116416ce4ea5a5a8c0b74451b44b.jpeg"
+      },
+      "scoring": {
+        "total_score": 72,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers",
+          "Insurance-Specific Solutions"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 32,
+            "confidence": 80,
+            "keywords": [
+              "workflow automation",
+              "ai platform"
+            ]
+          },
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          },
+          "Insurance-Specific Solutions": {
+            "score": 24,
+            "confidence": 70,
+            "keywords": [
+              "insurance",
+              "claims"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 32,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "101",
+          "849.",
+          "91.",
+          "28."
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/nolana",
+          "instagram": "https://instagram.com/nolana.ai"
+        }
+      },
+      "tech_stack": [
+        "React",
+        "Angular",
+        "Rails"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45193,
+        "name": "Mee Solution Consulting",
+        "country": "TH",
+        "city": "Bangkok",
+        "industry": "ai",
+        "website": "https://meesolution.com/",
+        "description": "Mee Solution delivers end-to-end technology solutions for digital transformation. We specialize in AI-powered platforms with LangChain integrations, custom e-learning systems with gamification, enterp",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 72,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Development & Legacy Modernization"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 24,
+            "confidence": 60,
+            "keywords": [
+              "monitoring"
+            ]
+          },
+          "Development & Legacy Modernization": {
+            "score": 14,
+            "confidence": 40,
+            "keywords": [
+              "ci/cd"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 24,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 0,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "8",
+          "0 ",
+          "3",
+          "914"
+        ],
+        "social_media": {}
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45733,
+        "name": "HealthSageAI",
+        "country": "NL",
+        "city": "Utrecht",
+        "industry": "medtechPharma",
+        "website": "https://healthsage.ai/",
+        "description": "At HealthSage AI, we are dedicated to unlocking the potential of generative AI to address key challenges in healthcare.\n\nWe aim to empower a connected healthcare system where clinical best practices a",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 70,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 32,
+            "confidence": 80,
+            "keywords": [
+              "rag",
+              "ai platform"
+            ]
+          },
+          "Health Innovations": {
+            "score": 15,
+            "confidence": 50,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 32,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 5,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "101",
+          "540",
+          "94-",
+          "28."
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/healthsage-ai"
+        }
+      },
+      "tech_stack": [
+        "Angular",
+        "WordPress"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45846,
+        "name": "Cardiolyse Heart Health AI",
+        "country": "FI",
+        "city": "Helsinki",
+        "industry": "health",
+        "website": "https://www.cardiolyse.com",
+        "description": "Medical-grade AI-powered analytics for Heart Health in Human (Class 2a Medical device) and the Animal area. (newly launched).\n\nWe detect more than 300 parameters from your heart, including more than 2",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 70,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 16,
+            "confidence": 40,
+            "keywords": [
+              "monitoring"
+            ]
+          },
+          "Health Innovations": {
+            "score": 27,
+            "confidence": 90,
+            "keywords": [
+              "health analytics",
+              "remote monitoring"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 27,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "group-23@3x-min.png"
+        ],
+        "phones": [
+          "",
+          "994",
+          "888",
+          "00",
+          "8"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/cardiolyse",
+          "facebook": "https://facebook.com/cardiolyse"
+        }
+      },
+      "tech_stack": [
+        "Angular",
+        "WordPress"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45032,
+        "name": "Binare Oy",
+        "country": "FI",
+        "city": "Jyvaskyla",
+        "industry": "cyber",
+        "website": "https://binare.io",
+        "description": "Binare.io is a software deep-tech cybersecurity spin-off from University of Jyvaskyla (Central Finland). It develops a world-leading SaaS/on-prem platform used mainly for cybersecurity automation of (",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 69,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Development & Legacy Modernization"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 16,
+            "confidence": 40,
+            "keywords": [
+              "monitoring"
+            ]
+          },
+          "Development & Legacy Modernization": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 16,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          ""
+        ],
+        "social_media": {}
+      },
+      "tech_stack": []
+    },
+    {
+      "startup": {
+        "id": 45426,
+        "name": "Radarme Sp. z o.o.",
+        "country": "PL",
+        "city": "Warsaw",
+        "industry": "fintech",
+        "website": "https://wemates.ai/",
+        "description": "Wemates introduces an innovative P2P risk-sharing platform, which operates purely as a technical intermediary, adeptly connecting individuals seeking equitable and transparent insurance alternatives.\n",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 69,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Insurance-Specific Solutions"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 16,
+            "confidence": 40,
+            "keywords": [
+              "rag"
+            ]
+          },
+          "Insurance-Specific Solutions": {
+            "score": 31,
+            "confidence": 90,
+            "keywords": [
+              "insurance",
+              "claims"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 31,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 0,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "help@wemates.ai"
+        ],
+        "phones": [
+          "",
+          "647",
+          "85",
+          "15 ",
+          "56."
+        ],
+        "social_media": {}
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 46368,
+        "name": "anyconcept",
+        "country": "AT",
+        "city": "Graz",
+        "industry": "ai",
+        "website": "https://ghosts.anyconcept.ai/",
+        "description": "anyconcept is developing a proprietary foundation model that understands and interacts with software purely through pixels, seeing and using software like a human. By reading the screen and sending mo",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 69,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Service Providers",
+          "Development & Legacy Modernization"
+        ],
+        "rule_scores": {
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          },
+          "Development & Legacy Modernization": {
+            "score": 21,
+            "confidence": 60,
+            "keywords": [
+              "test automation"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 21,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 0,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "office@anyconcept.ai",
+          "contact@yourdomain.com"
+        ],
+        "phones": [
+          "",
+          "512",
+          "225",
+          "28.",
+          "18."
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/anyconcept-ai"
+        }
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 46435,
+        "name": "Mindflow",
+        "country": "FR",
+        "city": "Paris",
+        "industry": "enterpriseSoftware",
+        "website": "https://mindflow.io/",
+        "description": "Mindflow’s hyperautomation platform blends no-code workflows with autonomous AI agents in a truly agentic framework—enabling enterprise to orchestrate end-to-end processes intelligently and at scale.\n",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 69,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 16,
+            "confidence": 40,
+            "keywords": []
+          },
+          "Agentic Service Providers": {
+            "score": 10,
+            "confidence": 30,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 16,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "550",
+          "035-",
+          "099.",
+          "298-"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/mindflow",
+          "twitter": "https://twitter.com/mindflow_io"
+        }
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 26124,
+        "name": "Wormsensing",
+        "country": "FR",
+        "city": "Grenoble",
+        "industry": "deeptech",
+        "website": "https://www.wormsensing.com/",
+        "description": "Wormsensing develops advanced vibration sensors and the Dragonfly platform, enabling precise acoustic pattern recognition and integrated physiological measurements for industries including aerospace, robotics, healthcare, automotive, and energy.",
+        "employees": "11-25",
+        "funding": 4.06,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/16f0fc29-f107-40e6-be19-72b6ee96299b-OG-default.png"
+      },
+      "scoring": {
+        "total_score": 68,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 28,
+            "confidence": 70,
+            "keywords": [
+              "monitoring",
+              "rag"
+            ]
+          },
+          "Health Innovations": {
+            "score": 6,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 28,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "107",
+          "94-",
+          "91.",
+          "792 "
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/15813743"
+        }
+      },
+      "tech_stack": [
+        "React",
+        "Angular",
+        "WordPress"
+      ]
+    },
+    {
+      "startup": {
+        "id": 44301,
+        "name": "Occurrence AB",
+        "country": "SE",
+        "city": "Stockholm",
+        "industry": "ai",
+        "website": "https://occurrence.se/",
+        "description": "Human-centric physical AI solutions",
+        "employees": "1-10",
+        "funding": 0.0,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/5978d5b9-933b-40b8-8901-eac43d0a84f0.png"
+      },
+      "scoring": {
+        "total_score": 68,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 28,
+            "confidence": 70,
+            "keywords": [
+              "rag",
+              "ai platform"
+            ]
+          },
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          },
+          "Health Innovations": {
+            "score": 6,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 28,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "info@occurrence.se"
+        ],
+        "phones": [
+          "",
+          "293",
+          "619",
+          "18.",
+          "000"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/occurrence-technologies"
+        }
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45295,
+        "name": "Nordics",
+        "country": "SK",
+        "city": "Kosice",
+        "industry": "ai",
+        "website": "https://www.nordics.io/",
+        "description": "Nordics addresses a critical blind spot in enterprise technology spending: IT services procurement. While SaaS and cloud infrastructure have become optimized, the services layer—where enterprises spen",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 68,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 20,
+            "confidence": 50,
+            "keywords": [
+              "workflow automation"
+            ]
+          },
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 20,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 0,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "hello@nordics.io"
+        ],
+        "phones": [
+          "",
+          "28.",
+          "91.",
+          "10 ",
+          "+011"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/nordicsio",
+          "instagram": "https://instagram.com/nordics.io"
+        }
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 42695,
+        "name": "Zencoder",
+        "country": "US",
+        "city": "Campbell",
+        "industry": "ai",
+        "website": "https://zencoder.ai/",
+        "description": "Enterprise AI platform for software automation.",
+        "employees": "51-100",
+        "funding": null,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/378ce722-c9f0-40c0-947a-120e5d0259c8-ae94e54afd2044f59973412b5b417c49.png"
+      },
+      "scoring": {
+        "total_score": 67,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers",
+          "Development & Legacy Modernization"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 20,
+            "confidence": 50,
+            "keywords": [
+              "ai platform"
+            ]
+          },
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          },
+          "Development & Legacy Modernization": {
+            "score": 17,
+            "confidence": 50,
+            "keywords": [
+              "ai coding"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 20,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 2,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "support@zencoder.ai"
+        ],
+        "phones": [
+          "",
+          "458-",
+          "28.",
+          "437",
+          "597."
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/zencoderai",
+          "instagram": "https://instagram.com/zencoderai"
+        }
+      },
+      "tech_stack": [
+        "Angular",
+        "Rails"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45258,
+        "name": "Chapter.works",
+        "country": "NL",
+        "city": "Amsterdam",
+        "industry": "energy",
+        "website": "https://www.chapter.works",
+        "description": "Chapter is a European software company building Agentic AI for the energy sector — AI that acts like a skilled team member rather than a passive chatbot. Unlike horizontal AI platforms, Chapter is bui",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 67,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 24,
+            "confidence": 60,
+            "keywords": [
+              "ai platform"
+            ]
+          },
+          "Agentic Service Providers": {
+            "score": 10,
+            "confidence": 30,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 24,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "148-",
+          "590",
+          "21",
+          "617"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/chapter-works"
+        }
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 46010,
+        "name": "easybits GmbH",
+        "country": "DE",
+        "city": "Berlin",
+        "industry": "ai",
+        "website": "https://easybits.tech/",
+        "description": "Easybits is a schema-first, open-source data extraction platform built for regulated industries. Faster, cheaper, and fully tailored to customer needs, Easybits delivers task-specific intelligence tha",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 67,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 24,
+            "confidence": 60,
+            "keywords": [
+              "monitoring"
+            ]
+          },
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          },
+          "Health Innovations": {
+            "score": 6,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 24,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "197",
+          "2"
+        ],
+        "social_media": {
+          "instagram": "https://instagram.com/easybits_ai"
+        }
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 46256,
+        "name": "Synthflow AI",
+        "country": "DE",
+        "city": "Berlin",
+        "industry": "ai",
+        "website": "https://synthflow.ai/",
+        "description": "\nSynthflow AI is a no-code platform for deploying voice AI agents that automate phone calls across contact centre operations and business process outsourcing (BPO) at scale. A G2 Grid Leader for AI Ag",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 67,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 8,
+            "confidence": 20,
+            "keywords": []
+          },
+          "Agentic Service Providers": {
+            "score": 14,
+            "confidence": 40,
+            "keywords": [
+              "conversational ai"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 14,
+          "multi_rule_bonus": 10,
+          "traction": 20,
+          "innovation": 5,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "you@example.com"
+        ],
+        "phones": [
+          "",
+          "555 ",
+          "550",
+          "985",
+          "908"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/synthflowai",
+          "facebook": "https://facebook.com/profile.php?id=61555448283479",
+          "instagram": "https://instagram.com/synthflowai"
+        }
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 34307,
+        "name": "ConfidentialMind",
+        "country": "FI",
+        "city": "Espoo",
+        "industry": "enterpriseSoftware",
+        "website": "https://www.confidentialmind.com/",
+        "description": "AI platform for customizable machine learning.",
+        "employees": "1-10",
+        "funding": 1.75,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/cd6ce9cd-cfe7-4a6a-8818-cb02b14d6a5d-683655c0fe9f4560b121c07c0dd921d8"
+      },
+      "scoring": {
+        "total_score": 66,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 36,
+            "confidence": 90,
+            "keywords": [
+              "rag",
+              "ai platform"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 36,
+          "multi_rule_bonus": 0,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "02",
+          "81",
+          "85",
+          "31"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/92833624"
+        }
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 44253,
+        "name": "Nomain",
+        "country": "FI",
+        "city": "Helsinki",
+        "industry": "fintech",
+        "website": "https://www.nomain.com",
+        "description": "AI-driven mainframe modernization platform",
+        "employees": "1-10",
+        "funding": 1.45,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/5c069a2e-b122-4d72-992f-b697a020b4dc.png"
+      },
+      "scoring": {
+        "total_score": 66,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Insurance-Specific Solutions",
+          "Development & Legacy Modernization"
+        ],
+        "rule_scores": {
+          "Insurance-Specific Solutions": {
+            "score": 10,
+            "confidence": 30,
+            "keywords": [
+              "insurance"
+            ]
+          },
+          "Development & Legacy Modernization": {
+            "score": 21,
+            "confidence": 60,
+            "keywords": [
+              "mainframe modernization"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 21,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 5,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "016",
+          "91.",
+          "10 ",
+          "18."
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/nomain"
+        }
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45416,
+        "name": "arterioscope FlexCo",
+        "country": "AT",
+        "city": "Graz",
+        "industry": "medtechPharma",
+        "website": "https://arterioscope.com/",
+        "description": "arterioscope is a medtech AI spin-off from Graz University of Technology developing digital biomarker diagnostics. Our patented technology non-invasively derives cardiac biomarkers — starting with NT-",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 66,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 28,
+            "confidence": 70,
+            "keywords": [
+              "rag",
+              "ai platform"
+            ]
+          },
+          "Health Innovations": {
+            "score": 9,
+            "confidence": 30,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 28,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 0,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "hello@arterioscope.com"
+        ],
+        "phones": [
+          "",
+          "956.",
+          "101",
+          "237",
+          "435"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/arterioscope",
+          "instagram": "https://instagram.com/arterioscope"
+        }
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 42917,
+        "name": "Paramatrix",
+        "country": "FI",
+        "city": "Helsinki",
+        "industry": "fintech",
+        "website": "https://paramatrix.io",
+        "description": "IT consulting and outsourcing services.",
+        "employees": "1-10",
+        "funding": null,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/de590549-9aa0-44bb-b4d4-5e596290c514.png"
+      },
+      "scoring": {
+        "total_score": 65,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Insurance-Specific Solutions"
+        ],
+        "rule_scores": {
+          "Insurance-Specific Solutions": {
+            "score": 35,
+            "confidence": 100,
+            "keywords": [
+              "insurance",
+              "insurtech",
+              "insurance platform"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 35,
+          "multi_rule_bonus": 0,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "edu@readymag.com",
+          "hello@readymag.com",
+          "no-reply@readymag.com",
+          "support@readymag.com"
+        ],
+        "phones": [
+          "",
+          "615",
+          "512",
+          "43-",
+          "408"
+        ],
+        "social_media": {}
+      },
+      "tech_stack": []
+    },
+    {
+      "startup": {
+        "id": 42973,
+        "name": "Raport",
+        "country": "US",
+        "city": "Spring, Texas",
+        "industry": "health",
+        "website": "https://www.raport.health",
+        "description": "AI-driven healthcare workflow automation",
+        "employees": "1-10",
+        "funding": 0.0,
+        "maturity": "1 - Emerging",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 65,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 28,
+            "confidence": 70,
+            "keywords": [
+              "rag",
+              "workflow automation"
+            ]
+          },
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          },
+          "Health Innovations": {
+            "score": 9,
+            "confidence": 30,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 28,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 2,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "Contactinfo@raport.health",
+          "info@raport.health"
+        ],
+        "phones": [],
+        "social_media": {}
+      },
+      "tech_stack": []
+    },
+    {
+      "startup": {
+        "id": 43075,
+        "name": "CaseMark",
+        "country": "US",
+        "city": "San Francisco",
+        "industry": "ai",
+        "website": "https://casemark.com",
+        "description": "AI-driven legal document summarization",
+        "employees": "11-25",
+        "funding": 1.84,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/30fd4341-e40a-460c-b92f-6f4a56f85086-9a82e074a2514f84a9789e37aa4c6a41.png"
+      },
+      "scoring": {
+        "total_score": 65,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 28,
+            "confidence": 70,
+            "keywords": [
+              "workflow automation",
+              "ai platform"
+            ]
+          },
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 28,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 2,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "75",
+          "406",
+          "59",
+          "8"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/casemark"
+        }
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 43649,
+        "name": "Deepentix",
+        "country": "AT",
+        "city": "Vienna",
+        "industry": "enterpriseSoftware",
+        "website": "https://deepentix.com",
+        "description": "Scientific claim verification platform",
+        "employees": "1-10",
+        "funding": null,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/32fe9da6-ed11-4db1-a64a-216854c94278.png"
+      },
+      "scoring": {
+        "total_score": 65,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Insurance-Specific Solutions"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 16,
+            "confidence": 40,
+            "keywords": [
+              "rag"
+            ]
+          },
+          "Insurance-Specific Solutions": {
+            "score": 35,
+            "confidence": 100,
+            "keywords": [
+              "insurance",
+              "underwriting",
+              "policy"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 35,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 5,
+          "stage": 5,
+          "geography": 0,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "26 ",
+          "888",
+          "+049",
+          "+046"
+        ],
+        "social_media": {}
+      },
+      "tech_stack": [
+        "Angular",
+        "Rails"
+      ]
+    },
+    {
+      "startup": {
+        "id": 43728,
+        "name": "Obriy AI",
+        "country": "UA",
+        "city": "Kyiv",
+        "industry": "ai",
+        "website": "https://about.obriy.ai/en/",
+        "description": "Obriy AI provides enterprise-grade AI-powered customer support automation through its SURE platform, offering omnichannel integration, expert-level responses, and advanced tools to enhance productivity and reduce costs.",
+        "employees": "1-10",
+        "funding": 0.0,
+        "maturity": "1 - Emerging",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/a6ed9f62-10f5-4441-8c45-283be43d800e.png"
+      },
+      "scoring": {
+        "total_score": 65,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 20,
+            "confidence": 50,
+            "keywords": [
+              "multi-agent"
+            ]
+          },
+          "Agentic Service Providers": {
+            "score": 17,
+            "confidence": 50,
+            "keywords": [
+              "customer support automation"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 20,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 0,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [],
+        "social_media": {}
+      },
+      "tech_stack": [
+        "Google Tag Manager"
+      ]
+    },
+    {
+      "startup": {
+        "id": 44244,
+        "name": "TidyCalls",
+        "country": "FI",
+        "city": "Helsinki",
+        "industry": "ai",
+        "website": "https://tidycalls.com",
+        "description": "AI virtual receptionist service",
+        "employees": "1-10",
+        "funding": null,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/ad0c354f-1d68-4be1-9bc9-42a72d2006c7-b73a6a563f2c42f18ef235e77f3481d1.png"
+      },
+      "scoring": {
+        "total_score": 65,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 20,
+            "confidence": 50,
+            "keywords": [
+              "rag"
+            ]
+          },
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 20,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 5,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "sales@tidycalls.com"
+        ],
+        "phones": [
+          "",
+          "19.",
+          "59",
+          "8",
+          "1-"
+        ],
+        "social_media": {}
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 18373,
+        "name": "modl.ai",
+        "country": "DK",
+        "city": "Copenhagen",
+        "industry": "ai",
+        "website": "https://modl.ai",
+        "description": "modl.ai leverages AI and machine learning to provide game developers with tools that accelerate game development, deliver psychometric insights, and enhance player engagement globally.",
+        "employees": "Undisclosed",
+        "funding": 10.1,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/52a03923-a322-4b86-92bc-43602662b33a.png"
+      },
+      "scoring": {
+        "total_score": 64,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Development & Legacy Modernization"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 24,
+            "confidence": 60,
+            "keywords": [
+              "rag"
+            ]
+          },
+          "Development & Legacy Modernization": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 24,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "884",
+          "789",
+          "444",
+          "18."
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/modl-ai",
+          "twitter": "https://twitter.com/modl_ai",
+          "facebook": "https://facebook.com/modldotai"
+        }
+      },
+      "tech_stack": [
+        "Angular",
+        "WordPress"
+      ]
+    },
+    {
+      "startup": {
+        "id": 43922,
+        "name": "Simplifai",
+        "country": "NO",
+        "city": "Oslo",
+        "industry": "ai",
+        "website": "https://www.simplifai.ai/",
+        "description": "AI automation for insurance processes",
+        "employees": "51-100",
+        "funding": 0.65,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/981e1f1e-7a04-449e-8f8a-2765d28c715b-oqudc3qvttl9kfosoxml.jpeg"
+      },
+      "scoring": {
+        "total_score": 64,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Service Providers",
+          "Insurance-Specific Solutions"
+        ],
+        "rule_scores": {
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          },
+          "Insurance-Specific Solutions": {
+            "score": 14,
+            "confidence": 40,
+            "keywords": [
+              "insurance"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 14,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "658",
+          "38-",
+          "514",
+          "31"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/18064052",
+          "facebook": "https://facebook.com/simplifaiai",
+          "instagram": "https://instagram.com/simplifai_ai"
+        }
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45701,
+        "name": "distil labs",
+        "country": "DE",
+        "city": "Berlin",
+        "industry": "ai",
+        "website": "https://distillabs.ai/",
+        "description": "We are developing a platform that allows anyone to easily fine-tune small language model (SLMs). \nHow easily? Imagine writing an in-context learning prompt to an LLM with a few dozen examples.\n\nSuch s",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 64,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 36,
+            "confidence": 90,
+            "keywords": [
+              "multi-agent",
+              "rag"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 36,
+          "multi_rule_bonus": 0,
+          "traction": 5,
+          "innovation": 5,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "272",
+          "00",
+          "8",
+          "66"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/distil-labs"
+        }
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 46246,
+        "name": "Merge.dev",
+        "country": "US",
+        "city": "San Francisco",
+        "industry": "ai",
+        "website": "https://www.merge.dev",
+        "description": "Merge is the leading provider of agentic tools and customer-facing integrations for frontier LLMs, Fortune 500 organizations, and B2B SaaS companies. Our platform offers two core products: Merge Unifi",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 64,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 24,
+            "confidence": 60,
+            "keywords": [
+              "monitoring"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 24,
+          "multi_rule_bonus": 0,
+          "traction": 20,
+          "innovation": 5,
+          "stage": 8,
+          "geography": 2,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "550",
+          "293",
+          "316",
+          "462"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/merge-api",
+          "twitter": "https://twitter.com/merge_api"
+        }
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 43120,
+        "name": "MANITTY",
+        "country": "FR",
+        "city": "Lyon",
+        "industry": "medtechPharma",
+        "website": "https://www.manitty.com/",
+        "description": "Advanced neurodiagnostic and monitoring solutions",
+        "employees": "1-10",
+        "funding": 0.37,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/b19c81e0-85fe-4986-9354-35507e7ae88a-crb8eyvq8a03bx5lcslu.png"
+      },
+      "scoring": {
+        "total_score": 63,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 28,
+            "confidence": 70,
+            "keywords": [
+              "monitoring",
+              "ai platform"
+            ]
+          },
+          "Health Innovations": {
+            "score": 12,
+            "confidence": 40,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 28,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 5,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "20info@manitty.com",
+          "info@manitty.com"
+        ],
+        "phones": [
+          "",
+          "615",
+          "366-",
+          "27-",
+          "298."
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/manitty",
+          "facebook": "https://facebook.com/manittybiotech"
+        }
+      },
+      "tech_stack": [
+        "Angular",
+        "WordPress"
+      ]
+    },
+    {
+      "startup": {
+        "id": 43916,
+        "name": "Voicari",
+        "country": "DE",
+        "city": "Berlin",
+        "industry": "ai",
+        "website": "https://www.voicari.com",
+        "description": "Voicari leverages AI to decode dog emotions, empowering pet owners with insights that improve care and deepen bonds with their pets.",
+        "employees": "1-10",
+        "funding": 0.04,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/fccba621-53e8-4e69-baf8-f4fa2ef799b0.png"
+      },
+      "scoring": {
+        "total_score": 63,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 28,
+            "confidence": 70,
+            "keywords": [
+              "rag",
+              "ai platform"
+            ]
+          },
+          "Health Innovations": {
+            "score": 6,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 28,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 5,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "884",
+          "101",
+          "786",
+          "225"
+        ],
+        "social_media": {}
+      },
+      "tech_stack": [
+        "React",
+        "Angular",
+        "WordPress"
+      ]
+    },
+    {
+      "startup": {
+        "id": 44859,
+        "name": "Shook Digital",
+        "country": "FI",
+        "city": "Helsinki",
+        "industry": "media",
+        "website": "https://shook.digital",
+        "description": "Shook is addressing a fundamental challenge brands face in media today. While the high video content output has become the key driver of commercial success, brands lack a scalable, efficient productio",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 63,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 8,
+            "confidence": 20,
+            "keywords": []
+          },
+          "Agentic Service Providers": {
+            "score": 10,
+            "confidence": 30,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 10,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "903 ",
+          "+049",
+          "035 ",
+          "661"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/shook-digital",
+          "instagram": "https://instagram.com/shookdigital"
+        }
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45379,
+        "name": "SA-FLaaS",
+        "country": "FI",
+        "city": "Turku",
+        "industry": "medtechPharma",
+        "website": "https://youtu.be/oMTvNZ0nwC0",
+        "description": "AI development in healthcare is held back by data privacy regulations, siloed datasets, and the lack of secure infrastructure for collaborative model training. Hospitals and companies cannot easily ac",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 63,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 20,
+            "confidence": 50,
+            "keywords": [
+              "rag"
+            ]
+          },
+          "Health Innovations": {
+            "score": 9,
+            "confidence": 30,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 20,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "150",
+          "512",
+          "099",
+          "138"
+        ],
+        "social_media": {}
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45424,
+        "name": "Vespa.ai",
+        "country": "NO",
+        "city": "Trondheim",
+        "industry": "ai",
+        "website": "https://vespa.ai/",
+        "description": "Vespa.ai is a platform for developing and running large-scale enterprise AI applications, using big data, RAG, vector search, machine learning and LLMs to deliver fast, precise decisions that drive bu",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 63,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 20,
+            "confidence": 50,
+            "keywords": [
+              "rag"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 20,
+          "multi_rule_bonus": 0,
+          "traction": 15,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "Info@vespa.ai",
+          "info@vespa.ai"
+        ],
+        "phones": [
+          "",
+          "166.",
+          "209.",
+          "199.",
+          "315"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/vespa-ai"
+        }
+      },
+      "tech_stack": [
+        "Angular",
+        "WordPress"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45529,
+        "name": "AISTUDIO",
+        "country": "TR",
+        "city": "Ankara",
+        "industry": "ai",
+        "website": "https://aistudio.com.tr/",
+        "description": "AI STUDIO puts AI Agents first: cloud-native digital workers that greet users, triage emergencies, schedule visits, chase payments and surface live analytics; shrinking queues and errors around the cl",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 63,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 20,
+            "confidence": 50,
+            "keywords": [
+              "rag"
+            ]
+          },
+          "Health Innovations": {
+            "score": 6,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 20,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 5,
+          "stage": 8,
+          "geography": 0,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "info@aistudio.com.tr"
+        ],
+        "phones": [
+          "",
+          "985",
+          "709 ",
+          "284",
+          "28."
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/aistudiotr",
+          "instagram": "https://instagram.com/aistudiotr"
+        }
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 43158,
+        "name": "Rubberduck AI Oy",
+        "country": "FI",
+        "city": "Helsinki",
+        "industry": "ai",
+        "website": "https://rubberduck.live",
+        "description": "AI-driven data project orchestration platform",
+        "employees": "1-10",
+        "funding": 0.0,
+        "maturity": "Undisclosed",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 62,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Development & Legacy Modernization"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 16,
+            "confidence": 40,
+            "keywords": []
+          },
+          "Development & Legacy Modernization": {
+            "score": 17,
+            "confidence": 50,
+            "keywords": [
+              "ai coding"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 17,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 5,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "support@rubberduck.live"
+        ],
+        "phones": [
+          "11",
+          "",
+          "81",
+          "0 ",
+          "3"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/rubberduck-ai"
+        }
+      },
+      "tech_stack": [
+        "React"
+      ]
+    },
+    {
+      "startup": {
+        "id": 44363,
+        "name": "Klaaryo",
+        "country": "IT",
+        "city": "Milan",
+        "industry": "ai",
+        "website": "https://klaaryo.com/en/",
+        "description": "AI-powered recruitment automation platform",
+        "employees": "1-10",
+        "funding": 0.59,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/2d3a1454-8696-4a52-80e2-8d9544e542e8-kpa2res6mfnhlr8mmffm.jpeg"
+      },
+      "scoring": {
+        "total_score": 62,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 12,
+            "confidence": 30,
+            "keywords": []
+          },
+          "Agentic Service Providers": {
+            "score": 7,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 12,
+          "multi_rule_bonus": 10,
+          "traction": 20,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 0,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "26 ",
+          "035-",
+          "017 ",
+          "+049"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/klaaryo"
+        }
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 44577,
+        "name": "GLBNXT",
+        "country": "NL",
+        "city": "Amsterdam",
+        "industry": "ai",
+        "website": "https://www.glbnxt.com",
+        "description": "Modular AI development platform",
+        "employees": "1-10",
+        "funding": null,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/eaa532ed-46bb-4496-9ab2-7c1742608a17-854c71012ea24ce09b8d884edb6a346e.jpeg"
+      },
+      "scoring": {
+        "total_score": 62,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 12,
+            "confidence": 30,
+            "keywords": []
+          },
+          "Health Innovations": {
+            "score": 6,
+            "confidence": 20,
+            "keywords": []
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 12,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "contact@glbnxt.com"
+        ],
+        "phones": [
+          "",
+          "207 ",
+          "72",
+          "+049",
+          "85"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/glbnxt"
+        }
+      },
+      "tech_stack": [
+        "React",
+        "Angular",
+        "Shopify"
+      ]
+    },
+    {
+      "startup": {
+        "id": 43156,
+        "name": "Jyrney",
+        "country": "GB",
+        "city": "Chester",
+        "industry": "mobility",
+        "website": "https://www.jyrney.com",
+        "description": "Integrated ground transportation platform",
+        "employees": "1-10",
+        "funding": null,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/77540334-3549-4873-b9a9-293bba47f862-koaf8dmbd2uh1sqw13qf.jpeg"
+      },
+      "scoring": {
+        "total_score": 61,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Insurance-Specific Solutions"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 16,
+            "confidence": 40,
+            "keywords": [
+              "rag"
+            ]
+          },
+          "Insurance-Specific Solutions": {
+            "score": 10,
+            "confidence": 30,
+            "keywords": [
+              "policy"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 16,
+          "multi_rule_bonus": 10,
+          "traction": 15,
+          "innovation": 5,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "81",
+          "+049",
+          "+046",
+          "410"
+        ],
+        "social_media": {}
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 43560,
+        "name": "Introist",
+        "country": "FI",
+        "city": "Helsinki",
+        "industry": "enterpriseSoftware",
+        "website": "https://introist.com",
+        "description": "HR process automation platform",
+        "employees": "1-10",
+        "funding": 0.58,
+        "maturity": "Undisclosed",
+        "logo_url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/20dd2ef4-0b4c-4e1e-a445-a29d32b3b139-vzgur9sqtecayms49aci.png"
+      },
+      "scoring": {
+        "total_score": 61,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Agentic Service Providers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 16,
+            "confidence": 40,
+            "keywords": [
+              "monitoring"
+            ]
+          },
+          "Agentic Service Providers": {
+            "score": 21,
+            "confidence": 60,
+            "keywords": [
+              "hr automation"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 21,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 5,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [],
+        "phones": [
+          "",
+          "884",
+          "985",
+          "016",
+          "28."
+        ],
+        "social_media": {}
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45614,
+        "name": "Tilect",
+        "country": "PT",
+        "city": "Porto",
+        "industry": "ai",
+        "website": "https://tilect.ai/",
+        "description": "Tilect built the Intelligent Algorithm Builder (IAB), an AI platform that lets business teams forecast sales, optimize and simulate pricing strategies in minutes. No months of spreadsheets, no costly ",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 61,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 28,
+            "confidence": 70,
+            "keywords": [
+              "embedding",
+              "ai platform"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 28,
+          "multi_rule_bonus": 0,
+          "traction": 15,
+          "innovation": 5,
+          "stage": 8,
+          "geography": 0,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "geral@tilect.ai"
+        ],
+        "phones": [
+          "",
+          "81",
+          "619",
+          "91.",
+          "28."
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/tilect"
+        }
+      },
+      "tech_stack": [
+        "Angular"
+      ]
+    },
+    {
+      "startup": {
+        "id": 45830,
+        "name": "Vindi Biosystems",
+        "country": "NL",
+        "city": "The Hague",
+        "industry": "biotech",
+        "website": "https://www.vindibiosystems.com/",
+        "description": "Vindi Biosystems is developing PICTURE™, a next-generation wearable platform that uses photonic-integrated-circuit (PIC) sensors to continuously track biochemical biomarkers in real time. Our technolo",
+        "employees": "Undisclosed",
+        "funding": null,
+        "maturity": "startup",
+        "logo_url": null
+      },
+      "scoring": {
+        "total_score": 61,
+        "tier": "Tier 2: High Priority",
+        "matched_rules": [
+          "Agentic Platform Enablers",
+          "Health Innovations"
+        ],
+        "rule_scores": {
+          "Agentic Platform Enablers": {
+            "score": 16,
+            "confidence": 40,
+            "keywords": [
+              "monitoring"
+            ]
+          },
+          "Health Innovations": {
+            "score": 18,
+            "confidence": 60,
+            "keywords": [
+              "digital health"
+            ]
+          }
+        },
+        "breakdown": {
+          "max_rule_score": 18,
+          "multi_rule_bonus": 10,
+          "traction": 5,
+          "innovation": 10,
+          "stage": 8,
+          "geography": 5,
+          "data_quality": 5
+        }
+      },
+      "contact": {
+        "emails": [
+          "user@domain.com",
+          "info@vindibiosystems.com"
+        ],
+        "phones": [
+          "",
+          "101",
+          "512",
+          "462",
+          "85"
+        ],
+        "social_media": {
+          "linkedin": "https://linkedin.com/vindi-biosystems",
+          "facebook": "https://facebook.com/2008"
+        }
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ]
+    }
+  ]
+}
