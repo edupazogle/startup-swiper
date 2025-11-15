@@ -8,10 +8,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AIStartupInsights } from '@/components/AIStartupInsights'
 import { AITimeSlotSuggester } from '@/components/AITimeSlotSuggester'
 import { Startup, Vote, CalendarEvent } from '@/lib/types'
-import { Users, Heart, CalendarBlank, Check, Rocket, MapPin, CurrencyDollar, Sparkle, GlobeHemisphereWest, Calendar, TrendUp, MagnifyingGlass } from '@phosphor-icons/react'
+import { Users, Heart, CalendarBlank, Check, Rocket, MapPin, CurrencyDollar, Sparkle, GlobeHemisphereWest, Calendar, TrendUp, MagnifyingGlass, X } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { useKV } from '@github/spark/hooks'
 import { getTopicColor, getTechColor, getMaturityColor, getLocationColor } from '@/lib/badgeColors'
@@ -686,151 +687,154 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
               </div>
             </div>
 
-            {/* Sort and Filter Controls */}
-            <div className="space-y-3">
-              {/* Sort By */}
-              <div className="flex items-center gap-2 md:gap-3 flex-wrap p-3 md:p-4 rounded-md bg-secondary/20">
-                <span className="text-xs md:text-sm font-bold text-foreground">Sort By:</span>
-                <div className="flex gap-2">
-                  <Button
-                    variant={sortBy === 'votes' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setSortBy('votes')}
-                    className="text-xs"
-                  >
-                    Votes
-                  </Button>
-                  <Button
-                    variant={sortBy === 'funding' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setSortBy('funding')}
-                    className="text-xs"
-                  >
-                    Funding
-                  </Button>
-                </div>
+            {/* Sort and Filter Controls - Responsive Dropdowns */}
+            <div className="space-y-3 md:space-y-4">
+              {/* Sort By Dropdown */}
+              <div className="max-w-xs">
+                <label className="text-xs md:text-sm font-bold text-foreground mb-2 block">Sort By</label>
+                <Select value={sortBy} onValueChange={(value) => setSortBy(value as 'votes' | 'funding')}>
+                  <SelectTrigger className="w-full text-xs md:text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="votes">Votes</SelectItem>
+                    <SelectItem value="funding">Funding</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
-              {/* Stage Filter */}
+              {/* Stage Filter Dropdown */}
               {uniqueStages.length > 0 && (
-                <div className="p-3 md:p-4 rounded-md bg-secondary/20">
-                  <div className="flex items-center gap-2 md:gap-3 mb-2">
-                    <span className="text-xs md:text-sm font-bold text-foreground">Stage:</span>
+                <div className="max-w-xs">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-xs md:text-sm font-bold text-foreground">Stage</label>
                     {selectedStages.size > 0 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
+                      <button
                         onClick={() => setSelectedStages(new Set())}
-                        className="text-xs text-muted-foreground hover:text-foreground"
+                        className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
                       >
+                        <X size={12} />
                         Clear
-                      </Button>
+                      </button>
                     )}
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {uniqueStages.map(stage => (
-                      <Badge
-                        key={stage}
-                        variant={selectedStages.has(stage) ? 'default' : 'outline'}
-                        className="cursor-pointer text-xs"
-                        onClick={() => {
-                          const newSet = new Set(selectedStages)
-                          if (newSet.has(stage)) {
-                            newSet.delete(stage)
-                          } else {
-                            newSet.add(stage)
-                          }
-                          setSelectedStages(newSet)
-                        }}
-                      >
-                        {stage}
-                      </Badge>
-                    ))}
-                  </div>
+                  <Select
+                    value={selectedStages.size === 0 ? '' : Array.from(selectedStages).join('|')}
+                    onValueChange={(value) => {
+                      if (value === '') {
+                        setSelectedStages(new Set())
+                      } else {
+                        setSelectedStages(new Set([value]))
+                      }
+                    }}
+                  >
+                    <SelectTrigger className="w-full text-xs md:text-sm">
+                      <SelectValue placeholder="Select stage...">
+                        {selectedStages.size > 0 
+                          ? Array.from(selectedStages)[0]
+                          : 'All stages'
+                        }
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">All Stages</SelectItem>
+                      {uniqueStages.map(stage => (
+                        <SelectItem key={stage} value={stage}>
+                          {stage}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
 
-              {/* Topics Filter */}
+              {/* Topics Filter Dropdown */}
               {uniqueTopics.length > 0 && (
-                <div className="p-3 md:p-4 rounded-md bg-secondary/20">
-                  <div className="flex items-center gap-2 md:gap-3 mb-2">
-                    <span className="text-xs md:text-sm font-bold text-foreground">Topics:</span>
+                <div className="max-w-xs">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-xs md:text-sm font-bold text-foreground">Topics</label>
                     {selectedTopics.size > 0 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
+                      <button
                         onClick={() => setSelectedTopics(new Set())}
-                        className="text-xs text-muted-foreground hover:text-foreground"
+                        className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
                       >
+                        <X size={12} />
                         Clear
-                      </Button>
+                      </button>
                     )}
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {uniqueTopics.slice(0, 15).map(topic => (
-                      <Badge
-                        key={topic}
-                        variant={selectedTopics.has(topic) ? 'default' : 'outline'}
-                        className="cursor-pointer text-xs"
-                        onClick={() => {
-                          const newSet = new Set(selectedTopics)
-                          if (newSet.has(topic)) {
-                            newSet.delete(topic)
-                          } else {
-                            newSet.add(topic)
-                          }
-                          setSelectedTopics(newSet)
-                        }}
-                      >
-                        {topic}
-                      </Badge>
-                    ))}
-                    {uniqueTopics.length > 15 && (
-                      <span className="text-xs text-muted-foreground">+{uniqueTopics.length - 15} more</span>
-                    )}
-                  </div>
+                  <Select
+                    value={selectedTopics.size === 0 ? '' : Array.from(selectedTopics).join('|')}
+                    onValueChange={(value) => {
+                      if (value === '') {
+                        setSelectedTopics(new Set())
+                      } else {
+                        setSelectedTopics(new Set([value]))
+                      }
+                    }}
+                  >
+                    <SelectTrigger className="w-full text-xs md:text-sm">
+                      <SelectValue placeholder="Select topic...">
+                        {selectedTopics.size > 0 
+                          ? Array.from(selectedTopics)[0]
+                          : 'All topics'
+                        }
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[300px]">
+                      <SelectItem value="">All Topics</SelectItem>
+                      {uniqueTopics.map(topic => (
+                        <SelectItem key={topic} value={topic}>
+                          {topic}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
 
-              {/* Tech Filter */}
+              {/* Tech Filter Dropdown */}
               {uniqueTechs.length > 0 && (
-                <div className="p-3 md:p-4 rounded-md bg-secondary/20">
-                  <div className="flex items-center gap-2 md:gap-3 mb-2">
-                    <span className="text-xs md:text-sm font-bold text-foreground">Tech:</span>
+                <div className="max-w-xs">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-xs md:text-sm font-bold text-foreground">Tech</label>
                     {selectedTechs.size > 0 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
+                      <button
                         onClick={() => setSelectedTechs(new Set())}
-                        className="text-xs text-muted-foreground hover:text-foreground"
+                        className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
                       >
+                        <X size={12} />
                         Clear
-                      </Button>
+                      </button>
                     )}
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {uniqueTechs.slice(0, 15).map(tech => (
-                      <Badge
-                        key={tech}
-                        variant={selectedTechs.has(tech) ? 'default' : 'outline'}
-                        className="cursor-pointer text-xs"
-                        onClick={() => {
-                          const newSet = new Set(selectedTechs)
-                          if (newSet.has(tech)) {
-                            newSet.delete(tech)
-                          } else {
-                            newSet.add(tech)
-                          }
-                          setSelectedTechs(newSet)
-                        }}
-                      >
-                        {tech}
-                      </Badge>
-                    ))}
-                    {uniqueTechs.length > 15 && (
-                      <span className="text-xs text-muted-foreground">+{uniqueTechs.length - 15} more</span>
-                    )}
-                  </div>
+                  <Select
+                    value={selectedTechs.size === 0 ? '' : Array.from(selectedTechs).join('|')}
+                    onValueChange={(value) => {
+                      if (value === '') {
+                        setSelectedTechs(new Set())
+                      } else {
+                        setSelectedTechs(new Set([value]))
+                      }
+                    }}
+                  >
+                    <SelectTrigger className="w-full text-xs md:text-sm">
+                      <SelectValue placeholder="Select tech...">
+                        {selectedTechs.size > 0 
+                          ? Array.from(selectedTechs)[0]
+                          : 'All tech'
+                        }
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[300px]">
+                      <SelectItem value="">All Tech</SelectItem>
+                      {uniqueTechs.map(tech => (
+                        <SelectItem key={tech} value={tech}>
+                          {tech}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
             </div>
