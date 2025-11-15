@@ -351,43 +351,59 @@ class AIConcierge:
         if user_context:
             context_parts.append(f"User Context: {json.dumps(user_context, indent=2)}")
         
-        # Startup-related questions
-        if any(word in question_lower for word in ["startup", "company", "founder", "funding", "investor"]):
-            startup_context = self.context_retriever.get_startup_context(question)
-            context_parts.append(startup_context)
-            
-            # Also try CB Insights for additional data
-            try:
-                cb_response = await cb_chat.ask_question(question)
-                if cb_response and "error" not in cb_response.lower():
-                    context_parts.append(f"\nCB Insights Research:\n{cb_response}")
-            except:
-                pass
+        # Check if this looks like a NAME SEARCH first (person's name)
+        # This should take priority over startup/founder keywords
+        is_likely_person_name = self._is_likely_person_name(question)
         
-        # Event-related questions
-        if any(word in question_lower for word in ["event", "schedule", "meeting", "session", "talk", "slush"]):
-            events_context = self.context_retriever.get_events_context(question)
-            context_parts.append(events_context)
-        
-        # Direction/location questions
-        if any(word in question_lower for word in ["how to get", "directions", "navigate", "arrive", "location", "where is"]):
-            # Extract locations from question
-            await self._add_directions_context(question, context_parts)
-        
-        # Voting/interest questions
-        if any(word in question_lower for word in ["vote", "interest", "popular", "trending"]):
-            votes_context = self.context_retriever.get_votes_context()
-            context_parts.append(votes_context)
-        
-        # Ideas questions
-        if any(word in question_lower for word in ["idea", "suggestion", "proposal"]):
-            ideas_context = self.context_retriever.get_ideas_context()
-            context_parts.append(ideas_context)
-        
-        # Attendee questions
-        if any(word in question_lower for word in ["attendee", "participant", "people", "who", "person", "founder", "ceo", "investor"]):
+        if is_likely_person_name:
+            # Try to search for attendee first
             attendees_context = self.context_retriever.get_attendees_context(question)
-            context_parts.append(attendees_context)
+            if "No attendees found" not in attendees_context:
+                context_parts.append(attendees_context)
+            else:
+                # If no attendee found, fall back to startup search
+                startup_context = self.context_retriever.get_startup_context(question)
+                context_parts.append(startup_context)
+        else:
+            # Regular classification logic
+            
+            # Startup-related questions (but not simple name queries)
+            if any(word in question_lower for word in ["startup", "company", "funding", "investment", "series", "raise"]):
+                startup_context = self.context_retriever.get_startup_context(question)
+                context_parts.append(startup_context)
+                
+                # Also try CB Insights for additional data
+                try:
+                    cb_response = await cb_chat.ask_question(question)
+                    if cb_response and "error" not in cb_response.lower():
+                        context_parts.append(f"\nCB Insights Research:\n{cb_response}")
+                except:
+                    pass
+            
+            # Event-related questions
+            if any(word in question_lower for word in ["event", "schedule", "meeting", "session", "talk", "slush"]):
+                events_context = self.context_retriever.get_events_context(question)
+                context_parts.append(events_context)
+            
+            # Direction/location questions
+            if any(word in question_lower for word in ["how to get", "directions", "navigate", "arrive", "location", "where is"]):
+                # Extract locations from question
+                await self._add_directions_context(question, context_parts)
+            
+            # Voting/interest questions
+            if any(word in question_lower for word in ["vote", "interest", "popular", "trending"]):
+                votes_context = self.context_retriever.get_votes_context()
+                context_parts.append(votes_context)
+            
+            # Ideas questions
+            if any(word in question_lower for word in ["idea", "suggestion", "proposal"]):
+                ideas_context = self.context_retriever.get_ideas_context()
+                context_parts.append(ideas_context)
+            
+            # Attendee questions (including founder, CEO, investor context)
+            if any(word in question_lower for word in ["attendee", "participant", "people", "who", "person", "founder", "ceo", "investor"]):
+                attendees_context = self.context_retriever.get_attendees_context(question)
+                context_parts.append(attendees_context)
         
         # Build the prompt for LLM
         full_context = "\n\n---\n\n".join(context_parts)
@@ -483,12 +499,42 @@ Please provide a helpful and comprehensive answer based on the available informa
             return "event_info"
         elif any(word in question_lower for word in ["direction", "location", "navigate"]):
             return "directions"
-        elif any(word in question_lower for word in ["attendee", "participant", "people"]):
+        elif any(word in question_lower for word in ["attendee", "participant"]):
             return "attendee_info"
-        elif any(word in question_lower for word in ["vote", "interest", "popular"]):
+        elif any(word in question_lower for word in ["vote", "interest"]):
             return "voting_info"
         else:
             return "general"
+    
+    def _is_likely_person_name(self, question: str) -> bool:
+        """
+        Detect if the question looks like it's asking about a person by name.
+        Examples: "Eduardo Paz Ogle", "Who is John Smith?", "Tell me about Jane Doe"
+        """
+        question_lower = question.lower()
+        
+        # If it's very short (2-4 words) and doesn't contain action verbs, likely a name
+        words = question.split()
+        
+        # Single name query (just a name, no keywords)
+        if len(words) <= 4 and not any(
+            keyword in question_lower for keyword in [
+                "startup", "company", "event", "schedule", "vote", "idea",
+                "trending", "popular", "directions", "located", "headquartered"
+            ]
+        ):
+            return True
+        
+        # Explicit person-asking phrases
+        if any(phrase in question_lower for phrase in [
+            "who is ", "tell me about ", "search for ", "find ",
+            "do you know ", "is there someone called", "is anyone named"
+        ]):
+            # But exclude startup-specific contexts
+            if not any(word in question_lower for word in ["founder's startup", "their company", "their startup"]):
+                return True
+        
+        return False
     
     async def get_startup_details(self, startup_name: str) -> str:
         """Get detailed information about a specific startup"""
