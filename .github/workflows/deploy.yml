@@ -3,9 +3,6 @@ name: Deploy Frontend to GitHub Pages
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'app/startup-swipe-schedu/**'
-      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 permissions:
@@ -30,10 +27,12 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: cd app/startup-swipe-schedu && npm install
+        working-directory: ./app/startup-swipe-schedu
+        run: npm install
 
       - name: Build
-        run: cd app/startup-swipe-schedu && npm run build
+        working-directory: ./app/startup-swipe-schedu
+        run: npm run build
         env:
           VITE_API_URL: https://startup-swiper-1.onrender.com
           VITE_BASE_PATH: /startup-swiper/
@@ -41,7 +40,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'app/startup-swipe-schedu/dist'
+          path: './app/startup-swipe-schedu/dist'
 
   deploy:
     environment:
