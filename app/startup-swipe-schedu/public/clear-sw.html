@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Service Worker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; }
+        button {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover { background: #4f46e5; }
+        #status { margin: 20px 0; padding: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Clear Service Worker</h1>
+        <p>This will unregister all service workers and clear the cache.</p>
+        
+        <button onclick="clearServiceWorkers()">Clear Service Workers</button>
+        <button onclick="clearCache()">Clear Cache</button>
+        <button onclick="clearAll()">Clear Everything</button>
+        
+        <div id="status"></div>
+        
+        <hr>
+        <h3>Manual Steps:</h3>
+        <ol>
+            <li>Press <strong>Ctrl+Shift+I</strong> (or F12)</li>
+            <li>Go to <strong>Application</strong> tab</li>
+            <li>Click <strong>Service Workers</strong></li>
+            <li>Click <strong>Unregister</strong></li>
+            <li>Click <strong>Clear storage</strong></li>
+            <li>Click <strong>Clear site data</strong></li>
+            <li>Close DevTools and refresh</li>
+        </ol>
+    </div>
+
+    <script>
+        const status = document.getElementById('status');
+        
+        function showStatus(message, isSuccess) {
+            status.innerHTML = message;
+            status.style.background = isSuccess ? '#d4edda' : '#f8d7da';
+            status.style.border = '1px solid ' + (isSuccess ? '#c3e6cb' : '#f5c6cb');
+            status.style.color = isSuccess ? '#155724' : '#721c24';
+        }
+        
+        async function clearServiceWorkers() {
+            try {
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    
+                    if (registrations.length === 0) {
+                        showStatus('✓ No service workers found', true);
+                        return;
+                    }
+                    
+                    for (let registration of registrations) {
+                        await registration.unregister();
+                    }
+                    
+                    showStatus(`✓ Unregistered ${registrations.length} service worker(s). Please refresh the page.`, true);
+                } else {
+                    showStatus('Service workers not supported', false);
+                }
+            } catch (error) {
+                showStatus('Error: ' + error.message, false);
+            }
+        }
+        
+        async function clearCache() {
+            try {
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    
+                    if (cacheNames.length === 0) {
+                        showStatus('✓ No caches found', true);
+                        return;
+                    }
+                    
+                    for (let name of cacheNames) {
+                        await caches.delete(name);
+                    }
+                    
+                    showStatus(`✓ Cleared ${cacheNames.length} cache(s)`, true);
+                } else {
+                    showStatus('Cache API not supported', false);
+                }
+            } catch (error) {
+                showStatus('Error: ' + error.message, false);
+            }
+        }
+        
+        async function clearAll() {
+            showStatus('Clearing...', false);
+            
+            await clearServiceWorkers();
+            await clearCache();
+            
+            showStatus('✓ All cleared! Redirecting to home page in 2 seconds...', true);
+            
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 2000);
+        }
+        
+        // Auto-clear on page load
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('auto') === 'true') {
+                clearAll();
+            }
+        });
+    </script>
+</body>
+</html>

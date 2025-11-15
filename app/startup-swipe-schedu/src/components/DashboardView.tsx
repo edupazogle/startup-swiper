@@ -1,0 +1,978 @@
+import { useMemo, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Separator } from '@/components/ui/separator'
+import { AIStartupInsights } from '@/components/AIStartupInsights'
+import { AITimeSlotSuggester } from '@/components/AITimeSlotSuggester'
+import { Startup, Vote, CalendarEvent } from '@/lib/types'
+import { Users, Heart, CalendarBlank, Check, Rocket, MapPin, CurrencyDollar, Sparkle, GlobeHemisphereWest, Calendar, TrendUp, MagnifyingGlass } from '@phosphor-icons/react'
+import { toast } from 'sonner'
+import { useKV } from '@github/spark/hooks'
+import { getTopicColor, getTechColor, getMaturityColor, getLocationColor } from '@/lib/badgeColors'
+import { cn } from '@/lib/utils'
+import { api } from '@/lib/api'
+
+interface DashboardViewProps {
+  startups: Startup[]
+  votes: Vote[]
+  events: CalendarEvent[]
+  currentUserId: string
+  onScheduleMeeting: (startupId: string, eventData: Omit<CalendarEvent, 'id' | 'attendees' | 'startupId' | 'startupName'>) => void
+}
+
+interface StartupWithVotes extends Startup {
+  interestedVotes: Vote[]
+  passedVotes: Vote[]
+  scheduledEvent?: CalendarEvent
+  averageRating?: number
+  totalRatings?: number
+}
+
+export function DashboardView({ startups, votes, events, currentUserId, onScheduleMeeting }: DashboardViewProps) {
+  const [selectedStartup, setSelectedStartup] = useState<StartupWithVotes | null>(null)
+  const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [sortBy, setSortBy] = useState<'votes' | 'funding'>('votes')
+  const [selectedStages, setSelectedStages] = useState<Set<string>>(new Set())
+  const [selectedTopics, setSelectedTopics] = useState<Set<string>>(new Set())
+  const [selectedTechs, setSelectedTechs] = useState<Set<string>>(new Set())
+  const [localVotes, setLocalVotes] = useState<Vote[]>(votes)
+  const [formData, setFormData] = useState({
+    startTime: '',
+    endTime: '',
+    location: '',
+    description: ''
+  })
+  const [startupRatings, setStartupRatings] = useKV<Record<string, Record<string, number>>>('startup-ratings', {})
+
+  // Extract unique stages, topics, and techs for filters
+  const uniqueStages = useMemo(() => {
+    const stages = new Set<string>()
+    startups.forEach(s => {
+      const stage = s.Stage || s.currentInvestmentStage || s.maturity
+      if (stage) stages.add(stage)
+    })
+    return Array.from(stages).sort()
+  }, [startups])
+
+  const uniqueTopics = useMemo(() => {
+    const topics = new Set<string>()
+    startups.forEach(s => {
+      let topicArray: string[] = []
+      if (Array.isArray(s.topics)) {
+        topicArray = s.topics
+      } else if (typeof s.topics === 'string') {
+        // Handle JSON string or comma-separated values
+        try {
+          topicArray = JSON.parse(s.topics)
+        } catch {
+          topicArray = s.topics.split(',').map(t => t.trim())
+        }
+      }
+      topicArray.forEach(t => {
+        if (typeof t === 'string') topics.add(t.trim())
+      })
+    })
+    return Array.from(topics).sort()
+  }, [startups])
+
+  const uniqueTechs = useMemo(() => {
+    const techs = new Set<string>()
+    startups.forEach(s => {
+      let techArray: string[] = []
+      if (Array.isArray(s.tech)) {
+        techArray = s.tech
+      } else if (typeof s.tech === 'string') {
+        // Handle JSON string or comma-separated values
+        try {
+          techArray = JSON.parse(s.tech)
+        } catch {
+          techArray = s.tech.split(',').map(t => t.trim())
+        }
+      }
+      techArray.forEach(t => {
+        if (typeof t === 'string') techs.add(t.trim())
+      })
+    })
+    return Array.from(techs).sort()
+  }, [startups])
+
+  const parseFunding = (funding: string | number | undefined): number => {
+    if (!funding) return 0
+    if (typeof funding === 'number') return funding
+    const match = String(funding).match(/\d+\.?\d*/);
+    return match ? parseFloat(match[0]) : 0
+  }
+
+  const startupsWithVotes = useMemo(() => {
+    let filtered = startups
+
+    // Apply search filter
+    if (searchQuery.trim().length >= 3) {
+      const query = searchQuery.toLowerCase().trim()
+      filtered = filtered.filter(s => {
+        const name = (s.name || s["Company Name"] || '').toLowerCase()
+        return name.includes(query)
+      })
+    }
+
+    // Apply stage filter
+    if (selectedStages.size > 0) {
+      filtered = filtered.filter(s => {
+        const stage = s.Stage || s.currentInvestmentStage || s.maturity
+        return stage && selectedStages.has(stage)
+      })
+    }
+
+    // Apply topics filter
+    if (selectedTopics.size > 0) {
+      filtered = filtered.filter(s => {
+        let topicArray: string[] = []
+        if (Array.isArray(s.topics)) {
+          topicArray = s.topics
+        } else if (typeof s.topics === 'string') {
+          try {
+            topicArray = JSON.parse(s.topics)
+          } catch {
+            topicArray = s.topics.split(',').map(t => t.trim())
+          }
+        }
+        return topicArray.some(t => selectedTopics.has(t.trim()))
+      })
+    }
+
+    // Apply tech filter
+    if (selectedTechs.size > 0) {
+      filtered = filtered.filter(s => {
+        let techArray: string[] = []
+        if (Array.isArray(s.tech)) {
+          techArray = s.tech
+        } else if (typeof s.tech === 'string') {
+          try {
+            techArray = JSON.parse(s.tech)
+          } catch {
+            techArray = s.tech.split(',').map(t => t.trim())
+          }
+        }
+        return techArray.some(t => selectedTechs.has(t.trim()))
+      })
+    }
+
+    const result: StartupWithVotes[] = filtered.map(startup => {
+      const scheduledEvent = (events || []).find(e => e.startupId === startup.id && e.confirmed)
+      const ratings = startupRatings?.[startup.id] || {}
+      const ratingValues = Object.values(ratings).filter(r => r > 0)
+      const averageRating = ratingValues.length > 0 
+        ? ratingValues.reduce((sum, rating) => sum + rating, 0) / ratingValues.length 
+        : 0
+      
+      return {
+        ...startup,
+        interestedVotes: localVotes.filter(v => String(v.startupId) === String(startup.id) && v.interested),
+        passedVotes: localVotes.filter(v => String(v.startupId) === String(startup.id) && !v.interested),
+        scheduledEvent,
+        averageRating,
+        totalRatings: ratingValues.length
+      }
+    })
+
+    // Sort based on sortBy setting
+    let sorted: StartupWithVotes[]
+    if (sortBy === 'funding') {
+      sorted = result.sort((a, b) => {
+        const fundingA = parseFunding(a.totalFunding || a["Funding"])
+        const fundingB = parseFunding(b.totalFunding || b["Funding"])
+        return fundingB - fundingA // Descending order
+      })
+    } else {
+      // Sort by interested votes
+      sorted = result.sort((a, b) => b.interestedVotes.length - a.interestedVotes.length)
+    }
+    
+    // Limit to 100 startups if no search query
+    if (searchQuery.trim().length < 3 && selectedStages.size === 0 && selectedTopics.size === 0 && selectedTechs.size === 0) {
+      return sorted.slice(0, 100)
+    }
+    
+    return sorted
+  }, [startups, localVotes, events, searchQuery, startupRatings, sortBy, selectedStages, selectedTopics, selectedTechs])
+
+  const highPriority = startupsWithVotes.filter(s => s.interestedVotes.length >= 3)
+  const mediumPriority = startupsWithVotes.filter(s => s.interestedVotes.length > 0 && s.interestedVotes.length < 3)
+  const noPriority = startupsWithVotes.filter(s => s.interestedVotes.length === 0)
+
+  const handleScheduleMeeting = () => {
+    if (!selectedStartup || !formData.startTime || !formData.endTime) {
+      toast.error('Please fill in all required fields')
+      return
+    }
+
+    onScheduleMeeting(String(selectedStartup.id), {
+      title: `Meeting: ${selectedStartup.name || selectedStartup["Company Name"]}`,
+      description: formData.description,
+      startTime: new Date(formData.startTime),
+      endTime: new Date(formData.endTime),
+      location: formData.location,
+      type: 'meeting',
+      confirmed: true
+    })
+
+    setFormData({ startTime: '', endTime: '', location: '', description: '' })
+    setIsScheduleDialogOpen(false)
+    setSelectedStartup(null)
+    toast.success(`Meeting scheduled with ${selectedStartup["Company Name"]}!`)
+  }
+
+  const openScheduleDialog = (startup: StartupWithVotes) => {
+    setSelectedStartup(startup)
+    setIsScheduleDialogOpen(true)
+  }
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
+  }
+
+  const handleRating = (startupId: string, rating: number) => {
+    setStartupRatings((current) => {
+      const updated = { ...(current || {}) }
+      if (!updated[startupId]) {
+        updated[startupId] = {}
+      }
+      updated[startupId][currentUserId] = rating
+      return updated
+    })
+    toast.success(`Rated ${rating} rocket${rating !== 1 ? 's' : ''}!`)
+  }
+
+  const RocketRating = ({ startupId, currentRating, averageRating, totalRatings }: { 
+    startupId: string
+    currentRating: number
+    averageRating: number
+    totalRatings: number 
+  }) => {
+    const [hoveredRating, setHoveredRating] = useState(0)
+    
+    return (
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-center gap-1">
+          {[1, 2, 3, 4, 5].map((rating) => {
+            const isActive = hoveredRating > 0 ? rating <= hoveredRating : rating <= currentRating
+            return (
+              <button
+                key={rating}
+                onClick={() => handleRating(startupId, rating)}
+                onMouseEnter={() => setHoveredRating(rating)}
+                onMouseLeave={() => setHoveredRating(0)}
+                className="transition-all hover:scale-110 active:scale-95 cursor-pointer"
+                aria-label={`Rate ${rating} rockets`}
+              >
+                <Rocket 
+                  size={18}
+                  weight={isActive ? 'fill' : 'regular'}
+                  className={`${
+                    isActive 
+                      ? 'text-primary' 
+                      : 'text-muted-foreground/30'
+                  } transition-colors md:w-5 md:h-5`}
+                />
+              </button>
+            )
+          })}
+        </div>
+        {totalRatings > 0 && (
+          <div className="flex items-center gap-1.5 text-[10px] md:text-xs text-muted-foreground">
+            <span className="font-semibold text-primary">{averageRating.toFixed(1)}</span>
+            <span>avg ({totalRatings} rating{totalRatings !== 1 ? 's' : ''})</span>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  const handleHeartToggle = async (startup: StartupWithVotes) => {
+    const voteExists = localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested)
+    
+    try {
+      if (voteExists) {
+        // Remove vote optimistically from UI first
+        setLocalVotes(prev => prev.filter(v => !(String(v.startupId) === String(startup.id) && v.userId === currentUserId)))
+        
+        // Then remove from database
+        try {
+          await api.deleteVote(String(startup.id), currentUserId)
+          toast.success('Removed from favorites')
+        } catch (deleteError) {
+          // If delete fails, restore the vote in UI
+          console.error('Delete failed:', deleteError)
+          setLocalVotes(prev => [...prev, {
+            startupId: String(startup.id),
+            userId: currentUserId,
+            userName: 'User',
+            interested: true,
+            timestamp: new Date().toISOString(),
+          }])
+          toast.error('Failed to remove vote')
+        }
+      } else {
+        // Add vote optimistically to UI first
+        const newVote = {
+          startupId: String(startup.id),
+          userId: currentUserId,
+          userName: 'User',
+          interested: true,
+          timestamp: new Date().toISOString(),
+        }
+        setLocalVotes(prev => [...prev, newVote])
+        
+        // Then add to database
+        try {
+          await api.createVote(newVote)
+          toast.success('Added to favorites')
+        } catch (createError) {
+          // If create fails, remove from UI
+          console.error('Create failed:', createError)
+          setLocalVotes(prev => prev.filter(v => !(String(v.startupId) === String(startup.id) && v.userId === currentUserId)))
+          toast.error('Failed to add vote')
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling vote:', error)
+      toast.error('Failed to update favorite status')
+    }
+  }
+
+  const renderStartupCard = (startup: StartupWithVotes) => {
+    const userRating = startupRatings?.[startup.id]?.[currentUserId] || 0
+    const displayName = startup.name || startup["Company Name"] || 'Unknown Startup'
+    const displayUSP = startup.shortDescription || startup["USP"] || ''
+    const displayLogo = startup.logoUrl || startup.logo
+    const displayWebsite = startup.website || startup["URL"]
+    const displayLocation = startup.billingCity && startup.billingCountry 
+      ? `${startup.billingCity}, ${startup.billingCountry}` 
+      : (startup.billingCountry || startup["Headquarter Country"] || 'Unknown')
+    const displayFunding = startup.totalFunding 
+      ? `$${startup.totalFunding}M` 
+      : (startup["Funding"] || 'Undisclosed')
+    const displayEmployees = startup.employees || 'Undisclosed'
+    const displayStage = startup.Stage || startup.currentInvestmentStage || startup.maturity || 'Unknown'
+    
+    return (
+      <Card key={startup.id} className="p-4 md:p-6 hover:shadow-md transition-shadow">
+        <div className="flex items-start gap-3 md:gap-4">
+          {displayLogo && (
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-background flex items-center justify-center overflow-hidden flex-shrink-0 border border-border/50 shadow-sm">
+              <img src={displayLogo} alt={displayName} className="w-full h-full object-contain p-1" />
+            </div>
+          )}
+          
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-3 md:gap-4 mb-2">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg md:text-xl font-semibold mb-1.5 leading-tight tracking-tight">{displayName}</h3>
+                <div className="flex flex-wrap gap-x-2 md:gap-x-3 gap-y-1.5 md:gap-y-2 mb-2">
+                  {(() => {
+                    // Helper function to check if topics exist and parse them
+                    let topicArray: string[] = []
+                    if (startup.topics) {
+                      if (Array.isArray(startup.topics)) {
+                        topicArray = startup.topics
+                      } else if (typeof startup.topics === 'string') {
+                        try {
+                          topicArray = JSON.parse(startup.topics)
+                        } catch {
+                          topicArray = startup.topics.split(',').map(t => t.trim())
+                        }
+                      }
+                    }
+                    
+                    return topicArray.length > 0 && (
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Topics</span>
+                        <div className="flex flex-wrap gap-1">
+                          {topicArray.slice(0, 2).map((topic, i) => {
+                            const colors = getTopicColor(topic)
+                            return (
+                              <Badge 
+                                key={i} 
+                                variant="outline" 
+                                className={cn("text-[10px] md:text-xs font-medium border", colors.bg, colors.text, colors.border)}
+                              >
+                                {topic}
+                              </Badge>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )
+                  })()}
+                  {(() => {
+                    // Helper function to check if tech exists and parse them
+                    let techArray: string[] = []
+                    if (startup.tech) {
+                      if (Array.isArray(startup.tech)) {
+                        techArray = startup.tech
+                      } else if (typeof startup.tech === 'string') {
+                        try {
+                          techArray = JSON.parse(startup.tech)
+                        } catch {
+                          techArray = startup.tech.split(',').map(t => t.trim())
+                        }
+                      }
+                    }
+                    
+                    return techArray.length > 0 && (
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Tech</span>
+                        <div className="flex flex-wrap gap-1">
+                          {techArray.slice(0, 2).map((t, i) => {
+                            const colors = getTechColor(t)
+                            return (
+                              <Badge 
+                                key={i} 
+                                variant="outline" 
+                                className={cn("text-[10px] md:text-xs font-medium border", colors.bg, colors.text, colors.border)}
+                              >
+                                {t}
+                              </Badge>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )
+                  })()}
+                  {startup.maturity && (
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Stage</span>
+                      {(() => {
+                        const colors = getMaturityColor(startup.maturity)
+                        return (
+                          <Badge 
+                            variant="outline" 
+                            className={cn("text-[10px] md:text-xs font-medium border", colors.bg, colors.text, colors.border)}
+                          >
+                            {startup.maturity}
+                          </Badge>
+                        )
+                      })()}
+                    </div>
+                  )}
+                  {startup.scheduledEvent && (
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[9px] md:text-[10px] text-transparent uppercase tracking-wider font-medium select-none">_</span>
+                      <Badge variant="default" className="text-[10px] md:text-xs gap-0.5 md:gap-1">
+                        <Check size={10} className="md:w-3 md:h-3" weight="bold" />
+                        Scheduled
+                      </Badge>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2 md:gap-3 flex-shrink-0 relative">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleHeartToggle(startup)
+                  }}
+                  className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group hover:scale-110 active:scale-95"
+                  title={localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? 'Unlike this startup' : 'Like this startup'}
+                >
+                  <Heart 
+                    size={20} 
+                    weight={localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? "fill" : "regular"}
+                    className={cn(
+                      "transition-all duration-200",
+                      localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? "text-pink-500" : "text-gray-400 group-hover:text-pink-400"
+                    )}
+                  />
+                </button>
+                <div className="flex items-center gap-1 md:gap-2">
+                  <Heart weight="fill" className="text-accent" size={16} />
+                  <span className="text-xl md:text-2xl font-bold text-accent">
+                    {localVotes.filter(v => String(v.startupId) === String(startup.id) && v.interested).length}
+                  </span>
+                </div>
+                <RocketRating 
+                  startupId={String(startup.id)}
+                  currentRating={userRating}
+                  averageRating={startup.averageRating || 0}
+                  totalRatings={startup.totalRatings || 0}
+                />
+              </div>
+            </div>
+
+            {displayUSP && (
+              <>
+                <div className="mb-3 md:mb-4">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <Sparkle size={14} className="text-accent md:w-4 md:h-4" weight="duotone" />
+                    <h4 className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide font-medium">Value Proposition</h4>
+                  </div>
+                  <p className="text-xs md:text-sm leading-relaxed text-accent-foreground bg-accent/5 p-2 md:p-3 rounded-md border border-accent/20">
+                    {displayUSP}
+                  </p>
+                </div>
+                <Separator className="mb-3 md:mb-4" />
+              </>
+            )}
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 mb-3 md:mb-4">
+              <div className="flex items-start gap-1.5 md:gap-2">
+                <MapPin size={14} className="text-muted-foreground mt-0.5 flex-shrink-0 md:w-4 md:h-4" weight="duotone" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Location</p>
+                  <Badge 
+                    variant="outline" 
+                    className={cn("text-[10px] md:text-xs font-medium border h-auto py-0.5", getLocationColor(displayLocation).bg, getLocationColor(displayLocation).text, getLocationColor(displayLocation).border)}
+                  >
+                    {displayLocation}
+                  </Badge>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-1.5 md:gap-2">
+                <Users size={14} className="text-muted-foreground mt-0.5 flex-shrink-0 md:w-4 md:h-4" weight="duotone" />
+                <div>
+                  <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Team Size</p>
+                  <p className="text-xs md:text-sm font-medium">{displayEmployees}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-1.5 md:gap-2">
+                <CurrencyDollar size={14} className="text-muted-foreground mt-0.5 flex-shrink-0 md:w-4 md:h-4" weight="duotone" />
+                <div>
+                  <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Funding</p>
+                  <p className="text-xs md:text-sm font-medium">{displayFunding}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-1.5 md:gap-2">
+                <TrendUp size={14} className="text-muted-foreground mt-0.5 flex-shrink-0 md:w-4 md:h-4" weight="duotone" />
+                <div>
+                  <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Stage</p>
+                  <p className="text-xs md:text-sm font-medium">{displayStage}</p>
+                </div>
+              </div>
+
+              {startup.dateFounded && (
+                <div className="flex items-start gap-1.5 md:gap-2">
+                  <Calendar size={14} className="text-muted-foreground mt-0.5 flex-shrink-0 md:w-4 md:h-4" weight="duotone" />
+                  <div>
+                    <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Founded</p>
+                    <p className="text-xs md:text-sm font-medium">{new Date(startup.dateFounded).getFullYear()}</p>
+                  </div>
+                </div>
+              )}
+
+              {displayWebsite && (
+                <div className="flex items-start gap-1.5 md:gap-2 md:col-span-3">
+                  <GlobeHemisphereWest size={14} className="text-muted-foreground mt-0.5 flex-shrink-0 md:w-4 md:h-4" weight="duotone" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Website</p>
+                    <a 
+                      href={displayWebsite.startsWith('http') ? displayWebsite : `https://${displayWebsite}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-xs md:text-sm font-medium text-accent hover:underline break-all"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {displayWebsite.replace(/^https?:\/\//, '').replace(/^www\./, '')}
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {startup.interestedVotes.length > 0 && (
+              <>
+                <Separator className="mb-3 md:mb-4" />
+                <AIStartupInsights 
+                  startup={startup}
+                  userVotes={votes}
+                />
+                <Separator className="my-3 md:my-4" />
+              </>
+            )}
+
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-4">
+              {startup.interestedVotes.length > 0 && (
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <Users size={14} className="text-muted-foreground md:w-4 md:h-4" />
+                  <div className="flex -space-x-1.5 md:-space-x-2">
+                    {startup.interestedVotes.map((vote, idx) => (
+                      <Avatar key={idx} className="w-6 h-6 md:w-8 md:h-8 border-2 border-background">
+                        <AvatarFallback className="bg-primary text-primary-foreground text-[10px] md:text-xs">
+                          {getInitials(vote.userName)}
+                        </AvatarFallback>
+                      </Avatar>
+                    ))}
+                  </div>
+                  <span className="text-[10px] md:text-xs text-muted-foreground ml-0.5 md:ml-1 hidden md:inline">
+                    {startup.interestedVotes.map(v => v.userName).join(', ')}
+                  </span>
+                </div>
+              )}
+              
+              {startup.interestedVotes.length > 0 && !startup.scheduledEvent && (
+                <Button 
+                  size="sm" 
+                  onClick={() => openScheduleDialog(startup)}
+                  className="gap-1.5 md:gap-2 text-xs"
+                >
+                  <CalendarBlank size={14} weight="bold" className="md:w-4 md:h-4" />
+                  <span className="hidden md:inline">Schedule Meeting</span>
+                  <span className="md:hidden">Schedule</span>
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </Card>
+    )
+  }
+
+  return (
+    <>
+      <div className="h-full">
+        <div className="max-w-4xl mx-auto p-3 md:p-6 space-y-4 md:space-y-6">
+          {/* Total Startups Banner */}
+          <div className="p-3 md:p-4 rounded-lg">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2 md:gap-3">
+                <Rocket size={24} weight="duotone" className="text-primary md:w-8 md:h-8" />
+                <div>
+                  <h3 className="text-base md:text-lg font-extrabold text-foreground">Total Startups Available</h3>
+                  <p className="text-xs md:text-sm text-muted-foreground">All startups from Slush 2025</p>
+                </div>
+              </div>
+              <div className="text-3xl md:text-4xl font-black text-primary">
+                {startups.length}
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {/* Search Bar */}
+            <div className="flex items-center gap-3 md:gap-4 flex-wrap p-3 md:p-4 rounded-md bg-secondary/30">
+              <div className="flex items-center gap-2 text-foreground">
+                <MagnifyingGlass size={18} weight="duotone" />
+                <span className="text-xs md:text-sm font-bold">Search:</span>
+              </div>
+              
+              <div className="flex-1 min-w-[200px] max-w-md">
+                <Input
+                  type="text"
+                  placeholder="Type at least 3 characters to search by name..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="text-xs md:text-sm"
+                />
+              </div>
+
+              <div className="ml-auto text-xs md:text-sm text-muted-foreground">
+                {startupsWithVotes.length} startup{startupsWithVotes.length !== 1 ? 's' : ''}
+                {searchQuery.trim().length < 3 && selectedStages.size === 0 && selectedTopics.size === 0 && selectedTechs.size === 0 && startupsWithVotes.length === 100 && ' (showing first 100)'}
+              </div>
+            </div>
+
+            {/* Sort and Filter Controls */}
+            <div className="space-y-3">
+              {/* Sort By */}
+              <div className="flex items-center gap-2 md:gap-3 flex-wrap p-3 md:p-4 rounded-md bg-secondary/20">
+                <span className="text-xs md:text-sm font-bold text-foreground">Sort By:</span>
+                <div className="flex gap-2">
+                  <Button
+                    variant={sortBy === 'votes' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setSortBy('votes')}
+                    className="text-xs"
+                  >
+                    Votes
+                  </Button>
+                  <Button
+                    variant={sortBy === 'funding' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setSortBy('funding')}
+                    className="text-xs"
+                  >
+                    Funding
+                  </Button>
+                </div>
+              </div>
+
+              {/* Stage Filter */}
+              {uniqueStages.length > 0 && (
+                <div className="p-3 md:p-4 rounded-md bg-secondary/20">
+                  <div className="flex items-center gap-2 md:gap-3 mb-2">
+                    <span className="text-xs md:text-sm font-bold text-foreground">Stage:</span>
+                    {selectedStages.size > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedStages(new Set())}
+                        className="text-xs text-muted-foreground hover:text-foreground"
+                      >
+                        Clear
+                      </Button>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {uniqueStages.map(stage => (
+                      <Badge
+                        key={stage}
+                        variant={selectedStages.has(stage) ? 'default' : 'outline'}
+                        className="cursor-pointer text-xs"
+                        onClick={() => {
+                          const newSet = new Set(selectedStages)
+                          if (newSet.has(stage)) {
+                            newSet.delete(stage)
+                          } else {
+                            newSet.add(stage)
+                          }
+                          setSelectedStages(newSet)
+                        }}
+                      >
+                        {stage}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Topics Filter */}
+              {uniqueTopics.length > 0 && (
+                <div className="p-3 md:p-4 rounded-md bg-secondary/20">
+                  <div className="flex items-center gap-2 md:gap-3 mb-2">
+                    <span className="text-xs md:text-sm font-bold text-foreground">Topics:</span>
+                    {selectedTopics.size > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedTopics(new Set())}
+                        className="text-xs text-muted-foreground hover:text-foreground"
+                      >
+                        Clear
+                      </Button>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {uniqueTopics.slice(0, 15).map(topic => (
+                      <Badge
+                        key={topic}
+                        variant={selectedTopics.has(topic) ? 'default' : 'outline'}
+                        className="cursor-pointer text-xs"
+                        onClick={() => {
+                          const newSet = new Set(selectedTopics)
+                          if (newSet.has(topic)) {
+                            newSet.delete(topic)
+                          } else {
+                            newSet.add(topic)
+                          }
+                          setSelectedTopics(newSet)
+                        }}
+                      >
+                        {topic}
+                      </Badge>
+                    ))}
+                    {uniqueTopics.length > 15 && (
+                      <span className="text-xs text-muted-foreground">+{uniqueTopics.length - 15} more</span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Tech Filter */}
+              {uniqueTechs.length > 0 && (
+                <div className="p-3 md:p-4 rounded-md bg-secondary/20">
+                  <div className="flex items-center gap-2 md:gap-3 mb-2">
+                    <span className="text-xs md:text-sm font-bold text-foreground">Tech:</span>
+                    {selectedTechs.size > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedTechs(new Set())}
+                        className="text-xs text-muted-foreground hover:text-foreground"
+                      >
+                        Clear
+                      </Button>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {uniqueTechs.slice(0, 15).map(tech => (
+                      <Badge
+                        key={tech}
+                        variant={selectedTechs.has(tech) ? 'default' : 'outline'}
+                        className="cursor-pointer text-xs"
+                        onClick={() => {
+                          const newSet = new Set(selectedTechs)
+                          if (newSet.has(tech)) {
+                            newSet.delete(tech)
+                          } else {
+                            newSet.add(tech)
+                          }
+                          setSelectedTechs(newSet)
+                        }}
+                      >
+                        {tech}
+                      </Badge>
+                    ))}
+                    {uniqueTechs.length > 15 && (
+                      <span className="text-xs text-muted-foreground">+{uniqueTechs.length - 15} more</span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          {highPriority.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                <div className="w-1 h-6 md:h-8 bg-accent rounded-full" />
+                <div>
+                  <h2 className="text-xl md:text-2xl font-semibold">High Priority</h2>
+                  <p className="text-xs md:text-sm text-muted-foreground">3+ team members interested</p>
+                </div>
+              </div>
+              <div className="space-y-3 md:space-y-4">
+                {highPriority.map(renderStartupCard)}
+              </div>
+            </div>
+          )}
+
+          {mediumPriority.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                <div className="w-1 h-6 md:h-8 bg-primary rounded-full" />
+                <div>
+                  <h2 className="text-xl md:text-2xl font-semibold">Medium Priority</h2>
+                  <p className="text-xs md:text-sm text-muted-foreground">1-2 team members interested</p>
+                </div>
+              </div>
+              <div className="space-y-3 md:space-y-4">
+                {mediumPriority.map(renderStartupCard)}
+              </div>
+            </div>
+          )}
+
+          {noPriority.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                <div className="w-1 h-6 md:h-8 bg-muted rounded-full" />
+                <div>
+                  <h2 className="text-xl md:text-2xl font-semibold">No Interest Yet</h2>
+                  <p className="text-xs md:text-sm text-muted-foreground">No team members interested</p>
+                </div>
+              </div>
+              <div className="space-y-3 md:space-y-4">
+                {noPriority.map(renderStartupCard)}
+              </div>
+            </div>
+          )}
+
+          {startupsWithVotes.length === 0 && (
+            <div className="text-center py-12 md:py-16">
+              <Users size={48} className="md:w-16 md:h-16 text-muted-foreground mx-auto mb-3 md:mb-4" />
+              <h2 className="text-xl md:text-2xl font-semibold mb-2">No Startups Found</h2>
+              <p className="text-sm md:text-base text-muted-foreground">
+                {searchQuery.trim().length >= 3
+                  ? 'No startups match your search. Try a different search term.'
+                  : 'Add some startups to get started with team coordination.'}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <Dialog open={isScheduleDialogOpen} onOpenChange={setIsScheduleDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Schedule Meeting with {selectedStartup?.["Company Name"]}</DialogTitle>
+            <DialogDescription>
+              This will create a confirmed meeting and automatically add all interested team members.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <AITimeSlotSuggester
+              events={events}
+              onSelectTimeSlot={(start, end) => {
+                setFormData({
+                  ...formData,
+                  startTime: start.slice(0, 16),
+                  endTime: end.slice(0, 16)
+                })
+              }}
+            />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="start">Start Time *</Label>
+                <Input
+                  id="start"
+                  type="datetime-local"
+                  value={formData.startTime}
+                  onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="end">End Time *</Label>
+                <Input
+                  id="end"
+                  type="datetime-local"
+                  value={formData.endTime}
+                  onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="location">Location</Label>
+              <Input
+                id="location"
+                placeholder="Hall 3, Booth A42"
+                value={formData.location}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="description">Notes</Label>
+              <Textarea
+                id="description"
+                placeholder="Add meeting notes..."
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                rows={3}
+              />
+            </div>
+            {selectedStartup && selectedStartup.interestedVotes.length > 0 && (
+              <div className="bg-muted/50 p-3 rounded-lg">
+                <p className="text-sm font-medium mb-2">Attendees ({selectedStartup.interestedVotes.length})</p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedStartup.interestedVotes.map((vote, idx) => (
+                    <Badge key={idx} variant="secondary">
+                      {vote.userName}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsScheduleDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleScheduleMeeting}>Schedule Meeting</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}

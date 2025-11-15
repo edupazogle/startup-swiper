@@ -1,0 +1,175 @@
+/* eslint-disable no-restricted-globals */
+/**
+ * Service Worker for Push Notifications
+ * Handles background push notifications and deep linking
+ */
+
+const CACHE_NAME = 'slush-2025-v1';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/src/main.tsx',
+  '/src/main.css'
+];
+
+// Install event - cache resources
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
+  );
+  self.skipWaiting();
+});
+
+// Activate event - clean up old caches
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+  self.clients.claim();
+});
+
+// Fetch event - serve from cache when offline
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      }
+    )
+  );
+});
+
+// Push notification event
+self.addEventListener('push', (event) => {
+  console.log('Push notification received:', event);
+  
+  if (!event.data) {
+    console.log('Push event has no data');
+    return;
+  }
+
+  let data;
+  try {
+    data = event.data.json();
+  } catch (e) {
+    console.error('Failed to parse push data as JSON:', e);
+    data = {
+      title: 'Slush 2025',
+      body: event.data.text()
+    };
+  }
+
+  const title = data.title || 'Slush 2025';
+  const options = {
+    body: data.body || 'New notification',
+    icon: data.icon || '/icon-192.png',
+    badge: data.badge || '/badge-72.png',
+    tag: data.tag || 'default',
+    requireInteraction: data.requireInteraction || false,
+    data: data.data || {},
+    actions: data.actions || []
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
+// Notification click event - handle deep linking
+self.addEventListener('notificationclick', (event) => {
+  console.log('Notification clicked:', event);
+  
+  event.notification.close();
+
+  const urlToOpen = event.notification.data?.url || '/';
+  const action = event.action;
+  
+  // Handle notification actions
+  if (action === 'submit') {
+    // User clicked "Share Insight" button
+    const meetingId = event.notification.data?.meetingId;
+    const insightUrl = `/?view=insights&meeting=${meetingId}&action=submit`;
+    
+    event.waitUntil(
+      clients.matchAll({ type: 'window', includeUncontrolled: true })
+        .then((clientList) => {
+          // Check if app is already open
+          for (let client of clientList) {
+            if (client.url === self.location.origin + insightUrl && 'focus' in client) {
+              return client.focus();
+            }
+          }
+          // Open new window with deep link
+          if (clients.openWindow) {
+            return clients.openWindow(insightUrl);
+          }
+        })
+    );
+  } else if (action === 'dismiss') {
+    // User clicked "Later" button - just close notification
+    console.log('Notification dismissed by user');
+  } else {
+    // Default action - open the URL
+    event.waitUntil(
+      clients.matchAll({ type: 'window', includeUncontrolled: true })
+        .then((clientList) => {
+          // Check if app is already open
+          for (let client of clientList) {
+            if (client.url.startsWith(self.location.origin) && 'focus' in client) {
+              // Navigate to the URL and focus
+              client.postMessage({
+                type: 'NAVIGATE',
+                url: urlToOpen
+              });
+              return client.focus();
+            }
+          }
+          // Open new window
+          if (clients.openWindow) {
+            return clients.openWindow(urlToOpen);
+          }
+        })
+    );
+  }
+});
+
+// Handle messages from the main app
+self.addEventListener('message', (event) => {
+  console.log('Service Worker received message:', event.data);
+  
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
+// Background sync for offline insights
+self.addEventListener('sync', (event) => {
+  console.log('Background sync event:', event.tag);
+  
+  if (event.tag === 'sync-insights') {
+    event.waitUntil(syncInsights());
+  }
+});
+
+async function syncInsights() {
+  // Get pending insights from IndexedDB and sync to server
+  // This would be implemented based on your offline storage strategy
+  console.log('Syncing pending insights...');
+}
