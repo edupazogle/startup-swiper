@@ -189,3 +189,27 @@ class PushSubscription(Base):
     active = Column(Boolean, default=True)
     createdAt = Column(DateTime, default=datetime.utcnow)
     lastUsed = Column(DateTime, default=datetime.utcnow)
+
+class Attendee(Base):
+    __tablename__ = "attendees"
+    
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String, nullable=False, index=True)
+    title = Column(String, nullable=True)
+    country = Column(String, nullable=True, index=True)
+    city = Column(String, nullable=True)
+    linkedin = Column(String, nullable=True)
+    twitter = Column(String, nullable=True)
+    bio = Column(Text, nullable=True)
+    industry = Column(JSON, nullable=True)  # Array of industries
+    occupation = Column(JSON, nullable=True)  # Array of occupations
+    company_name = Column(String, nullable=True, index=True)
+    company_type = Column(String, nullable=True)
+    company_country = Column(String, nullable=True)
+    company_city = Column(String, nullable=True)
+    website = Column(String, nullable=True)
+    company_linkedin = Column(String, nullable=True)
+    company_description = Column(Text, nullable=True)
+    profile_link = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

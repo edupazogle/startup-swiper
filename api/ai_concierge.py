@@ -257,6 +257,67 @@ class ContextRetriever:
                 context_parts.append(f"  Tags: {', '.join(idea.tags)}")
         
         return "\n".join(context_parts)
+    
+    def get_attendees_context(self, query: str = None) -> str:
+        """Get context about attendees based on query"""
+        import db_queries
+        
+        if not query:
+            attendees = db_queries.get_all_attendees(self.db, limit=20)
+            if not attendees:
+                return "No attendee information available."
+            
+            context_parts = ["Top Attendees:\n"]
+            for attendee in attendees:
+                name = attendee.get("name", "Unknown")
+                title = attendee.get("title", "")
+                company = attendee.get("company_name", "")
+                title_str = f" - {title}" if title else ""
+                company_str = f" @ {company}" if company else ""
+                context_parts.append(f"- {name}{title_str}{company_str}")
+            
+            return "\n".join(context_parts)
+        
+        # Search attendees based on query
+        query_lower = query.lower()
+        results = []
+        
+        # Try different search methods
+        if any(word in query_lower for word in ["name", "called", "named"]):
+            name_query = query_lower.replace("name", "").replace("called", "").replace("named", "").strip()
+            results = db_queries.search_attendees_by_name(self.db, name_query, limit=5)
+        elif any(word in query_lower for word in ["company", "from", "at", "working"]):
+            company_query = query_lower.replace("company", "").replace("from", "").replace("at", "").replace("working", "").strip()
+            results = db_queries.search_attendees_by_company(self.db, company_query, limit=5)
+        elif any(word in query_lower for word in ["country", "from", "based"]):
+            country_query = query_lower.replace("country", "").replace("from", "").replace("based", "").strip()
+            results = db_queries.search_attendees_by_country(self.db, country_query, limit=10)
+        elif any(word in query_lower for word in ["ceo", "founder", "investor", "developer", "engineer"]):
+            results = db_queries.search_attendees_by_occupation(self.db, query, limit=5)
+        else:
+            # Default to name search
+            results = db_queries.search_attendees_by_name(self.db, query, limit=5)
+        
+        if not results:
+            return f"No attendees found matching '{query}'."
+        
+        context_parts = [f"Attendees matching '{query}':\n"]
+        for attendee in results:
+            name = attendee.get("name", "Unknown")
+            title = attendee.get("title", "")
+            company = attendee.get("company_name", "")
+            country = attendee.get("country", "")
+            bio = attendee.get("bio", "")
+            
+            title_str = f" - {title}" if title else ""
+            company_str = f" @ {company}" if company else ""
+            country_str = f" ({country})" if country else ""
+            
+            context_parts.append(f"\n- **{name}{title_str}**{company_str}{country_str}")
+            if bio:
+                context_parts.append(f"  Bio: {bio[:100]}...")
+        
+        return "\n".join(context_parts)
 
 
 class AIConcierge:
@@ -324,8 +385,8 @@ class AIConcierge:
             context_parts.append(ideas_context)
         
         # Attendee questions
-        if any(word in question_lower for word in ["attendee", "participant", "people", "who"]):
-            attendees_context = self._get_attendees_context()
+        if any(word in question_lower for word in ["attendee", "participant", "people", "who", "person", "founder", "ceo", "investor"]):
+            attendees_context = self.context_retriever.get_attendees_context(question)
             context_parts.append(attendees_context)
         
         # Build the prompt for LLM

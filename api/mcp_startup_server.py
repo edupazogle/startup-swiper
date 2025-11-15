@@ -190,6 +190,100 @@ class StartupDatabaseServer:
                         "required": []
                     }
                 ),
+                Tool(
+                    name="search_attendees_by_name",
+                    description="Search attendees by name. Returns matching attendees with their details.",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "Attendee name or partial name to search for"
+                            },
+                            "limit": {
+                                "type": "integer",
+                                "description": "Maximum number of results (default: 10)",
+                                "default": 10
+                            }
+                        },
+                        "required": ["name"]
+                    }
+                ),
+                Tool(
+                    name="search_attendees_by_company",
+                    description="Search attendees by company name.",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "company_name": {
+                                "type": "string",
+                                "description": "Company name to search for"
+                            },
+                            "limit": {
+                                "type": "integer",
+                                "description": "Maximum number of results (default: 10)",
+                                "default": 10
+                            }
+                        },
+                        "required": ["company_name"]
+                    }
+                ),
+                Tool(
+                    name="search_attendees_by_country",
+                    description="Search attendees by country.",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "country": {
+                                "type": "string",
+                                "description": "Country name or code (e.g., Finland, FI, USA)"
+                            },
+                            "limit": {
+                                "type": "integer",
+                                "description": "Maximum number of results (default: 20)",
+                                "default": 20
+                            }
+                        },
+                        "required": ["country"]
+                    }
+                ),
+                Tool(
+                    name="search_attendees_by_occupation",
+                    description="Search attendees by occupation (e.g., CEO, Investor, Developer).",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "occupation": {
+                                "type": "string",
+                                "description": "Occupation type (e.g., CEO, founder, investor, developer)"
+                            },
+                            "limit": {
+                                "type": "integer",
+                                "description": "Maximum number of results (default: 10)",
+                                "default": 10
+                            }
+                        },
+                        "required": ["occupation"]
+                    }
+                ),
+                Tool(
+                    name="get_attendee_details",
+                    description="Get detailed information about a specific attendee.",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "attendee_id": {
+                                "type": "string",
+                                "description": "Attendee unique ID"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "Attendee name (use if ID not available)"
+                            }
+                        },
+                        "required": []
+                    }
+                ),
             ]
         
         @self.server.call_tool()
@@ -209,6 +303,16 @@ class StartupDatabaseServer:
                     return await self._get_enrichment_data(arguments)
                 elif name == "get_top_startups_by_funding":
                     return await self._get_top_by_funding(arguments)
+                elif name == "search_attendees_by_name":
+                    return await self._search_attendees_by_name(arguments)
+                elif name == "search_attendees_by_company":
+                    return await self._search_attendees_by_company(arguments)
+                elif name == "search_attendees_by_country":
+                    return await self._search_attendees_by_country(arguments)
+                elif name == "search_attendees_by_occupation":
+                    return await self._search_attendees_by_occupation(arguments)
+                elif name == "get_attendee_details":
+                    return await self._get_attendee_details(arguments)
                 else:
                     return [TextContent(type="text", text=f"Unknown tool: {name}")]
             except Exception as e:
@@ -349,6 +453,146 @@ class StartupDatabaseServer:
             
             result = self._format_startup_list(startups)
             return [TextContent(type="text", text=result)]
+    
+    async def _search_attendees_by_name(self, arguments: dict) -> list[TextContent]:
+        """Search attendees by name"""
+        from db_queries import search_attendees_by_name
+        
+        name = arguments.get("name", "")
+        limit = arguments.get("limit", 10)
+        
+        async with self.get_db() as db:
+            attendees = search_attendees_by_name(db, name, limit)
+            
+            if not attendees:
+                return [TextContent(type="text", text=f"No attendees found matching '{name}'")]
+            
+            result = self._format_attendee_list(attendees)
+            return [TextContent(type="text", text=result)]
+    
+    async def _search_attendees_by_company(self, arguments: dict) -> list[TextContent]:
+        """Search attendees by company"""
+        from db_queries import search_attendees_by_company
+        
+        company_name = arguments.get("company_name", "")
+        limit = arguments.get("limit", 10)
+        
+        async with self.get_db() as db:
+            attendees = search_attendees_by_company(db, company_name, limit)
+            
+            if not attendees:
+                return [TextContent(type="text", text=f"No attendees found from company '{company_name}'")]
+            
+            result = self._format_attendee_list(attendees)
+            return [TextContent(type="text", text=result)]
+    
+    async def _search_attendees_by_country(self, arguments: dict) -> list[TextContent]:
+        """Search attendees by country"""
+        from db_queries import search_attendees_by_country
+        
+        country = arguments.get("country", "")
+        limit = arguments.get("limit", 20)
+        
+        async with self.get_db() as db:
+            attendees = search_attendees_by_country(db, country, limit)
+            
+            if not attendees:
+                return [TextContent(type="text", text=f"No attendees found from country '{country}'")]
+            
+            result = self._format_attendee_list(attendees)
+            return [TextContent(type="text", text=result)]
+    
+    async def _search_attendees_by_occupation(self, arguments: dict) -> list[TextContent]:
+        """Search attendees by occupation"""
+        from db_queries import search_attendees_by_occupation
+        
+        occupation = arguments.get("occupation", "")
+        limit = arguments.get("limit", 10)
+        
+        async with self.get_db() as db:
+            attendees = search_attendees_by_occupation(db, occupation, limit)
+            
+            if not attendees:
+                return [TextContent(type="text", text=f"No attendees found with occupation '{occupation}'")]
+            
+            result = self._format_attendee_list(attendees)
+            return [TextContent(type="text", text=result)]
+    
+    async def _get_attendee_details(self, arguments: dict) -> list[TextContent]:
+        """Get attendee details"""
+        from db_queries import get_attendee_by_id, search_attendees_by_name
+        
+        attendee_id = arguments.get("attendee_id")
+        name = arguments.get("name")
+        
+        async with self.get_db() as db:
+            attendee = None
+            
+            if attendee_id:
+                attendee = get_attendee_by_id(db, attendee_id)
+            elif name:
+                results = search_attendees_by_name(db, name, 1)
+                attendee = results[0] if results else None
+            
+            if not attendee:
+                return [TextContent(type="text", text="Attendee not found")]
+            
+            result = self._format_attendee_details(attendee)
+            return [TextContent(type="text", text=result)]
+    
+    def _format_attendee_list(self, attendees: List[Dict]) -> str:
+        """Format attendee list for display"""
+        lines = []
+        for attendee in attendees:
+            name = attendee.get("name", "Unknown")
+            title = attendee.get("title", "")
+            company = attendee.get("company_name", "")
+            country = attendee.get("country", "")
+            
+            title_str = f" - {title}" if title else ""
+            company_str = f" @ {company}" if company else ""
+            country_str = f" ({country})" if country else ""
+            
+            lines.append(f"• {name}{title_str}{company_str}{country_str}")
+        
+        return "\n".join(lines)
+    
+    def _format_attendee_details(self, attendee: Dict) -> str:
+        """Format attendee details for display"""
+        lines = []
+        
+        lines.append(f"**{attendee.get('name', 'Unknown')}**")
+        
+        if attendee.get("title"):
+            lines.append(f"Title: {attendee['title']}")
+        
+        if attendee.get("bio"):
+            lines.append(f"Bio: {attendee['bio']}")
+        
+        if attendee.get("company_name"):
+            lines.append(f"Company: {attendee['company_name']} ({attendee.get('company_type', 'N/A')})")
+        
+        if attendee.get("country") or attendee.get("city"):
+            location = f"{attendee.get('city', '')}, {attendee.get('country', '')}".strip(", ")
+            lines.append(f"Location: {location}")
+        
+        if attendee.get("industry"):
+            industries = attendee.get("industry")
+            if isinstance(industries, list):
+                lines.append(f"Industries: {', '.join(industries)}")
+        
+        if attendee.get("occupation"):
+            occupations = attendee.get("occupation")
+            if isinstance(occupations, list):
+                lines.append(f"Occupations: {', '.join(occupations)}")
+        
+        if attendee.get("linkedin"):
+            lines.append(f"LinkedIn: {attendee['linkedin']}")
+        
+        if attendee.get("profile_link"):
+            lines.append(f"Profile: {attendee['profile_link']}")
+        
+        return "\n".join(lines)
     
     def _format_startup_list(self, startups: List[Startup]) -> str:
         """Format startup list for display"""

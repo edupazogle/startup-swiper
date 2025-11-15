@@ -393,3 +393,155 @@ def get_auroral_themes(db: Session) -> Dict:
         "last_viewed": info.last_viewed if info else None,
         "themes": themes
     }
+
+# ============================================
+# Attendee Queries
+# ============================================
+
+def search_attendees_by_name(db: Session, name: str, limit: int = 10) -> List[Dict]:
+    """Search attendees by name"""
+    from models import Attendee
+    
+    results = db.query(Attendee).filter(
+        Attendee.name.ilike(f"%{name}%")
+    ).limit(limit).all()
+    
+    return [
+        {
+            "id": a.id,
+            "name": a.name,
+            "title": a.title,
+            "country": a.country,
+            "city": a.city,
+            "company_name": a.company_name,
+            "company_type": a.company_type,
+            "bio": a.bio,
+            "linkedin": a.linkedin,
+            "profile_link": a.profile_link,
+            "industry": a.industry,
+            "occupation": a.occupation,
+        }
+        for a in results
+    ]
+
+def search_attendees_by_company(db: Session, company_name: str, limit: int = 10) -> List[Dict]:
+    """Search attendees by company name"""
+    from models import Attendee
+    
+    results = db.query(Attendee).filter(
+        Attendee.company_name.ilike(f"%{company_name}%")
+    ).limit(limit).all()
+    
+    return [
+        {
+            "id": a.id,
+            "name": a.name,
+            "title": a.title,
+            "country": a.country,
+            "company_name": a.company_name,
+            "company_type": a.company_type,
+            "bio": a.bio,
+            "linkedin": a.linkedin,
+            "profile_link": a.profile_link,
+        }
+        for a in results
+    ]
+
+def search_attendees_by_country(db: Session, country: str, limit: int = 20) -> List[Dict]:
+    """Search attendees by country"""
+    from models import Attendee
+    
+    results = db.query(Attendee).filter(
+        Attendee.country.ilike(f"%{country}%")
+    ).limit(limit).all()
+    
+    return [
+        {
+            "id": a.id,
+            "name": a.name,
+            "title": a.title,
+            "country": a.country,
+            "city": a.city,
+            "company_name": a.company_name,
+            "linkedin": a.linkedin,
+        }
+        for a in results
+    ]
+
+def search_attendees_by_occupation(db: Session, occupation: str, limit: int = 10) -> List[Dict]:
+    """Search attendees by occupation"""
+    from models import Attendee
+    
+    # Search in occupation JSON array
+    results = db.query(Attendee).filter(
+        Attendee.occupation.astext.ilike(f"%{occupation}%")
+    ).limit(limit).all()
+    
+    return [
+        {
+            "id": a.id,
+            "name": a.name,
+            "title": a.title,
+            "country": a.country,
+            "company_name": a.company_name,
+            "occupation": a.occupation,
+            "linkedin": a.linkedin,
+        }
+        for a in results
+    ]
+
+def get_attendee_by_id(db: Session, attendee_id: str) -> Optional[Dict]:
+    """Get attendee by ID"""
+    from models import Attendee
+    
+    attendee = db.query(Attendee).filter(Attendee.id == attendee_id).first()
+    
+    if not attendee:
+        return None
+    
+    return {
+        "id": attendee.id,
+        "name": attendee.name,
+        "title": attendee.title,
+        "country": attendee.country,
+        "city": attendee.city,
+        "linkedin": attendee.linkedin,
+        "twitter": attendee.twitter,
+        "bio": attendee.bio,
+        "industry": attendee.industry,
+        "occupation": attendee.occupation,
+        "company_name": attendee.company_name,
+        "company_type": attendee.company_type,
+        "company_country": attendee.company_country,
+        "company_city": attendee.company_city,
+        "website": attendee.website,
+        "company_linkedin": attendee.company_linkedin,
+        "company_description": attendee.company_description,
+        "profile_link": attendee.profile_link,
+    }
+
+def get_all_attendees(db: Session, skip: int = 0, limit: int = 100) -> List[Dict]:
+    """Get all attendees"""
+    from models import Attendee
+    
+    results = db.query(Attendee).offset(skip).limit(limit).all()
+    
+    return [
+        {
+            "id": a.id,
+            "name": a.name,
+            "title": a.title,
+            "country": a.country,
+            "city": a.city,
+            "company_name": a.company_name,
+            "company_type": a.company_type,
+            "linkedin": a.linkedin,
+        }
+        for a in results
+    ]
+
+def count_attendees(db: Session) -> int:
+    """Count total attendees"""
+    from models import Attendee
+    
+    return db.query(Attendee).count()
