@@ -661,6 +661,13 @@ class MCPEnhancedAIConcierge(AIConcierge):
         Returns:
             AI-generated answer with potentially tool-enhanced context
         """
+        # Check if this looks like a person name first (prioritize attendee search)
+        is_likely_person_name = self._is_likely_person_name(question)
+        
+        if is_likely_person_name:
+            # For name queries, use the enhanced answer_question method with name detection
+            return await self.answer_question(question, user_context)
+        
         # Build system message with tool information
         tools_info = json.dumps(self.get_tool_definitions(), indent=2)
         
