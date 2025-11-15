@@ -30,6 +30,21 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
   const rotate = useTransform(x, [-200, 0, 200], [-25, 0, 25])
   const opacity = useTransform(x, [-200, 0, 200], [0.5, 1, 0.5])
 
+  // Helper to safely parse array fields (topics, tech, etc.)
+  const parseArray = (value: any): string[] => {
+    if (!value) return []
+    if (Array.isArray(value)) return value
+    if (typeof value === 'string') {
+      try {
+        const parsed = JSON.parse(value)
+        return Array.isArray(parsed) ? parsed : []
+      } catch {
+        return value.split(',').map((v: string) => v.trim()).filter((v: string) => v)
+      }
+    }
+    return []
+  }
+
   const handleDragEnd = (_: any, info: PanInfo) => {
     if (hasVoted) return
     
@@ -48,6 +63,10 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
   const displayUSP = startup.shortDescription || startup["USP"] || ''
   const displayLogo = startup.logoUrl || startup.logo
   const displayWebsite = startup.website || startup["URL"]
+  
+  // Safe array parsing
+  const topicsArray = parseArray(startup.topics)
+  const techArray = parseArray(startup.tech)
   const displayLocation = startup.billingCity && startup.billingCountry 
     ? `${startup.billingCity}, ${startup.billingCountry}` 
     : (startup.billingCountry || startup["Headquarter Country"] || 'Unknown')
@@ -125,11 +144,11 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                   {displayName}
                 </h1>
                 <div className="flex flex-wrap gap-x-3 gap-y-2">
-                  {startup.topics && startup.topics.length > 0 && (
+                  {topicsArray && topicsArray.length > 0 && (
                     <div className="flex flex-col gap-0.5">
                       <span className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Topics</span>
                       <div className="flex flex-wrap gap-1">
-                        {startup.topics.slice(0, 2).map((topic, i) => {
+                        {topicsArray.slice(0, 2).map((topic, i) => {
                           const colors = getTopicColor(topic)
                           return (
                             <Badge 
@@ -144,11 +163,11 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                       </div>
                     </div>
                   )}
-                  {startup.tech && startup.tech.length > 0 && (
+                  {techArray && techArray.length > 0 && (
                     <div className="flex flex-col gap-0.5">
                       <span className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Tech</span>
                       <div className="flex flex-wrap gap-1">
-                        {startup.tech.slice(0, 2).map((t, i) => {
+                        {techArray.slice(0, 2).map((t, i) => {
                           const colors = getTechColor(t)
                           return (
                             <Badge 
