@@ -20,6 +20,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Debug - List directories
+        run: ls -la && ls -la app/
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -27,12 +32,14 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        working-directory: ./app/startup-swipe-schedu
-        run: npm install
+        run: |
+          cd "${{ github.workspace }}/app/startup-swipe-schedu"
+          npm install
 
       - name: Build
-        working-directory: ./app/startup-swipe-schedu
-        run: npm run build
+        run: |
+          cd "${{ github.workspace }}/app/startup-swipe-schedu"
+          npm run build
         env:
           VITE_API_URL: https://startup-swiper-1.onrender.com
           VITE_BASE_PATH: /startup-swiper/
@@ -40,7 +47,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './app/startup-swipe-schedu/dist'
+          path: '${{ github.workspace }}/app/startup-swipe-schedu/dist'
 
   deploy:
     environment:
