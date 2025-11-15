@@ -1028,7 +1028,7 @@ def filter_startups_enhanced(startups: List[Dict], min_score: int = 50,
     # Final sort by score, with funding as tiebreaker
     filtered.sort(key=lambda x: (
         x['axa_scoring']['total_score'],
-        x['axa_scoring']['funding']['amount_millions']
+        x['axa_scoring'].get('funding', {}).get('amount_millions', 0)
     ), reverse=True)
     
     return filtered, excluded
@@ -1191,15 +1191,15 @@ def main():
         
         # Funding distribution
         print(f"\n💰 FUNDING DISTRIBUTION:")
-        funded_count = sum(1 for s in filtered if s['axa_scoring']['funding']['amount_millions'] > 0)
-        avg_funding = sum(s['axa_scoring']['funding']['amount_millions'] for s in filtered) / len(filtered) if filtered else 0
+        funded_count = sum(1 for s in filtered if s['axa_scoring'].get('funding', {}).get('amount_millions', 0) > 0)
+        avg_funding = sum(s['axa_scoring'].get('funding', {}).get('amount_millions', 0) for s in filtered) / len(filtered) if filtered else 0
         print(f"  Funded startups: {funded_count}/{len(filtered)} ({100*funded_count/len(filtered):.1f}%)")
         print(f"  Average funding: ${avg_funding:.1f}M")
         
         # Size distribution
         print(f"\n👥 COMPANY SIZE DISTRIBUTION:")
-        size_10_plus = sum(1 for s in filtered if s['axa_scoring']['company_size']['employee_count'] >= 10)
-        size_50_plus = sum(1 for s in filtered if s['axa_scoring']['company_size']['employee_count'] >= 50)
+        size_10_plus = sum(1 for s in filtered if s['axa_scoring'].get('company_size', {}).get('employee_count', 0) >= 10)
+        size_50_plus = sum(1 for s in filtered if s['axa_scoring'].get('company_size', {}).get('employee_count', 0) >= 50)
         print(f"  10+ employees: {size_10_plus}/{len(filtered)} ({100*size_10_plus/len(filtered):.1f}%)")
         print(f"  50+ employees: {size_50_plus}/{len(filtered)} ({100*size_50_plus/len(filtered):.1f}%)")
         
@@ -1208,9 +1208,9 @@ def main():
         for i, s in enumerate(filtered[:10], 1):
             score = s['axa_scoring']['total_score']
             tier = s['axa_scoring']['tier']
-            funding = s['axa_scoring']['funding']['amount_millions']
-            employees = s['axa_scoring']['company_size']['employee_count']
-            rules = ', '.join([r.split(':')[0] for r in s['axa_scoring']['matched_rules']])
+            funding = s['axa_scoring'].get('funding', {}).get('amount_millions', 0)
+            employees = s['axa_scoring'].get('company_size', {}).get('employee_count', 0)
+            rules = ', '.join([r.split(':')[0] for r in s['axa_scoring'].get('matched_rules', [])])
             company_name = s.get('company_name', 'Unknown')
             
             funding_str = f"${funding:.0f}M" if funding > 0 else "Undisclosed"

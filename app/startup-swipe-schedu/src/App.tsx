@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useKV } from '@/lib/useKV'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { LoginView } from '@/components/LoginView'
 import { AuroralBackground } from '@/components/AuroralBackground'
 import { SwipeView } from '@/components/SwipeView'
 import { DashboardView } from '@/components/DashboardView'
@@ -17,7 +18,7 @@ import { Startup, Vote, CalendarEvent, Idea } from '@/lib/types'
 import { initialStartups } from '@/lib/initialStartups'
 import { InsightsAPI } from '@/lib/notificationManager'
 import { api } from '@/lib/api'
-import { Swatches, Rocket, Lightbulb, CalendarBlank, UserGear, Plus, Robot, Bell, BellSlash } from '@phosphor-icons/react'
+import { Swatches, Rocket, Lightbulb, CalendarBlank, UserGear, Plus, Robot, Bell, BellSlash, SignOut } from '@phosphor-icons/react'
 import { Toaster } from '@/components/ui/sonner'
 import { toast } from 'sonner'
 import logoVC from '@/assets/images/logo_vc.png'
@@ -26,8 +27,9 @@ import logoMain from '@/assets/images/f8cba53d-0d66-4aab-b97c-8fa66871fa8b.png'
 
 function App() {
   const isMobile = useIsMobile()
-  const [currentUserId, setCurrentUserId] = useKV<string>('current-user-id', `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`)
-  const [currentUserName, setCurrentUserName] = useState('You')
+  const [isAuthenticated, setIsAuthenticated] = useKV<boolean>('is-authenticated', false)
+  const [currentUserId, setCurrentUserId] = useKV<string>('current-user-id', '')
+  const [currentUserName, setCurrentUserName] = useKV<string>('current-user-name', '')
   const [notificationManager, setNotificationManager] = useState<null>(null)
   const [notificationsEnabled, setNotificationsEnabled] = useState(false)
   const [showNotificationSetup, setShowNotificationSetup] = useState(false)
@@ -505,6 +507,19 @@ function App() {
           </div>
         </div>
       </AuroralBackground>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <LoginView
+        onLogin={(email, name) => {
+          setCurrentUserId(email)
+          setCurrentUserName(name)
+          setIsAuthenticated(true)
+          toast.success(`Welcome, ${name}!`)
+        }}
+      />
     )
   }
 
