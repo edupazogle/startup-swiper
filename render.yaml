@@ -26,7 +26,7 @@ services:
     runtime: node
     region: oregon
     buildCommand: "cd app/startup-swipe-schedu && npm install && npm run build"
-    startCommand: "cd app/startup-swipe-schedu && npx vite preview --host 0.0.0.0 --port $PORT"
+    startCommand: "cd app/startup-swipe-schedu && node server.js"
     envVars:
       - key: VITE_API_URL
         value: https://startup-swiper-1.onrender.com

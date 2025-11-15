@@ -584,7 +584,7 @@ def can_be_axa_provider(startup: Dict, use_llm: bool = False) -> Tuple[bool, str
     """
     Check if a startup can potentially be used as a provider for AXA
     
-    Uses LLM assessment for intelligent evaluation rather than keyword matching.
+    Uses NVIDIA NIM (DeepSeek-R1) for intelligent B2B viability assessment.
     
     Returns:
         (is_viable_provider, reason)
@@ -593,127 +593,238 @@ def can_be_axa_provider(startup: Dict, use_llm: bool = False) -> Tuple[bool, str
     description = startup.get('company_description', startup.get('description', ''))
     industry = startup.get('primary_industry', '')
     business_types = startup.get('business_types', '')
+    topics = startup.get('topics', [])
+    website = startup.get('website', '')
+    
+    # First pass: Hard exclusions (obvious B2C/consumer)
+    search_text = f"{company_name} {description} {industry} {' '.join(topics)}".lower()
+    
+    hard_exclusions = [
+        'dating app', 'dating platform', 'matchmaking app',
+        'food delivery', 'restaurant delivery', 'meal delivery',
+        'social network', 'social media platform', 'influencer platform',
+        'consumer marketplace', 'e-commerce platform', 'online shopping',
+        'mobile game', 'gaming platform', 'game developer',
+        'music streaming', 'video streaming', 'entertainment platform',
+        'consumer app', 'b2c only', 'direct to consumer only'
+    ]
+    
+    for exclusion in hard_exclusions:
+        if exclusion in search_text:
+            return False, f"Hard exclusion: {exclusion}"
     
     if not use_llm or not HAS_LLM:
-        # Basic viability check without LLM
-        # Only do minimal filtering - let LLM make the real decision
-        return True, None
-    
-    # Use LLM to assess if startup can be AXA provider
-    try:
-        assessment_prompt = f"""
-You are evaluating whether a startup can be a viable provider/vendor for AXA (a major insurance and reinsurance company).
-
-STARTUP DETAILS:
-Name: {company_name}
-Industry: {industry}
-Business Types: {business_types}
-Description: {description[:500]}
-
-EVALUATION CRITERIA:
-AXA may use startups as providers if they can:
-1. Provide software/services to AXA's enterprise operations
-2. Improve AXA's internal processes, risk assessment, or customer service
-3. Develop innovative solutions in insurance, data, AI, automation
-4. Enable AXA's digital transformation
-5. Enhance operational efficiency or security
-
-Companies NOT suitable as providers:
-- Pure consumer apps (unless APIs available for B2B)
-- Startups with no clear business model
-- Startups too early stage with no revenue/funding
-- Companies with no enterprise deployment experience
-
-ASSESSMENT TASK:
-Based on the startup description and details, determine if this startup COULD potentially be a viable provider for AXA.
-
-Respond with:
-1. VIABLE or NOT_VIABLE
-2. Confidence (0-100)
-3. Brief explanation (1-2 sentences)
-
-Format your response exactly as:
-DECISION: [VIABLE or NOT_VIABLE]
-CONFIDENCE: [0-100]
-REASON: [explanation]
-"""
+        # Without LLM, use stricter keyword-based filtering
+        consumer_signals = ['b2c', 'consumer', 'marketplace', 'p2p', 'social']
+        consumer_count = sum(1 for sig in consumer_signals if sig in search_text)
         
+        enterprise_signals = ['enterprise', 'b2b', 'saas', 'platform', 'api', 'infrastructure', 
+                             'automation', 'analytics', 'security', 'compliance']
+        enterprise_count = sum(1 for sig in enterprise_signals if sig in search_text)
+        
+        # Must have enterprise signals or very few consumer signals
+        if enterprise_count >= 2 or consumer_count == 0:
+            return True, "Enterprise indicators present"
+        elif consumer_count >= 2 and enterprise_count == 0:
+            return False, "Strong consumer-only indicators"
+        
+        return True, "Neutral - needs LLM assessment"
+    
+    # Use NVIDIA NIM for intelligent assessment
+    try:
+        assessment_prompt = f"""You are an expert analyst evaluating B2B technology vendors for AXA, a global insurance corporation with 140,000+ employees.
+
+STARTUP TO EVALUATE:
+Company: {company_name}
+Industry: {industry}
+Business Model: {business_types}
+Description: {description[:600]}
+Website: {website}
+Topics: {', '.join(topics[:5]) if topics else 'N/A'}
+
+EVALUATION CRITERIA - Can this startup be an AXA vendor/provider?
+
+✅ VIABLE if the startup:
+• Provides B2B software, APIs, or enterprise services
+• Offers solutions for: insurance operations, risk assessment, claims processing, fraud detection
+• Enables: process automation, data analytics, AI/ML infrastructure, security, compliance
+• Delivers: developer tools, IT infrastructure, employee productivity, customer service platforms
+• Has: proven enterprise deployment, APIs for integration, B2B licensing model
+• Serves: insurance companies, financial services, large enterprises, regulated industries
+
+❌ NOT VIABLE if the startup:
+• Pure B2C consumer app with no B2B offering
+• Consumer marketplace, social network, dating app, food delivery
+• Gaming, entertainment, lifestyle consumer products
+• No clear path to enterprise adoption (mobile-only consumer apps)
+• Focused solely on individual consumers, not businesses
+• Geographic/market mismatch (e.g., China-only, consumer retail only)
+
+IMPORTANT NUANCES:
+• Healthtech can be viable IF it offers employer/payer solutions (not just direct-to-consumer wellness)
+• Fintech can be viable IF it provides B2B APIs/infrastructure (not just consumer banking apps)
+• Marketplace models can be viable IF they have B2B SaaS components
+• Developer tools, AI platforms, data services are almost always viable
+
+PROVIDE YOUR ASSESSMENT:
+1. DECISION: VIABLE or NOT_VIABLE
+2. CONFIDENCE: 0-100 (be decisive: >80 for clear cases)
+3. REASON: One clear sentence explaining why
+
+Format exactly as:
+DECISION: [VIABLE or NOT_VIABLE]
+CONFIDENCE: [number]
+REASON: [explanation]"""
+        
+        model = get_nvidia_nim_model() if is_nvidia_nim_configured() else None
         response = llm_completion_sync(
             [{"role": "user", "content": assessment_prompt}],
-            max_tokens=200
+            model=model,
+            max_tokens=300,
+            temperature=0.3  # Lower temperature for more consistent evaluation
         )
         
-        # Extract content from response object
+        # Extract and parse response
         if response and hasattr(response, 'choices'):
             message = response.choices[0].message
-            # DeepSeek-R1 returns reasoning_content separately from content
             content = message.content if message.content else ""
-            reasoning = message.reasoning_content if hasattr(message, 'reasoning_content') else ""
             
-            # If we only have reasoning, parse it for the decision
-            if not content and reasoning:
-                content = reasoning
-            elif not content:
-                # If no content at all, be lenient
-                return True, "LLM response parsing - allowing through"
+            # DeepSeek-R1 may put reasoning separate
+            if hasattr(message, 'reasoning_content') and message.reasoning_content:
+                reasoning = message.reasoning_content
+                # Use reasoning if content is empty
+                if not content:
+                    content = reasoning
+            
+            if not content:
+                logger.warning(f"Empty LLM response for {company_name} - defaulting to NOT VIABLE")
+                return False, "LLM returned empty response - conservative exclusion"
         else:
-            # If response doesn't have expected structure, be lenient
-            return True, "LLM response parsing - allowing through"
+            logger.warning(f"Invalid LLM response structure for {company_name}")
+            return False, "LLM error - conservative exclusion"
         
-        # Parse response
-        lines = content.strip().split('\n')
+        # Parse structured response
+        lines = [line.strip() for line in content.strip().split('\n') if line.strip()]
         decision = None
-        confidence = 50
+        confidence = 0
         reason = "LLM assessment"
         
         for line in lines:
-            if line.startswith('DECISION:'):
-                decision = 'VIABLE' in line.upper()
-            elif line.startswith('CONFIDENCE:'):
+            if 'DECISION:' in line.upper():
+                decision_text = line.split(':', 1)[1].strip().upper()
+                decision = 'VIABLE' in decision_text and 'NOT' not in decision_text
+            elif 'CONFIDENCE:' in line.upper():
                 try:
-                    confidence = int(line.split(':')[1].strip())
-                except:
-                    pass
-            elif line.startswith('REASON:'):
+                    conf_str = line.split(':', 1)[1].strip()
+                    # Extract just the number
+                    confidence = int(''.join(filter(str.isdigit, conf_str)))
+                except Exception as e:
+                    logger.debug(f"Failed to parse confidence: {e}")
+                    confidence = 50
+            elif 'REASON:' in line.upper():
                 reason = line.split(':', 1)[1].strip()
         
-        # If confidence is low, be lenient (let it through)
+        # Validation and decision logic
         if decision is None:
-            return True, "LLM unable to assess definitively - allowing through"
+            # Try to infer from content
+            content_lower = content.lower()
+            if 'not viable' in content_lower or 'not_viable' in content_lower:
+                decision = False
+                confidence = 75
+            elif 'viable' in content_lower:
+                decision = True
+                confidence = 70
+            else:
+                # No clear decision - be conservative
+                logger.warning(f"Could not parse decision for {company_name}, defaulting to NOT VIABLE")
+                return False, f"LLM unclear - excluded for safety. Response: {content[:100]}"
         
-        # Consider viable if LLM thinks so OR if confidence is low (uncertain)
-        if not decision and confidence > 70:
+        # Apply confidence thresholds
+        if decision and confidence >= 70:
+            return True, reason
+        elif not decision and confidence >= 70:
             return False, reason
-        
-        return True, reason
+        elif not decision and confidence >= 50:
+            # Moderately confident NOT viable - exclude
+            return False, f"{reason} (moderate confidence exclusion)"
+        elif decision and confidence < 50:
+            # Low confidence viable - be conservative, exclude
+            return False, f"Low confidence match - {reason}"
+        else:
+            # Ambiguous - default to exclusion for quality
+            return False, f"Uncertain assessment (conf={confidence}) - {reason}"
         
     except Exception as e:
-        logger.debug(f"LLM provider assessment failed for {company_name}: {e}")
-        # Default to allowing it through if LLM fails
-        return True, "LLM assessment failed - allowing through"
+        logger.warning(f"LLM provider assessment failed for {company_name}: {e}")
+        # On error, be conservative - exclude
+        return False, f"LLM assessment error - excluded for quality control"
 
 
 def should_exclude(startup: Dict, use_llm: bool = False) -> bool:
-    """Check if startup should be excluded
+    """Check if startup should be excluded from AXA provider consideration
     
     Args:
         startup: Startup data
-        use_llm: Whether to use LLM for provider assessment
+        use_llm: Whether to use LLM for provider assessment (recommended)
+    
+    Returns:
+        True if startup should be excluded, False otherwise
     """
     search_text = get_search_text(startup).lower()
+    company_name = startup.get('company_name', '').lower()
     
-    # Check standard exclusions (only hardcoded B2C/consumer)
-    basic_exclusions = [
-        'b2c', 'consumer app', 'gaming', 'game', 'entertainment',
-        'food delivery', 'dating app', 'social network game'
+    # Hard exclusions - obvious consumer/B2C companies
+    critical_exclusions = [
+        # Consumer apps
+        'b2c app', 'consumer app only', 'mobile app for consumers',
+        # Social & Dating
+        'dating app', 'dating platform', 'matchmaking service',
+        'social network', 'social media app', 'influencer platform',
+        # Food & Delivery
+        'food delivery app', 'restaurant delivery', 'meal kit delivery',
+        'grocery delivery app', 'food ordering app',
+        # Entertainment & Gaming
+        'mobile game', 'gaming app', 'video game', 'esports platform',
+        'streaming service', 'music app', 'video platform',
+        # E-commerce & Marketplaces (pure consumer)
+        'consumer marketplace', 'online shopping app', 'retail app',
+        'fashion marketplace', 'beauty products'
     ]
-    for keyword in basic_exclusions:
-        if keyword in search_text:
+    
+    for exclusion in critical_exclusions:
+        if exclusion in search_text or exclusion in company_name:
+            logger.debug(f"Hard exclusion: {startup.get('company_name')} - {exclusion}")
             return True
     
-    # Use LLM to assess if can be provider (for everything else)
-    can_be_provider, _ = can_be_axa_provider(startup, use_llm=use_llm)
-    return not can_be_provider
+    # Use LLM for intelligent provider viability assessment
+    if use_llm:
+        can_be_provider, reason = can_be_axa_provider(startup, use_llm=True)
+        if not can_be_provider:
+            logger.debug(f"LLM exclusion: {startup.get('company_name')} - {reason}")
+            return True
+        return False
+    else:
+        # Without LLM, use more conservative keyword-based exclusion
+        consumer_only_indicators = [
+            'b2c', 'consumer', 'marketplace', 'retail', 'shopping',
+            'gaming', 'entertainment', 'social network', 'dating'
+        ]
+        
+        enterprise_indicators = [
+            'b2b', 'enterprise', 'saas', 'platform', 'api',
+            'infrastructure', 'developer', 'automation', 'analytics'
+        ]
+        
+        consumer_count = sum(1 for ind in consumer_only_indicators if ind in search_text)
+        enterprise_count = sum(1 for ind in enterprise_indicators if ind in search_text)
+        
+        # Exclude if strong consumer signals and no enterprise signals
+        if consumer_count >= 3 and enterprise_count == 0:
+            logger.debug(f"Keyword exclusion: {startup.get('company_name')} - Strong consumer indicators")
+            return True
+        
+        # Don't exclude - let it through for manual review or LLM analysis later
+        return False
 
 
 # ============================================================================
