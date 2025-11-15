@@ -503,8 +503,40 @@ Please provide a helpful and comprehensive answer based on the available informa
             return "attendee_info"
         elif any(word in question_lower for word in ["vote", "interest"]):
             return "voting_info"
+        elif any(word in question_lower for word in ["linkedin", "post", "write"]):
+            return "linkedin_post"
         else:
             return "general"
+    
+    async def generate_linkedin_post(
+        self,
+        topic: str,
+        key_points: Optional[List[str]] = None,
+        people_companies_to_tag: Optional[List[str]] = None,
+        call_to_action: Optional[str] = None,
+        link: Optional[str] = None
+    ) -> str:
+        """
+        Generate a professional LinkedIn post with VC partner persona
+        
+        Args:
+            topic: Main topic for the post
+            key_points: List of key points to include (optional)
+            people_companies_to_tag: List of people/companies to tag (optional)
+            call_to_action: Custom CTA for the post (optional)
+            link: Link to include in the post (optional)
+        
+        Returns:
+            Generated LinkedIn post
+        """
+        generator = LinkedInPostGenerator()
+        return await generator.generate_post(
+            topic=topic,
+            key_points=key_points,
+            people_companies_to_tag=people_companies_to_tag,
+            call_to_action=call_to_action,
+            link=link
+        )
     
     def _is_likely_person_name(self, question: str) -> bool:
         """
@@ -661,7 +693,14 @@ class MCPEnhancedAIConcierge(AIConcierge):
         Returns:
             AI-generated answer with potentially tool-enhanced context
         """
-        # Check if this looks like a person name first (prioritize attendee search)
+        # Check if this is a LinkedIn post request first
+        question_lower = question.lower()
+        if any(word in question_lower for word in ["linkedin post", "write a post", "generate post", "create post"]):
+            # Extract topic from the question
+            topic = question
+            return await self.generate_linkedin_post(topic)
+        
+        # Check if this looks like a person name (prioritize attendee search)
         is_likely_person_name = self._is_likely_person_name(question)
         
         if is_likely_person_name:
@@ -789,6 +828,102 @@ Guidelines:
         except Exception as e:
             logger.error(f"Error in conversational search: {e}")
             return f"Error performing search: {str(e)}"
+
+
+class LinkedInPostGenerator:
+    """
+    Generate professional LinkedIn posts with a VC partner persona
+    Similar to Frank DESVIGNES - expert in AI, Blockchain, Web3, and Finance
+    """
+    
+    def __init__(self):
+        self.persona_prompt = """You are a seasoned Venture Capital Founding Partner and thought leader, similar to Frank DESVIGNES. 
+Your expertise is at the intersection of AI, Blockchain, Web3, and Finance.
+
+You have been invited to write a LinkedIn post based on the following information provided by the user.
+
+Style and Tone Guidelines:
+* Persona: You are an enthusiastic, authoritative, and globally-connected VC partner.
+* Tone: Confident, optimistic, collaborative, and forward-looking.
+* Language: Professional but energetic. Use emojis strategically to add personality and break up text.
+
+Structure to follow:
+1. Hook: Start with 1-2 relevant emojis and a strong, engaging opening sentence (a "Breaking News" tag, a quote, or a personal observation).
+2. Context/Personal Link: Briefly explain why this topic is relevant to you or your firm.
+3. Body: Break down the main points into a digestible list (using bullet points like 🔹, 👉, 🔑, or numbered lists). 
+   This section should explain the "what," "why," and "how."
+4. Evidence (If applicable): Include 1-2 specific data points, statistics, or quotes to support your points.
+5. Tagging: Tag relevant companies and individuals involved.
+6. Call to Action (CTA): End with a clear action for your audience. 
+   This could be a question to drive engagement or a link to learn more.
+7. Hashtags: Conclude with 5-8 relevant hashtags, including broad topics (#AI, #VentureCapital, #Blockchain) 
+   and specifics related to your post.
+
+Generate a compelling LinkedIn post now following this structure."""
+    
+    async def generate_post(
+        self,
+        topic: str,
+        key_points: Optional[List[str]] = None,
+        people_companies_to_tag: Optional[List[str]] = None,
+        call_to_action: Optional[str] = None,
+        link: Optional[str] = None
+    ) -> str:
+        """
+        Generate a LinkedIn post with the VC partner persona
+        
+        Args:
+            topic: Main topic for the post
+            key_points: List of key points to include (optional)
+            people_companies_to_tag: List of people/companies to tag (optional)
+            call_to_action: Custom CTA for the post (optional)
+            link: Link to include in the post (optional)
+        
+        Returns:
+            Generated LinkedIn post
+        """
+        # Build the user prompt with provided inputs
+        prompt_parts = [
+            f"Topic: {topic}\n"
+        ]
+        
+        if key_points:
+            prompt_parts.append(f"Key Points to Include:\n" + 
+                              "\n".join([f"- {point}" for point in key_points]) + "\n")
+        
+        if people_companies_to_tag:
+            prompt_parts.append(f"People/Companies to Tag:\n" +
+                              "\n".join([f"- {tag}" for tag in people_companies_to_tag]) + "\n")
+        
+        if call_to_action:
+            prompt_parts.append(f"Desired Call to Action: {call_to_action}\n")
+        
+        if link:
+            prompt_parts.append(f"Link to Include: {link}\n")
+        
+        user_prompt = "".join(prompt_parts)
+        
+        messages = [
+            {"role": "system", "content": self.persona_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
+        
+        try:
+            response = await llm_completion(
+                messages=messages,
+                use_nvidia_nim=True,
+                temperature=0.8,  # Slightly higher for more creative writing
+                max_tokens=2500
+            )
+            
+            if hasattr(response, 'choices') and len(response.choices) > 0:
+                return response.choices[0].message.content
+            
+            return str(response)
+        
+        except Exception as e:
+            logger.error(f"Error generating LinkedIn post: {e}")
+            return f"Error generating LinkedIn post: {str(e)}"
 
 
 # Helper functions

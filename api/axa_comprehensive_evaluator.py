@@ -624,7 +624,14 @@ Provide ONLY the JSON response, no additional text.
         category_type: CategoryType
     ) -> CategoryMatch:
         """Synchronous wrapper for category evaluation"""
-        return self._evaluate_category_async(startup, category_type)
+        # Run async function in sync context
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        
+        return loop.run_until_complete(self._evaluate_category_async(startup, category_type))
     
     def evaluate_startup(
         self,

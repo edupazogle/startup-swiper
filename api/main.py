@@ -506,6 +506,13 @@ class DirectionsRequest(BaseModel):
     destination: str
     mode: Optional[str] = "walking"
 
+class LinkedInPostRequest(BaseModel):
+    topic: str
+    key_points: Optional[List[str]] = None
+    people_companies_to_tag: Optional[List[str]] = None
+    call_to_action: Optional[str] = None
+    link: Optional[str] = None
+
 @app.post("/concierge/ask", response_model=ConciergeResponse)
 async def ask_concierge(request: ConciergeRequest, db: Session = Depends(get_db)):
     """
@@ -584,6 +591,38 @@ async def get_directions(request: DirectionsRequest, db: Session = Depends(get_d
     )
     
     return ConciergeResponse(answer=directions, question_type="directions")
+
+@app.post("/concierge/generate-linkedin-post", response_model=ConciergeResponse)
+async def generate_linkedin_post(request: LinkedInPostRequest, db: Session = Depends(get_db)):
+    """
+    Generate a professional LinkedIn post with VC partner persona
+    
+    Write compelling LinkedIn posts as a seasoned Venture Capital Founding Partner
+    with expertise in AI, Blockchain, Web3, and Finance.
+    
+    Request body:
+    {
+        "topic": "The announcement of our new AI-focused investment fund",
+        "key_points": [
+            "Focus on AI infrastructure",
+            "Series A to Series C stage startups",
+            "European market emphasis"
+        ],
+        "people_companies_to_tag": ["@VCFirm", "@CoFounder"],
+        "call_to_action": "What are your thoughts on AI investing trends?",
+        "link": "https://example.com/report"
+    }
+    """
+    concierge = create_concierge(db)
+    post = await concierge.generate_linkedin_post(
+        topic=request.topic,
+        key_points=request.key_points,
+        people_companies_to_tag=request.people_companies_to_tag,
+        call_to_action=request.call_to_action,
+        link=request.link
+    )
+    
+    return ConciergeResponse(answer=post, question_type="linkedin_post")
 
 @app.get("/concierge/search-startups")
 async def search_startups(query: str, limit: int = 10, db: Session = Depends(get_db)):
