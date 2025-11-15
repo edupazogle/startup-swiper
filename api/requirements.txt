@@ -10,8 +10,8 @@ sqlalchemy==2.0.25
 alembic==1.13.1
 
 # Data Validation
-pydantic==2.5.3
-pydantic[email]==2.5.3
+pydantic>=2.11.0
+pydantic[email]>=2.11.0
 
 # Authentication & Security
 bcrypt==4.0.1
