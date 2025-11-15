@@ -144,7 +144,7 @@ def text_search(text: str, keywords: List[str]) -> int:
 
 def matches_rule_1(startup: Dict) -> Tuple[bool, int, List[str]]:
     """Rule 1: Agentic Platform Enablers"""
-    search_text = f"{startup.get('description', '')} {startup.get('shortDescription', '')} {' '.join(startup.get('topics', []))}"
+    search_text = f"{startup.get('company_description', '')} {startup.get('shortDescription', '')} {' '.join(startup.get('topics', []) or [])}"
     
     primary_matches = text_search(search_text, RULE_1_KEYWORDS['primary'])
     secondary_matches = text_search(search_text, RULE_1_KEYWORDS['secondary'])
@@ -164,7 +164,7 @@ def matches_rule_1(startup: Dict) -> Tuple[bool, int, List[str]]:
 
 def matches_rule_2(startup: Dict) -> Tuple[bool, int, List[str]]:
     """Rule 2: Agentic Service Providers (Non-Insurance)"""
-    search_text = f"{startup.get('description', '')} {startup.get('shortDescription', '')} {' '.join(startup.get('topics', []))}"
+    search_text = f"{startup.get('company_description', '')} {startup.get('shortDescription', '')} {' '.join(startup.get('topics', []) or [])}"
     
     # Exclude if insurance-specific
     if text_search(search_text, ['insurance', 'insurtech', 'claims', 'underwriting']) > 0:
@@ -187,7 +187,7 @@ def matches_rule_2(startup: Dict) -> Tuple[bool, int, List[str]]:
 
 def matches_rule_3(startup: Dict) -> Tuple[bool, int, List[str]]:
     """Rule 3: Insurance-Specific Solutions"""
-    search_text = f"{startup.get('description', '')} {startup.get('shortDescription', '')} {' '.join(startup.get('topics', []))}"
+    search_text = f"{startup.get('company_description', '')} {startup.get('shortDescription', '')} {' '.join(startup.get('topics', []) or [])}"
     
     primary_matches = text_search(search_text, RULE_3_KEYWORDS['primary'])
     secondary_matches = text_search(search_text, RULE_3_KEYWORDS['secondary'])
@@ -206,7 +206,7 @@ def matches_rule_3(startup: Dict) -> Tuple[bool, int, List[str]]:
 
 def matches_rule_4(startup: Dict) -> Tuple[bool, int, List[str]]:
     """Rule 4: Health Innovations (Insurance Applicable)"""
-    search_text = f"{startup.get('description', '')} {startup.get('shortDescription', '')} {' '.join(startup.get('topics', []))}"
+    search_text = f"{startup.get('company_description', '')} {startup.get('shortDescription', '')} {' '.join(startup.get('topics', []) or [])}"
     
     primary_matches = text_search(search_text, RULE_4_KEYWORDS['primary'])
     secondary_matches = text_search(search_text, RULE_4_KEYWORDS['secondary'])
@@ -225,7 +225,7 @@ def matches_rule_4(startup: Dict) -> Tuple[bool, int, List[str]]:
 
 def matches_rule_5(startup: Dict) -> Tuple[bool, int, List[str]]:
     """Rule 5: Development & Legacy Modernization"""
-    search_text = f"{startup.get('description', '')} {startup.get('shortDescription', '')} {' '.join(startup.get('topics', []))}"
+    search_text = f"{startup.get('company_description', '')} {startup.get('shortDescription', '')} {' '.join(startup.get('topics', []) or [])}"
     
     primary_matches = text_search(search_text, RULE_5_KEYWORDS['primary'])
     secondary_matches = text_search(search_text, RULE_5_KEYWORDS['secondary'])
@@ -244,7 +244,7 @@ def matches_rule_5(startup: Dict) -> Tuple[bool, int, List[str]]:
 
 def should_exclude(startup: Dict) -> bool:
     """Check if startup should be excluded"""
-    search_text = f"{startup.get('description', '')} {startup.get('shortDescription', '')}".lower()
+    search_text = f"{startup.get('company_description', '')} {startup.get('shortDescription', '')}".lower()
     
     # Check exclusion keywords
     for keyword in EXCLUSION_KEYWORDS:
@@ -256,7 +256,7 @@ def should_exclude(startup: Dict) -> bool:
 
 def calculate_traction_score(startup: Dict) -> int:
     """Calculate corporate traction score (0-25 points)"""
-    description = f"{startup.get('description', '')} {startup.get('shortDescription', '')}".lower()
+    description = f"{startup.get('company_description', '')} {startup.get('shortDescription', '')}".lower()
     
     # Look for indicators of corporate customers
     enterprise_indicators = [
@@ -280,7 +280,7 @@ def calculate_traction_score(startup: Dict) -> int:
 
 def calculate_innovation_score(startup: Dict) -> int:
     """Calculate innovation score (0-15 points)"""
-    description = f"{startup.get('description', '')} {startup.get('shortDescription', '')}".lower()
+    description = f"{startup.get('company_description', '')} {startup.get('shortDescription', '')}".lower()
     
     innovation_keywords = [
         'ai', 'artificial intelligence', 'machine learning', 'deep learning',
@@ -305,11 +305,12 @@ def calculate_innovation_score(startup: Dict) -> int:
 def calculate_stage_score(startup: Dict) -> int:
     """Calculate company stage score (0-10 points)"""
     maturity = str(startup.get('maturity', '')).lower()
+    company_type = str(startup.get('company_type', '')).lower()
     employees = startup.get('employees', '')
     
-    if 'scaleup' in maturity:
+    if 'scaleup' in maturity or 'scaleup' in company_type:
         return 10
-    elif 'startup' in maturity:
+    elif 'startup' in maturity or 'startup' in company_type:
         return 8
     elif 'validating' in maturity or 'deploying' in maturity:
         return 6
@@ -323,7 +324,7 @@ def calculate_stage_score(startup: Dict) -> int:
 
 def calculate_geo_score(startup: Dict) -> int:
     """Calculate geographic advantage score (0-5 points)"""
-    country = str(startup.get('billingCountry', '')).upper()
+    country = str(startup.get('company_country', '') or startup.get('billingCountry', '')).upper()
     
     # European countries
     eu_countries = ['FI', 'FINLAND', 'DE', 'GERMANY', 'FR', 'FRANCE', 'GB', 'UK', 
@@ -554,7 +555,8 @@ def main():
             score = s['axa_scoring']['total_score']
             tier = s['axa_scoring']['tier']
             rules = ', '.join([r.split(':')[0] for r in s['axa_scoring']['matched_rules']])
-            print(f"  {i}. {s['name']} (Score: {score}, {rules})")
+            company_name = s.get('company_name') or s.get('name', 'Unknown')
+            print(f"  {i}. {company_name} (Score: {score}, {rules})")
         
         print("="*70 + "\n")
     
@@ -613,9 +615,9 @@ def main():
             
             for s in filtered:
                 writer.writerow({
-                    'name': s['name'],
+                    'name': s.get('company_name', s.get('name', '')),
                     'website': s.get('website', ''),
-                    'country': s.get('billingCountry', ''),
+                    'country': s.get('company_country', s.get('billingCountry', '')),
                     'maturity': s.get('maturity', ''),
                     'score': s['axa_scoring']['total_score'],
                     'tier': s['axa_scoring']['tier'],

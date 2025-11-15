@@ -6,11 +6,32 @@ from pydantic import BaseModel
 from datetime import timedelta, datetime
 import sys
 from pathlib import Path
+import logging
+import json
+import asyncio
+from dotenv import load_dotenv
+
+# Load environment variables FIRST before any other imports
+env_paths = [
+    Path(__file__).parent / ".env",
+    Path(__file__).parent.parent / "app" / "startup-swipe-schedu" / ".env",
+    Path(__file__).parent.parent / ".env",
+]
+for env_path in env_paths:
+    if env_path.exists():
+        load_dotenv(env_path, override=True)
+        print(f"✓ Main: Loaded environment from: {env_path}")
+        break
+
+# Setup logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 # Add api directory to path
 sys.path.insert(0, str(Path(__file__).parent))
 
 import models
+import models_startup
 import schemas
 import crud
 from database import engine, get_db
@@ -24,38 +45,54 @@ from auth import (
 )
 from ai_concierge import create_concierge
 # from notification_service import NotificationService, notification_worker
-import asyncio
-import json
 from pathlib import Path
 from startup_prioritization import prioritizer
 from meeting_feedback_llm import feedback_assistant
+import db_queries
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
+models_startup.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Startup Swiper API", version="1.0.0")
 
-# Load startup data - try multiple paths
+# CORS middleware - add FIRST before any routes
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Legacy support - will be removed after migration
 STARTUPS_FILE = Path(__file__).parent / "startups_data.json"
 BACKUP_FILE = Path(__file__).parent.parent / "docs/architecture/ddbb/slush2_extracted.json"
 ALL_STARTUPS = []
 
+# Load from DB function
+def get_all_startups_from_db(db: Session, skip: int = 0, limit: int = 10000):
+    """Get startups from database instead of JSON."""
+    return db_queries.get_all_startups(db, skip=skip, limit=limit)
+
 try:
-    # Try primary file first
+    # Try primary file first (legacy fallback)
     if STARTUPS_FILE.exists():
         with open(STARTUPS_FILE, "r") as f:
             ALL_STARTUPS = json.load(f)
-        print(f"✓ Loaded {len(ALL_STARTUPS)} startups from {STARTUPS_FILE.name}")
+        print(f"⚠️  Legacy: Loaded {len(ALL_STARTUPS)} startups from {STARTUPS_FILE.name}")
+        print(f"💡 Switch to database with db_queries.get_all_startups()")
     # Fallback to backup location
     elif BACKUP_FILE.exists():
         with open(BACKUP_FILE, "r") as f:
             ALL_STARTUPS = json.load(f)
-        print(f"✓ Loaded {len(ALL_STARTUPS)} startups from {BACKUP_FILE.name}")
+        print(f"⚠️  Legacy: Loaded {len(ALL_STARTUPS)} startups from {BACKUP_FILE.name}")
+        print(f"💡 Switch to database with db_queries.get_all_startups()")
     else:
-        print(f"⚠️  Warning: Could not find startups file in {STARTUPS_FILE} or {BACKUP_FILE}")
+        print(f"✓ Using database for startup data (no legacy JSON files)")
         ALL_STARTUPS = []
 except Exception as e:
-    print(f"⚠️  Warning: Could not load startups data: {e}")
+    print(f"⚠️  Warning: Could not load legacy startups data: {e}")
     ALL_STARTUPS = []
 
 # Initialize notification service
@@ -66,15 +103,6 @@ except Exception as e:
 # async def startup_event():
 #     """Start background tasks on app startup"""
 #     asyncio.create_task(notification_worker())
-
-# CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # LLM Request/Response Models
 class LLMRequest(BaseModel):
@@ -242,9 +270,10 @@ async def update_user_endpoint(
 def create_calendar_event(event: schemas.CalendarEventCreate, db: Session = Depends(get_db)):
     return crud.create_calendar_event(db=db, event=event)
 
-@app.get("/calendar-events/", response_model=List[schemas.CalendarEvent])
+@app.get("/calendar-events/")
 def read_calendar_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    events = crud.get_calendar_events(db, skip=skip, limit=limit)
+    """Get calendar events from normalized database"""
+    events = db_queries.get_calendar_events(db, skip=skip, limit=limit)
     return events
 
 @app.get("/calendar-events/{event_id}", response_model=schemas.CalendarEvent)
@@ -303,6 +332,13 @@ def read_votes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 @app.get("/votes/startup/{startup_id}", response_model=List[schemas.Vote])
 def read_votes_by_startup(startup_id: str, db: Session = Depends(get_db)):
     return crud.get_votes_by_startup(db, startup_id=startup_id)
+
+@app.delete("/votes/{startup_id}/{user_id}")
+def delete_vote(startup_id: str, user_id: str, db: Session = Depends(get_db)):
+    success = crud.delete_vote(db, startup_id=startup_id, user_id=user_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Vote not found")
+    return {"status": "success", "message": "Vote deleted"}
 
 # Auroral Info endpoints
 @app.post("/auroral-info/", response_model=schemas.AuroralInfo)
@@ -429,14 +465,39 @@ class DirectionsRequest(BaseModel):
 async def ask_concierge(request: ConciergeRequest, db: Session = Depends(get_db)):
     """
     Ask the AI Concierge any question about:
-    - Startups (database + CB Insights)
+    - Startups (database + CB Insights) - uses MCP for database queries
     - Events and schedules
     - Meetings and participants
     - Directions and locations
     - Attendees
+    
+    Uses NVIDIA NIM (DeepSeek-R1) + MCP for intelligent responses
     """
     concierge = create_concierge(db)
-    answer = await concierge.answer_question(request.question, request.user_context)
+    # Use tool-enhanced answer with NVIDIA NIM and MCP
+    answer = await concierge.answer_question_with_tools(request.question, request.user_context, use_nvidia_nim=True)
+    question_type = concierge._classify_question(request.question)
+    
+    return ConciergeResponse(answer=answer, question_type=question_type)
+
+@app.post("/concierge/ask-with-tools", response_model=ConciergeResponse)
+async def ask_concierge_with_explicit_tools(request: ConciergeRequest, db: Session = Depends(get_db)):
+    """
+    Ask the AI Concierge with explicit MCP tool support
+    
+    This endpoint explicitly enables:
+    - NVIDIA NIM (DeepSeek-R1) for advanced reasoning
+    - MCP (Model Context Protocol) for database queries
+    - Tool calling for precise startup information retrieval
+    
+    Best for startup-specific questions like:
+    - "Find startups in Finland with Series A funding"
+    - "Which startups are in the AI space?"
+    - "Show me companies founded after 2020"
+    """
+    concierge = create_concierge(db)
+    # Explicitly use tool-enhanced answer with maximum MCP integration
+    answer = await concierge.answer_question_with_tools(request.question, request.user_context, use_nvidia_nim=True)
     question_type = concierge._classify_question(request.question)
     
     return ConciergeResponse(answer=answer, question_type=question_type)
@@ -505,14 +566,17 @@ class PrioritizedStartupsRequest(BaseModel):
     limit: Optional[int] = 50
 
 @app.get("/startups/all")
-def get_all_startups(skip: int = 0, limit: int = 100):
+def get_all_startups(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
-    Get all startups without prioritization
+    Get all startups from database
     """
+    startups = db_queries.get_all_startups(db, skip=skip, limit=limit)
+    total = db_queries.count_startups(db)
+    
     return {
-        "total": len(ALL_STARTUPS),
-        "count": min(limit, len(ALL_STARTUPS) - skip),
-        "startups": ALL_STARTUPS[skip:skip+limit]
+        "total": total,
+        "count": len(startups),
+        "startups": startups
     }
 
 @app.get("/startups/prioritized")
@@ -536,6 +600,9 @@ def get_prioritized_startups(
         limit: Maximum number of startups to return
         min_score: Minimum score threshold (filters out very low-relevance startups)
     """
+    # Get all startups from DB
+    all_startups = db_queries.get_all_startups(db, skip=0, limit=10000)
+    
     # Get user's voting history if user_id provided
     user_votes = []
     if user_id:
@@ -544,14 +611,14 @@ def get_prioritized_startups(
 
     # Get prioritized list
     prioritized = prioritizer.prioritize_startups(
-        ALL_STARTUPS,
+        all_startups,
         user_votes=[{"startupId": v.startupId, "interested": v.interested} for v in user_votes],
         limit=limit,
         min_score=min_score
     )
 
     return {
-        "total": len(ALL_STARTUPS),
+        "total": len(all_startups),
         "prioritized_count": len(prioritized),
         "user_id": user_id,
         "personalized": user_id is not None and len(user_votes) > 0,
@@ -559,13 +626,82 @@ def get_prioritized_startups(
         "startups": prioritized
     }
 
+@app.get("/startups/axa/filtered")
+def get_axa_filtered_startups(
+    limit: int = 300,
+    min_score: int = 25,
+    db: Session = Depends(get_db)
+):
+    """
+    Get AXA-filtered startups from enhanced filter with NVIDIA NIM validation.
+    
+    These startups have been filtered using:
+    - NVIDIA NIM (DeepSeek-R1) for semantic rule validation
+    - MCP server for database enrichment
+    - Advanced scoring prioritizing funding and company size
+    
+    Args:
+        limit: Maximum number of startups to return (default: 300)
+        min_score: Minimum score threshold (default: 25)
+    
+    Returns:
+        Filtered startup list with AXA scoring breakdown
+    """
+    try:
+        # Load AXA filtered results from enhanced final JSON file (125 LLM-assessed candidates)
+        axa_results_path = Path(__file__).parent.parent / "downloads" / "axa_enhanced_final.json"
+        
+        if not axa_results_path.exists():
+            # Fallback: try alternative path
+            axa_results_path = Path(__file__).parent.parent / "downloads" / "axa_300startups.json"
+        
+        if not axa_results_path.exists():
+            # Final fallback: run filter if file doesn't exist
+            logger.warning(f"AXA results file not found")
+            logger.info("Falling back to standard prioritization")
+            return get_prioritized_startups(
+                user_id=None,
+                limit=limit,
+                min_score=float(min_score),
+                db=db
+            )
+        
+        with open(axa_results_path, 'r') as f:
+            axa_startups = json.load(f)
+        
+        # Limit results
+        results = axa_startups[:limit]
+        
+        # Count by tier
+        tier_counts = {}
+        for startup in results:
+            tier = startup.get('axa_scoring', {}).get('tier', 'Unknown')
+            tier_counts[tier] = tier_counts.get(tier, 0) + 1
+        
+        return {
+            "total": len(axa_startups),
+            "returned": len(results),
+            "min_score": min_score,
+            "source": "axa_enhanced_filter",
+            "processing": {
+                "method": "NVIDIA NIM (DeepSeek-R1) + Enhanced Scoring (125 LLM-assessed candidates)",
+                "llm_model": "deepseek-ai/deepseek-r1",
+                "validation": "Intelligent semantic assessment"
+            },
+            "tier_breakdown": tier_counts,
+            "startups": results
+        }
+    except Exception as e:
+        logger.error(f"Failed to load AXA filtered startups: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to load filtered startups: {str(e)}")
+
 @app.get("/startups/{startup_id}/insights")
-def get_startup_insights(startup_id: str):
+def get_startup_insights(startup_id: str, db: Session = Depends(get_db)):
     """
     Get categorization and priority insights for a specific startup
     """
-    # Find startup
-    startup = next((s for s in ALL_STARTUPS if str(s.get("id")) == startup_id or s.get("name") == startup_id), None)
+    # Find startup from DB
+    startup = db_queries.get_startup_by_id(db, startup_id)
 
     if not startup:
         raise HTTPException(status_code=404, detail="Startup not found")
@@ -574,25 +710,25 @@ def get_startup_insights(startup_id: str):
 
     return {
         "startup_id": startup_id,
-        "startup_name": startup.get("name"),
+        "startup_name": startup.get("company_name"),
         "insights": insights
     }
 
 @app.post("/startups/batch-insights")
-def get_batch_startup_insights(startup_ids: List[str]):
+def get_batch_startup_insights(startup_ids: List[str], db: Session = Depends(get_db)):
     """
     Get insights for multiple startups at once
     """
     results = []
 
     for startup_id in startup_ids:
-        startup = next((s for s in ALL_STARTUPS if str(s.get("id")) == startup_id or s.get("name") == startup_id), None)
+        startup = db_queries.get_startup_by_id(db, startup_id)
 
         if startup:
             insights = prioritizer.get_startup_insights(startup)
             results.append({
                 "startup_id": startup_id,
-                "startup_name": startup.get("name"),
+                "startup_name": startup.get("company_name"),
                 "insights": insights
             })
 
@@ -606,23 +742,29 @@ def get_batch_startup_insights(startup_ids: List[str]):
 def search_enriched_startups(
     query: str = "",
     enrichment_type: Optional[str] = None,
-    limit: int = 20
+    limit: int = 20,
+    db: Session = Depends(get_db)
 ):
     """
     Search enriched startups
     - enrichment_type: 'emails', 'social', 'tech_stack', 'team'
     """
+    # Get enriched startups from DB
+    enriched_startups = db_queries.get_enriched_startups(db, limit=1000)
+    
     results = []
     
-    for startup in ALL_STARTUPS:
-        if not startup.get('is_enriched'):
-            continue
-        
+    for startup in enriched_startups:
         # Filter by name/description match
-        if query and query.lower() not in startup.get('name', '').lower():
+        if query and query.lower() not in startup.get('company_name', '').lower():
             continue
         
-        enrichment = startup.get('enrichment', {})
+        # Parse enrichment JSON if string
+        enrichment = startup.get('enrichment')
+        if isinstance(enrichment, str):
+            enrichment = json.loads(enrichment) if enrichment else {}
+        elif enrichment is None:
+            enrichment = {}
         
         # Filter by enrichment type
         if enrichment_type == 'emails' and not enrichment.get('emails'):
@@ -636,7 +778,7 @@ def search_enriched_startups(
         
         results.append({
             "id": startup.get('id'),
-            "name": startup.get('name'),
+            "name": startup.get('company_name'),
             "website": startup.get('website'),
             "enrichment": enrichment,
             "enriched_date": startup.get('last_enriched_date')
@@ -653,12 +795,11 @@ def search_enriched_startups(
     }
 
 @app.get("/startups/{startup_id}/enrichment")
-def get_startup_enrichment(startup_id: str):
+def get_startup_enrichment(startup_id: str, db: Session = Depends(get_db)):
     """
     Get enrichment data for a specific startup
     """
-    startup = next((s for s in ALL_STARTUPS 
-                   if str(s.get('id')) == startup_id or s.get('name') == startup_id), None)
+    startup = db_queries.get_startup_by_id(db, startup_id)
     
     if not startup:
         raise HTTPException(status_code=404, detail="Startup not found")
@@ -669,11 +810,16 @@ def get_startup_enrichment(startup_id: str):
             detail="Startup enrichment not available"
         )
     
-    enrichment = startup.get('enrichment', {})
+    # Parse enrichment JSON if string
+    enrichment = startup.get('enrichment')
+    if isinstance(enrichment, str):
+        enrichment = json.loads(enrichment) if enrichment else {}
+    elif enrichment is None:
+        enrichment = {}
     
     return {
         "startup_id": startup.get('id'),
-        "startup_name": startup.get('name'),
+        "startup_name": startup.get('company_name'),
         "website": startup.get('website'),
         "enrichment": {
             "emails": enrichment.get('emails', []),
@@ -689,25 +835,11 @@ def get_startup_enrichment(startup_id: str):
     }
 
 @app.get("/startups/enrichment/stats")
-def get_enrichment_stats():
+def get_enrichment_stats(db: Session = Depends(get_db)):
     """
     Get enrichment statistics
     """
-    total = len(ALL_STARTUPS)
-    enriched = [s for s in ALL_STARTUPS if s.get('is_enriched')]
-    
-    stats = {
-        "total_startups": total,
-        "enriched_count": len(enriched),
-        "enrichment_percentage": (len(enriched) / total * 100) if total > 0 else 0,
-        "fields_available": {
-            "with_emails": sum(1 for s in enriched if s.get('enrichment', {}).get('emails')),
-            "with_phone": sum(1 for s in enriched if s.get('enrichment', {}).get('phone_numbers')),
-            "with_social": sum(1 for s in enriched if s.get('enrichment', {}).get('social_media')),
-            "with_tech_stack": sum(1 for s in enriched if s.get('enrichment', {}).get('tech_stack')),
-            "with_team": sum(1 for s in enriched if s.get('enrichment', {}).get('team_members'))
-        }
-    }
+    stats = db_queries.get_enrichment_stats(db)
     
     return stats
 
@@ -1167,6 +1299,82 @@ async def preview_feedback_questions(
 # async def schedule_meeting_notification(...)
 
 # Notifications will be enabled in a future update
+
+# ============================================
+# Utility Endpoints for Normalized DB
+# ============================================
+
+@app.get("/api/current-user")
+def get_current_user_api(db: Session = Depends(get_db)):
+    """Get current active user ID"""
+    user_id = db_queries.get_current_user(db)
+    return {"user_id": user_id}
+
+@app.post("/api/current-user")
+def set_current_user_api(user_id: str, db: Session = Depends(get_db)):
+    """Set current active user ID"""
+    db_queries.set_current_user(db, user_id)
+    return {"user_id": user_id, "status": "updated"}
+
+@app.get("/api/data-version")
+def get_data_version_api(db: Session = Depends(get_db)):
+    """Get current data version"""
+    version = db_queries.get_data_version(db)
+    return {"version": version}
+
+@app.get("/api/finished-users")
+def get_finished_users_api(db: Session = Depends(get_db)):
+    """Get list of users who completed swiper"""
+    users = db_queries.get_finished_users(db)
+    return {"finished_users": users, "count": len(users)}
+
+@app.post("/api/finished-users")
+def add_finished_user_api(user_id: str, db: Session = Depends(get_db)):
+    """Mark user as finished"""
+    db_queries.add_finished_user(db, user_id)
+    return {"user_id": user_id, "status": "marked_finished"}
+
+@app.get("/api/auroral-themes")
+def get_auroral_themes_api(db: Session = Depends(get_db)):
+    """Get auroral theme configuration with colors"""
+    themes = db_queries.get_auroral_themes(db)
+    return themes
+
+@app.get("/api/calendar-events/date-range")
+def get_events_by_date_api(
+    start_date: str,
+    end_date: str,
+    db: Session = Depends(get_db)
+):
+    """Get calendar events in date range (ISO format)"""
+    events = db_queries.get_events_by_date_range(db, start_date, end_date)
+    return {"events": events, "count": len(events)}
+
+@app.get("/api/ratings/average")
+def get_average_ratings_api(limit: int = 100, db: Session = Depends(get_db)):
+    """Get average ratings per startup"""
+    ratings = db_queries.get_average_ratings(db, limit=limit)
+    return {"ratings": ratings, "count": len(ratings)}
+
+@app.post("/api/ratings")
+def add_rating_api(
+    startup_id: str,
+    user_id: str,
+    rating: int,
+    db: Session = Depends(get_db)
+):
+    """Add or update startup rating (1-5)"""
+    if rating < 1 or rating > 5:
+        raise HTTPException(status_code=400, detail="Rating must be between 1 and 5")
+    
+    db_queries.add_startup_rating(db, startup_id, user_id, rating)
+    return {"startup_id": startup_id, "user_id": user_id, "rating": rating, "status": "saved"}
+
+@app.get("/api/messages/ai-assistant")
+def get_ai_assistant_messages_api(limit: int = 100, db: Session = Depends(get_db)):
+    """Get AI assistant chat messages"""
+    messages = db_queries.get_ai_assistant_messages(db, limit=limit)
+    return {"messages": messages, "count": len(messages)}
 
 if __name__ == "__main__":
     import uvicorn

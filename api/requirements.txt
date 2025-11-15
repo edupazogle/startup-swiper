@@ -24,8 +24,11 @@ litellm==1.44.28
 openai>=1.45.0
 anthropic>=0.18.1
 
+# Model Context Protocol (MCP) - For tool/database access
+mcp==1.21.1
+
 # HTTP Client
-httpx==0.26.0
+httpx>=0.26.0
 requests==2.31.0
 aiohttp==3.9.1
 

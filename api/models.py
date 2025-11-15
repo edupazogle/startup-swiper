@@ -19,13 +19,13 @@ class User(Base):
 class CalendarEvent(Base):
     __tablename__ = "calendar_events"
     
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String, primary_key=True, index=True)
     title = Column(String, nullable=False)
-    startTime = Column(DateTime, nullable=False)
-    endTime = Column(DateTime, nullable=False)
+    start_time = Column(DateTime, nullable=False)  # Changed from startTime
+    end_time = Column(DateTime, nullable=False)    # Changed from endTime
     type = Column(String, nullable=False)
     attendees = Column(JSON)
-    isSaved = Column(Boolean, default=False)
+    is_saved = Column(Boolean, default=False)       # Changed from isSaved
     link = Column(String)
     stage = Column(String)
     category = Column(String)
@@ -50,12 +50,12 @@ class Vote(Base):
     __tablename__ = "votes"
     
     id = Column(Integer, primary_key=True, index=True)
-    startupId = Column(String, nullable=False, index=True)
-    userId = Column(Integer, nullable=False)
-    userName = Column(String, nullable=False)
+    startupId = Column(String, name="startup_id", nullable=False, index=True)
+    userId = Column(Integer, name="user_id", nullable=False)
+    userName = Column(String, name="user_name", nullable=False)
     interested = Column(Boolean, nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
-    meetingScheduled = Column(Boolean, default=False)
+    meetingScheduled = Column(Boolean, name="meeting_scheduled", default=False)
 
 class AuroralInfo(Base):
     __tablename__ = "auroral_info"

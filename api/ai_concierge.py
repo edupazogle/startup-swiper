@@ -1,13 +1,18 @@
 """
-AI Concierge System
+AI Concierge System with MCP Integration
 
 Comprehensive AI assistant capable of answering questions about:
-- Startups (from database and CB Insights)
+- Startups (from database via MCP and CB Insights)
 - Events and schedules
 - Meetings and participants
 - Slush main events
 - Side events with directions
 - Attendees
+
+Features:
+- LiteLLM integration with NVIDIA NIM support
+- MCP (Model Context Protocol) for database queries
+- Tool calling support for LLM function calls
 """
 
 import json
@@ -17,11 +22,16 @@ from typing import Dict, Any, List, Optional, Tuple
 from sqlalchemy.orm import Session
 from datetime import datetime
 import re
+import asyncio
+import logging
 
 from llm_config import llm_completion, simple_llm_call_async
 from cb_insights_integration import cb_insights_api, cb_chat
 from google_maps_integration import google_maps_api
+from mcp_client import StartupDatabaseMCPTools
 import models
+
+logger = logging.getLogger(__name__)
 
 
 class StartupDataLoader:
@@ -348,8 +358,10 @@ Please provide a helpful and comprehensive answer based on the available informa
         try:
             response = await llm_completion(
                 messages=messages,
-                model="gpt-4o",
+                model=None,  # Use NVIDIA NIM default (DeepSeek-R1)
                 temperature=0.7,
+                max_tokens=2000,
+                use_nvidia_nim=True,
                 metadata={
                     "feature": "ai_concierge",
                     "question_type": self._classify_question(question)
@@ -468,7 +480,8 @@ Please provide a helpful and comprehensive answer based on the available informa
         response = await simple_llm_call_async(
             prompt=user_prompt,
             system_message=system_message,
-            model="gpt-4o-mini"
+            model=None,  # Use NVIDIA NIM default
+            use_nvidia_nim=True
         )
         
         return response
@@ -489,7 +502,197 @@ Please provide a helpful and comprehensive answer based on the available informa
         return formatted
 
 
-# Helper function to create concierge instance
-def create_concierge(db: Session) -> AIConcierge:
-    """Create an AI Concierge instance"""
-    return AIConcierge(db)
+class MCPEnhancedAIConcierge(AIConcierge):
+    """
+    AI Concierge with MCP (Model Context Protocol) integration
+    
+    This extends the base AIConcierge with:
+    - Tool calling support for LLM function calls
+    - MCP server integration for database queries
+    - Enhanced startup information retrieval
+    """
+    
+    def __init__(self, db: Session):
+        super().__init__(db)
+        self.mcp_tools = StartupDatabaseMCPTools()
+        self._init_mcp_tools()
+    
+    def _init_mcp_tools(self):
+        """Initialize MCP tools"""
+        logger.info("Initializing MCP tools for AI Concierge")
+        # Tools are now available through self.mcp_tools
+    
+    def get_tool_definitions(self) -> List[Dict[str, Any]]:
+        """
+        Get tool definitions for LLM function calling
+        
+        These tools allow the LLM to query the startup database
+        when answering questions.
+        
+        Returns:
+            List of tool definitions compatible with Claude, GPT-4, etc.
+        """
+        return self.mcp_tools.get_tools_for_llm()
+    
+    async def answer_question_with_tools(
+        self,
+        question: str,
+        user_context: Optional[Dict[str, Any]] = None,
+        use_nvidia_nim: bool = True
+    ) -> str:
+        """
+        Answer a question with tool calling support
+        
+        The LLM can call tools to extract startup information from the database
+        as needed during the conversation.
+        
+        Args:
+            question: User's question
+            user_context: Optional user context
+            use_nvidia_nim: Whether to use NVIDIA NIM for LLM calls
+        
+        Returns:
+            AI-generated answer with potentially tool-enhanced context
+        """
+        # Build system message with tool information
+        tools_info = json.dumps(self.get_tool_definitions(), indent=2)
+        
+        system_message = f"""You are an intelligent AI Concierge assistant for Slush 2025.
+
+You have access to the following tools to query startup information from the database:
+
+{tools_info}
+
+When a user asks about startups, you can use these tools to get accurate information.
+Always use the tools when you need specific startup data to answer questions accurately.
+
+Guidelines:
+1. Use tools to search for startups by name, industry, funding, or location
+2. Get detailed startup information when needed
+3. Use enrichment data for team, tech stack, and social information
+4. Always provide accurate, sourced information
+5. If tools return no results, explain that clearly to the user"""
+        
+        messages = [
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": question}
+        ]
+        
+        try:
+            # Make LLM call with tool support
+            response = await llm_completion(
+                messages=messages,
+                use_nvidia_nim=use_nvidia_nim,
+                temperature=0.7,
+                max_tokens=2000
+            )
+            
+            # Extract response
+            if hasattr(response, 'choices') and len(response.choices) > 0:
+                return response.choices[0].message.content
+            
+            return str(response)
+        
+        except Exception as e:
+            logger.error(f"Error in tool-enhanced answer: {e}")
+            # Fall back to regular answer without tools
+            return await self.answer_question(question, user_context)
+    
+    async def handle_tool_call(self, tool_name: str, **kwargs) -> Dict[str, Any]:
+        """
+        Handle a tool call from the LLM
+        
+        Args:
+            tool_name: Name of the tool to call
+            **kwargs: Arguments for the tool
+        
+        Returns:
+            Tool result
+        """
+        logger.info(f"Calling tool: {tool_name} with args: {kwargs}")
+        return await self.mcp_tools.call_tool(tool_name, **kwargs)
+    
+    async def conversational_startup_search(
+        self,
+        query: str,
+        search_type: str = "name"
+    ) -> str:
+        """
+        Perform a startup search and format results conversationally
+        
+        Args:
+            query: Search query
+            search_type: Type of search (name, industry, location, funding)
+        
+        Returns:
+            Formatted search results
+        """
+        try:
+            if search_type == "name":
+                result = await self.mcp_tools.call_tool("search_startups_by_name", query=query, limit=10)
+            elif search_type == "industry":
+                result = await self.mcp_tools.call_tool("search_startups_by_industry", industry=query, limit=10)
+            elif search_type == "location":
+                # Parse location - assume "City, Country" format
+                parts = query.split(",")
+                country = parts[0].strip() if parts else query
+                city = parts[1].strip() if len(parts) > 1 else None
+                result = await self.mcp_tools.call_tool(
+                    "search_startups_by_location",
+                    country=country,
+                    city=city,
+                    limit=10
+                )
+            elif search_type == "funding":
+                result = await self.mcp_tools.call_tool("search_startups_by_funding", stage=query, limit=10)
+            else:
+                return f"Unknown search type: {search_type}"
+            
+            if not result.get("success"):
+                return f"Search failed: {result.get('error', 'Unknown error')}"
+            
+            # Format results conversationally
+            results = result.get("results", [])
+            if not results:
+                return f"No startups found matching '{query}'."
+            
+            formatted_results = [f"Found {len(results)} startups:\n"]
+            for startup in results[:5]:  # Show top 5
+                formatted_results.append(f"\n**{startup.get('name', 'N/A')}**")
+                if startup.get('description'):
+                    formatted_results.append(f"  {startup['description'][:100]}...")
+                if startup.get('industry'):
+                    formatted_results.append(f"  Industry: {startup['industry']}")
+                if startup.get('funding'):
+                    formatted_results.append(f"  Funding: ${startup['funding']}M")
+                if startup.get('stage'):
+                    formatted_results.append(f"  Stage: {startup['stage']}")
+                if startup.get('website'):
+                    formatted_results.append(f"  Website: {startup['website']}")
+            
+            return "\n".join(formatted_results)
+        
+        except Exception as e:
+            logger.error(f"Error in conversational search: {e}")
+            return f"Error performing search: {str(e)}"
+
+
+# Helper functions
+def create_concierge(db: Session) -> MCPEnhancedAIConcierge:
+    """
+    Create an AI Concierge instance with MCP and NVIDIA NIM integration
+    
+    Returns:
+        MCPEnhancedAIConcierge: Concierge with tool calling and NVIDIA NIM support
+    """
+    return MCPEnhancedAIConcierge(db)
+
+
+def create_mcp_concierge(db: Session) -> MCPEnhancedAIConcierge:
+    """
+    Create an MCP-enhanced AI Concierge instance
+    
+    This version has tool calling capabilities for database queries
+    """
+    return MCPEnhancedAIConcierge(db)
+

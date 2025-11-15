@@ -1,8 +1,11 @@
 """
-LiteLLM Configuration and Logging Module
+LiteLLM Configuration and Logging Module with NVIDIA NIM Support
 
-This module configures LiteLLM with debugging enabled and saves all
-LLM requests and responses to the /logs/llm folder.
+This module configures LiteLLM with:
+- Debugging enabled
+- NVIDIA NIM support for DeepSeek models
+- All LLM requests and responses logged to /logs/llm folder
+- Environment-based model selection
 """
 
 import os
@@ -13,6 +16,19 @@ from pathlib import Path
 from typing import Optional, Dict, Any, List
 import asyncio
 from functools import wraps
+from dotenv import load_dotenv
+
+# Load environment variables from multiple possible locations
+env_paths = [
+    Path(__file__).parent / ".env",
+    Path(__file__).parent.parent / "app" / "startup-swipe-schedu" / ".env",
+    Path(__file__).parent.parent / ".env",
+]
+for env_path in env_paths:
+    if env_path.exists():
+        load_dotenv(env_path)
+        print(f"✓ Loaded environment from: {env_path}")
+        break
 
 # Configure LiteLLM
 litellm.set_verbose = True  # Enable verbose logging
@@ -22,6 +38,29 @@ litellm.failure_callback = []
 # Set up logs directory
 LOGS_DIR = Path(__file__).parent.parent / "logs" / "llm"
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
+
+# ====================
+# NVIDIA NIM Configuration
+# ====================
+# NVIDIA NIM (NVIDIA Inference Microservices) provides optimized inference
+# for various open-source models. LiteLLM supports NIM through custom endpoints.
+
+NVIDIA_NIM_CONFIG = {
+    "api_key": os.getenv("NVIDIA_API_KEY"),
+    "base_url": os.getenv("NVIDIA_NIM_BASE_URL", "https://integrate.api.nvidia.com/v1"),
+    "default_model": os.getenv("NVIDIA_DEFAULT_MODEL", "deepseek-ai/deepseek-r1"),
+    "embedding_model": os.getenv("NVIDIA_EMBEDDING_MODEL", "nvidia/llama-3.2-nemoretriever-300m-embed-v2"),
+}
+
+# Validate NVIDIA NIM configuration
+if NVIDIA_NIM_CONFIG["api_key"]:
+    print(f"✓ NVIDIA NIM configured:")
+    print(f"  - API Key: {'*' * 20}...")
+    print(f"  - Base URL: {NVIDIA_NIM_CONFIG['base_url']}")
+    print(f"  - Default Model: {NVIDIA_NIM_CONFIG['default_model']}")
+    print(f"  - Embedding Model: {NVIDIA_NIM_CONFIG['embedding_model']}")
+else:
+    print("⚠️  NVIDIA_API_KEY not set. NVIDIA NIM features will not work.")
 
 class LLMLogger:
     """Logger for LLM requests and responses"""
@@ -150,23 +189,26 @@ def generate_request_id() -> str:
 
 async def llm_completion(
     messages: List[Dict[str, Any]],
-    model: str = "gpt-4o",
+    model: Optional[str] = None,
     temperature: float = 0.7,
     max_tokens: Optional[int] = None,
     stream: bool = False,
     metadata: Optional[Dict[str, Any]] = None,
+    use_nvidia_nim: bool = True,
     **kwargs
 ) -> Any:
     """
-    Make an LLM completion request with logging
+    Make an LLM completion request with logging and NVIDIA NIM support
 
     Args:
         messages: List of message dictionaries with 'role' and 'content'
-        model: Model name (supports OpenAI, Anthropic, etc. via LiteLLM)
+        model: Model name (supports OpenAI, Anthropic, NVIDIA NIM, etc. via LiteLLM)
+               If None and use_nvidia_nim=True, uses NVIDIA_DEFAULT_MODEL
         temperature: Sampling temperature
         max_tokens: Maximum tokens to generate
         stream: Whether to stream the response (not supported in this version)
         metadata: Additional metadata to log
+        use_nvidia_nim: If True and no model specified, use NVIDIA NIM default model
         **kwargs: Additional arguments to pass to LiteLLM
 
     Returns:
@@ -174,6 +216,30 @@ async def llm_completion(
     """
     request_id = generate_request_id()
     start_time = datetime.now()
+    
+    # Use NVIDIA NIM model if no model specified and enabled
+    if model is None and use_nvidia_nim and NVIDIA_NIM_CONFIG["api_key"]:
+        model = NVIDIA_NIM_CONFIG["default_model"]
+    elif model is None:
+        model = "gpt-4o"
+    
+    # Configure NVIDIA NIM headers if using NIM model
+    if use_nvidia_nim and NVIDIA_NIM_CONFIG["api_key"]:
+        if "nvidia" in model.lower() or "deepseek" in model.lower():
+            kwargs.setdefault("api_key", NVIDIA_NIM_CONFIG["api_key"])
+            kwargs.setdefault("api_base", NVIDIA_NIM_CONFIG["base_url"])
+            # When using api_base, use openai/ prefix for compatibility or just the model name
+            # LiteLLM will route to the custom endpoint
+            if model.startswith("nvidia/"):
+                # Remove nvidia/ prefix when using custom api_base
+                model = model.replace("nvidia/", "")
+            # Use openai compatibility mode for custom endpoints
+            if not model.startswith("openai/"):
+                model = f"openai/{model}"
+    elif use_nvidia_nim and not NVIDIA_NIM_CONFIG["api_key"]:
+        # Fall back to GPT-4o if NVIDIA NIM is requested but no API key is set
+        if "deepseek" in model.lower():
+            model = "gpt-4o"
 
     try:
         # Make the LLM call (non-streaming only for now)
@@ -221,17 +287,49 @@ async def llm_completion(
 
 def llm_completion_sync(
     messages: List[Dict[str, Any]],
-    model: str = "gpt-4o",
+    model: Optional[str] = None,
     temperature: float = 0.7,
     max_tokens: Optional[int] = None,
     metadata: Optional[Dict[str, Any]] = None,
+    use_nvidia_nim: bool = True,
     **kwargs
 ) -> Any:
     """
-    Synchronous wrapper for LLM completion with logging
+    Synchronous wrapper for LLM completion with logging and NVIDIA NIM support
+    
+    Args:
+        messages: List of message dictionaries with 'role' and 'content'
+        model: Model name (if None and use_nvidia_nim=True, uses NVIDIA default)
+        temperature: Sampling temperature
+        max_tokens: Maximum tokens to generate
+        metadata: Additional metadata to log
+        use_nvidia_nim: If True and no model specified, use NVIDIA NIM default model
+        **kwargs: Additional arguments to pass to LiteLLM
     """
     request_id = generate_request_id()
     start_time = datetime.now()
+    
+    # Use NVIDIA NIM model if no model specified and enabled
+    if model is None and use_nvidia_nim and NVIDIA_NIM_CONFIG["api_key"]:
+        model = NVIDIA_NIM_CONFIG["default_model"]
+    elif model is None:
+        model = "gpt-4o"
+    
+    # Format model for NVIDIA NIM
+    if use_nvidia_nim and NVIDIA_NIM_CONFIG["api_key"]:
+        if "deepseek" in model.lower() or "nvidia" in model.lower():
+            # Set base URL and API key for NVIDIA NIM
+            kwargs.setdefault("api_key", NVIDIA_NIM_CONFIG["api_key"])
+            kwargs.setdefault("api_base", NVIDIA_NIM_CONFIG["base_url"])
+            # When using api_base, use openai/ prefix for compatibility
+            if model.startswith("nvidia/"):
+                model = model.replace("nvidia/", "")
+            if not model.startswith("openai/"):
+                model = f"openai/{model}"
+    elif use_nvidia_nim and not NVIDIA_NIM_CONFIG["api_key"]:
+        # Fall back to GPT-4o if NVIDIA NIM is requested but no API key is set
+        if "deepseek" in model.lower():
+            model = "gpt-4o"
     
     try:
         # Make the LLM call
@@ -278,9 +376,10 @@ def llm_completion_sync(
 
 def simple_llm_call(
     prompt: str,
-    model: str = "gpt-4o",
+    model: Optional[str] = None,
     system_message: Optional[str] = None,
     temperature: float = 0.7,
+    use_nvidia_nim: bool = True,
     **kwargs
 ) -> str:
     """
@@ -288,9 +387,10 @@ def simple_llm_call(
     
     Args:
         prompt: User prompt
-        model: Model name
+        model: Model name (if None and use_nvidia_nim=True, uses NVIDIA default)
         system_message: Optional system message
         temperature: Sampling temperature
+        use_nvidia_nim: If True and no model specified, use NVIDIA NIM default model
         **kwargs: Additional arguments
     
     Returns:
@@ -307,6 +407,7 @@ def simple_llm_call(
         messages=messages,
         model=model,
         temperature=temperature,
+        use_nvidia_nim=use_nvidia_nim,
         **kwargs
     )
     
@@ -318,9 +419,10 @@ def simple_llm_call(
 
 async def simple_llm_call_async(
     prompt: str,
-    model: str = "gpt-4o",
+    model: Optional[str] = None,
     system_message: Optional[str] = None,
     temperature: float = 0.7,
+    use_nvidia_nim: bool = True,
     **kwargs
 ) -> str:
     """
@@ -328,9 +430,10 @@ async def simple_llm_call_async(
     
     Args:
         prompt: User prompt
-        model: Model name
+        model: Model name (if None and use_nvidia_nim=True, uses NVIDIA default)
         system_message: Optional system message
         temperature: Sampling temperature
+        use_nvidia_nim: If True and no model specified, use NVIDIA NIM default model
         **kwargs: Additional arguments
     
     Returns:
@@ -347,6 +450,7 @@ async def simple_llm_call_async(
         messages=messages,
         model=model,
         temperature=temperature,
+        use_nvidia_nim=use_nvidia_nim,
         **kwargs
     )
     
@@ -360,19 +464,38 @@ async def simple_llm_call_async(
 def configure_llm_api_keys():
     """
     Configure API keys from environment variables
+    
     Set these in your .env file or environment:
-    - OPENAI_API_KEY
-    - ANTHROPIC_API_KEY
-    - AZURE_API_KEY
-    - etc.
+    - OPENAI_API_KEY (for GPT models)
+    - ANTHROPIC_API_KEY (for Claude models)
+    - AZURE_API_KEY (for Azure OpenAI)
+    - NVIDIA_API_KEY (for NVIDIA NIM models)
+    - NVIDIA_NIM_BASE_URL (optional, defaults to https://integrate.api.nvidia.com/v1)
+    - NVIDIA_DEFAULT_MODEL (optional, defaults to deepseek-ai/deepseek-r1)
     """
     # LiteLLM automatically reads from standard environment variables
-    # You can also set them programmatically:
-    # os.environ["OPENAI_API_KEY"] = "your-key"
+    # NVIDIA NIM API key is already configured above
     pass
+
+
+def get_nvidia_nim_model() -> str:
+    """Get the configured NVIDIA NIM model name"""
+    return NVIDIA_NIM_CONFIG["default_model"]
+
+
+def get_nvidia_nim_embedding_model() -> str:
+    """Get the configured NVIDIA NIM embedding model name"""
+    return NVIDIA_NIM_CONFIG["embedding_model"]
+
+
+def is_nvidia_nim_configured() -> bool:
+    """Check if NVIDIA NIM is properly configured"""
+    return bool(NVIDIA_NIM_CONFIG["api_key"])
 
 
 # Initialize on import
 configure_llm_api_keys()
 
 print(f"✓ LiteLLM configured with logging to: {LOGS_DIR}")
+if is_nvidia_nim_configured():
+    print(f"✓ NVIDIA NIM support enabled (Model: {get_nvidia_nim_model()})")

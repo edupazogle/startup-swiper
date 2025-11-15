@@ -1,8 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, JSON, Text, Float
-from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
-
-Base = declarative_base()
+from models import Base  # Import the shared Base class
 
 class Startup(Base):
     """Startup company data model with full enrichment"""

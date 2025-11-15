@@ -115,6 +115,17 @@ def create_vote(db: Session, vote: schemas.VoteCreate):
     db.refresh(db_vote)
     return db_vote
 
+def delete_vote(db: Session, startup_id: str, user_id: str):
+    vote = db.query(models.Vote).filter(
+        models.Vote.startupId == startup_id,
+        models.Vote.userId == user_id
+    ).first()
+    if vote:
+        db.delete(vote)
+        db.commit()
+        return True
+    return False
+
 # Auroral Info CRUD
 def get_auroral_info(db: Session):
     return db.query(models.AuroralInfo).first()
