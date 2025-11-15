@@ -100,7 +100,7 @@ class AdminUser(AdminUserBase):
 # Vote schemas
 class VoteBase(BaseModel):
     startupId: str
-    userId: int
+    userId: str
     userName: str
     interested: bool
     timestamp: Optional[datetime] = None

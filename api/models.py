@@ -51,7 +51,7 @@ class Vote(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     startupId = Column(String, name="startup_id", nullable=False, index=True)
-    userId = Column(Integer, name="user_id", nullable=False)
+    userId = Column(String, name="user_id", nullable=False)
     userName = Column(String, name="user_name", nullable=False)
     interested = Column(Boolean, nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow)

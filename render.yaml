@@ -2,28 +2,32 @@ services:
   # Backend API
   - type: web
     name: startup-swiper-api
-    env: python
+    runtime: python-3.11
     region: oregon
-    buildCommand: "cd api && pip install -r requirements.txt"
+    buildCommand: "pip install -r api/requirements.txt"
     startCommand: "cd api && uvicorn main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: DATABASE_URL
+        value: sqlite:///./startup_swiper.db
+      - key: NVIDIA_API_KEY
         sync: false
-      - key: VAPID_PUBLIC_KEY
-        sync: false
-      - key: VAPID_PRIVATE_KEY
-        sync: false
-      - key: OPENAI_API_KEY
+      - key: NVIDIA_NIM_BASE_URL
+        value: https://integrate.api.nvidia.com/v1
+      - key: NVIDIA_DEFAULT_MODEL
+        value: deepseek-ai/deepseek-r1
+      - key: SECRET_KEY
         sync: false
     healthCheckPath: /health
+    autoDeploy: true
 
   # Frontend
   - type: web
     name: startup-swiper-frontend
-    env: node
+    runtime: node
     region: oregon
     buildCommand: "cd app/startup-swipe-schedu && npm install && npm run build"
     startCommand: "cd app/startup-swipe-schedu && npm run preview -- --host 0.0.0.0 --port $PORT"
     envVars:
       - key: VITE_API_URL
         value: https://startup-swiper-api.onrender.com
+    autoDeploy: true
