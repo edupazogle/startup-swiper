@@ -34,7 +34,7 @@ import models
 import models_startup
 import schemas
 import crud
-from database import engine, get_db
+from database import engine, get_db, SessionLocal
 from llm_config import simple_llm_call_async, llm_completion
 from auth import (
     authenticate_user,
@@ -51,8 +51,13 @@ from meeting_feedback_llm import feedback_assistant
 import db_queries
 
 # Create database tables
-models.Base.metadata.create_all(bind=engine)
-models_startup.Base.metadata.create_all(bind=engine)
+try:
+    models.Base.metadata.create_all(bind=engine)
+    models_startup.Base.metadata.create_all(bind=engine)
+    print(f"✓ Database tables created/verified at: {engine.url}")
+except Exception as e:
+    print(f"⚠️  Warning: Could not create database tables: {e}")
+    print(f"    This may happen on first deployment. Retrying on next request...")
 
 app = FastAPI(title="Startup Swiper API", version="1.0.0")
 
@@ -98,11 +103,51 @@ except Exception as e:
 # Initialize notification service
 # notification_service = NotificationService()  # Temporarily disabled - install pywebpush first
 
-# Start notification worker on startup
-# @app.on_event("startup")
-# async def startup_event():
-#     """Start background tasks on app startup"""
-#     asyncio.create_task(notification_worker())
+# Startup event - ensure database is initialized
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database and load startup data on app startup"""
+    try:
+        # Ensure tables exist
+        models.Base.metadata.create_all(bind=engine)
+        models_startup.Base.metadata.create_all(bind=engine)
+        print(f"✓ Database tables initialized/verified")
+        
+        # Check if we need to load startup data
+        db = SessionLocal()
+        try:
+            startup_count = db.query(models_startup.Startup).count()
+            if startup_count == 0:
+                print(f"📊 Database is empty, loading startup data...")
+                # Try to load from file
+                if STARTUPS_FILE.exists():
+                    with open(STARTUPS_FILE, "r") as f:
+                        startup_data = json.load(f)
+                    print(f"📥 Loaded {len(startup_data)} startups from {STARTUPS_FILE.name}")
+                    
+                    # Import into database
+                    from create_startup_database import import_startups
+                    imported, skipped, errors = import_startups(engine, startup_data)
+                    print(f"✓ Database loaded: {imported} imported, {skipped} skipped, {errors} errors")
+                elif BACKUP_FILE.exists():
+                    with open(BACKUP_FILE, "r") as f:
+                        startup_data = json.load(f)
+                    print(f"📥 Loaded {len(startup_data)} startups from {BACKUP_FILE.name}")
+                    
+                    from create_startup_database import import_startups
+                    imported, skipped, errors = import_startups(engine, startup_data)
+                    print(f"✓ Database loaded: {imported} imported, {skipped} skipped, {errors} errors")
+                else:
+                    print(f"⚠️  No startup data files found")
+            else:
+                print(f"✓ Database ready with {startup_count} startups")
+        finally:
+            db.close()
+            
+    except Exception as e:
+        print(f"⚠️  Error during startup initialization: {e}")
+        import traceback
+        traceback.print_exc()
 
 # LLM Request/Response Models
 class LLMRequest(BaseModel):
