@@ -73,9 +73,15 @@ def import_startups(engine, startups_data):
     
     for idx, data in enumerate(startups_data):
         try:
+            # Skip records without company name (required field)
+            company_name = data.get('company_name')
+            if not company_name or company_name.strip() == '':
+                skipped += 1
+                continue
+            
             # Check if startup already exists
             existing = session.query(Startup).filter_by(
-                company_name=data.get('company_name')
+                company_name=company_name
             ).first()
             
             if existing:
@@ -86,11 +92,11 @@ def import_startups(engine, startups_data):
             startup = Startup(
                 # ID and basic info
                 id=data.get('id'),
-                company_name=data.get('company_name'),
+                company_name=company_name,
                 company_type=data.get('company_type'),
                 company_country=data.get('company_country'),
                 company_city=data.get('company_city'),
-                website=data.get('website'),
+                website=data.get('website', ''),  # Provide empty string if None
                 company_linked_in=data.get('company_linked_in'),
                 company_description=data.get('company_description'),
                 founding_year=parse_int(data.get('founding_year')),
@@ -175,19 +181,29 @@ def import_startups(engine, startups_data):
             session.add(startup)
             imported += 1
             
-            # Commit in batches
+            # Commit in batches to avoid large memory usage
             if imported % 100 == 0:
-                session.commit()
-                logger.info(f"Imported {imported} startups...")
+                try:
+                    session.commit()
+                    logger.info(f"Imported {imported} startups...")
+                except Exception as batch_error:
+                    logger.warning(f"Batch commit error, rolling back: {batch_error}")
+                    session.rollback()
+                    errors += 100  # Count the batch that failed
                 
         except Exception as e:
             logger.error(f"Error importing startup {data.get('company_name', 'Unknown')}: {e}")
             errors += 1
-            session.rollback()
+            # Don't rollback on individual errors, just skip the record
     
     # Final commit
-    session.commit()
-    session.close()
+    try:
+        session.commit()
+    except Exception as e:
+        logger.error(f"Final commit failed: {e}")
+        session.rollback()
+    finally:
+        session.close()
     
     return imported, skipped, errors
 
