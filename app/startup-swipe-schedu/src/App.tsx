@@ -75,21 +75,23 @@ function App() {
   useEffect(() => {
     const initializeUser = async () => {
       try {
-        // Check if window.spark exists before calling it
-        if (typeof window !== 'undefined' && window.spark && typeof window.spark.user === 'function') {
-          const user = await window.spark.user()
-          if (user && user.id && currentUserId && currentUserId.startsWith('user-')) {
+        // If a hosted SSO/Spark provider is available, use it to sign users in.
+        if (typeof window !== 'undefined' && (window as any).spark && typeof (window as any).spark.user === 'function') {
+          const user = await (window as any).spark.user()
+          if (user && user.id) {
             const userId = String(user.id)
-            setCurrentUserId((oldId) => userId || oldId || `user-${Date.now()}`)
+            setCurrentUserId(userId)
+            if (user.login) setCurrentUserName(user.login)
+            setIsAuthenticated(true)
+            console.log('Signed in via Spark provider:', userId)
+            return
           }
-          if (user && user.login) {
-            setCurrentUserName(user.login)
-          }
-        } else {
-          console.log('Using anonymous user ID (Spark API not available)')
         }
+
+        // No external provider: remain signed out until user logs in via the app
+        console.log('No external SSO available; user must log in')
       } catch (error) {
-        console.log('Using anonymous user ID')
+        console.warn('Failed to initialize external user provider:', error)
       }
     }
     initializeUser()
@@ -110,7 +112,8 @@ function App() {
   const [votes, setVotes] = useKV<Vote[]>('votes', [])
   
   // Fetch AXA-filtered startups for swiper and all startups for dashboard
-  const safeUserId = currentUserId || `user-${Date.now()}`
+  // We require an authenticated user; `safeUserId` is the authenticated id.
+  const safeUserId = currentUserId
 
   // Fetch votes from API on app load
   useEffect(() => {
@@ -496,20 +499,7 @@ function App() {
     toast.success('Idea submitted successfully!')
   }
 
-  // Show loading state while fetching startups
-  if (isLoadingStartups) {
-    return (
-      <AuroralBackground>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Loading prioritized startups...</p>
-          </div>
-        </div>
-      </AuroralBackground>
-    )
-  }
-
+  // Show login view if not authenticated (before loading startups)
   if (!isAuthenticated) {
     return (
       <LoginView
@@ -520,6 +510,20 @@ function App() {
           toast.success(`Welcome, ${name}!`)
         }}
       />
+    )
+  }
+
+  // Show loading state while fetching startups (only after authentication)
+  if (isLoadingStartups) {
+    return (
+      <AuroralBackground>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading prioritized startups...</p>
+          </div>
+        </div>
+      </AuroralBackground>
     )
   }
 
@@ -598,6 +602,19 @@ function App() {
                   >
                     <UserGear size={32} className={isMobile ? '' : 'mr-3'} weight="bold" />
                     {!isMobile && 'Admin'}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setIsAuthenticated(false)
+                      setCurrentUserId('')
+                      setCurrentUserName('')
+                      toast('Signed out')
+                    }}
+                    variant="ghost"
+                    className={`text-white hover:bg-white/10 h-14 ${isMobile ? 'px-3' : 'px-6'} font-bold text-lg`}
+                  >
+                    <SignOut size={24} className={isMobile ? '' : 'mr-2'} />
+                    {!isMobile && 'Sign out'}
                   </Button>
                 </div>
               </div>

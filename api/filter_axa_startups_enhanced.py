@@ -845,16 +845,15 @@ def calculate_axa_score_enhanced(startup: Dict, use_llm: bool = False) -> Dict:
     Total: 0-125 points (normalized to 0-100)
     """
     
-    # Check exclusions first
-    can_be_provider, exclusion_reason = can_be_axa_provider(startup, use_llm=use_llm)
-    if not can_be_provider or should_exclude(startup, use_llm=use_llm):
+    # Check hard exclusions only (not LLM)
+    if should_exclude(startup, use_llm=False):
         return {
             'total_score': 0,
             'normalized_score': 0,
             'tier': 'Excluded',
             'matched_rules': [],
             'rule_scores': {},
-            'breakdown': {'excluded': True, 'exclusion_reason': exclusion_reason or 'Does not meet AXA provider criteria'},
+            'breakdown': {'excluded': True, 'exclusion_reason': 'Hard exclusion - consumer/B2C only'},
             'funding_amount': 0,
             'funding_stage': 'Undisclosed',
             'employee_count': 0,
@@ -899,12 +898,22 @@ def calculate_axa_score_enhanced(startup: Dict, use_llm: bool = False) -> Dict:
     size_score = calculate_size_score(startup)
     maturity_score = calculate_maturity_score(startup)
     
+    # LLM bonus/penalty (optional, additive)
+    llm_adjustment = 0
+    if use_llm and len(rule_matches) > 0:
+        # Only use LLM for edge cases that already have some rule matches
+        can_be_provider, reason = can_be_axa_provider(startup, use_llm=True)
+        if can_be_provider:
+            llm_adjustment = 15  # Bonus for LLM confirmation
+        else:
+            llm_adjustment = -10  # Penalty if LLM rejects
+    
     # Raw score before normalization
-    raw_score = rule_total + funding_score + size_score + maturity_score
+    raw_score = rule_total + funding_score + size_score + maturity_score + llm_adjustment
     
     # Normalize to 0-100
-    # Maximum possible: 35 + 10 + 40 + 30 + 10 = 125
-    normalized_score = min(100, int(raw_score * 100 / 125))
+    # Maximum possible: 35 + 10 + 40 + 30 + 10 + 15 = 140
+    normalized_score = min(100, max(0, int(raw_score * 100 / 140)))
     
     # Determine tier based on funding + rule match combination
     if funding_amount >= 100 and len(rule_matches) >= 2:
@@ -932,6 +941,7 @@ def calculate_axa_score_enhanced(startup: Dict, use_llm: bool = False) -> Dict:
             'funding': funding_score,
             'size': size_score,
             'maturity': maturity_score,
+            'llm_adjustment': llm_adjustment if use_llm else 0,
             'raw_total': raw_score
         },
         'funding': {

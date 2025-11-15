@@ -1,0 +1,5419 @@
+[
+  {
+    "company_name": "ICEYE",
+    "company_type": "scaleup",
+    "company_country": "FI",
+    "company_city": "Espoo",
+    "website": "https://www.iceye.com/",
+    "company_linked_in": "https://www.linkedin.com/company/4856503/",
+    "company_description": "ICEYE delivers unparalleled persistent monitoring capabilities to detect and respond to changes in any location on Earth, faster and more accurately than ever before.\n\nOwning the world's largest synthetic aperture radar (SAR) satellite constellation, ICEYE provides objective, near-real-time insights, ensuring that customers have unmatched access to actionable data, day or night, even in challenging environmental conditions. As a trusted partner to governments and commercial industries, ICEYE delivers intelligence in sectors such as defense and intelligence, insurance, natural catastrophe response and recovery, security, maritime monitoring, and finance, enabling decision-making that contributes to community resilience and sustainable development.\n",
+    "founding_year": 2014,
+    "primary_industry": "space",
+    "secondary_industry": "[]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\", \"b2g\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/7c1be9f1-0664-438a-879c-55ade284fc52",
+    "id": 12390,
+    "dateCreated": "2022-03-24T09:09:12.937Z",
+    "dateFounded": "2014-01-01T00:00:00.000Z",
+    "employees": "500+",
+    "legalEntity": "Oy",
+    "mainContactId": null,
+    "shortDescription": "AI and microsatellite-based imaging and data monitoring solutions",
+    "technologyReadiness": "Growth Market Stage",
+    "currentInvestmentStage": "Series D",
+    "totalFunding": "863.54",
+    "originalTotalFunding": "732.23",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-08-25T00:00:00.000Z",
+    "lastFunding": "10.95",
+    "originalLastFunding": "9.4",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": "Uusimaa",
+    "billingStreet": "",
+    "billingPostalCode": "",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 102,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-06-20T11:56:21.371Z",
+    "pitchbookId": "129020-68",
+    "lastPitchbookSync": "2025-10-16T02:11:56.541Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": "2025-06-20T11:56:21.409Z",
+    "lastQualityCheckById": 102,
+    "isQualityChecked": true,
+    "qualityChecks": [
+      {
+        "id": 2,
+        "name": "Proper Legal Entity",
+        "description": "Does this startup have a proper legal entity?"
+      },
+      {
+        "id": 6,
+        "name": "Testable Product",
+        "description": "Is this startup's product ready to be tested in a pilot project?"
+      },
+      {
+        "id": 1,
+        "name": "Verifiable Company Information",
+        "description": "Is this company's information verifiable?"
+      },
+      {
+        "id": 5,
+        "name": "Founder or Investor Ownership",
+        "description": "Do the founders and institutional investors hold the majority ownership of this startup?"
+      },
+      {
+        "id": 3,
+        "name": "Institutional Funding",
+        "description": "Has this startup received institutional funding?"
+      },
+      {
+        "id": 4,
+        "name": "Proprietary Product Offering",
+        "description": "Does this startup offer a proprietary product (not just services)?"
+      }
+    ],
+    "lastQualityCheckBy": {
+      "name": "Valentin Peters",
+      "id": 102,
+      "email": "vapeters@deloitte.de",
+      "oauthSubject": "7394e8f2-e0f1-7065-8f3d-35561137610d",
+      "salesforceId": "0051r000008NTnsAAG",
+      "roleName": "Admin",
+      "invitedById": null,
+      "deletedById": null,
+      "emailConsent": true,
+      "deletedAt": null,
+      "lastClearedUpdates": null
+    },
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [
+      {
+        "id": 20836,
+        "projectId": 3180,
+        "isQualified": false,
+        "isSelectedForPilot": false,
+        "project": {
+          "id": 3180,
+          "name": "Geospatial analysis for risk assessment - Generation of Data",
+          "funnelStage": "assess"
+        }
+      }
+    ],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 67184,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/3d288561-a16c-48d2-8724-ec9caab6d847-zNFQGTX22kdS0QrfvjrQwEWMENx1657100779516_200x200.png",
+        "key": "3d288561-a16c-48d2-8724-ec9caab6d847-zNFQGTX22kdS0QrfvjrQwEWMENx1657100779516_200x200.png",
+        "name": "240402_Logo_Iceye.png",
+        "type": "Logo",
+        "linkableId": 12390,
+        "linkableType": "startup",
+        "dateCreated": "2024-04-02T07:55:35.544Z",
+        "uploadOwnerId": 457,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 12390
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/3d288561-a16c-48d2-8724-ec9caab6d847-zNFQGTX22kdS0QrfvjrQwEWMENx1657100779516_200x200.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:19:14.731235",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:19:14.731227",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.iceye.com/",
+      "page_title": "ICEYE",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "138",
+        "697",
+        "590",
+        "28."
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/iceye",
+        "facebook": "https://facebook.com/iceye"
+      },
+      "tech_stack": [
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 75,
+      "normalized_score": 75,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [
+        "Rule 3: Insurance Solutions"
+      ],
+      "rule_scores": {
+        "Rule 3: Insurance Solutions": {
+          "score": 12,
+          "confidence": 35,
+          "keywords": [
+            "insurance"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 12,
+        "multi_rule_bonus": 0,
+        "funding": 40,
+        "size": 28,
+        "maturity": 10,
+        "llm_adjustment": 15,
+        "raw_total": 105
+      },
+      "funding": {
+        "amount_millions": 863.54,
+        "stage": "Late Stage"
+      },
+      "company_size": {
+        "employee_count": 500,
+        "category": "Large (500+)"
+      }
+    }
+  },
+  {
+    "company_name": "Matillion",
+    "company_type": "scaleup",
+    "company_country": "GB",
+    "company_city": "Manchester",
+    "website": "https://www.matillion.com/",
+    "company_linked_in": "https://www.linkedin.com/company/matillion-limited",
+    "company_description": "Matillion provides a Cloud-Native Data Integration platform that helps organizations build and manage data pipelines with minimal effort.\n\nIt utilizes AI capabilities, including Maia, a team of agentic data engineers. Maia allows users to deploy virtual data engineers using plain language prompts to handle repetitive and complex tasks like building pipelines, accelerating the delivery of trusted data, and amplifying the impact of human data teams. This allows data engineers to focus on innovative projects and enables non-technical users to participate in the data workflow. The platform also offers low-code, SQL, Python, and dbt options for transformation and supports universal connectivity to integrate structured and unstructured data from any source into a single platform for analytics",
+    "founding_year": 2011,
+    "primary_industry": "ai",
+    "secondary_industry": "[\"enterpriseSoftware\", \"ai\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "General Atlantic, Lightspeed Venture Partners, Battery Ventures, Sapphire Ventures, Scale Venture Partners",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/4ca6d4a9-d6dc-4e92-8b3e-db07cac1b40d",
+    "id": 5054,
+    "dateCreated": "2019-06-10T12:36:24.000Z",
+    "dateFounded": "2011-02-01T00:00:00.000Z",
+    "employees": "500+",
+    "legalEntity": "Ltd.",
+    "mainContactId": 42550,
+    "shortDescription": "Master data integration platform",
+    "technologyReadiness": "Growth Market Stage",
+    "currentInvestmentStage": "Series E",
+    "totalFunding": "307.26",
+    "originalTotalFunding": "261.87",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2022-11-08T00:00:00.000Z",
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": "0011r00002JUic7AAD",
+    "billingState": "",
+    "billingStreet": "",
+    "billingPostalCode": "",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 226,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2024-10-07T13:04:34.747Z",
+    "pitchbookId": "168524-38",
+    "lastPitchbookSync": "2025-10-10T16:59:33.900Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": "2024-09-09T11:37:07.581Z",
+    "lastQualityCheckById": 226,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": {
+      "name": "Peter Hartwieg",
+      "id": 226,
+      "email": "phartwieg@deloitte.de",
+      "oauthSubject": "b3a40812-d091-701c-933e-6724adbaa32c",
+      "salesforceId": null,
+      "roleName": "Standard User",
+      "invitedById": null,
+      "deletedById": null,
+      "emailConsent": true,
+      "deletedAt": null,
+      "lastClearedUpdates": "2025-09-24T13:46:43.119Z"
+    },
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 76724,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/5dc6547f-a403-4982-af0d-9067ea2ef87d-logo%20matillion.png",
+        "key": "5dc6547f-a403-4982-af0d-9067ea2ef87d-logo matillion.png",
+        "name": "240812_Logo_Matillion.png",
+        "type": "Logo",
+        "linkableId": 5054,
+        "linkableType": "startup",
+        "dateCreated": "2024-08-12T13:44:39.720Z",
+        "uploadOwnerId": 226,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 5054
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/5dc6547f-a403-4982-af0d-9067ea2ef87d-logo%20matillion.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:19:20.177055",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:19:20.177037",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.matillion.com/",
+      "page_title": "Matillion | Cloud-Native Data Integration With AI Built In",
+      "emails": [
+        "info@matillion.com"
+      ],
+      "phone_numbers": [
+        "",
+        "956.",
+        "550",
+        "884",
+        "540"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/matillion-limited",
+        "twitter": "https://twitter.com/matillion",
+        "facebook": "https://facebook.com/matillion",
+        "instagram": "https://instagram.com/matillion_"
+      },
+      "tech_stack": [
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 62,
+      "normalized_score": 62,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [
+        "Rule 1: Platform Enablers"
+      ],
+      "rule_scores": {
+        "Rule 1: Platform Enablers": {
+          "score": 24,
+          "confidence": 70,
+          "keywords": [
+            "agentic"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 24,
+        "multi_rule_bonus": 0,
+        "funding": 35,
+        "size": 28,
+        "maturity": 10,
+        "llm_adjustment": -10,
+        "raw_total": 87
+      },
+      "funding": {
+        "amount_millions": 307.26,
+        "stage": "Growth"
+      },
+      "company_size": {
+        "employee_count": 500,
+        "category": "Large (500+)"
+      }
+    }
+  },
+  {
+    "company_name": "Synera",
+    "company_type": "startup",
+    "company_country": "DE",
+    "company_city": "Bremen",
+    "website": "https://www.synera.io",
+    "company_linked_in": "https://www.linkedin.com/company/syneragmbh/",
+    "company_description": "At Synera, we believe that engineering deserves an efficiency boost. Engineers should be creative once again instead of being trapped in tedious, manual processes and routines.\n\nThat's why Synera gives your engineering organization a digital workforce that thinks, decides, and executes like your best engineers. \n\nCreate and deploy collaborative AI agents that double as engineering experts – to supplement your engineering teams and autonomously address product development tasks around the clock. \n\nOur easy-to-use builder allows you to automate at multiple levels – from simple automated engineering workflows to fully fledged multi-agent-systems that combine workflows with the scalability and reasoning of AI. The platform seamlessly integrates with your existing CAx tools and processes, enabling exponential scaling of engineering capacity without corresponding exponential cost growth.",
+    "founding_year": 2018,
+    "primary_industry": "ai",
+    "secondary_industry": "[\"deeptech\", \"enterpriseSoftware\", \"manufacturingMaterials\", \"mobility\", \"space\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/2ae72e9b-dd1e-4925-867f-f4703c48e2a0",
+    "id": 30700,
+    "dateCreated": "2024-01-30T15:57:30.531Z",
+    "dateFounded": "2017-12-31T23:00:00.000Z",
+    "employees": "51-100",
+    "legalEntity": "GmbH",
+    "mainContactId": 42379,
+    "shortDescription": "Process Automation for Engineers",
+    "technologyReadiness": "Early Market Stage",
+    "currentInvestmentStage": "Series A",
+    "totalFunding": "20.82",
+    "originalTotalFunding": "17.64",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2022-09-07T00:00:00.000Z",
+    "lastFunding": "16.84",
+    "originalLastFunding": "14.5",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": "Token-based licensing system. Tokens are drawn when a software (or module/node) is used",
+    "sfId": null,
+    "billingState": "Bremen",
+    "billingStreet": "Konsul-Smidt-Straße 8u",
+    "billingPostalCode": "28217",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 432,
+    "parentCompanyId": 19706,
+    "lastModifiedDate": "2025-10-07T09:13:19.609Z",
+    "pitchbookId": "327243-97",
+    "lastPitchbookSync": "2025-10-24T08:42:34.738Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": "2025-10-07T11:24:18.053Z",
+    "lastQualityCheckById": 432,
+    "isQualityChecked": true,
+    "qualityChecks": [
+      {
+        "id": 4,
+        "name": "Proprietary Product Offering",
+        "description": "Does this startup offer a proprietary product (not just services)?"
+      },
+      {
+        "id": 6,
+        "name": "Testable Product",
+        "description": "Is this startup's product ready to be tested in a pilot project?"
+      },
+      {
+        "id": 1,
+        "name": "Verifiable Company Information",
+        "description": "Is this company's information verifiable?"
+      },
+      {
+        "id": 2,
+        "name": "Proper Legal Entity",
+        "description": "Does this startup have a proper legal entity?"
+      },
+      {
+        "id": 5,
+        "name": "Founder or Investor Ownership",
+        "description": "Do the founders and institutional investors hold the majority ownership of this startup?"
+      },
+      {
+        "id": 3,
+        "name": "Institutional Funding",
+        "description": "Has this startup received institutional funding?"
+      }
+    ],
+    "lastQualityCheckBy": {
+      "name": "Purichmun Low",
+      "id": 432,
+      "email": "pulow@deloitte.de",
+      "oauthSubject": "f3f4c8e2-f0c1-7066-8c2b-57dbb7b85101",
+      "salesforceId": null,
+      "roleName": "Standard User",
+      "invitedById": null,
+      "deletedById": null,
+      "emailConsent": true,
+      "deletedAt": null,
+      "lastClearedUpdates": null
+    },
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 101381,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/e2c20db6-fd13-47aa-839c-0068d62eee2c-Screenshot%202025-07-31%20at%2014.32.08.png",
+        "key": "e2c20db6-fd13-47aa-839c-0068d62eee2c-Screenshot 2025-07-31 at 14.32.08.png",
+        "name": "250731_Logo_Synera.png",
+        "type": "Logo",
+        "linkableId": 30700,
+        "linkableType": "startup",
+        "dateCreated": "2025-07-31T12:32:23.315Z",
+        "uploadOwnerId": 451,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 30700
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/e2c20db6-fd13-47aa-839c-0068d62eee2c-Screenshot%202025-07-31%20at%2014.32.08.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:17:34.038773",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:17:34.038762",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.synera.io",
+      "page_title": "Synera | The AI Agents Platform for engineers",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "658",
+        "888",
+        "72",
+        "514"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/syneragmbh"
+      },
+      "tech_stack": [
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 62,
+      "normalized_score": 62,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [
+        "Rule 1: Platform Enablers",
+        "Rule 2: Service Providers"
+      ],
+      "rule_scores": {
+        "Rule 1: Platform Enablers": {
+          "score": 26,
+          "confidence": 75,
+          "keywords": [
+            "multi-agent"
+          ]
+        },
+        "Rule 2: Service Providers": {
+          "score": 9,
+          "confidence": 32,
+          "keywords": []
+        }
+      },
+      "breakdown": {
+        "rule_score": 36,
+        "multi_rule_bonus": 10,
+        "funding": 25,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": 15,
+        "raw_total": 88
+      },
+      "funding": {
+        "amount_millions": 20.82,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "M-Files",
+    "company_type": "scaleup",
+    "company_country": "FI",
+    "company_city": "Tampere",
+    "website": "https://www.m-files.com/",
+    "company_linked_in": "https://www.linkedin.com/company/m-files-corporation/",
+    "company_description": "M-Files is the leading platform for knowledge work automation. We are a growing, $100M+ ARR enterprise SaaS company.\n\nWith the M-Files platform, knowledge workers can find information faster, work smarter, and achieve more. M-Files features an innovative metadata-driven architecture, embedded workflow engine, and advanced artificial intelligence. This enables customers to eliminate information chaos, improve process efficiency, and automate security and compliance.\n",
+    "founding_year": 2000,
+    "primary_industry": "enterpriseSoftware",
+    "secondary_industry": "[\"regtech\", \"ai\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Haveli Investments, Bregal Milestone",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/4ef811eb-213b-4ac6-b30e-54253295f848",
+    "id": 32757,
+    "dateCreated": "2024-07-10T14:54:38.259Z",
+    "dateFounded": "2001-12-31T23:00:00.000Z",
+    "employees": "500+",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "Secure, share, and manage documents efficiently.",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "145.65",
+    "originalTotalFunding": "133.15",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-03-31T00:00:00.000Z",
+    "lastFunding": "31.84",
+    "originalLastFunding": "27.34",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": "33720",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 259,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-03-24T16:49:28.735Z",
+    "pitchbookId": "56788-30",
+    "lastPitchbookSync": "2025-10-16T00:21:01.217Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 75187,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/71b4e1a0-bded-4c82-bbf4-402ccad42d2e-m-files.png",
+        "key": "71b4e1a0-bded-4c82-bbf4-402ccad42d2e-m-files.png",
+        "name": "240711_Logo_M-Files.png",
+        "type": "Logo",
+        "linkableId": 32757,
+        "linkableType": "startup",
+        "dateCreated": "2024-07-11T15:12:00.156Z",
+        "uploadOwnerId": 391,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 32757
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/71b4e1a0-bded-4c82-bbf4-402ccad42d2e-m-files.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:13:37.226290",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:13:37.226280",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.m-files.com/",
+      "page_title": "Document Management System (DMS) with Workflow Automation",
+      "emails": [
+        "support@m-files.com"
+      ],
+      "phone_numbers": [
+        "",
+        "166.",
+        "72",
+        "80 ",
+        "777"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/m-files-corporation",
+        "facebook": "https://facebook.com/mfileseasydocumentmanagement",
+        "instagram": "https://instagram.com/mfilesinfomgmt"
+      },
+      "tech_stack": [
+        "React",
+        "Angular",
+        "WordPress"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 50,
+      "normalized_score": 50,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [
+        "Rule 2: Service Providers"
+      ],
+      "rule_scores": {
+        "Rule 2: Service Providers": {
+          "score": 7,
+          "confidence": 24,
+          "keywords": []
+        }
+      },
+      "breakdown": {
+        "rule_score": 7,
+        "multi_rule_bonus": 0,
+        "funding": 35,
+        "size": 28,
+        "maturity": 10,
+        "llm_adjustment": -10,
+        "raw_total": 70
+      },
+      "funding": {
+        "amount_millions": 145.65,
+        "stage": "Growth"
+      },
+      "company_size": {
+        "employee_count": 500,
+        "category": "Large (500+)"
+      }
+    }
+  },
+  {
+    "company_name": "Nolana AI",
+    "company_type": "startup",
+    "company_country": "GB",
+    "company_city": "London, UK",
+    "website": "https://nolana.com",
+    "company_linked_in": "https://www.linkedin.com/company/nolana/",
+    "company_description": "Nolana’s agentic AI platform transforms how financial institutions manage customer service and insurance operations. It acts as a real-time co-pilot for teams,  guiding humans while executing full workflows in the background. From triaging issues and updating records to verifying claims and triggering approvals, Nolana automates complex processes while keeping humans in control. The result is faster decisions, higher accuracy, and a more human customer experience powered by intelligent automation.",
+    "founding_year": 2024,
+    "primary_industry": "ai",
+    "secondary_industry": "[\"fintech\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Haatch, Feedback Ventures, Innovate UK",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/08cd9d5c-4f6a-4c0d-8a38-72e3323e5cb9",
+    "id": 42880,
+    "dateCreated": "2025-10-25T20:17:06.641Z",
+    "dateFounded": "2024-02-01T00:00:00.000Z",
+    "employees": "1-10",
+    "legalEntity": "Ltd.",
+    "mainContactId": null,
+    "shortDescription": "AI workflow automation for financial services",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "0.47",
+    "originalTotalFunding": "0.4",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-01-01T00:00:00.000Z",
+    "lastFunding": "0.36",
+    "originalLastFunding": "0.31",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": "England",
+    "billingStreet": null,
+    "billingPostalCode": "N1 3QP",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-25T20:17:12.661Z",
+    "pitchbookId": "708045-94",
+    "lastPitchbookSync": "2025-10-25T20:17:01.873Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 107387,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/5d2b40af-6d99-401e-8738-d23d6f1a7048-2dcd116416ce4ea5a5a8c0b74451b44b.jpeg",
+        "key": "5d2b40af-6d99-401e-8738-d23d6f1a7048-2dcd116416ce4ea5a5a8c0b74451b44b.jpeg",
+        "name": "251025_Logo_Nolana AI.jpeg",
+        "type": "Logo",
+        "linkableId": 42880,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-25T20:17:12.572Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 42880
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/5d2b40af-6d99-401e-8738-d23d6f1a7048-2dcd116416ce4ea5a5a8c0b74451b44b.jpeg",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:14:22.426003",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:14:22.425989",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://nolana.com",
+      "page_title": "Nolana AI - agentify financial services data and systems",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "101",
+        "849.",
+        "91.",
+        "28."
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/nolana",
+        "instagram": "https://instagram.com/nolana.ai"
+      },
+      "tech_stack": [
+        "React",
+        "Angular",
+        "Rails"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 50,
+      "normalized_score": 50,
+      "tier": "Tier 3: Medium Priority",
+      "matched_rules": [
+        "Rule 1: Platform Enablers",
+        "Rule 3: Insurance Solutions"
+      ],
+      "rule_scores": {
+        "Rule 1: Platform Enablers": {
+          "score": 26,
+          "confidence": 75,
+          "keywords": [
+            "workflow automation",
+            "ai platform",
+            "agentic"
+          ]
+        },
+        "Rule 3: Insurance Solutions": {
+          "score": 28,
+          "confidence": 82,
+          "keywords": [
+            "insurance",
+            "claims"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 38,
+        "multi_rule_bonus": 10,
+        "funding": 5,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": 15,
+        "raw_total": 70
+      },
+      "funding": {
+        "amount_millions": 0.47,
+        "stage": "Minimal"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "Yazen",
+    "company_type": "startup",
+    "company_country": "SE",
+    "company_city": "Lund",
+    "website": "https://www.yazen.com",
+    "company_linked_in": "https://www.linkedin.com/company/yazen-health/",
+    "company_description": "Yazen is a digital healthcare provider fighting obesity with a combination of medication and lifestyle changing therapies. All in a digital setting.",
+    "founding_year": 2021,
+    "primary_industry": "health",
+    "secondary_industry": "[]",
+    "focus_industries": null,
+    "business_types": "[\"b2c\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Evli Growth Partner, Helsana, Yabeo, Almaz Capital, Luminar Ventures, FSG (Fåhreus Start Up and Growth)",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/623290c4-1d5f-4db5-9c2b-5c89dc25d454",
+    "id": 35035,
+    "dateCreated": "2024-10-14T20:52:33.667Z",
+    "dateFounded": "2021-02-01T00:00:00.000Z",
+    "employees": "101-250",
+    "legalEntity": "AB",
+    "mainContactId": null,
+    "shortDescription": "Digital app for men's obesity treatment.",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Series A",
+    "totalFunding": "28.78",
+    "originalTotalFunding": "24.71",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2024-10-31T00:00:00.000Z",
+    "lastFunding": "23.08",
+    "originalLastFunding": "19.81",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": "222 20",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2024-10-14T20:52:33.665Z",
+    "pitchbookId": "498412-18",
+    "lastPitchbookSync": "2025-10-16T00:40:39.370Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": "2024-10-28T19:23:06.643Z",
+    "lastQualityCheckById": 457,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": {
+      "name": "Matteo Carabelli",
+      "id": 457,
+      "email": "macarabelli@deloitte.de",
+      "oauthSubject": "2334b8e2-70f1-7090-ab8c-8ca9f0d50b2b",
+      "salesforceId": null,
+      "roleName": "Standard User",
+      "invitedById": null,
+      "deletedById": null,
+      "emailConsent": true,
+      "deletedAt": null,
+      "lastClearedUpdates": null
+    },
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 109501,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/50d94af3-57db-4422-b321-0602ff76c2e1.png",
+        "key": "50d94af3-57db-4422-b321-0602ff76c2e1.png",
+        "name": "35035_logo.png",
+        "type": "Logo",
+        "linkableId": 35035,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-30T09:20:43.788Z",
+        "uploadOwnerId": null,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 35035
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/50d94af3-57db-4422-b321-0602ff76c2e1.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": false,
+    "last_enriched_date": null,
+    "axa_scoring": {
+      "total_score": 45,
+      "normalized_score": 45,
+      "tier": "Tier 3: Medium Priority",
+      "matched_rules": [
+        "Rule 4: Health Innovations"
+      ],
+      "rule_scores": {
+        "Rule 4: Health Innovations": {
+          "score": 18,
+          "confidence": 60,
+          "keywords": [
+            "digital health"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 18,
+        "multi_rule_bonus": 0,
+        "funding": 25,
+        "size": 24,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 64
+      },
+      "funding": {
+        "amount_millions": 28.78,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 101,
+        "category": "Small (50+)"
+      }
+    }
+  },
+  {
+    "company_name": "Qare",
+    "company_type": "scaleup",
+    "company_country": "FR",
+    "company_city": "Paris",
+    "website": "",
+    "company_linked_in": "https://www.linkedin.com/in/olivier-thierry-b6399/",
+    "company_description": "Medical teleconsultations",
+    "founding_year": 2017,
+    "primary_industry": "health",
+    "secondary_industry": "[]",
+    "focus_industries": null,
+    "business_types": "[\"b2c\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/af6b5c59-36cc-4fd4-ab89-bb96a61a79e9",
+    "id": 41894,
+    "dateCreated": "2025-09-03T11:39:54.540Z",
+    "dateFounded": "2016-02-01T00:00:00.000Z",
+    "employees": "101-250",
+    "legalEntity": "SAS",
+    "mainContactId": null,
+    "shortDescription": "Telemedicine platform for virtual consultations",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Acquired",
+    "totalFunding": "29.71",
+    "originalTotalFunding": "25.35",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2021-04-12T00:00:00.000Z",
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": "75008",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": 27253,
+    "lastModifiedDate": "2025-09-03T11:39:59.017Z",
+    "pitchbookId": "234394-39",
+    "lastPitchbookSync": "2025-10-16T00:12:47.487Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 103311,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/6b09ce68-3c5d-4c2c-a65b-490400ccac10-n4br5bfofx4qak2hpyc6.png",
+        "key": "6b09ce68-3c5d-4c2c-a65b-490400ccac10-n4br5bfofx4qak2hpyc6.png",
+        "name": "250903_Logo_Qare.png",
+        "type": "Logo",
+        "linkableId": 41894,
+        "linkableType": "startup",
+        "dateCreated": "2025-09-03T11:39:58.934Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 41894
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/6b09ce68-3c5d-4c2c-a65b-490400ccac10-n4br5bfofx4qak2hpyc6.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": false,
+    "last_enriched_date": null,
+    "axa_scoring": {
+      "total_score": 43,
+      "normalized_score": 43,
+      "tier": "Tier 3: Medium Priority",
+      "matched_rules": [
+        "Rule 4: Health Innovations"
+      ],
+      "rule_scores": {
+        "Rule 4: Health Innovations": {
+          "score": 12,
+          "confidence": 40,
+          "keywords": [
+            "telemedicine"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 12,
+        "multi_rule_bonus": 0,
+        "funding": 25,
+        "size": 24,
+        "maturity": 10,
+        "llm_adjustment": -10,
+        "raw_total": 61
+      },
+      "funding": {
+        "amount_millions": 29.71,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 101,
+        "category": "Small (50+)"
+      }
+    }
+  },
+  {
+    "company_name": "Media Stream AI",
+    "company_type": "startup",
+    "company_country": "GB",
+    "company_city": "Manchester, UK ",
+    "website": "https://www.mediastreamai.com",
+    "company_linked_in": "",
+    "company_description": "Media Stream AI is building sovereign AI data infrastructure and autonomous production systems that power the media, government, and enterprise sectors across the UK, Europe, and global markets. Its network of GPU- and RDU-powered data centres in Manchester, Sunderland, Düsseldorf, and Jamaica deliver sustainable, high-performance compute managed by MOTHER AI, a sovereign orchestration platform ensuring real-time efficiency, data compliance, and energy optimisation. Integrating Lenovo Neptune water-cooled GPUs and SambaNova RDU racks, MSAI enables secure, low-latency AI training, inference, and robotic production—positioning the UK as a leader in intelligent, sustainable AI infrastructure.",
+    "founding_year": 2025,
+    "primary_industry": "ai",
+    "secondary_industry": "[\"cleantech\", \"ai\", \"analytics\", \"deeptech\", \"energy\", \"media\", \"musicEntertainment\", \"robo\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\", \"b2c\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/d20bdc4f-71f1-481a-ad8d-5a484aeebf91",
+    "id": 44508,
+    "dateCreated": "2025-10-26T18:53:47.448Z",
+    "dateFounded": "2025-02-02T11:00:00.000Z",
+    "employees": "51-100",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "AI-driven personalized TV solutions",
+    "technologyReadiness": "Early Market Stage",
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "88.00",
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": null,
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 253,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-11-10T14:56:12.554Z",
+    "pitchbookId": null,
+    "lastPitchbookSync": null,
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 111644,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/e191f7d5-48fe-4006-b1f2-915827b38973-Screenshot%202025-11-10%20at%2015.56.01.png",
+        "key": "e191f7d5-48fe-4006-b1f2-915827b38973-Screenshot 2025-11-10 at 15.56.01.png",
+        "name": "251110_Logo_Media Stream AI.png",
+        "type": "Logo",
+        "linkableId": 44508,
+        "linkableType": "startup",
+        "dateCreated": "2025-11-10T14:56:10.181Z",
+        "uploadOwnerId": 253,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 44508
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/e191f7d5-48fe-4006-b1f2-915827b38973-Screenshot%202025-11-10%20at%2015.56.01.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:15:51.366449",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:15:51.366441",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.mediastreamai.com",
+      "page_title": "Media Stream AI – UK &amp; EU Sovereign GPU Cloud | Canal-Cooled AI Data Centres",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "37",
+        "59",
+        "45",
+        "8"
+      ],
+      "social_media": {},
+      "tech_stack": [
+        "React",
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 42,
+      "normalized_score": 42,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [
+        "Rule 1: Platform Enablers"
+      ],
+      "rule_scores": {
+        "Rule 1: Platform Enablers": {
+          "score": 28,
+          "confidence": 80,
+          "keywords": []
+        }
+      },
+      "breakdown": {
+        "rule_score": 28,
+        "multi_rule_bonus": 0,
+        "funding": 30,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 60
+      },
+      "funding": {
+        "amount_millions": 88.0,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "Prewave",
+    "company_type": "scaleup",
+    "company_country": "AT",
+    "company_city": "Vienna",
+    "website": "https://www.prewave.com/",
+    "company_linked_in": "https://www.linkedin.com/company/prewave",
+    "company_description": "Pioneering a breakthrough era for supply chain management, Prewave stands as a beacon of transparency, resilience, and sustainability. Committed to enhancing the resilience and sustainability of supply chains, Prewave harnesses the power of publicly accessible information from local news, social media, and other databases to comprehensively comprehend and report potential risks affecting suppliers and commodities across all supply chain tiers. Leveraging a sophisticated AI algorithm, Prewave efficiently analyzes content in over 400 languages across more than 150 risk categories, ensuring that no supply chain disruption remains undetected. This innovative approach has positioned Prewave as an indispensable ally in fostering a more sustainable and resilient global supply chain ecosystem.\n",
+    "founding_year": 2017,
+    "primary_industry": "enterpriseSoftware",
+    "secondary_industry": "[\"regtech\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Hedosophia, Creandum, Speedinvest, Venteh, Kompas",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/a7613627-002f-418a-83a0-aec89f760ff6",
+    "id": 44192,
+    "dateCreated": "2025-10-26T15:53:39.143Z",
+    "dateFounded": "2016-02-01T00:00:00.000Z",
+    "employees": "101-250",
+    "legalEntity": "GmbH",
+    "mainContactId": null,
+    "shortDescription": "AI-driven supply chain risk management",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Series B",
+    "totalFunding": "36.86",
+    "originalTotalFunding": "31.7",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-04-02T00:00:00.000Z",
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": "1020",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T15:53:44.022Z",
+    "pitchbookId": "224194-06",
+    "lastPitchbookSync": "2025-10-26T15:53:35.891Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 107889,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/c7eb45f2-6b4d-42b4-8a44-67e389c0c222-bhrc16hak5dl8pd6kzsu.jpeg",
+        "key": "c7eb45f2-6b4d-42b4-8a44-67e389c0c222-bhrc16hak5dl8pd6kzsu.jpeg",
+        "name": "251026_Logo_Prewave.jpeg",
+        "type": "Logo",
+        "linkableId": 44192,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-26T15:53:43.918Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 44192
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/c7eb45f2-6b4d-42b4-8a44-67e389c0c222-bhrc16hak5dl8pd6kzsu.jpeg",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:13:28.916444",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:13:28.916433",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.prewave.com/",
+      "page_title": "Leading AI-Powered Platform for Supply Chain Intelligence | Prewave",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "911-",
+        "045",
+        "138",
+        "772"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/prewave",
+        "facebook": "https://facebook.com/prewaveai",
+        "instagram": "https://instagram.com/prewaveai"
+      },
+      "tech_stack": [
+        "React",
+        "Angular",
+        "WordPress"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 42,
+      "normalized_score": 42,
+      "tier": "Tier 3: Medium Priority",
+      "matched_rules": [],
+      "rule_scores": {},
+      "breakdown": {
+        "rule_score": 0,
+        "multi_rule_bonus": 0,
+        "funding": 25,
+        "size": 24,
+        "maturity": 10,
+        "llm_adjustment": 0,
+        "raw_total": 59
+      },
+      "funding": {
+        "amount_millions": 36.86,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 101,
+        "category": "Small (50+)"
+      }
+    }
+  },
+  {
+    "company_name": "Superscript",
+    "company_type": "scaleup",
+    "company_country": "GB",
+    "company_city": "London",
+    "website": "https://gosuperscript.com/",
+    "company_linked_in": "https://www.linkedin.com/company/superscript-insurance/posts/?feedView=all",
+    "company_description": "We are a digital insurance broker with worldwide reach, we have access to best-in-class covers, meeting the needs of companies at every stage of growth, from startups to large corporations.\n",
+    "founding_year": 2015,
+    "primary_industry": "ai",
+    "secondary_industry": "[\"propConstruction\", \"agriTech\", \"ai\", \"analytics\", \"cleantech\", \"climate\", \"comms\", \"crypto\", \"cyber\", \"deeptech\", \"dualUseTech\", \"onlineMarkets\", \"eventTech\", \"enterpriseSoftware\", \"fintech\", \"gaming\", \"legal\", \"marketingAds\", \"media\", \"medtechPharma\", \"musicEntertainment\", \"regtech\", \"space\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\", \"b2c\", \"b2g\", \"c2c\", \"other\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/1eb32d39-bf32-48eb-87aa-afa52debea90",
+    "id": 21891,
+    "dateCreated": "2023-03-23T11:02:35.943Z",
+    "dateFounded": "2014-01-01T00:00:00.000Z",
+    "employees": "Undisclosed",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "Superscript delivers tailored business insurance solutions, including public liability, business interruption, cyber, and healthcare professional coverage, serving diverse industries with flexible policies since 2014, based in London, United Kingdom.",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Series B",
+    "totalFunding": "82.35",
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": "2023-01-09T00:00:00.000Z",
+    "lastFunding": "54.93",
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": "England",
+    "billingStreet": "180 Borough High Street",
+    "billingPostalCode": "SE1 1LB",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 267,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2023-03-23T11:02:35.943Z",
+    "pitchbookId": null,
+    "lastPitchbookSync": null,
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [],
+    "logoUrl": null,
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:15:43.895694",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:15:43.895686",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://gosuperscript.com/",
+      "page_title": "Advised insurance solutions | Superscript",
+      "emails": [
+        "hello@gosuperscript.com",
+        "advised@gosuperscript.com"
+      ],
+      "phone_numbers": [
+        "",
+        "615",
+        "75",
+        "165",
+        "869"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/gosuperscript",
+        "twitter": "https://twitter.com/gosuperscript",
+        "facebook": "https://facebook.com/gosuperscript",
+        "instagram": "https://instagram.com/gosuperscript"
+      },
+      "tech_stack": [
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 40,
+      "normalized_score": 40,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [
+        "Rule 3: Insurance Solutions",
+        "Rule 4: Health Innovations"
+      ],
+      "rule_scores": {
+        "Rule 3: Insurance Solutions": {
+          "score": 16,
+          "confidence": 47,
+          "keywords": [
+            "insurance"
+          ]
+        },
+        "Rule 4: Health Innovations": {
+          "score": 6,
+          "confidence": 20,
+          "keywords": []
+        }
+      },
+      "breakdown": {
+        "rule_score": 26,
+        "multi_rule_bonus": 10,
+        "funding": 30,
+        "size": 0,
+        "maturity": 10,
+        "llm_adjustment": -10,
+        "raw_total": 56
+      },
+      "funding": {
+        "amount_millions": 82.35,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 0,
+        "category": "Unknown"
+      }
+    }
+  },
+  {
+    "company_name": "properti",
+    "company_type": "startup",
+    "company_country": "CH",
+    "company_city": "Zurich",
+    "website": "https://www.properti.com",
+    "company_linked_in": "https://www.linkedin.com/company/properti-ag/",
+    "company_description": "properti is a transaction-based end-to-end real estate platform based on AI, software, marketplace and brokerage - for the next generation of realtors.\n\n\n- 6 years old, bootstrapped the first 2 years\n- over 15k+ transactions\n- revenue in double-digit million range (2025)\n- profitable\n- 14mCHF raised so far\n#1 in the Swiss market\n\nB2C & B2B2C\n\n",
+    "founding_year": 2019,
+    "primary_industry": "propConstruction",
+    "secondary_industry": "[\"propConstruction\", \"fintech\", \"realestate\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2c\", \"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/320a22fb-3ec0-434f-99a5-966103443308",
+    "id": 35659,
+    "dateCreated": "2024-10-14T21:21:49.809Z",
+    "dateFounded": "2019-02-01T00:00:00.000Z",
+    "employees": "101-250",
+    "legalEntity": "AG",
+    "mainContactId": null,
+    "shortDescription": "Real Estate Platform",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Series A",
+    "totalFunding": "20.27",
+    "originalTotalFunding": "17.41",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-01-20T00:00:00.000Z",
+    "lastFunding": "8.02",
+    "originalLastFunding": "6.89",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": "Zurich",
+    "billingStreet": "",
+    "billingPostalCode": "",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 199,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2024-10-23T10:51:21.040Z",
+    "pitchbookId": "483877-54",
+    "lastPitchbookSync": "2025-10-16T00:36:59.699Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": "2024-10-28T19:23:06.643Z",
+    "lastQualityCheckById": 457,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": {
+      "name": "Matteo Carabelli",
+      "id": 457,
+      "email": "macarabelli@deloitte.de",
+      "oauthSubject": "2334b8e2-70f1-7090-ab8c-8ca9f0d50b2b",
+      "salesforceId": null,
+      "roleName": "Standard User",
+      "invitedById": null,
+      "deletedById": null,
+      "emailConsent": true,
+      "deletedAt": null,
+      "lastClearedUpdates": null
+    },
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 82233,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/ae83f9b4-7831-459a-a5c2-0e5bc7b0544a-4281f626bcab483c9b39d88b6251d638",
+        "key": "ae83f9b4-7831-459a-a5c2-0e5bc7b0544a-4281f626bcab483c9b39d88b6251d638",
+        "name": "241023_Logo_Properti AG4281f626bcab483c9b39d88b6251d638",
+        "type": "Logo",
+        "linkableId": 35659,
+        "linkableType": "startup",
+        "dateCreated": "2024-10-23T10:46:22.860Z",
+        "uploadOwnerId": 199,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 35659
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/ae83f9b4-7831-459a-a5c2-0e5bc7b0544a-4281f626bcab483c9b39d88b6251d638",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": false,
+    "last_enriched_date": null,
+    "axa_scoring": {
+      "total_score": 40,
+      "normalized_score": 40,
+      "tier": "Tier 3: Medium Priority",
+      "matched_rules": [],
+      "rule_scores": {},
+      "breakdown": {
+        "rule_score": 0,
+        "multi_rule_bonus": 0,
+        "funding": 25,
+        "size": 24,
+        "maturity": 7,
+        "llm_adjustment": 0,
+        "raw_total": 56
+      },
+      "funding": {
+        "amount_millions": 20.27,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 101,
+        "category": "Small (50+)"
+      }
+    }
+  },
+  {
+    "company_name": "Anansi",
+    "company_type": "startup",
+    "company_country": "GB",
+    "company_city": "London",
+    "website": "https://withanansi.com/",
+    "company_linked_in": "https://www.linkedin.com/company/anansi-insurance/",
+    "company_description": "Anansi is a delivery resilience platform for modern retailers and 3PLs. \n\nOur platform combines regulated insurance, real-time data, and embedded automation to protect profit and improve operational control. \n\nWe automate the tedious, manual aspects of last-mile logistics, including claims, invoice verification, and carrier performance tracking. That means fewer errors, faster resolutions, and less firefighting for overstretched teams. \n\nWe help turn a business's last-mile risk into its strongest performance lever, protecting the bottom line for growth",
+    "founding_year": 2021,
+    "primary_industry": "fintech",
+    "secondary_industry": "[\"logistics\", \"analytics\", \"ai\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Guinness Ventures, Greenlight Re, Alea CP, Octoput Ventures",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/9f66ff7c-9958-40b7-bf01-2af5ca36906f",
+    "id": 44715,
+    "dateCreated": "2025-10-26T20:14:58.622Z",
+    "dateFounded": "2018-02-01T00:00:00.000Z",
+    "employees": "11-25",
+    "legalEntity": "Ltd.",
+    "mainContactId": null,
+    "shortDescription": "Insurance-driven delivery platform.",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "5.33",
+    "originalTotalFunding": "4.58",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-01-01T00:00:00.000Z",
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": "England",
+    "billingStreet": null,
+    "billingPostalCode": "WC2H 9JQ",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T20:15:03.611Z",
+    "pitchbookId": "233860-06",
+    "lastPitchbookSync": "2025-10-26T20:14:54.518Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 108085,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/0d987237-b914-4cc5-b393-0bdc53de34a0-yypqgviscqjxyrim2xxe.jpeg",
+        "key": "0d987237-b914-4cc5-b393-0bdc53de34a0-yypqgviscqjxyrim2xxe.jpeg",
+        "name": "251026_Logo_Anansi.jpeg",
+        "type": "Logo",
+        "linkableId": 44715,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-26T20:15:03.496Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 44715
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/0d987237-b914-4cc5-b393-0bdc53de34a0-yypqgviscqjxyrim2xxe.jpeg",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:19:55.061968",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:19:55.061901",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://withanansi.com/",
+      "page_title": "Anansi - Delivery, reinforced.",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "+049",
+        "619",
+        "+046",
+        "072"
+      ],
+      "social_media": {},
+      "tech_stack": [
+        "React",
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 40,
+      "normalized_score": 40,
+      "tier": "Tier 3: Medium Priority",
+      "matched_rules": [
+        "Rule 3: Insurance Solutions"
+      ],
+      "rule_scores": {
+        "Rule 3: Insurance Solutions": {
+          "score": 32,
+          "confidence": 94,
+          "keywords": [
+            "insurance",
+            "claims"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 32,
+        "multi_rule_bonus": 0,
+        "funding": 15,
+        "size": 12,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 56
+      },
+      "funding": {
+        "amount_millions": 5.33,
+        "stage": "Seed/Pre-Seed"
+      },
+      "company_size": {
+        "employee_count": 11,
+        "category": "Micro (11)"
+      }
+    }
+  },
+  {
+    "company_name": "Get-ranked.ai",
+    "company_type": "startup",
+    "company_country": "CH",
+    "company_city": "Zürich",
+    "website": "https://get-ranked.ai",
+    "company_linked_in": "https://www.linkedin.com/in/quirin-hasler-a80076186/",
+    "company_description": "Get Ranked is a Social & AI Search impact platform that helps brands get discovered across LLMs like ChatGPT, Perplexity and Gemini and social platforms like TikTok . By activating hundreds of nano and micro creators, we generate authentic brand mentions that drive visibility in both social search and AI-driven discovery.\n\nWe’re second-time founders who previously built Refluenced — a two-sided marketplace connecting creators and brands. In just 3 years, we scaled it to over 1.5 M ARR, 3 000 campaigns, and 20 000 creator-brand matches — proving our ability to execute, scale, and dominate emerging discovery channels.",
+    "founding_year": 2025,
+    "primary_industry": "marketingAds",
+    "secondary_industry": "[\"marketingAds\", \"media\", \"someMessaging\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\", \"b2c\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Thomas Brändle, Guntram Friede, Run My Accounts, Swiss Fintech Association, Celonis",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/7f74cc3d-6d5f-47ca-857f-dc3914e6e809",
+    "id": 43537,
+    "dateCreated": "2025-10-26T10:34:24.554Z",
+    "dateFounded": "2025-02-01T11:00:00.000Z",
+    "employees": "11-25",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "AI search and social visibility platform",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "250.00",
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": null,
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T10:34:26.418Z",
+    "pitchbookId": null,
+    "lastPitchbookSync": null,
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [],
+    "logoUrl": null,
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:16:35.687572",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:16:35.687562",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://get-ranked.ai",
+      "page_title": "Get Ranked | Boost Visibility on ChatGPT, Gemini &amp; TikTok Search with Nano &amp; Micro Creators",
+      "emails": [
+        "royce@refluenced.com",
+        "info@get-ranked.io"
+      ],
+      "phone_numbers": [
+        "",
+        "615",
+        "+049",
+        "+046",
+        "125"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/get-ranked",
+        "instagram": "https://instagram.com/refluenced?igsh=mtexa2dpemxpynpldg=="
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 38,
+      "normalized_score": 38,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [],
+      "rule_scores": {},
+      "breakdown": {
+        "rule_score": 0,
+        "multi_rule_bonus": 0,
+        "funding": 35,
+        "size": 12,
+        "maturity": 7,
+        "llm_adjustment": 0,
+        "raw_total": 54
+      },
+      "funding": {
+        "amount_millions": 250.0,
+        "stage": "Growth"
+      },
+      "company_size": {
+        "employee_count": 11,
+        "category": "Micro (11)"
+      }
+    }
+  },
+  {
+    "company_name": "Huniverse Global",
+    "company_type": "startup",
+    "company_country": "KR",
+    "company_city": "Seoul",
+    "website": "https://huniverse.co.kr/",
+    "company_linked_in": "https://www.linkedin.com/company/huniverse-global",
+    "company_description": "Enabling precision medicine via standardized, AI-ready healthcare data platform. Our proprietary cloud-based EMR platform streamlines hospital operations and captures high-quality clinical data. By turning fragmented hospital data into structured, interoperable datasets, we empower hospitals, researchers, and companies to accelerate innovation in patient care.\n",
+    "founding_year": 2019,
+    "primary_industry": "health",
+    "secondary_industry": "[\"medtechPharma\", \"health\", \"ai\", \"enterpriseSoftware\", \"somethingElse\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\", \"b2g\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "TAP Angel Partners, IBK Capital, DA Value Investment, Scale Up Partners, Naver Cloud",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/1e508c3e-c687-49a5-8a00-2599a64f560f",
+    "id": 20602,
+    "dateCreated": "2023-03-23T10:54:54.121Z",
+    "dateFounded": "2019-01-01T00:00:00.000Z",
+    "employees": "51-100",
+    "legalEntity": "Co. Ltd.",
+    "mainContactId": null,
+    "shortDescription": "Huniverse Global, founded in 2019 in Seoul, South Korea, delivers cloud-based hospital information systems designed to support precision medicine and adapt to evolving medical environments with modular solutions.",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Series B",
+    "totalFunding": "9.46",
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": "2022-06-20T00:00:00.000Z",
+    "lastFunding": "7.74",
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": "81, Anam-ro",
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 391,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2024-10-25T12:54:15.825Z",
+    "pitchbookId": "483298",
+    "lastPitchbookSync": null,
+    "isMissingValidation": false,
+    "lastQualityCheckDate": "2024-10-25T12:54:15.851Z",
+    "lastQualityCheckById": 391,
+    "isQualityChecked": true,
+    "qualityChecks": [
+      {
+        "id": 6,
+        "name": "Testable Product",
+        "description": "Is this startup's product ready to be tested in a pilot project?"
+      },
+      {
+        "id": 4,
+        "name": "Proprietary Product Offering",
+        "description": "Does this startup offer a proprietary product (not just services)?"
+      },
+      {
+        "id": 3,
+        "name": "Institutional Funding",
+        "description": "Has this startup received institutional funding?"
+      },
+      {
+        "id": 1,
+        "name": "Verifiable Company Information",
+        "description": "Is this company's information verifiable?"
+      },
+      {
+        "id": 2,
+        "name": "Proper Legal Entity",
+        "description": "Does this startup have a proper legal entity?"
+      },
+      {
+        "id": 5,
+        "name": "Founder or Investor Ownership",
+        "description": "Do the founders and institutional investors hold the majority ownership of this startup?"
+      }
+    ],
+    "lastQualityCheckBy": {
+      "name": "Pinar Celik",
+      "id": 391,
+      "email": "picelik@deloitte.de",
+      "oauthSubject": "23d43872-f011-703a-e5bf-9cd5905a27c8",
+      "salesforceId": null,
+      "roleName": "Standard User",
+      "invitedById": null,
+      "deletedById": null,
+      "emailConsent": true,
+      "deletedAt": null,
+      "lastClearedUpdates": null
+    },
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 108661,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/0785ad83-9e38-4b87-ae64-e359807e140f.png",
+        "key": "0785ad83-9e38-4b87-ae64-e359807e140f.png",
+        "name": "20602_logo.png",
+        "type": "Logo",
+        "linkableId": 20602,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-30T09:19:12.877Z",
+        "uploadOwnerId": null,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 20602
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/0785ad83-9e38-4b87-ae64-e359807e140f.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:13:10.379312",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:13:10.379303",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://huniverse.co.kr/",
+      "page_title": "HUNIVERSE - 휴니버스 글로벌",
+      "emails": [
+        "sinkbs@huniverse.co.kr",
+        "huniverse@huniverse.co.kr"
+      ],
+      "phone_numbers": [
+        "",
+        "31",
+        "28.",
+        "18.",
+        "21"
+      ],
+      "social_media": {},
+      "tech_stack": [
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 38,
+      "normalized_score": 38,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 1: Platform Enablers",
+        "Rule 4: Health Innovations"
+      ],
+      "rule_scores": {
+        "Rule 1: Platform Enablers": {
+          "score": 21,
+          "confidence": 60,
+          "keywords": [
+            "rag"
+          ]
+        },
+        "Rule 4: Health Innovations": {
+          "score": 27,
+          "confidence": 90,
+          "keywords": [
+            "healthcare data"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 37,
+        "multi_rule_bonus": 10,
+        "funding": 15,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 54
+      },
+      "funding": {
+        "amount_millions": 9.46,
+        "stage": "Seed/Pre-Seed"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "Arrogant Pixel LTD",
+    "company_type": "startup",
+    "company_country": "GB",
+    "company_city": "London",
+    "website": "",
+    "company_linked_in": "https://www.linkedin.com/company/9379879/",
+    "company_description": "We are a London-based game development studio dedicated to crafting genre-surbverting games with a lot of heart. Led by a female founder, our diverse team is currently shaping an innovative RTS for PC and Console, backed by an ambitious franchise plan. Beyond gaming, we offer software development,a rapid prototyping, multimedia, marketing, and business solutions.",
+    "founding_year": 2015,
+    "primary_industry": "gaming",
+    "secondary_industry": "[\"edu\", \"media\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\", \"b2c\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/c2a55965-55ee-45ef-9f64-bb39281c8266",
+    "id": 43712,
+    "dateCreated": "2025-10-26T11:13:11.780Z",
+    "dateFounded": "2015-02-01T11:00:00.000Z",
+    "employees": "1-10",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "Developer of narrative-driven adventure games",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "25000.00",
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": null,
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T11:13:16.292Z",
+    "pitchbookId": null,
+    "lastPitchbookSync": null,
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 109419,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/af23862e-6ccf-4021-a113-38f5abdf56d9.png",
+        "key": "af23862e-6ccf-4021-a113-38f5abdf56d9.png",
+        "name": "43712_logo.png",
+        "type": "Logo",
+        "linkableId": 43712,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-30T09:20:35.692Z",
+        "uploadOwnerId": null,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 43712
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/af23862e-6ccf-4021-a113-38f5abdf56d9.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": false,
+    "last_enriched_date": null,
+    "axa_scoring": {
+      "total_score": 37,
+      "normalized_score": 37,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [
+        "Rule 5: Dev & Legacy"
+      ],
+      "rule_scores": {
+        "Rule 5: Dev & Legacy": {
+          "score": 10,
+          "confidence": 30,
+          "keywords": []
+        }
+      },
+      "breakdown": {
+        "rule_score": 10,
+        "multi_rule_bonus": 0,
+        "funding": 40,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 52
+      },
+      "funding": {
+        "amount_millions": 25000.0,
+        "stage": "Late Stage"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "Hyphorest",
+    "company_type": "startup",
+    "company_country": "DE",
+    "company_city": "Filderstadt",
+    "website": "https://hyphorest.com",
+    "company_linked_in": "https://www.linkedin.com/company/hyphorest/",
+    "company_description": "Hyphorest develops a digital platform that bridges individuals, companies, and project developers to verified nature-based solutions such as reforestation, agroforestry, and carbon farming. By combining satellite imagery, AI-powered monitoring, and blockchain technology, Hyphorest ensures transparent, science-based tracking of environmental impact and carbon removal. The platform enables users to fund projects, follow their real-world progress, and receive reliable impact reports that align with corporate sustainability and CSRD disclosure requirements. Each project is continuously monitored through remote sensing and AI models that estimate tree growth, biomass, and CO₂ sequestration, while blockchain provides a secure and tamper-proof record of results and investments. In doing so, Hyphorest transforms nature restoration into a transparent, data-driven investment class, enabling people and organizations to contribute credibly to climate resilience and biodiversity recovery.",
+    "founding_year": 2025,
+    "primary_industry": "climate",
+    "secondary_industry": "[\"fintech\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\", \"b2c\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/a248ffb0-c80e-4077-8197-562d3d656625",
+    "id": 43271,
+    "dateCreated": "2025-10-26T08:15:46.777Z",
+    "dateFounded": "2025-02-01T11:00:00.000Z",
+    "employees": "1-10",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "Hyphorest provides satellite-monitored, AI-driven nature restoration projects with transparent, verifiable data for compliance reporting and environmental contributions.",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "1000.00",
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": null,
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T08:15:48.455Z",
+    "pitchbookId": null,
+    "lastPitchbookSync": null,
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 109276,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/bf92e718-e2bb-4b2d-96a1-74261c76a280.png",
+        "key": "bf92e718-e2bb-4b2d-96a1-74261c76a280.png",
+        "name": "43271_logo.png",
+        "type": "Logo",
+        "linkableId": 43271,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-30T09:20:17.783Z",
+        "uploadOwnerId": null,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 43271
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/bf92e718-e2bb-4b2d-96a1-74261c76a280.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:19:32.544414",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:19:32.544407",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://hyphorest.com",
+      "page_title": "Hyphorest",
+      "emails": [
+        "info@hyphorest.com"
+      ],
+      "phone_numbers": [
+        "",
+        "706",
+        "00",
+        "8",
+        "513"
+      ],
+      "social_media": {},
+      "tech_stack": [
+        "React"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 37,
+      "normalized_score": 37,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [],
+      "rule_scores": {},
+      "breakdown": {
+        "rule_score": 0,
+        "multi_rule_bonus": 0,
+        "funding": 40,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": 0,
+        "raw_total": 52
+      },
+      "funding": {
+        "amount_millions": 1000.0,
+        "stage": "Late Stage"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "DATATOENERGY",
+    "company_type": "startup",
+    "company_country": "KR",
+    "company_city": "NAJU",
+    "website": "https://www.datatoenergy.com",
+    "company_linked_in": "",
+    "company_description": "DataToEnergy develops high-efficiency microinverters and AI-based monitoring systems that optimize solar power generation and enable intelligent fault diagnosis.",
+    "founding_year": 2024,
+    "primary_industry": "energy",
+    "secondary_industry": "[\"ai\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/7c1d667d-f0ed-41d9-94e2-602f0cd10d57",
+    "id": 44644,
+    "dateCreated": "2025-10-26T19:21:11.160Z",
+    "dateFounded": "2024-02-01T11:00:00.000Z",
+    "employees": "1-10",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "AI-driven smart energy solutions",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "1000.00",
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": null,
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T19:21:13.586Z",
+    "pitchbookId": null,
+    "lastPitchbookSync": null,
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [],
+    "logoUrl": null,
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:20:34.286859",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:20:34.286851",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.datatoenergy.com",
+      "page_title": "데이터투에너지 - AI 기반 스마트 에너지 솔루션",
+      "emails": [
+        "info@datatoenergyco.com"
+      ],
+      "phone_numbers": [
+        "",
+        "959",
+        "061-",
+        "8",
+        "9."
+      ],
+      "social_media": {},
+      "tech_stack": [
+        "React",
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 37,
+      "normalized_score": 37,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [],
+      "rule_scores": {},
+      "breakdown": {
+        "rule_score": 0,
+        "multi_rule_bonus": 0,
+        "funding": 40,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": 0,
+        "raw_total": 52
+      },
+      "funding": {
+        "amount_millions": 1000.0,
+        "stage": "Late Stage"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "AdsGency AI",
+    "company_type": "startup",
+    "company_country": "US",
+    "company_city": "San Francisco",
+    "website": "https://adsgency.ai",
+    "company_linked_in": "https://www.linkedin.com/in/bolbi-liu/",
+    "company_description": "Agentic operating system for brands to run performance advertisement",
+    "founding_year": 2023,
+    "primary_industry": "ai",
+    "secondary_industry": "[\"marketingAds\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\", \"b2g\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Hat Trick Capital, Uphonest Capital, HF0, Brightway Future Capital, Kungho Capital",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/68f6c292-71f5-4faf-be51-9b16e913a866",
+    "id": 43001,
+    "dateCreated": "2025-10-25T20:40:51.528Z",
+    "dateFounded": "2023-02-01T00:00:00.000Z",
+    "employees": "11-25",
+    "legalEntity": "Inc.",
+    "mainContactId": null,
+    "shortDescription": "AI-driven advertising automation platform",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Seed - VC",
+    "totalFunding": "15.12",
+    "originalTotalFunding": "13",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-10-20T00:00:00.000Z",
+    "lastFunding": "11.94",
+    "originalLastFunding": "10.26",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": "California",
+    "billingStreet": null,
+    "billingPostalCode": "94560",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-25T20:40:57.759Z",
+    "pitchbookId": "537684-94",
+    "lastPitchbookSync": "2025-10-25T20:40:46.826Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 107425,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/651ca314-713b-4e87-acf3-b5092ce1639a-9103ba3c274140d3af0ad58dc7356952.jpeg",
+        "key": "651ca314-713b-4e87-acf3-b5092ce1639a-9103ba3c274140d3af0ad58dc7356952.jpeg",
+        "name": "251025_Logo_AdsGency AI.jpeg",
+        "type": "Logo",
+        "linkableId": 43001,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-25T20:40:57.716Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 43001
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/651ca314-713b-4e87-acf3-b5092ce1639a-9103ba3c274140d3af0ad58dc7356952.jpeg",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:19:17.002622",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:19:17.002612",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://adsgency.ai",
+      "page_title": "AdsGency AI",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "107",
+        "888",
+        "379.",
+        "28."
+      ],
+      "social_media": {},
+      "tech_stack": [
+        "React",
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 37,
+      "normalized_score": 37,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 1: Platform Enablers"
+      ],
+      "rule_scores": {
+        "Rule 1: Platform Enablers": {
+          "score": 24,
+          "confidence": 70,
+          "keywords": [
+            "agentic"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 24,
+        "multi_rule_bonus": 0,
+        "funding": 20,
+        "size": 12,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 53
+      },
+      "funding": {
+        "amount_millions": 15.12,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 11,
+        "category": "Micro (11)"
+      }
+    }
+  },
+  {
+    "company_name": "OpenHealth Technologies ",
+    "company_type": "startup",
+    "company_country": "DE",
+    "company_city": "Berlin ",
+    "website": "https://www.open-health.app",
+    "company_linked_in": "https://www.linkedin.com/company/openhealth-technologies",
+    "company_description": "B2B healthtech company building the central infrastructure for lab data. Our technology includes a secure API that turns fragmented results into structured, AI-ready data, and a white-label platform for insights and patient-friendly reporting. ",
+    "founding_year": 2023,
+    "primary_industry": "health",
+    "secondary_industry": "[\"ai\", \"analytics\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "YZR, GoHub, xDeck, calm/Storm, Octopus Ventures",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/2cf3df23-9048-4a37-a4ca-9bc72b77a526",
+    "id": 44205,
+    "dateCreated": "2025-10-26T15:56:34.520Z",
+    "dateFounded": "2022-02-01T00:00:00.000Z",
+    "employees": "11-25",
+    "legalEntity": "GmbH",
+    "mainContactId": null,
+    "shortDescription": "AI-driven health data management solutions",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Seed - VC",
+    "totalFunding": "4.28",
+    "originalTotalFunding": "3.68",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-09-10T00:00:00.000Z",
+    "lastFunding": "4.28",
+    "originalLastFunding": "3.68",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": "10117",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T15:56:38.528Z",
+    "pitchbookId": "542335-60",
+    "lastPitchbookSync": "2025-10-26T15:56:31.086Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 107895,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/510be8da-0fc6-4687-bdf8-818096e025f6-a818030a097242589b6d340ae01bde03.jpeg",
+        "key": "510be8da-0fc6-4687-bdf8-818096e025f6-a818030a097242589b6d340ae01bde03.jpeg",
+        "name": "251026_Logo_OpenHealth Technologies.jpeg",
+        "type": "Logo",
+        "linkableId": 44205,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-26T15:56:38.428Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 44205
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/510be8da-0fc6-4687-bdf8-818096e025f6-a818030a097242589b6d340ae01bde03.jpeg",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:20:22.567101",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:20:22.567090",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.open-health.app",
+      "page_title": "Open Health Technologies",
+      "emails": [
+        "hello@openhealthtechnologies.com"
+      ],
+      "phone_numbers": [
+        "",
+        "658",
+        "550",
+        "02",
+        "514"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/openhealth-technologies",
+        "instagram": "https://instagram.com/openhealth.tech"
+      },
+      "tech_stack": [
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 36,
+      "normalized_score": 36,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 1: Platform Enablers",
+        "Rule 4: Health Innovations"
+      ],
+      "rule_scores": {
+        "Rule 1: Platform Enablers": {
+          "score": 22,
+          "confidence": 65,
+          "keywords": [
+            "rag"
+          ]
+        },
+        "Rule 4: Health Innovations": {
+          "score": 15,
+          "confidence": 50,
+          "keywords": [
+            "healthtech"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 32,
+        "multi_rule_bonus": 10,
+        "funding": 10,
+        "size": 12,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 51
+      },
+      "funding": {
+        "amount_millions": 4.28,
+        "stage": "Seed/Pre-Seed"
+      },
+      "company_size": {
+        "employee_count": 11,
+        "category": "Micro (11)"
+      }
+    }
+  },
+  {
+    "company_name": "Sateliot",
+    "company_type": "scaleup",
+    "company_country": "ES",
+    "company_city": "BArcelona",
+    "website": "https://sateliot.space/",
+    "company_linked_in": "",
+    "company_description": "connect 5G devices directly from space . IoT devices for industries out of coverage and 5G devices for gov/defense industries",
+    "founding_year": 2018,
+    "primary_industry": "space",
+    "secondary_industry": "[\"comms\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\", \"b2g\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "INDRA, CELLNEX, GPI, HYPERION",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/f7b793cc-daf6-45b7-9291-8d1bf9cfb998",
+    "id": 39083,
+    "dateCreated": "2025-03-18T14:28:57.327Z",
+    "dateFounded": "2018-02-01T00:00:00.000Z",
+    "employees": "51-100",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "Global IoT connectivity via nanosatellites.",
+    "technologyReadiness": "Growth Market Stage",
+    "currentInvestmentStage": "Series B",
+    "totalFunding": "138.83",
+    "originalTotalFunding": "126.79",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-03-26T00:00:00.000Z",
+    "lastFunding": "76.65",
+    "originalLastFunding": "70",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": "08029",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 253,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-11-06T08:21:56.273Z",
+    "pitchbookId": "433591-93",
+    "lastPitchbookSync": "2025-04-10T09:53:29.141Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 91574,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/c6232db1-b250-43ed-b865-631d78d4ae96-gt0mo6mhlo5dmhgpbtst",
+        "key": "c6232db1-b250-43ed-b865-631d78d4ae96-gt0mo6mhlo5dmhgpbtst",
+        "name": "250318_Logo_Sateliotgt0mo6mhlo5dmhgpbtst",
+        "type": "Logo",
+        "linkableId": 39083,
+        "linkableType": "startup",
+        "dateCreated": "2025-03-18T14:28:58.394Z",
+        "uploadOwnerId": 703,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 39083
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/c6232db1-b250-43ed-b865-631d78d4ae96-gt0mo6mhlo5dmhgpbtst",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:15:23.994311",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:15:23.994299",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://sateliot.space/",
+      "page_title": "Sateliot | Connect Your IoT Devices | 5G Satellite NB-IoT",
+      "emails": [
+        "info@sateliot.space"
+      ],
+      "phone_numbers": [
+        "",
+        "81",
+        "985",
+        "27-",
+        "72"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/sateliot",
+        "instagram": "https://instagram.com/sateliot.space"
+      },
+      "tech_stack": [
+        "React",
+        "Angular",
+        "WordPress"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 35,
+      "normalized_score": 35,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [],
+      "rule_scores": {},
+      "breakdown": {
+        "rule_score": 0,
+        "multi_rule_bonus": 0,
+        "funding": 35,
+        "size": 5,
+        "maturity": 10,
+        "llm_adjustment": 0,
+        "raw_total": 50
+      },
+      "funding": {
+        "amount_millions": 138.83,
+        "stage": "Growth"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "RespireLabs",
+    "company_type": "startup",
+    "company_country": "AT",
+    "company_city": "Vienna",
+    "website": "https://www.respirelabs.com",
+    "company_linked_in": "https://www.linkedin.com/company/105738719",
+    "company_description": "RespireLabs is a healthtech startup from Austria. Our flagship product is the Smart Mouth Tape, a sensors equipped adhesive strip that is based on acoustic-AI. It detects dysfunctional breathing patterns during sleep, and potential sleep apnea events. We provide users with personalized protocols, and actionable insights to dramatticaly improve their sleep quality, oxygenation, and overall health. RespireLabs is human-centered, our mission is to help people transition from mouth to nasal breathing, fix the basic breathing & sleep habits, reduce sleep apnea, thereby reducing linked risks of e.g. strokes and other cardiovascular diseases. We collect a large, unique prioprietary dataset of breathing sounds. We sell through retailers like drugstores and pharmacies, we collaborate with doctors who are active breathing practitioners, who prescribe mouth taping for certain group of patients.",
+    "founding_year": 2025,
+    "primary_industry": "lifeSciences",
+    "secondary_industry": "[\"health\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2c\", \"other\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/3c41aa4e-2cb2-446e-88c4-224a6c62d492",
+    "id": 43872,
+    "dateCreated": "2025-10-26T13:39:28.237Z",
+    "dateFounded": "2025-02-01T11:00:00.000Z",
+    "employees": "1-10",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "Wearable sleep breathing monitor",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "55.00",
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": null,
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T13:39:30.495Z",
+    "pitchbookId": null,
+    "lastPitchbookSync": null,
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 108790,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/af2e2cf4-b26c-4aef-ab40-e3f6a62a14f7.png",
+        "key": "af2e2cf4-b26c-4aef-ab40-e3f6a62a14f7.png",
+        "name": "43872_logo.png",
+        "type": "Logo",
+        "linkableId": 43872,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-30T09:19:25.799Z",
+        "uploadOwnerId": null,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 43872
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/af2e2cf4-b26c-4aef-ab40-e3f6a62a14f7.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:15:17.811304",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:15:17.811296",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.respirelabs.com",
+      "page_title": "RespireLabs Homepage - RespireLabs",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "8",
+        "0 ",
+        "32",
+        "3"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/respirelabs",
+        "facebook": "https://facebook.com/groups"
+      },
+      "tech_stack": [
+        "React",
+        "Angular",
+        "WordPress"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 35,
+      "normalized_score": 35,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [
+        "Rule 4: Health Innovations"
+      ],
+      "rule_scores": {
+        "Rule 4: Health Innovations": {
+          "score": 18,
+          "confidence": 60,
+          "keywords": [
+            "healthtech"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 18,
+        "multi_rule_bonus": 0,
+        "funding": 30,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 50
+      },
+      "funding": {
+        "amount_millions": 55.0,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "TimeFlow",
+    "company_type": "startup",
+    "company_country": "IT",
+    "company_city": "Milano",
+    "website": "https://www.timeflow.it",
+    "company_linked_in": "https://www.linkedin.com/company/42683039",
+    "company_description": "TimeFlow redefines how companies govern their supply chain, buy, and deliver expertise through generative AI and autonomous agents.\nWe offer a SaaS solution — an AI‑powered Workforce & Vendor Management platform — that unifies internal skills monitoring with the selection and engagement of consultants.",
+    "founding_year": 2020,
+    "primary_industry": "enterpriseSoftware",
+    "secondary_industry": "[\"regtech\", \"recruitment\", \"ai\", \"enterpriseSoftware\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Vertis, Azimut, FNDX",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/31c31de6-b0fa-4c47-9daf-92e20b40e63f",
+    "id": 35568,
+    "dateCreated": "2024-10-14T21:18:11.667Z",
+    "dateFounded": "2020-02-01T00:00:00.000Z",
+    "employees": "26-50",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "Networking platform for IT supplier management.",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Seed - VC",
+    "totalFunding": "7.86",
+    "originalTotalFunding": "6.65",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-02-17T00:00:00.000Z",
+    "lastFunding": "4.66",
+    "originalLastFunding": "4",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": "73100",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2024-10-14T21:18:11.665Z",
+    "pitchbookId": "442463-77",
+    "lastPitchbookSync": "2025-10-16T00:39:17.189Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": "2024-10-28T19:23:06.643Z",
+    "lastQualityCheckById": 457,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": {
+      "name": "Matteo Carabelli",
+      "id": 457,
+      "email": "macarabelli@deloitte.de",
+      "oauthSubject": "2334b8e2-70f1-7090-ab8c-8ca9f0d50b2b",
+      "salesforceId": null,
+      "roleName": "Standard User",
+      "invitedById": null,
+      "deletedById": null,
+      "emailConsent": true,
+      "deletedAt": null,
+      "lastClearedUpdates": null
+    },
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 81006,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/4bbbbcb7-99a2-4465-bf6e-7a60fa572cee-uughc1wppwpzsxgbyz9w",
+        "key": "4bbbbcb7-99a2-4465-bf6e-7a60fa572cee-uughc1wppwpzsxgbyz9w",
+        "name": "241014_Logo_TimeFlowuughc1wppwpzsxgbyz9w",
+        "type": "Logo",
+        "linkableId": 35568,
+        "linkableType": "startup",
+        "dateCreated": "2024-10-14T21:18:12.783Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 35568
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/4bbbbcb7-99a2-4465-bf6e-7a60fa572cee-uughc1wppwpzsxgbyz9w",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:17:14.060372",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:17:14.060364",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.timeflow.it",
+      "page_title": "Piattaforma AI per Vendor e Workforce Management | TimeFlow",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "9.",
+        "0 ",
+        "151",
+        "201"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/timeflow-optimization-control",
+        "facebook": "https://facebook.com/timeflowplatform",
+        "instagram": "https://instagram.com/timeflowplatform"
+      },
+      "tech_stack": [
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 34,
+      "normalized_score": 34,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 1: Platform Enablers"
+      ],
+      "rule_scores": {
+        "Rule 1: Platform Enablers": {
+          "score": 24,
+          "confidence": 70,
+          "keywords": [
+            "monitoring",
+            "autonomous agent"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 24,
+        "multi_rule_bonus": 0,
+        "funding": 15,
+        "size": 12,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 48
+      },
+      "funding": {
+        "amount_millions": 7.86,
+        "stage": "Seed/Pre-Seed"
+      },
+      "company_size": {
+        "employee_count": 26,
+        "category": "Micro (26)"
+      }
+    }
+  },
+  {
+    "company_name": "Claimlane",
+    "company_type": "startup",
+    "company_country": "DK",
+    "company_city": "Copenhagen",
+    "website": "https://www.claimlane.com",
+    "company_linked_in": "https://www.linkedin.com/in/anderssommerlarsen/",
+    "company_description": "Claimlane helps the retail industry and any company that sells physical products handle warranty claims and returns without emails and spreadsheets. \n\nWe help solve the complex operational challenges behind the scenes in returns management as opposed to other platforms that are mostly focused on the consumer side.\n\nWe are deeply integrated into our customers processes, tech stack, and business relationships because we also manage the b2b side of returns with all their business partners.\n\nBecause we manage the b2b side we have a large network of thousands of retailers and brands using our platform worldwide which is a great moat and has also caused us to have 0% churn outside of the occasional customers going out of business of course.",
+    "founding_year": 2020,
+    "primary_industry": "enterpriseSoftware",
+    "secondary_industry": "[\"onlineMarkets\", \"comms\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Vendep",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/e123f3ed-2ab9-4b24-8ccd-f0470f9280e7",
+    "id": 43720,
+    "dateCreated": "2025-10-26T11:15:28.191Z",
+    "dateFounded": "2015-02-01T00:00:00.000Z",
+    "employees": "11-25",
+    "legalEntity": "ApS",
+    "mainContactId": null,
+    "shortDescription": "Returns and warranty claims management platform.",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Seed - VC",
+    "totalFunding": "2.72",
+    "originalTotalFunding": "2.34",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2024-05-28T00:00:00.000Z",
+    "lastFunding": "2.09",
+    "originalLastFunding": "1.8",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": "2300",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T11:15:33.073Z",
+    "pitchbookId": "501259-33",
+    "lastPitchbookSync": "2025-10-26T11:15:22.065Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 107693,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/3e8ccc00-8acd-4a41-be31-f966850ef2c0-wawtxsma1zbzn7ifuhaq.png",
+        "key": "3e8ccc00-8acd-4a41-be31-f966850ef2c0-wawtxsma1zbzn7ifuhaq.png",
+        "name": "251026_Logo_Claimlane.png",
+        "type": "Logo",
+        "linkableId": 43720,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-26T11:15:32.973Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 43720
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/3e8ccc00-8acd-4a41-be31-f966850ef2c0-wawtxsma1zbzn7ifuhaq.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:16:51.392751",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:16:51.392739",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.claimlane.com",
+      "page_title": "Warranty Software Leader | Claimlane’s Top Solution",
+      "emails": [
+        "support@claimlane.com"
+      ],
+      "phone_numbers": [
+        "",
+        "81",
+        "082.",
+        "676",
+        "302"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/claimlane"
+      },
+      "tech_stack": [
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 33,
+      "normalized_score": 33,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 3: Insurance Solutions"
+      ],
+      "rule_scores": {
+        "Rule 3: Insurance Solutions": {
+          "score": 28,
+          "confidence": 82,
+          "keywords": [
+            "claims",
+            "claims management"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 28,
+        "multi_rule_bonus": 0,
+        "funding": 10,
+        "size": 12,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 47
+      },
+      "funding": {
+        "amount_millions": 2.72,
+        "stage": "Seed/Pre-Seed"
+      },
+      "company_size": {
+        "employee_count": 11,
+        "category": "Micro (11)"
+      }
+    }
+  },
+  {
+    "company_name": "Deepentix",
+    "company_type": "startup",
+    "company_country": "AT",
+    "company_city": "Vienna",
+    "website": "https://deepentix.com",
+    "company_linked_in": "https://www.linkedin.com/in/morteza-amini/",
+    "company_description": "AI ROI stalls when decisions can’t be traced. Deepentix converts unstructured documents into a verifiable Claim Graph, linking every answer back to its evidence (“Answer → Claim → Paragraph → Document → Author”). Our reasoning plane goes beyond basic RAG: graph-constrained retrieval, counterfactual checks (e.g., policy clauses, CER criteria), and paragraph-level citations minimize hallucinations and make audits fast. We’re EU-AI-Act–ready by design.\nWe focus first on MedTech/Pharma (e.g., Clinical Evaluation Reports, protocol reviews) and Insurance (coverage assessment, underwriting), where manual reviews are slow, fragmented, and hard to audit. Traction to date includes a live Gap Finder, shipped Claim Graph API, pilots in MedTech and Insurance, and non-dilutive DeepTech funding. The outcome for customers: shorter reviews, higher straight-through processing, and defensible decisions with full provenance.",
+    "founding_year": 2025,
+    "primary_industry": "enterpriseSoftware",
+    "secondary_industry": "[\"ai\", \"deeptech\", \"medtechPharma\", \"lifeSciences\", \"enterpriseSoftware\", \"fintech\", \"legal\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/9a3a6d9f-d54c-4ddb-8aec-c96080a1f9c5",
+    "id": 43649,
+    "dateCreated": "2025-10-26T10:59:05.400Z",
+    "dateFounded": "1900-02-01T00:00:00.000Z",
+    "employees": "1-10",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "Scientific claim verification platform",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": null,
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": null,
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T10:59:08.730Z",
+    "pitchbookId": "630291-52",
+    "lastPitchbookSync": "2025-10-26T10:59:01.792Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 109234,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/32fe9da6-ed11-4db1-a64a-216854c94278.png",
+        "key": "32fe9da6-ed11-4db1-a64a-216854c94278.png",
+        "name": "43649_logo.png",
+        "type": "Logo",
+        "linkableId": 43649,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-30T09:20:12.236Z",
+        "uploadOwnerId": null,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 43649
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/32fe9da6-ed11-4db1-a64a-216854c94278.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:14:01.118098",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:14:01.118090",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://deepentix.com",
+      "page_title": "Deepentix",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "26 ",
+        "888",
+        "+049",
+        "+046"
+      ],
+      "social_media": {},
+      "tech_stack": [
+        "Angular",
+        "Rails"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 33,
+      "normalized_score": 33,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 1: Platform Enablers",
+        "Rule 3: Insurance Solutions"
+      ],
+      "rule_scores": {
+        "Rule 1: Platform Enablers": {
+          "score": 26,
+          "confidence": 75,
+          "keywords": [
+            "rag"
+          ]
+        },
+        "Rule 3: Insurance Solutions": {
+          "score": 35,
+          "confidence": 100,
+          "keywords": [
+            "insurance",
+            "underwriting",
+            "policy"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 45,
+        "multi_rule_bonus": 10,
+        "funding": 0,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 47
+      },
+      "funding": {
+        "amount_millions": 0.0,
+        "stage": "Undisclosed"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "Gamma Meon",
+    "company_type": "startup",
+    "company_country": "GB",
+    "company_city": "London",
+    "website": "https://solarenergyport.net",
+    "company_linked_in": "https://www.linkedin.com/in/kristofferlaurson/",
+    "company_description": "Gamma Meon designs and deploys modular, scalable solar energy solutions to replace fossil fuel generators in emerging markets. Our flagship project, Solar Energy Port (SEP), delivers locally manufactured, rapidly deployable solar micro-grids using a service-based model (Energy as a Service, EaaS) to provide clean, reliable, and affordable electricity. In partnership with PAS Solar in Nigeria, we address energy access gaps in commercial centers and peri-urban communities, displacing diesel generator dependence while promoting local job creation, economic development, and emissions reductions. Our SEP systems are IoT-enabled for remote monitoring, use standard components for cost efficiency and maintenance ease, and are designed for rapid installation and redeployment. Through innovative business models and robust risk management, we ensure financial sustainability, environmental impact, and gender and social inclusion outcomes aligned with ESG principles and Nigeria’s national climate g",
+    "founding_year": 2022,
+    "primary_industry": "energy",
+    "secondary_industry": "[\"analytics\", \"cleantech\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2c\", \"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "InnovateUK",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/5dc5716f-7694-47ac-abdf-74b0e7f94d51",
+    "id": 43911,
+    "dateCreated": "2025-10-26T13:48:53.933Z",
+    "dateFounded": "2022-02-01T11:00:00.000Z",
+    "employees": "1-10",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "Modular solar energy solutions",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "200.00",
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": null,
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T13:48:57.067Z",
+    "pitchbookId": null,
+    "lastPitchbookSync": null,
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 108945,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/f732a6bb-a370-4676-8ea0-20a28a7121cb.png",
+        "key": "f732a6bb-a370-4676-8ea0-20a28a7121cb.png",
+        "name": "43911_logo.png",
+        "type": "Logo",
+        "linkableId": 43911,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-30T09:19:41.462Z",
+        "uploadOwnerId": null,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 43911
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/f732a6bb-a370-4676-8ea0-20a28a7121cb.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:15:24.315453",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:15:24.315444",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://solarenergyport.net",
+      "page_title": "SEP - Solar Energy Port",
+      "emails": [
+        "kristoffer@solarenergyport.net"
+      ],
+      "phone_numbers": [
+        "",
+        "166.",
+        "72",
+        "528-",
+        "370."
+      ],
+      "social_media": {},
+      "tech_stack": [
+        "Angular",
+        "WordPress"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 32,
+      "normalized_score": 32,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [
+        "Rule 4: Health Innovations"
+      ],
+      "rule_scores": {
+        "Rule 4: Health Innovations": {
+          "score": 9,
+          "confidence": 30,
+          "keywords": [
+            "remote monitoring"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 9,
+        "multi_rule_bonus": 0,
+        "funding": 35,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 46
+      },
+      "funding": {
+        "amount_millions": 200.0,
+        "stage": "Growth"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "Oraion",
+    "company_type": "startup",
+    "company_country": "IE",
+    "company_city": "Dublin",
+    "website": "https://www.oraion.com/",
+    "company_linked_in": "https://www.linkedin.com/company/oraion-ai",
+    "company_description": "Oraion is an agentic AI platform that unifies data from across your organization to deliver deep, context-rich, actionable insights. Chat with your data in natural language, tailor the insights most relevant to you, generate reports, and automate workflows. Oraion identifies trends, patterns, and relationships across all your data, highlighting opportunities and surfacing what matters. By combining agentic analysis, contextual understanding, and workflow integration, Oraion gives your organization clarity and control, while also reducing manual effort. With Oraion, teams are able to make smart, data-backed decisions in seconds.",
+    "founding_year": 2024,
+    "primary_industry": "ai",
+    "secondary_industry": "[\"enterpriseSoftware\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/03062ee3-da3a-4f99-a1a9-4c2949d3c527",
+    "id": 44502,
+    "dateCreated": "2025-10-26T18:52:33.267Z",
+    "dateFounded": "2024-02-01T00:00:00.000Z",
+    "employees": "11-25",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "AI-driven data analysis platform",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Seed - VC",
+    "totalFunding": "3.50",
+    "originalTotalFunding": "3.01",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-07-09T00:00:00.000Z",
+    "lastFunding": "3.50",
+    "originalLastFunding": "3.01",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T18:52:37.653Z",
+    "pitchbookId": "894557-71",
+    "lastPitchbookSync": "2025-10-26T18:52:29.229Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 108010,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/c977b231-b0f8-4325-87fe-e1c7fca62fc6-7f7d1be4f6fa4fe19e5b1d43f931b77b.jpeg",
+        "key": "c977b231-b0f8-4325-87fe-e1c7fca62fc6-7f7d1be4f6fa4fe19e5b1d43f931b77b.jpeg",
+        "name": "251026_Logo_Oraion.jpeg",
+        "type": "Logo",
+        "linkableId": 44502,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-26T18:52:37.552Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 44502
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/c977b231-b0f8-4325-87fe-e1c7fca62fc6-7f7d1be4f6fa4fe19e5b1d43f931b77b.jpeg",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:20:33.350529",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:20:33.350519",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.oraion.com/",
+      "page_title": "Oraion: Agentic AI",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "555 ",
+        "101",
+        "709 ",
+        "28."
+      ],
+      "social_media": {},
+      "tech_stack": [
+        "React",
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 32,
+      "normalized_score": 32,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 1: Platform Enablers"
+      ],
+      "rule_scores": {
+        "Rule 1: Platform Enablers": {
+          "score": 26,
+          "confidence": 75,
+          "keywords": [
+            "ai platform",
+            "agentic"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 26,
+        "multi_rule_bonus": 0,
+        "funding": 10,
+        "size": 12,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 45
+      },
+      "funding": {
+        "amount_millions": 3.5,
+        "stage": "Seed/Pre-Seed"
+      },
+      "company_size": {
+        "employee_count": 11,
+        "category": "Micro (11)"
+      }
+    }
+  },
+  {
+    "company_name": "co.brick ",
+    "company_type": "startup",
+    "company_country": "PL",
+    "company_city": "Gliwice",
+    "website": "https://www.cobrick.com",
+    "company_linked_in": "https://www.linkedin.com/company/cobrick/",
+    "company_description": "We are a product-service company specializing in custom multi-agent solutions and knowledge management for industrial clients. Our core competency is simplifying complexity through expertise in:\n\n-Multi-Agent Architecture\n-Mesh Communication & hardware-software integration\n-Enterprise Knowledge Management\n-Process Automation (n8n, custom) \n\nWe own product and technologies  for advanced knowledge management for manufactures. \n\nAs a trusted business and technology partner specializing in the collection and processing of IIOT data, artificial intelligence-based solutions, offering advisory support, expert knowledge, and practical assistance in building, scaling, and transforming innovative custom solutions..\n\n",
+    "founding_year": 2019,
+    "primary_industry": "manufacturingMaterials",
+    "secondary_industry": "[\"dualUseTech\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/a5220352-8269-451f-b303-2918c5089f6d",
+    "id": 43600,
+    "dateCreated": "2025-10-26T10:47:58.560Z",
+    "dateFounded": "2019-02-01T11:00:00.000Z",
+    "employees": "51-100",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "Industrial operations observability platform",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "3.00",
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": "2020-01-01T00:00:00.000Z",
+    "lastFunding": "1.62",
+    "originalLastFunding": "1.4",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 253,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-11-12T08:33:42.488Z",
+    "pitchbookId": "498144-43",
+    "lastPitchbookSync": "2025-11-12T08:32:45.086Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 109295,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/780f022c-97d6-448a-8cc9-c0d7bae61f12.png",
+        "key": "780f022c-97d6-448a-8cc9-c0d7bae61f12.png",
+        "name": "43600_logo.png",
+        "type": "Logo",
+        "linkableId": 43600,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-30T09:20:19.191Z",
+        "uploadOwnerId": null,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 43600
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/780f022c-97d6-448a-8cc9-c0d7bae61f12.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:15:54.617805",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:15:54.617797",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.cobrick.com",
+      "page_title": "Expert Services for Growing Businesses",
+      "emails": [
+        "hello@cobrick.com",
+        "sales@cobrick.com"
+      ],
+      "phone_numbers": [
+        "",
+        "225",
+        "91.",
+        "28.",
+        "616"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/cobrick1",
+        "facebook": "https://facebook.com/cobrick.io",
+        "instagram": "https://instagram.com/co.brick"
+      },
+      "tech_stack": [
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 32,
+      "normalized_score": 32,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 1: Platform Enablers",
+        "Rule 2: Service Providers"
+      ],
+      "rule_scores": {
+        "Rule 1: Platform Enablers": {
+          "score": 24,
+          "confidence": 70,
+          "keywords": [
+            "observability",
+            "multi-agent"
+          ]
+        },
+        "Rule 2: Service Providers": {
+          "score": 7,
+          "confidence": 24,
+          "keywords": []
+        }
+      },
+      "breakdown": {
+        "rule_score": 34,
+        "multi_rule_bonus": 10,
+        "funding": 10,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 46
+      },
+      "funding": {
+        "amount_millions": 3.0,
+        "stage": "Seed/Pre-Seed"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "Nomain",
+    "company_type": "startup",
+    "company_country": "FI",
+    "company_city": "Helsinki",
+    "website": "https://www.nomain.com",
+    "company_linked_in": "https://www.linkedin.com/company/nomain",
+    "company_description": "Nomain provides AI-powered tools for banks and insurance companies to make mainframe systems understandable and manageable. \n\nOur platform analyzes complex legacy code, visualizes system architecture, and enables anyone—technical or not—to search, explore, and document mainframe environments quickly. This reduces time spent on code comprehension, accelerates project delivery, lowers operational costs, and supports modernization or cloud migration. \n\nNomain integrates with existing workflows, ensures enterprise-grade security, and helps organizations onboard new talent, maintain business continuity, and bridge the knowledge gap as mainframe experts retire. No fluff—just faster, clearer, and more efficient mainframe management.\n\nWe serve a global market projected to reach $86B by 2031.",
+    "founding_year": 2024,
+    "primary_industry": "fintech",
+    "secondary_industry": "[\"enterpriseSoftware\", \"ai\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\", \"b2g\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Janne Jormalainen, Olli Pasanen, Mikko Kuitunen, Jarkko Forsberg, Mikko Kesti",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/c9270734-a338-4210-a764-88f8bc91358f",
+    "id": 44253,
+    "dateCreated": "2025-10-26T16:07:24.520Z",
+    "dateFounded": "2024-02-01T00:00:00.000Z",
+    "employees": "1-10",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "AI-driven mainframe modernization platform",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Seed - VC",
+    "totalFunding": "1.45",
+    "originalTotalFunding": "1.25",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-07-16T00:00:00.000Z",
+    "lastFunding": "1.45",
+    "originalLastFunding": "1.25",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T16:07:27.031Z",
+    "pitchbookId": "832841-29",
+    "lastPitchbookSync": "2025-10-26T16:07:20.860Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 109445,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/5c069a2e-b122-4d72-992f-b697a020b4dc.png",
+        "key": "5c069a2e-b122-4d72-992f-b697a020b4dc.png",
+        "name": "44253_logo.png",
+        "type": "Logo",
+        "linkableId": 44253,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-30T09:20:38.926Z",
+        "uploadOwnerId": null,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 44253
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/5c069a2e-b122-4d72-992f-b697a020b4dc.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:14:59.578481",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:14:59.578473",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.nomain.com",
+      "page_title": "Mainframe Modernization &amp; Legacy System Analysis Platform | Nomain",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "016",
+        "91.",
+        "10 ",
+        "18."
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/nomain"
+      },
+      "tech_stack": [
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 32,
+      "normalized_score": 32,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 3: Insurance Solutions",
+        "Rule 5: Dev & Legacy"
+      ],
+      "rule_scores": {
+        "Rule 3: Insurance Solutions": {
+          "score": 12,
+          "confidence": 35,
+          "keywords": [
+            "insurance"
+          ]
+        },
+        "Rule 5: Dev & Legacy": {
+          "score": 24,
+          "confidence": 70,
+          "keywords": [
+            "mainframe modernization"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 34,
+        "multi_rule_bonus": 10,
+        "funding": 10,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 46
+      },
+      "funding": {
+        "amount_millions": 1.45,
+        "stage": "Seed/Pre-Seed"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "Velory",
+    "company_type": "startup",
+    "company_country": "SE",
+    "company_city": "Stockholm",
+    "website": "https://www.velory.com/",
+    "company_linked_in": "https://www.linkedin.com/company/velory-ab/",
+    "company_description": "Velory is an integrated IT Lifecycle Management platform that helps people-centric enterprises automate and control their entire IT asset journey — from procurement to end-of-life. By empowering employees through a self-service experience and connecting to multiple suppliers, Velory simplifies IT management, enhances visibility, and removes complexity. Unlike reseller portals or fragmented tools, Velory is supplier-agnostic, easy to implement, and designed to create a seamless, secure, and delightful IT experience for both IT teams and employees.",
+    "founding_year": 2020,
+    "primary_industry": "enterpriseSoftware",
+    "secondary_industry": "[\"onlineMarkets\", \"socialImpact\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/2463a5ef-738d-4ffd-a8ed-b5a4e189fbf5",
+    "id": 44392,
+    "dateCreated": "2025-10-26T18:24:02.703Z",
+    "dateFounded": "2014-02-01T00:00:00.000Z",
+    "employees": "26-50",
+    "legalEntity": "AB",
+    "mainContactId": null,
+    "shortDescription": "IT lifecycle management platform",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "32.18",
+    "originalTotalFunding": "27.67",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2020-06-10T00:00:00.000Z",
+    "lastFunding": "6.62",
+    "originalLastFunding": "5.69",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": "111 34",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": 32498,
+    "lastModifiedDate": "2025-10-26T18:24:14.097Z",
+    "pitchbookId": "102648-07",
+    "lastPitchbookSync": "2025-10-26T18:23:58.314Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 107965,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/5dffa412-21bc-4e3c-8cb4-a3acf9338e9f-zndlu7btuazbgqbbwtne.jpeg",
+        "key": "5dffa412-21bc-4e3c-8cb4-a3acf9338e9f-zndlu7btuazbgqbbwtne.jpeg",
+        "name": "251026_Logo_Velory.jpeg",
+        "type": "Logo",
+        "linkableId": 44392,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-26T18:24:13.984Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 44392
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/5dffa412-21bc-4e3c-8cb4-a3acf9338e9f-zndlu7btuazbgqbbwtne.jpeg",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:15:21.336158",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:15:21.336151",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.velory.com/",
+      "page_title": "Velory - Your IT Lifecycle on Autopilot",
+      "emails": [
+        "support@velory.com"
+      ],
+      "phone_numbers": [
+        "",
+        "85",
+        "589",
+        "777",
+        "07 "
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/velory-ab",
+        "twitter": "https://twitter.com/veloryofficial",
+        "instagram": "https://instagram.com/velory"
+      },
+      "tech_stack": [
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 31,
+      "normalized_score": 31,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [],
+      "rule_scores": {},
+      "breakdown": {
+        "rule_score": 0,
+        "multi_rule_bonus": 0,
+        "funding": 25,
+        "size": 12,
+        "maturity": 7,
+        "llm_adjustment": 0,
+        "raw_total": 44
+      },
+      "funding": {
+        "amount_millions": 32.18,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 26,
+        "category": "Micro (26)"
+      }
+    }
+  },
+  {
+    "company_name": "varmo",
+    "company_type": "startup",
+    "company_country": "DE",
+    "company_city": "Karlsruhe ",
+    "website": "https://www.varmo-sensors.de",
+    "company_linked_in": "https://www.linkedin.com/company/varmo-sensors/posts/?feedView=all",
+    "company_description": "varmo develops and manufactures fully printed heat flux sensors that can be produced in any shape or size. These ultra-thin, flexible sensors enable precise thermal management and real-time monitoring. Their applications range from wearables and medical devices to industrial processes and battery systems.",
+    "founding_year": 2024,
+    "primary_industry": "deeptech",
+    "secondary_industry": "[\"wearables\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "innoWerft Walldorf GmbH",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/58c78688-e545-4271-af84-d6b9b4be22ba",
+    "id": 44357,
+    "dateCreated": "2025-10-26T18:14:19.611Z",
+    "dateFounded": "2024-02-01T11:00:00.000Z",
+    "employees": "1-10",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "Printed heat flux sensor manufacturer",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "400.00",
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": null,
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T18:14:26.346Z",
+    "pitchbookId": null,
+    "lastPitchbookSync": null,
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 108921,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/e6365b1e-2501-4fd7-83b1-38d4e875a913.png",
+        "key": "e6365b1e-2501-4fd7-83b1-38d4e875a913.png",
+        "name": "44357_logo.png",
+        "type": "Logo",
+        "linkableId": 44357,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-30T09:19:39.262Z",
+        "uploadOwnerId": null,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 44357
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/e6365b1e-2501-4fd7-83b1-38d4e875a913.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:19:51.145907",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:19:51.145899",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.varmo-sensors.de",
+      "page_title": "varmo-sensors |",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "7.",
+        "8",
+        "464",
+        "0 "
+      ],
+      "social_media": {},
+      "tech_stack": [
+        "Angular",
+        "WordPress"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 30,
+      "normalized_score": 30,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [
+        "Rule 4: Health Innovations"
+      ],
+      "rule_scores": {
+        "Rule 4: Health Innovations": {
+          "score": 6,
+          "confidence": 20,
+          "keywords": []
+        }
+      },
+      "breakdown": {
+        "rule_score": 6,
+        "multi_rule_bonus": 0,
+        "funding": 35,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 43
+      },
+      "funding": {
+        "amount_millions": 400.0,
+        "stage": "Growth"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "Canopy Cloud",
+    "company_type": "startup",
+    "company_country": "GB",
+    "company_city": "London",
+    "website": "https://www.canopycloud.io/platform",
+    "company_linked_in": "https://www.linkedin.com/company/104958985",
+    "company_description": "Canopy is a next-generation cloud broker platform designed to transform how organisations procure, negotiate, and optimise cloud contracts across over 30 providers. By combining deep technical expertise in cloud architecture with commercial acumen, Canopy enables customers to achieve substantial savings, accelerate deal cycles, and eliminate inefficiencies that plague traditional cloud procurement. The platform leverages AI and real-time analytics to deliver unbiased comparisons, automate negotiations, and advise on optimal migration strategies, all through a scalable SaaS marketplace. Canopy’s “technical-first” approach ensures clients from high-growth scale-ups to established enterprises avoid costly contract mistakes and gain maximum value from the rapidly expanding cloud market.",
+    "founding_year": 2024,
+    "primary_industry": "enterpriseSoftware",
+    "secondary_industry": "[\"enterpriseSoftware\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Mark Boost, CIVO",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/d83995c4-6e2e-431b-a168-61e67f6fc49b",
+    "id": 43583,
+    "dateCreated": "2025-10-26T10:43:39.327Z",
+    "dateFounded": "2024-02-01T11:00:00.000Z",
+    "employees": "1-10",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "Canopy Cloud provides a platform designed to harness and optimize cloud technology for businesses, enabling streamlined operations and enhanced efficiency.",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Undisclosed",
+    "totalFunding": "80.00",
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": null,
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": null,
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T10:43:41.253Z",
+    "pitchbookId": null,
+    "lastPitchbookSync": null,
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 109518,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/0e8449ed-efe1-42e8-9676-55c2b64761e8.png",
+        "key": "0e8449ed-efe1-42e8-9676-55c2b64761e8.png",
+        "name": "43583_logo.png",
+        "type": "Logo",
+        "linkableId": 43583,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-30T09:20:46.017Z",
+        "uploadOwnerId": null,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 43583
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/0e8449ed-efe1-42e8-9676-55c2b64761e8.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:15:51.401903",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:15:51.401894",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.canopycloud.io/platform",
+      "page_title": "Platform | Discover the Power of Canopy &mdash; Canopy",
+      "emails": [
+        "user@domain.com"
+      ],
+      "phone_numbers": [
+        "",
+        "658",
+        "101",
+        "21",
+        "073"
+      ],
+      "social_media": {
+        "facebook": "https://facebook.com/2008",
+        "instagram": "https://instagram.com/squarespace"
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 30,
+      "normalized_score": 30,
+      "tier": "Tier 2: High Priority",
+      "matched_rules": [],
+      "rule_scores": {},
+      "breakdown": {
+        "rule_score": 0,
+        "multi_rule_bonus": 0,
+        "funding": 30,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": 0,
+        "raw_total": 42
+      },
+      "funding": {
+        "amount_millions": 80.0,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "Tendios",
+    "company_type": "startup",
+    "company_country": "ES",
+    "company_city": "Barcelona",
+    "website": "https://tendios.com/en",
+    "company_linked_in": "https://www.linkedin.com/company/tendios/",
+    "company_description": "Tendios is an AI-native B2B SaaS that goes beyond search to do the work for you. Powered by Digital Workers coordinated through Agentic Workflows, it streamlines every step of winning public tenders.\n\nAutonomous agents monitor official sources 24/7, enrich and de-duplicate data, and surface relevant tenders with advanced filters and custom alerts. Real-time notifications mean you never miss a deadline.\n\nTeams collaborate in one place: share tenders, assign tasks, track progress, and control approvals while Agentic Workflows handle hand-offs between people and bots.\n\nAsk natural-language questions about any tender, run compliance and eligibility checks, and auto-extract requirements. Digital Workers draft structured bids, tailor answers, pre-fill forms, and validate against mandatory criteria—accelerating proposals and improving win rates.\n\nWith AI, Digital Workers, and auditable automation, Tendios makes tender management faster, smarter, and reliably consistent.",
+    "founding_year": 2023,
+    "primary_industry": "ai",
+    "secondary_industry": "[\"enterpriseSoftware\", \"ai\", \"legal\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\", \"b2g\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Easo Ventures, Ona Capital, Archipelago, Lukkap Ventures",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/290a9275-6ec2-4eb5-aea7-207cd2a8cf09",
+    "id": 44572,
+    "dateCreated": "2025-10-26T19:06:55.528Z",
+    "dateFounded": "2023-02-01T00:00:00.000Z",
+    "employees": "26-50",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "AI-driven public procurement platform",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Seed - VC",
+    "totalFunding": "2.33",
+    "originalTotalFunding": "2",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-05-27T00:00:00.000Z",
+    "lastFunding": "2.33",
+    "originalLastFunding": "2",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": "08007",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T19:07:01.697Z",
+    "pitchbookId": "599711-86",
+    "lastPitchbookSync": "2025-10-26T19:06:50.033Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 108032,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/e1b59513-3f5c-404e-9ecc-6631a395612b-irb1h5a4qkyvtudmyr0d.jpeg",
+        "key": "e1b59513-3f5c-404e-9ecc-6631a395612b-irb1h5a4qkyvtudmyr0d.jpeg",
+        "name": "251026_Logo_Tendios.jpeg",
+        "type": "Logo",
+        "linkableId": 44572,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-26T19:07:01.567Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 44572
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/e1b59513-3f5c-404e-9ecc-6631a395612b-irb1h5a4qkyvtudmyr0d.jpeg",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:19:17.662529",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:19:17.662520",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://tendios.com/en",
+      "page_title": "Tendios - Contratación pública con Inteligencia Artificial",
+      "emails": [
+        "info@tendios.com",
+        "hello@tendios.com"
+      ],
+      "phone_numbers": [
+        "",
+        "888",
+        "099",
+        "72",
+        "919-"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/tendios",
+        "twitter": "https://twitter.com/tendios_es",
+        "facebook": "https://facebook.com/tendios.es",
+        "instagram": "https://instagram.com/tendios_es"
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 30,
+      "normalized_score": 30,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 1: Platform Enablers"
+      ],
+      "rule_scores": {
+        "Rule 1: Platform Enablers": {
+          "score": 24,
+          "confidence": 70,
+          "keywords": [
+            "agentic",
+            "autonomous agent"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 24,
+        "multi_rule_bonus": 0,
+        "funding": 10,
+        "size": 12,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 43
+      },
+      "funding": {
+        "amount_millions": 2.33,
+        "stage": "Seed/Pre-Seed"
+      },
+      "company_size": {
+        "employee_count": 26,
+        "category": "Micro (26)"
+      }
+    }
+  },
+  {
+    "company_name": "Hedera Dx",
+    "company_type": "startup",
+    "company_country": "CH",
+    "company_city": "Lausanne",
+    "website": "https://www.hederadx.com",
+    "company_linked_in": "https://www.linkedin.com/company/hedera-dx/",
+    "company_description": "Hedera Dx is building the missing global cancer real-world data platform (RWD) based on molecular testing and AI. In the US cancer care already runs on genetic testing, real-world data (RWD) and artificial intelligence, and companies like Flatiron, Foundation Medicine and Tempus AI have already commercialized liquid biopsies and RWD/AI in the US. Hedera Dx is doing the same for the rest-of-world, a very large opportunity that is untapped because of the different infrastructure than what the US has.\n\nThe Hedera team has the required senior experience (CEO / Blueprint Genetics exit to NYSE:DGX, CCO / Sophia Genetics IPO and the chief medical led early clinical development and oncology biomarkers/CDx globally at Roche for 15 years), having recently launched, already rolled out into more than 50 institutions in 12 countries and having first pharma programs ongoing.",
+    "founding_year": 2021,
+    "primary_industry": "medtechPharma",
+    "secondary_industry": "[\"biotech\", \"ai\", \"lifeSciences\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Vsquared, Tesi, Top Harvest, Inventure, Amino Collective, Air Street Capital, Helsana, Jeff Dean",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/4559967d-5f79-48b5-b9c6-dc2b6389ba56",
+    "id": 34978,
+    "dateCreated": "2024-10-14T20:50:22.659Z",
+    "dateFounded": "2021-02-01T00:00:00.000Z",
+    "employees": "26-50",
+    "legalEntity": "SAS",
+    "mainContactId": null,
+    "shortDescription": "Liquid biopsy technology for cancer detection.",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Series A",
+    "totalFunding": "40.48",
+    "originalTotalFunding": "34.76",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-05-27T00:00:00.000Z",
+    "lastFunding": "17.47",
+    "originalLastFunding": "15",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": "1066",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2024-10-14T20:50:22.658Z",
+    "pitchbookId": "493338-61",
+    "lastPitchbookSync": "2025-10-16T00:40:48.340Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": "2024-10-28T19:23:06.643Z",
+    "lastQualityCheckById": 457,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": {
+      "name": "Matteo Carabelli",
+      "id": 457,
+      "email": "macarabelli@deloitte.de",
+      "oauthSubject": "2334b8e2-70f1-7090-ab8c-8ca9f0d50b2b",
+      "salesforceId": null,
+      "roleName": "Standard User",
+      "invitedById": null,
+      "deletedById": null,
+      "emailConsent": true,
+      "deletedAt": null,
+      "lastClearedUpdates": null
+    },
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 80676,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/27fac981-f121-4f05-b3ac-cfad056e0642-ykms0330el5cvbi2ziw8",
+        "key": "27fac981-f121-4f05-b3ac-cfad056e0642-ykms0330el5cvbi2ziw8",
+        "name": "241014_Logo_Hedera Dxykms0330el5cvbi2ziw8",
+        "type": "Logo",
+        "linkableId": 34978,
+        "linkableType": "startup",
+        "dateCreated": "2024-10-14T20:50:23.702Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 34978
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/27fac981-f121-4f05-b3ac-cfad056e0642-ykms0330el5cvbi2ziw8",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:16:01.476970",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:16:01.476961",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.hederadx.com",
+      "page_title": "Hedera Dx | Home",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "985",
+        "28.",
+        "91.",
+        "18."
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/hedera-dx",
+        "twitter": "https://twitter.com/hederadx?s=21&amp;t=xs5orrb-cx6pn5w_w3pq5q"
+      },
+      "tech_stack": [
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 28,
+      "normalized_score": 28,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 4: Health Innovations"
+      ],
+      "rule_scores": {
+        "Rule 4: Health Innovations": {
+          "score": 6,
+          "confidence": 20,
+          "keywords": []
+        }
+      },
+      "breakdown": {
+        "rule_score": 6,
+        "multi_rule_bonus": 0,
+        "funding": 25,
+        "size": 12,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 40
+      },
+      "funding": {
+        "amount_millions": 40.48,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 26,
+        "category": "Micro (26)"
+      }
+    }
+  },
+  {
+    "company_name": "Dorian",
+    "company_type": "startup",
+    "company_country": "US",
+    "company_city": "San Francisco",
+    "website": "https://dorian.live/",
+    "company_linked_in": "https://www.linkedin.com/company/dorian-stories/",
+    "company_description": "Looking to connect with studios, artists and strategic partners interested in the convergence of UGC games and comic, manga and anime. Dorian is a UGC games platform for making and distributing games without big budget and without coding.\n\nWe’ve scaled to multiple $1M+ titles created by indie developers and artists within the last year.\n\nWe’re now expanding distribution through strategic platform integrations including Ren’Py SDK and web gaming.",
+    "founding_year": 2019,
+    "primary_industry": "gaming",
+    "secondary_industry": "[]",
+    "focus_industries": null,
+    "business_types": "[\"b2c\", \"b2b\"]",
+    "curated_collections_tags": null,
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/5350ff3d-b4df-4343-8424-a19b23bc1bdc",
+    "id": 43915,
+    "dateCreated": "2025-10-26T13:53:56.512Z",
+    "dateFounded": "2018-02-01T00:00:00.000Z",
+    "employees": "26-50",
+    "legalEntity": "Inc.",
+    "mainContactId": null,
+    "shortDescription": "No-code interactive game platform.",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Series A",
+    "totalFunding": "19.99",
+    "originalTotalFunding": "17.19",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2022-03-17T00:00:00.000Z",
+    "lastFunding": "14.64",
+    "originalLastFunding": "12.59",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": "California",
+    "billingStreet": null,
+    "billingPostalCode": "91723",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T13:54:00.990Z",
+    "pitchbookId": "266250-61",
+    "lastPitchbookSync": "2025-10-26T13:53:51.537Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 107773,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/c06a0a75-8e75-4b2a-a533-22e904f0d6ea-u7cldkrxzh5epiogpatt.jpeg",
+        "key": "c06a0a75-8e75-4b2a-a533-22e904f0d6ea-u7cldkrxzh5epiogpatt.jpeg",
+        "name": "251026_Logo_Dorian.jpeg",
+        "type": "Logo",
+        "linkableId": 43915,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-26T13:54:00.885Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 43915
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/c06a0a75-8e75-4b2a-a533-22e904f0d6ea-u7cldkrxzh5epiogpatt.jpeg",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:16:57.113394",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:16:57.113388",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://dorian.live/",
+      "page_title": "Dorian",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "0"
+      ],
+      "social_media": {},
+      "tech_stack": [],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 27,
+      "normalized_score": 27,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 5: Dev & Legacy"
+      ],
+      "rule_scores": {
+        "Rule 5: Dev & Legacy": {
+          "score": 10,
+          "confidence": 30,
+          "keywords": []
+        }
+      },
+      "breakdown": {
+        "rule_score": 10,
+        "multi_rule_bonus": 0,
+        "funding": 20,
+        "size": 12,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 39
+      },
+      "funding": {
+        "amount_millions": 19.99,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 26,
+        "category": "Micro (26)"
+      }
+    }
+  },
+  {
+    "company_name": "Solace Care",
+    "company_type": "startup",
+    "company_country": "SE",
+    "company_city": "Stockholm",
+    "website": "https://solace.care/",
+    "company_linked_in": "https://www.linkedin.com/company/105433894/admin/dashboard/",
+    "company_description": "Solace Care is an AI-first platform reshaping the life insurance and pension industry by delivering comprehensive emotional and practical support across the end-of-life journey. We provide an AI-driven approach to legacy planning and bereavement support, combining automation, personalization, and empathy. For end-users, our platform offers a built-in AI agent that always knows what to do next, automates complex administrative tasks, anticipates needs, and delivers tailored emotional care. For life insurance and pension providers, Solace Care enhances product value, improves policyholder retention, reduces claims-related workload, and supports customer acquisition through differentiation. By integrating our service into existing policies, providers can offer proactive, dignified, and scalable support while creating new opportunities for customer engagement and long-term loyalty.",
+    "founding_year": 2025,
+    "primary_industry": "fintech",
+    "secondary_industry": "[\"enterpriseSoftware\", \"socialImpact\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": [
+      "Slush 100"
+    ],
+    "prominent_investors": "Plug & Play EMEA, Caroline Farberger, Mattias Miksche, Krim Talia, Wave Ventures",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/c26f6bab-d068-4b0a-a912-c9392d2835ed",
+    "id": 43143,
+    "dateCreated": "2025-10-25T21:07:24.235Z",
+    "dateFounded": "2025-02-01T00:00:00.000Z",
+    "employees": "1-10",
+    "legalEntity": "AB",
+    "mainContactId": null,
+    "shortDescription": "Digital end-of-life planning platform",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Seed - VC",
+    "totalFunding": null,
+    "originalTotalFunding": null,
+    "originalTotalFundingCurrency": null,
+    "lastFundingDate": "2025-08-25T00:00:00.000Z",
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": null,
+    "billingPostalCode": "111 37",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-25T21:07:28.199Z",
+    "pitchbookId": "820993-33",
+    "lastPitchbookSync": "2025-10-25T21:07:20.564Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 107478,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/dd08b2c4-3390-4456-9cf1-d52aec123799-7314d57d9d604d0abed079859b42a32d.jpeg",
+        "key": "dd08b2c4-3390-4456-9cf1-d52aec123799-7314d57d9d604d0abed079859b42a32d.jpeg",
+        "name": "251025_Logo_Solace Care.jpeg",
+        "type": "Logo",
+        "linkableId": 43143,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-25T21:07:28.091Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 43143
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/dd08b2c4-3390-4456-9cf1-d52aec123799-7314d57d9d604d0abed079859b42a32d.jpeg",
+    "topics": [
+      "Growth"
+    ],
+    "tech": [
+      "AI"
+    ],
+    "maturity": "1 - Emerging",
+    "maturity_score": 20,
+    "enrichment": {
+      "enrichment_date": "2025-11-14T09:28:35.977712",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.solace.care",
+      "page_title": "Solace Care -  Compassionate Digital End-of-Life Support",
+      "emails": [
+        "1080info@solace.careFollow"
+      ],
+      "phone_numbers": [],
+      "social_media": {
+        "linkedin": "https://www.linkedin.com/company/solacecare/"
+      },
+      "tech_stack": [
+        "Framer 8c094e5",
+        "Google Tag Manager"
+      ],
+      "key_pages": {
+        "about": "https://www.solace.care/about-us",
+        "products": "https://www.solace.care/for-insurance",
+        "team": "https://www.solace.care/knowledge-library/move-through-grief-with-care-and-support",
+        "contact": "https://www.solace.care/knowledge-library/organize-your-online-life-before-others-have-to",
+        "careers": "https://www.solace.care/careers"
+      },
+      "team_members": [
+        "More blog"
+      ]
+    },
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T09:28:35.977712",
+    "axa_scoring": {
+      "total_score": 26,
+      "normalized_score": 26,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 3: Insurance Solutions"
+      ],
+      "rule_scores": {
+        "Rule 3: Insurance Solutions": {
+          "score": 35,
+          "confidence": 100,
+          "keywords": [
+            "insurance",
+            "claims",
+            "policy"
+          ]
+        }
+      },
+      "breakdown": {
+        "rule_score": 35,
+        "multi_rule_bonus": 0,
+        "funding": 0,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 37
+      },
+      "funding": {
+        "amount_millions": 0.0,
+        "stage": "Undisclosed"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  },
+  {
+    "company_name": "Abtrace",
+    "company_type": "startup",
+    "company_country": "GB",
+    "company_city": "London",
+    "website": "https://www.abtrace.co/",
+    "company_linked_in": "https://linkedin.com/company/abtrace",
+    "company_description": "Abtrace automates the early detection and monitoring of disease by processing end-to-end, large longitudinal health record data analysing both structured and unstructured data covering over 4 million patients.",
+    "founding_year": 2018,
+    "primary_industry": "medtechPharma",
+    "secondary_industry": "[\"health\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\", \"b2g\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "Faber Ventures",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/119469f0-da85-495e-8f09-a08adc1003f4",
+    "id": 44111,
+    "dateCreated": "2025-10-26T15:34:32.522Z",
+    "dateFounded": "2018-02-01T00:00:00.000Z",
+    "employees": "26-50",
+    "legalEntity": "Ltd.",
+    "mainContactId": null,
+    "shortDescription": "AI-driven patient monitoring solutions",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Seed - Accelerator (equity)",
+    "totalFunding": "12.15",
+    "originalTotalFunding": "10.44",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-02-01T00:00:00.000Z",
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": "England",
+    "billingStreet": null,
+    "billingPostalCode": "W2 1BE",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-26T15:34:36.969Z",
+    "pitchbookId": "462853-00",
+    "lastPitchbookSync": "2025-10-26T15:34:28.889Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 108607,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/9a6b8ff3-302f-43fd-9bc3-e36fdfb8d66a.png",
+        "key": "9a6b8ff3-302f-43fd-9bc3-e36fdfb8d66a.png",
+        "name": "44111_logo.png",
+        "type": "Logo",
+        "linkableId": 44111,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-30T09:19:07.992Z",
+        "uploadOwnerId": null,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 44111
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/9a6b8ff3-302f-43fd-9bc3-e36fdfb8d66a.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:17:05.296585",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:17:05.296579",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.abtrace.co/",
+      "page_title": "Abtrace",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "75",
+        "37",
+        "49-",
+        "00"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/11802765",
+        "facebook": "https://facebook.com/tr?id=913776032498523&ev=pageview&noscript=1"
+      },
+      "tech_stack": [
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 25,
+      "normalized_score": 25,
+      "tier": "Tier 4: Low Priority",
+      "matched_rules": [
+        "Rule 4: Health Innovations"
+      ],
+      "rule_scores": {
+        "Rule 4: Health Innovations": {
+          "score": 6,
+          "confidence": 20,
+          "keywords": []
+        }
+      },
+      "breakdown": {
+        "rule_score": 6,
+        "multi_rule_bonus": 0,
+        "funding": 20,
+        "size": 12,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 35
+      },
+      "funding": {
+        "amount_millions": 12.15,
+        "stage": "Series A/B"
+      },
+      "company_size": {
+        "employee_count": 26,
+        "category": "Micro (26)"
+      }
+    }
+  },
+  {
+    "company_name": "Wormsensing",
+    "company_type": "startup",
+    "company_country": "FR",
+    "company_city": "Grenoble",
+    "website": "https://www.wormsensing.com/",
+    "company_linked_in": "https://www.linkedin.com/company/wormsensing",
+    "company_description": "What does your company do?\nWormsensing develops and commercializes the world’s most sensitive and compact piezoceramic sensors to monitor vibration and deformation in real time. Our flagship product, Dragonfly®, enables unprecedented insight into the mechanical behavior of machines — from aerospace engines to manufacturing lines. Thanks to its ultra-thin format, plug & play design, and extreme sensitivity (1000× over legacy sensors), Dragonfly® captures what traditional sensors miss: subtle deformation signals at the source, even on moving or embedded parts. This data is then processed through our software stack, enabling predictive maintenance, quality control, and structural health monitoring across R&D, Industry 4.0, and OEM applications. With over 40 patents, strong traction (+110% YoY), and a proven in-house production capacity (2M units/year), Wormsensing bridges physical performance with digital intelligence — for a safer, smarter, more efficient industry.",
+    "founding_year": 2020,
+    "primary_industry": "deeptech",
+    "secondary_industry": "[\"manufacturingMaterials\", \"robo\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "INNOVACOM, KBC Focus Fund, Cea investment",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/cc16ba24-32b1-400f-81ff-1f65bf29fd9e",
+    "id": 26124,
+    "dateCreated": "2023-03-23T11:36:43.921Z",
+    "dateFounded": "2020-01-02T00:00:00.000Z",
+    "employees": "11-25",
+    "legalEntity": null,
+    "mainContactId": null,
+    "shortDescription": "Wormsensing develops advanced vibration sensors and the Dragonfly platform, enabling precise acoustic pattern recognition and integrated physiological measurements for industries including aerospace, robotics, healthcare, automotive, and energy.",
+    "technologyReadiness": "Early Market Stage",
+    "currentInvestmentStage": "Seed - VC",
+    "totalFunding": "4.06",
+    "originalTotalFunding": "3.5",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2024-12-17T00:00:00.000Z",
+    "lastFunding": null,
+    "originalLastFunding": null,
+    "originalLastFundingCurrency": null,
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": null,
+    "billingStreet": "7 parvis Louis Neel",
+    "billingPostalCode": "38040",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 253,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-11-12T08:35:01.305Z",
+    "pitchbookId": "442596-79",
+    "lastPitchbookSync": "2025-11-12T08:34:26.789Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 106796,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/16f0fc29-f107-40e6-be19-72b6ee96299b-OG-default.png",
+        "key": "16f0fc29-f107-40e6-be19-72b6ee96299b-OG-default.png",
+        "name": "251017_Logo_Wormsensing.png",
+        "type": "Logo",
+        "linkableId": 26124,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-17T07:49:32.128Z",
+        "uploadOwnerId": 991,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 26124
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/16f0fc29-f107-40e6-be19-72b6ee96299b-OG-default.png",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:18:53.836919",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:18:53.836911",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.wormsensing.com/",
+      "page_title": "Wormsensing - Vibration Sensing Solutions",
+      "emails": [],
+      "phone_numbers": [
+        "",
+        "107",
+        "94-",
+        "91.",
+        "792 "
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/15813743"
+      },
+      "tech_stack": [
+        "React",
+        "Angular",
+        "WordPress"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 17,
+      "normalized_score": 17,
+      "tier": "Excluded",
+      "matched_rules": [
+        "Rule 4: Health Innovations"
+      ],
+      "rule_scores": {
+        "Rule 4: Health Innovations": {
+          "score": 6,
+          "confidence": 20,
+          "keywords": []
+        }
+      },
+      "breakdown": {
+        "rule_score": 6,
+        "multi_rule_bonus": 0,
+        "funding": 10,
+        "size": 12,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 25
+      },
+      "funding": {
+        "amount_millions": 4.06,
+        "stage": "Seed/Pre-Seed"
+      },
+      "company_size": {
+        "employee_count": 11,
+        "category": "Micro (11)"
+      }
+    }
+  },
+  {
+    "company_name": "NaviSavi",
+    "company_type": "startup",
+    "company_country": "US",
+    "company_city": "Oxford, Nebraska",
+    "website": "https://www.navisaviapp.com/",
+    "company_linked_in": "https://www.linkedin.com/company/navisaviapp/",
+    "company_description": "We are a video-first travel content platform that ingests raw user-generated clips at scale - via our mobile app, bulk hard-drive uploads, branded portals and bespoke shoots - and refines them with our proprietary TIDAL engine. Every clip is quality-assured, rights-cleared and enriched with AI-driven emotional, contextual and temporal metadata, then converted into machine-readable tags that power natural-language search and AI integrations. We distribute this library through consumer apps and AI-powered OTAs, a B2B licensing portal, developer APIs & plugins, airline in-flight entertainment, interactive TV ‘buy bars’ and next-gen agent-to-agent ecosystems. With 150K+ geolocated videos from 5K+ creators, coverage across 750K+ hotels, and flexible monetisation - including per-video licensing, subscription APIs, booking commissions, brand hubs (MOATS), custom shoots and ad revenue - NaviSavi unlocks authentic, bookable travel experiences for consumers, operators and AI platforms alike",
+    "founding_year": 2022,
+    "primary_industry": "travel",
+    "secondary_industry": "[\"someMessaging\", \"ai\", \"onlineMarkets\", \"marketingAds\", \"media\", \"travel\"]",
+    "focus_industries": null,
+    "business_types": "[\"b2b\", \"b2c\", \"other\"]",
+    "curated_collections_tags": null,
+    "prominent_investors": "State Of Nebraska, Capital Q Investments",
+    "profile_link": "https://platform.slush.org/slush25/meeting-tool/browse/companies/8616a35e-c11a-4ace-a248-696beb60bce0",
+    "id": 43051,
+    "dateCreated": "2025-10-25T20:50:13.087Z",
+    "dateFounded": "2018-02-01T00:00:00.000Z",
+    "employees": "1-10",
+    "legalEntity": "Inc.",
+    "mainContactId": null,
+    "shortDescription": "Short-form video travel platform",
+    "technologyReadiness": null,
+    "currentInvestmentStage": "Seed - VC",
+    "totalFunding": "3.14",
+    "originalTotalFunding": "2.7",
+    "originalTotalFundingCurrency": "EUR",
+    "lastFundingDate": "2025-02-20T00:00:00.000Z",
+    "lastFunding": "1.39",
+    "originalLastFunding": "1.2",
+    "originalLastFundingCurrency": "EUR",
+    "pricingModel": null,
+    "sfId": null,
+    "billingState": "Nebraska",
+    "billingStreet": null,
+    "billingPostalCode": "68967",
+    "fundingIsUndisclosed": false,
+    "lastModifiedById": 98,
+    "parentCompanyId": null,
+    "lastModifiedDate": "2025-10-25T20:50:18.718Z",
+    "pitchbookId": "539287-30",
+    "lastPitchbookSync": "2025-10-25T20:50:08.991Z",
+    "isMissingValidation": false,
+    "lastQualityCheckDate": null,
+    "lastQualityCheckById": null,
+    "isQualityChecked": null,
+    "qualityChecks": [],
+    "lastQualityCheckBy": null,
+    "featuredLists": [
+      {
+        "id": 5,
+        "name": "SLUSH 2025",
+        "logo": "https://vclms-frontend-prod-dcs.s3.eu-central-1.amazonaws.com/Slush_Black.png"
+      }
+    ],
+    "opportunities": [],
+    "leadOpportunities": [],
+    "files": [
+      {
+        "id": 107446,
+        "url": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/3c02c492-9217-48e6-8a7d-e649fbbfbbb1-xnlrufle5e1n7euelivp.jpeg",
+        "key": "3c02c492-9217-48e6-8a7d-e649fbbfbbb1-xnlrufle5e1n7euelivp.jpeg",
+        "name": "251025_Logo_NaviSavi.jpeg",
+        "type": "Logo",
+        "linkableId": 43051,
+        "linkableType": "startup",
+        "dateCreated": "2025-10-25T20:50:18.627Z",
+        "uploadOwnerId": 98,
+        "preview": false,
+        "isLink": false,
+        "linkable_id": 43051
+      }
+    ],
+    "logoUrl": "https://vclos-backend-prod-files-dcs.s3.eu-central-1.amazonaws.com/3c02c492-9217-48e6-8a7d-e649fbbfbbb1-xnlrufle5e1n7euelivp.jpeg",
+    "topics": [],
+    "tech": [],
+    "maturity": "Undisclosed",
+    "maturity_score": null,
+    "is_enriched": true,
+    "last_enriched_date": "2025-11-14T16:16:59.998212",
+    "enrichment": {
+      "enrichment_date": "2025-11-14T16:16:59.998203",
+      "enrichment_success": true,
+      "sources_checked": [
+        "company_website"
+      ],
+      "website_url": "https://www.navisaviapp.com/",
+      "page_title": "NaviSavi Travel",
+      "emails": [
+        "contact@navi-savi.com",
+        "user@domain.com"
+      ],
+      "phone_numbers": [
+        "",
+        "427 ",
+        "02",
+        "101",
+        "952-"
+      ],
+      "social_media": {
+        "linkedin": "https://linkedin.com/navisaviapp",
+        "twitter": "https://twitter.com/navisavitravel",
+        "facebook": "https://facebook.com/2008",
+        "instagram": "https://instagram.com/navisavitravel"
+      },
+      "tech_stack": [
+        "React",
+        "Angular"
+      ],
+      "enrichment_method": "ultra_fast_async"
+    },
+    "axa_scoring": {
+      "total_score": 15,
+      "normalized_score": 15,
+      "tier": "Excluded",
+      "matched_rules": [
+        "Rule 5: Dev & Legacy"
+      ],
+      "rule_scores": {
+        "Rule 5: Dev & Legacy": {
+          "score": 10,
+          "confidence": 30,
+          "keywords": []
+        }
+      },
+      "breakdown": {
+        "rule_score": 10,
+        "multi_rule_bonus": 0,
+        "funding": 10,
+        "size": 5,
+        "maturity": 7,
+        "llm_adjustment": -10,
+        "raw_total": 22
+      },
+      "funding": {
+        "amount_millions": 3.14,
+        "stage": "Seed/Pre-Seed"
+      },
+      "company_size": {
+        "employee_count": 5,
+        "category": "Micro (1-10)"
+      }
+    }
+  }
+]
