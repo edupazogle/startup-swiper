@@ -343,8 +343,17 @@ class AIConcierge:
         Returns:
             AI-generated answer
         """
-        # Determine question type and gather relevant context
+        # Check if this is a LinkedIn post request first
         question_lower = question.lower()
+        if any(phrase in question_lower for phrase in [
+            "write a linkedin post", "write linkedin post", "create linkedin post",
+            "generate linkedin post", "linkedin post", "write a post", "write post",
+            "create a post", "generate post"
+        ]):
+            # For LinkedIn posts, ask clarifying questions to gather context
+            return await self._ask_linkedin_clarification_questions(question)
+        
+        # Determine question type and gather relevant context
         context_parts = []
         
         # Add user context if provided
@@ -448,6 +457,74 @@ Please provide a helpful and comprehensive answer based on the available informa
             return response.choices[0].message.content
         except Exception as e:
             return f"I apologize, but I encountered an error processing your question: {str(e)}"
+    
+    async def _ask_linkedin_clarification_questions(self, question: str) -> str:
+        """
+        Ask clarifying questions for LinkedIn post requests
+        This helps gather context about what the user wants to write about
+        
+        Args:
+            question: The original LinkedIn post request
+            
+        Returns:
+            Response with clarifying questions for the user
+        """
+        system_message = """You are a helpful LinkedIn content strategist. 
+When a user asks to write a LinkedIn post, you should ask clarifying questions to understand:
+1. What specific topic or subject they want to write about
+2. Whether it's about a specific startup, event, or announcement
+3. The key message or goal of the post
+4. Any specific companies, people, or events to mention
+
+Ask these questions in a conversational, friendly manner. Be specific and helpful.
+Format your response as a series of clear, actionable questions."""
+        
+        user_prompt = f"""The user has asked: "{question}"
+
+Please ask me clarifying questions to help write a great LinkedIn post. 
+I want to understand:
+- What they want to focus on (startup announcement, thought leadership, event recap, etc.)
+- Any specific startups, companies, or people to mention
+- Key points or messages to include
+- Any links or resources to reference
+- The tone and target audience
+
+Make the questions conversational and not overwhelming - ask 3-4 key questions."""
+        
+        messages = [
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": user_prompt}
+        ]
+        
+        try:
+            response = await llm_completion(
+                messages=messages,
+                model=None,  # Use NVIDIA NIM default
+                temperature=0.7,
+                max_tokens=800,
+                use_nvidia_nim=True,
+                metadata={
+                    "feature": "ai_concierge",
+                    "question_type": "linkedin_clarification"
+                }
+            )
+            
+            return response.choices[0].message.content
+        except Exception as e:
+            logger.error(f"Error in LinkedIn clarification: {e}")
+            # Fallback response with manual questions
+            return """Great! I'd love to help you write a compelling LinkedIn post. 
+To create the perfect post, please tell me:
+
+1️⃣ **Topic/Focus**: What's the main topic or subject? (e.g., "AI in insurance", "Our Series A announcement", "Takeaways from Slush 2025")
+
+2️⃣ **Context**: Is this about a specific startup, event, or general thought leadership? Any key companies or people to mention?
+
+3️⃣ **Key Points**: What are 2-3 key points or messages you want to get across?
+
+4️⃣ **Links/Resources**: Do you have any articles, reports, or links to reference?
+
+Once you provide these details, I'll generate a professional LinkedIn post with your VC partner perspective! 🚀"""
     
     async def _add_directions_context(self, question: str, context_parts: List[str]):
         """Add directions context for location-based questions"""
@@ -695,10 +772,13 @@ class MCPEnhancedAIConcierge(AIConcierge):
         """
         # Check if this is a LinkedIn post request first
         question_lower = question.lower()
-        if any(word in question_lower for word in ["linkedin post", "write a post", "generate post", "create post"]):
-            # Extract topic from the question
-            topic = question
-            return await self.generate_linkedin_post(topic)
+        if any(phrase in question_lower for phrase in [
+            "write a linkedin post", "write linkedin post", "create linkedin post",
+            "generate linkedin post", "linkedin post", "write a post", "write post",
+            "create a post", "generate post"
+        ]):
+            # For LinkedIn posts, ask clarifying questions first
+            return await self._ask_linkedin_clarification_questions(question)
         
         # Check if this looks like a person name (prioritize attendee search)
         is_likely_person_name = self._is_likely_person_name(question)

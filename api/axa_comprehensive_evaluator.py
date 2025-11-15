@@ -559,7 +559,7 @@ Provide ONLY the JSON response, no additional text.
 """
         return prompt
     
-    async def _evaluate_category_async(
+    def _evaluate_category_sync(
         self,
         startup: Startup,
         category_type: CategoryType
@@ -617,21 +617,6 @@ Provide ONLY the JSON response, no additional text.
                 potential_use_cases=[],
                 risk_factors=["Evaluation failed"]
             )
-    
-    def _evaluate_category_sync(
-        self,
-        startup: Startup,
-        category_type: CategoryType
-    ) -> CategoryMatch:
-        """Synchronous wrapper for category evaluation"""
-        # Run async function in sync context
-        try:
-            loop = asyncio.get_event_loop()
-        except RuntimeError:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-        
-        return loop.run_until_complete(self._evaluate_category_async(startup, category_type))
     
     def evaluate_startup(
         self,

@@ -3,14 +3,81 @@
 ## Overview
 The LinkedIn Post Generator is an AI-powered feature that creates professional LinkedIn posts with a Venture Capital partner persona. It's designed for thought leaders and VCs with expertise in AI, Blockchain, Web3, and Finance.
 
-## Usage
+## Workflow: Two-Step Process
 
-### API Endpoint
+### Step 1️⃣: User Asks to Write a Post
+The user initiates by asking the agent to write a LinkedIn post (with or without a topic).
+
+**Examples:**
+- "Write a LinkedIn post"
+- "Help me write a post about AI in insurance"
+- "Create a LinkedIn post about our Series A"
+
+### Step 2️⃣: Agent Asks Clarifying Questions
+The AI Concierge responds with targeted questions to gather context:
+- **Topic/Focus**: Specific angle or angle (e.g., claims processing vs. thought leadership)
+- **Companies/People**: Any startups, companies, or individuals to mention
+- **Key Points**: Main messages or takeaways to include
+- **Tone & Style**: Casual vs. authoritative, with or without stats
+
+### Step 3️⃣: User Provides Details
+User responds with specifics about their topic, companies, and goals.
+
+### Step 4️⃣: Agent Generates Post
+The AI Concierge creates a professional, structured LinkedIn post based on gathered details.
+
+## Usage Scenarios
+
+### Scenario 1: General Post Request
+```
+User: "Write a LinkedIn post"
+
+AI: "Here are 4 questions to help shape your post:
+1. What's the main purpose? (startup/product launch, industry insight, etc.)
+2. Who needs a shoutout? (companies, people, partners)
+3. What's the #1 thing you want remembered?
+4. Casual or polished tone?"
+
+User: [Provides answers]
+
+AI: [Generates professional post with their details]
+```
+
+### Scenario 2: Topic-Specific Request
+```
+User: "Help me write a LinkedIn post about AI in insurance"
+
+AI: "Here are 3 quick questions to shape your post:
+1. Focus first - AI-driven claims processing, customer personalization, or broader thought leadership?
+2. Names matter - Any insurance players or AI tools to mention?
+3. Vibe check - Casual and curious or authoritative with stats?"
+
+User: [Provides specifics: "Focus on AXA's claims automation, 40% cost reduction, authoritative tone"]
+
+AI: [Generates targeted post]
+```
+
+### Scenario 3: Event/Announcement Request
+```
+User: "Create a LinkedIn post about our Series A announcement"
+
+AI: "Let me ask a few questions to make this perfect:
+1. What's special about this round? (amount, lead investor, focus area)
+2. Who should we tag or mention?
+3. What's the main message for your audience?"
+
+User: [Provides: "$50M Series A, led by top VC firm, AI infrastructure focus, targeting enterprise"]
+
+AI: [Generates compelling announcement post]
+```
+
+### API Endpoint - For Direct Post Generation
 ```
 POST /concierge/generate-linkedin-post
 ```
 
-### Request Body
+If you already have all the details, use this endpoint directly with complete request body:
+
 ```json
 {
   "topic": "The rise of AI in enterprise insurance",
@@ -27,6 +94,7 @@ POST /concierge/generate-linkedin-post
   "link": "https://example.com/ai-insurance-report"
 }
 ```
+
 
 ### Parameters
 
