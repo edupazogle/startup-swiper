@@ -678,67 +678,62 @@ def get_axa_filtered_startups(
     db: Session = Depends(get_db)
 ):
     """
-    Get AXA-filtered startups from enhanced filter with NVIDIA NIM validation.
-    
-    These startups have been filtered using:
-    - NVIDIA NIM (DeepSeek-R1) for semantic rule validation
-    - MCP server for database enrichment
-    - Advanced scoring prioritizing funding and company size
-    
-    Args:
-        limit: Maximum number of startups to return (default: 300)
-        min_score: Minimum score threshold (default: 25)
-    
-    Returns:
-        Filtered startup list with AXA scoring breakdown
+    Get AXA-filtered startups. Falls back to all startups if enhanced data unavailable.
     """
     try:
-        # Load AXA filtered results from enhanced final JSON file (125 LLM-assessed candidates)
+        # Load AXA filtered results from enhanced final JSON file
         axa_results_path = Path(__file__).parent.parent / "downloads" / "axa_enhanced_final.json"
         
         if not axa_results_path.exists():
-            # Fallback: try alternative path
             axa_results_path = Path(__file__).parent.parent / "downloads" / "axa_300startups.json"
         
-        if not axa_results_path.exists():
-            # Final fallback: run filter if file doesn't exist
-            logger.warning(f"AXA results file not found")
-            logger.info("Falling back to standard prioritization")
-            return get_prioritized_startups(
-                user_id=None,
-                limit=limit,
-                min_score=float(min_score),
-                db=db
-            )
+        if axa_results_path.exists():
+            with open(axa_results_path, 'r') as f:
+                axa_startups = json.load(f)
+            
+            # Ensure axa_startups is a list
+            if isinstance(axa_startups, dict) and 'startups' in axa_startups:
+                axa_startups = axa_startups['startups']
+            
+            if isinstance(axa_startups, list) and len(axa_startups) > 0:
+                results = axa_startups[:limit]
+                return {
+                    "total": len(axa_startups),
+                    "returned": len(results),
+                    "min_score": min_score,
+                    "source": "axa_enhanced_filter",
+                    "processing": {
+                        "method": "NVIDIA NIM Enhanced Scoring",
+                        "llm_model": "deepseek-ai/deepseek-r1"
+                    },
+                    "startups": results
+                }
         
-        with open(axa_results_path, 'r') as f:
-            axa_startups = json.load(f)
-        
-        # Limit results
-        results = axa_startups[:limit]
-        
-        # Count by tier
-        tier_counts = {}
-        for startup in results:
-            tier = startup.get('axa_scoring', {}).get('tier', 'Unknown')
-            tier_counts[tier] = tier_counts.get(tier, 0) + 1
+        # Fallback: return all startups from database
+        logger.info("AXA results file not found, using all database startups")
+        all_startups = db_queries.get_all_startups(db, skip=0, limit=limit)
         
         return {
-            "total": len(axa_startups),
-            "returned": len(results),
+            "total": len(all_startups),
+            "returned": len(all_startups),
             "min_score": min_score,
-            "source": "axa_enhanced_filter",
+            "source": "database_fallback",
             "processing": {
-                "method": "NVIDIA NIM (DeepSeek-R1) + Enhanced Scoring (125 LLM-assessed candidates)",
-                "llm_model": "deepseek-ai/deepseek-r1",
-                "validation": "Intelligent semantic assessment"
+                "method": "Standard database retrieval"
             },
-            "tier_breakdown": tier_counts,
-            "startups": results
+            "startups": all_startups
         }
     except Exception as e:
-        logger.error(f"Failed to load AXA filtered startups: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to load filtered startups: {str(e)}")
+        logger.error(f"Error in AXA filter endpoint: {e}", exc_info=True)
+        # Return empty but valid response instead of error
+        return {
+            "total": 0,
+            "returned": 0,
+            "min_score": min_score,
+            "source": "error_fallback",
+            "processing": {"method": "Error fallback"},
+            "startups": []
+        }
 
 @app.get("/startups/{startup_id}/insights")
 def get_startup_insights(startup_id: str, db: Session = Depends(get_db)):
