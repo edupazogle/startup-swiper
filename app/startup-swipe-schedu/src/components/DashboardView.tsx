@@ -687,16 +687,16 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
               </div>
             </div>
 
-            {/* Sort and Filter Controls - Responsive Dropdowns */}
-            <div className="space-y-3 md:space-y-4">
+            {/* Sort and Filter Controls - Single Row on All Devices */}
+            <div className="flex flex-wrap gap-2 md:gap-3 items-end">
               {/* Sort By Dropdown */}
-              <div className="max-w-xs">
-                <label className="text-xs md:text-sm font-bold text-foreground mb-2 block">Sort By</label>
+              <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
+                <label className="text-[10px] md:text-xs font-bold text-foreground mb-1 block">Sort</label>
                 <Select value={sortBy} onValueChange={(value) => setSortBy(value as 'votes' | 'funding')}>
-                  <SelectTrigger className="w-full text-xs md:text-sm">
+                  <SelectTrigger className="w-full text-[11px] md:text-xs h-8 md:h-9">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-[150px] md:max-h-[200px]">
                     <SelectItem value="votes">Votes</SelectItem>
                     <SelectItem value="funding">Funding</SelectItem>
                   </SelectContent>
@@ -705,39 +705,38 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
 
               {/* Stage Filter Dropdown */}
               {uniqueStages.length > 0 && (
-                <div className="max-w-xs">
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="text-xs md:text-sm font-bold text-foreground">Stage</label>
+                <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] md:text-xs font-bold text-foreground">Stage</label>
                     {selectedStages.size > 0 && (
                       <button
                         onClick={() => setSelectedStages(new Set())}
-                        className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+                        className="text-[9px] md:text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5"
                       >
-                        <X size={12} />
-                        Clear
+                        <X size={10} />
                       </button>
                     )}
                   </div>
                   <Select
-                    value={selectedStages.size === 0 ? '' : Array.from(selectedStages).join('|')}
+                    value={selectedStages.size === 0 ? '__all__' : Array.from(selectedStages)[0]}
                     onValueChange={(value) => {
-                      if (value === '') {
+                      if (value === '__all__') {
                         setSelectedStages(new Set())
                       } else {
                         setSelectedStages(new Set([value]))
                       }
                     }}
                   >
-                    <SelectTrigger className="w-full text-xs md:text-sm">
+                    <SelectTrigger className="w-full text-[11px] md:text-xs h-8 md:h-9">
                       <SelectValue placeholder="Select stage...">
                         {selectedStages.size > 0 
                           ? Array.from(selectedStages)[0]
-                          : 'All stages'
+                          : 'All'
                         }
                       </SelectValue>
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">All Stages</SelectItem>
+                    <SelectContent className="max-h-[150px] md:max-h-[300px]">
+                      <SelectItem value="__all__">All Stages</SelectItem>
                       {uniqueStages.map(stage => (
                         <SelectItem key={stage} value={stage}>
                           {stage}
@@ -750,39 +749,38 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
 
               {/* Topics Filter Dropdown */}
               {uniqueTopics.length > 0 && (
-                <div className="max-w-xs">
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="text-xs md:text-sm font-bold text-foreground">Topics</label>
+                <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] md:text-xs font-bold text-foreground">Topics</label>
                     {selectedTopics.size > 0 && (
                       <button
                         onClick={() => setSelectedTopics(new Set())}
-                        className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+                        className="text-[9px] md:text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5"
                       >
-                        <X size={12} />
-                        Clear
+                        <X size={10} />
                       </button>
                     )}
                   </div>
                   <Select
-                    value={selectedTopics.size === 0 ? '' : Array.from(selectedTopics).join('|')}
+                    value={selectedTopics.size === 0 ? '__all__' : Array.from(selectedTopics)[0]}
                     onValueChange={(value) => {
-                      if (value === '') {
+                      if (value === '__all__') {
                         setSelectedTopics(new Set())
                       } else {
                         setSelectedTopics(new Set([value]))
                       }
                     }}
                   >
-                    <SelectTrigger className="w-full text-xs md:text-sm">
+                    <SelectTrigger className="w-full text-[11px] md:text-xs h-8 md:h-9">
                       <SelectValue placeholder="Select topic...">
                         {selectedTopics.size > 0 
                           ? Array.from(selectedTopics)[0]
-                          : 'All topics'
+                          : 'All'
                         }
                       </SelectValue>
                     </SelectTrigger>
-                    <SelectContent className="max-h-[300px]">
-                      <SelectItem value="">All Topics</SelectItem>
+                    <SelectContent className="max-h-[150px] md:max-h-[300px]">
+                      <SelectItem value="__all__">All Topics</SelectItem>
                       {uniqueTopics.map(topic => (
                         <SelectItem key={topic} value={topic}>
                           {topic}
@@ -795,39 +793,38 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
 
               {/* Tech Filter Dropdown */}
               {uniqueTechs.length > 0 && (
-                <div className="max-w-xs">
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="text-xs md:text-sm font-bold text-foreground">Tech</label>
+                <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] md:text-xs font-bold text-foreground">Tech</label>
                     {selectedTechs.size > 0 && (
                       <button
                         onClick={() => setSelectedTechs(new Set())}
-                        className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+                        className="text-[9px] md:text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5"
                       >
-                        <X size={12} />
-                        Clear
+                        <X size={10} />
                       </button>
                     )}
                   </div>
                   <Select
-                    value={selectedTechs.size === 0 ? '' : Array.from(selectedTechs).join('|')}
+                    value={selectedTechs.size === 0 ? '__all__' : Array.from(selectedTechs)[0]}
                     onValueChange={(value) => {
-                      if (value === '') {
+                      if (value === '__all__') {
                         setSelectedTechs(new Set())
                       } else {
                         setSelectedTechs(new Set([value]))
                       }
                     }}
                   >
-                    <SelectTrigger className="w-full text-xs md:text-sm">
+                    <SelectTrigger className="w-full text-[11px] md:text-xs h-8 md:h-9">
                       <SelectValue placeholder="Select tech...">
                         {selectedTechs.size > 0 
                           ? Array.from(selectedTechs)[0]
-                          : 'All tech'
+                          : 'All'
                         }
                       </SelectValue>
                     </SelectTrigger>
-                    <SelectContent className="max-h-[300px]">
-                      <SelectItem value="">All Tech</SelectItem>
+                    <SelectContent className="max-h-[150px] md:max-h-[300px]">
+                      <SelectItem value="__all__">All Tech</SelectItem>
                       {uniqueTechs.map(tech => (
                         <SelectItem key={tech} value={tech}>
                           {tech}
