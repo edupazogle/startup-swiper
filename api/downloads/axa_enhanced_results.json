@@ -1,0 +1,92 @@
+[
+  {
+    "startup_id": 63,
+    "startup_name": "Pandatron",
+    "evaluation_date": "2025-11-16T09:29:35.780569",
+    "categories_matched": [
+      {
+        "category": "F2.7_workflow_automation",
+        "rule": "Rule 2",
+        "matches": true,
+        "confidence": 50,
+        "reasoning": "Pandatron sells coaching services using AI coaches to help enterprises with leadership development and cultural transformation, which involves automating and scaling human development workflows \u2014 a core enterprise service offering."
+      },
+      {
+        "category": "F1.1_observability_monitoring",
+        "rule": "Rule 1",
+        "matches": false,
+        "confidence": 50,
+        "reasoning": "While AI coaches are used internally, Pandatron does not sell monitoring, observability, or AI infrastructure as a product \u2014 it sells consulting/services."
+      }
+    ],
+    "matched_rules": [
+      "Rule 2"
+    ],
+    "rule_scores": {
+      "Rule 2": [
+        50
+      ]
+    },
+    "overall_score": 57.0,
+    "priority_tier": "Tier 3: Medium Priority",
+    "axa_fit_summary": "Primary: Rule 2. Matches 1 features across 1 rules. Score: 57%. \u2713 Usable as provider. Maturity: Emerging. Stage: Seed - Accelerator (equity) ($0.0M).",
+    "can_use_as_provider": true,
+    "business_leverage": "AXA could use Pandatron\u2019s AI coaching platform to scale leadership and cultural development programs for its claims adjusters, underwriters, and customer service teams \u2014 improving autonomy, decision-making, and compliance adherence at scale across global teams."
+  },
+  {
+    "startup_id": 322,
+    "startup_name": "Bankify",
+    "evaluation_date": "2025-11-16T09:29:35.780597",
+    "categories_matched": [
+      {
+        "category": "F2.7_workflow_automation",
+        "rule": "Rule 2",
+        "matches": true,
+        "confidence": 50,
+        "reasoning": "Bankify sells Smart Collections, an AI-powered end-to-end digital platform that automates debt recovery workflows for financial institutions \u2014 a core enterprise B2B solution focused on workflow automation."
+      },
+      {
+        "category": "F2.6_data_analytics",
+        "rule": "Rule 2",
+        "matches": true,
+        "confidence": 50,
+        "reasoning": "Predictive analytics is central to their platform\u2019s ability to improve recovery rates and reduce manual effort \u2014 it is a core component of the product sold to clients."
+      },
+      {
+        "category": "F5.4_system_integration",
+        "rule": "Rule 5",
+        "matches": false,
+        "confidence": 50,
+        "reasoning": "While APIs are mentioned, integration is not the core product \u2014 it is an enabler for their debt collection platform, not the primary offering."
+      },
+      {
+        "category": "F1.4_agent_frameworks",
+        "rule": "Rule 1",
+        "matches": false,
+        "confidence": 50,
+        "reasoning": "AI is used in the platform, but Bankify does not sell agent frameworks or infrastructure \u2014 it sells a debt collection solution."
+      },
+      {
+        "category": "F2.5_finance_procurement",
+        "rule": "Rule 2",
+        "matches": false,
+        "confidence": 50,
+        "reasoning": "The product is for debt recovery, not procurement or financial purchasing processes \u2014 irrelevant to this category."
+      }
+    ],
+    "matched_rules": [
+      "Rule 2"
+    ],
+    "rule_scores": {
+      "Rule 2": [
+        50,
+        50
+      ]
+    },
+    "overall_score": 17.7,
+    "priority_tier": "Tier 4: Low Priority",
+    "axa_fit_summary": "Primary: Rule 2. Matches 2 features across 1 rules. Score: 18%. \u2717 Not suitable as provider. Maturity: Emerging. Stage: Seed - Accelerator (equity) ($0.0M).",
+    "can_use_as_provider": false,
+    "business_leverage": "Bankify serves financial institutions for consumer debt recovery \u2014 not insurance companies. While debt collection is similar to insurance fraud or premium recovery, Bankify\u2019s product is not designed for or marketed to insurers, and its target buyers (banks, fintechs) are not AXA\u2019s peers or customers."
+  }
+]

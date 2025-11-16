@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKV } from '@/lib/useKV'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { SwipeableCard } from './SwipeableCard'
 import { AIRecommendations } from './AIRecommendations'
@@ -18,6 +18,69 @@ interface SwipeViewProps {
   onVote: (startupId: string, interested: boolean) => void
 }
 
+// Helper function to calculate recommendation score
+function calculateRecommendationScore(
+  candidate: Startup,
+  userVotes: { interested: Startup[], passed: Startup[] },
+  swipeCount: number
+): number {
+  if (swipeCount < 20) return 0 // No recommendations until 20 swipes (Phase 2 starts after 20)
+
+  const interestedTopics = new Set<string>()
+  const interestedMaturity = new Map<string, number>()
+  const interestedUseCases = new Set<string>()
+  
+  // Extract preferences from interested startups
+  userVotes.interested.forEach(startup => {
+    const topics = typeof startup.topics === 'string' ? startup.topics.split(',').map(t => t.trim()) : (startup.topics || [])
+    topics.forEach(t => interestedTopics.add(t))
+    
+    if (startup.maturity) interestedMaturity.set(startup.maturity, (interestedMaturity.get(startup.maturity) || 0) + 1)
+    
+    const useCases = startup.axa_use_cases || startup.axaUseCases
+    if (useCases) {
+      try {
+        const caseArray = Array.isArray(useCases) ? useCases : (typeof useCases === 'string' ? JSON.parse(useCases) : [])
+        caseArray.forEach((uc: any) => {
+          if (typeof uc === 'string') interestedUseCases.add(uc)
+        })
+      } catch {}
+    }
+  })
+
+  let score = 0
+  let matchCount = 0
+
+  // Check topic match (weighted)
+  const candTopics = typeof candidate.topics === 'string' ? candidate.topics.split(',').map(t => t.trim()) : (candidate.topics || [])
+  const topicMatches = candTopics.filter(t => interestedTopics.has(t)).length
+  if (topicMatches > 0) {
+    score += topicMatches * 20
+    matchCount += topicMatches
+  }
+
+  // Check maturity match (weighted)
+  if (candidate.maturity && interestedMaturity.has(candidate.maturity)) {
+    score += 15
+    matchCount++
+  }
+
+  // Check use case match (weighted)
+  const candUseCases = candidate.axa_use_cases || candidate.axaUseCases
+  if (candUseCases) {
+    try {
+      const caseArray = Array.isArray(candUseCases) ? candUseCases : (typeof candUseCases === 'string' ? JSON.parse(candUseCases) : [])
+      const ucMatches = caseArray.filter((uc: any) => typeof uc === 'string' && interestedUseCases.has(uc)).length
+      if (ucMatches > 0) {
+        score += ucMatches * 10
+        matchCount++
+      }
+    } catch {}
+  }
+
+  return score
+}
+
 export function SwipeView({ startups, votes, currentUserId, currentUserName, onVote }: SwipeViewProps) {
   const isMobile = useIsMobile()
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -26,9 +89,67 @@ export function SwipeView({ startups, votes, currentUserId, currentUserName, onV
   const [localVotedIds, setLocalVotedIds] = useState<Set<string>>(new Set())
   const [isProcessingSwipe, setIsProcessingSwipe] = useState(false)
   const [lockedStartup, setLockedStartup] = useState<Startup | null>(null)
+  
+  // Get user's votes to determine phase
+  const userVotes = votes.filter(v => v.userId === currentUserId)
+  const swipeCount = userVotes.length + localVotedIds.size
+  
+  // Determine which startups to use based on phase
+  let startupPool: Startup[]
+  
+  if (swipeCount < 20) {
+    // Phase 1: Only use Phase 1 startups (from API response, already Agentic + Other topics)
+    startupPool = startups
+  } else {
+    // Phase 2: Use all startups (should include Tier 2, 3, 4 from Phase 2 API)
+    // Include all startups since Phase 2 API returns the full pool
+    startupPool = startups
+  }
 
-  // Show all available startups
-  const limitedStartups = startups
+  // Sort by axa_overall_score (descending) - highest quality first
+  const sortedByFit = [...startupPool].sort((a, b) => {
+    const scoreA = (a.axa_overall_score || a.axaOverallScore || 0) as number
+    const scoreB = (b.axa_overall_score || b.axaOverallScore || 0) as number
+    return scoreB - scoreA
+  })
+  
+  // Build recommendation data
+  const interestedIds = new Set(userVotes.filter(v => v.interested).map(v => String(v.startupId)))
+  const passedIds = new Set(userVotes.filter(v => !v.interested).map(v => String(v.startupId)))
+  
+  const userVotesData = {
+    interested: sortedByFit.filter(s => interestedIds.has(String(s.id))),
+    passed: sortedByFit.filter(s => passedIds.has(String(s.id)))
+  }
+
+  // Build the final list: First 20 sorted by funding, then recommendations with ~70% preference match + ~30% diversity
+  let limitedStartups: Startup[]
+  
+  if (swipeCount >= 20) {
+    const seenIds = new Set([...interestedIds, ...passedIds, ...localVotedIds])
+    const unseen = sortedByFit.filter(s => !seenIds.has(String(s.id)))
+    
+    // Separate recommendations into preference-based and diverse
+    const recommendations = unseen.map(s => ({
+      startup: s,
+      score: calculateRecommendationScore(s, userVotesData, swipeCount)
+    }))
+    
+    // Sort by recommendation score (descending)
+    recommendations.sort((a, b) => b.score - a.score)
+    
+    // Take top 70 preference-based matches
+    const preferenceBasedCount = Math.floor(100 * 0.7)
+    const preferenceBasedRecs = recommendations.slice(0, preferenceBasedCount).map(r => r.startup)
+    
+    // Take remaining 30 from the rest (diverse options)
+    const diverseRecs = recommendations.slice(preferenceBasedCount).slice(0, 100 - preferenceBasedCount).map(r => r.startup)
+    
+    limitedStartups = [...preferenceBasedRecs, ...diverseRecs]
+  } else {
+    // Before 20 swipes (Phase 1), just show sorted by funding
+    limitedStartups = sortedByFit
+  }
 
   const unseenStartups = limitedStartups.filter(
     startup => {
@@ -101,8 +222,9 @@ export function SwipeView({ startups, votes, currentUserId, currentUserName, onV
 
   if (isMobile) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-4 md:gap-8 p-4 pb-8">
-        <div className="w-full max-w-md px-2">
+      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+        {/* Recommendations Section - bounded */}
+        <section className="flex-shrink-0 max-h-[120px] sm:max-h-[150px] overflow-y-auto px-4 py-2 sm:py-3 border-b border-white/10">
           <AIRecommendations
             startups={limitedStartups}
             votes={votes}
@@ -112,62 +234,37 @@ export function SwipeView({ startups, votes, currentUserId, currentUserName, onV
               if (idx >= 0) setCurrentIndex(idx)
             }}
           />
-          
-          <div className="flex items-center justify-between mb-2 text-xs md:text-sm">
-            <span className="text-muted-foreground">
-              {limitedStartups.length - unseenStartups.length} of {limitedStartups.length}
-            </span>
-            <span className="text-muted-foreground">
-              {unseenStartups.length} remaining
-            </span>
+        </section>
+
+        {/* Card Section - fills remaining space */}
+        <section className="flex-1 flex items-center justify-center px-3 sm:px-4 py-2 pb-3 min-h-0">
+          <div className="relative w-full max-w-[440px] h-full flex">
+            <AnimatePresence>
+              {currentStartup && (
+                <motion.div
+                  key={currentStartup.id}
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{
+                    x: direction === 'right' ? 500 : direction === 'left' ? -500 : 0,
+                    opacity: 0,
+                    rotate: direction === 'right' ? 25 : direction === 'left' ? -25 : 0,
+                    transition: { duration: 0.3 }
+                  }}
+                >
+                  <SwipeableCard
+                    startup={currentStartup}
+                    onSwipe={handleSwipe}
+                    isProcessing={isProcessingSwipe}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-          <Progress value={progress} className="h-2" />
-        </div>
+        </section>
 
-        <div className="relative w-[min(90vw,440px)] h-[min(70vh,640px)]">
-          <AnimatePresence>
-            {currentStartup && (
-              <motion.div
-                key={currentStartup.id}
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{
-                  x: direction === 'right' ? 500 : direction === 'left' ? -500 : 0,
-                  opacity: 0,
-                  rotate: direction === 'right' ? 25 : direction === 'left' ? -25 : 0,
-                  transition: { duration: 0.3 }
-                }}
-              >
-                <SwipeableCard
-                  startup={currentStartup}
-                  onSwipe={handleSwipe}
-                  isProcessing={isProcessingSwipe}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <div className="flex gap-4 md:gap-6 items-center">
-          <Button
-            size="lg"
-            variant="outline"
-            onClick={() => handleSwipe(false)}
-            disabled={!currentStartup || isProcessingSwipe}
-            className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 hover:bg-destructive/10 hover:border-destructive hover:text-destructive transition-colors"
-          >
-            <X size={28} weight="bold" className="md:w-8 md:h-8" />
-          </Button>
-
-          <Button
-            size="lg"
-            onClick={() => handleSwipe(true)}
-            disabled={!currentStartup || isProcessingSwipe}
-            className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-pink-500/80 hover:bg-pink-500/90 text-white shadow-lg"
-          >
-            <Heart size={28} weight="fill" className="md:w-8 md:h-8" />
-          </Button>
-        </div>
+        {/* Nav spacing reserve */}
+        <div className="flex-shrink-0 h-[calc(var(--nav-height-mobile)+env(safe-area-inset-bottom)+4px)]" />
       </div>
     )
   }
@@ -184,16 +281,6 @@ export function SwipeView({ startups, votes, currentUserId, currentUserName, onV
             if (idx >= 0) setCurrentIndex(idx)
           }}
         />
-        
-        <div className="flex items-center justify-between mb-2 text-sm">
-          <span className="text-muted-foreground">
-            {limitedStartups.length - unseenStartups.length} of {limitedStartups.length}
-          </span>
-          <span className="text-muted-foreground">
-            {unseenStartups.length} remaining
-          </span>
-        </div>
-        <Progress value={progress} className="h-2" />
       </div>
 
       <div className="relative w-[440px] h-[640px]">
@@ -219,27 +306,8 @@ export function SwipeView({ startups, votes, currentUserId, currentUserName, onV
           )}
         </AnimatePresence>
       </div>
-
-      <div className="flex gap-6 items-center">
-        <Button
-          size="lg"
-          variant="outline"
-          onClick={() => handleSwipe(false)}
-          disabled={!currentStartup || isProcessingSwipe}
-          className="w-16 h-16 rounded-full border-2 hover:bg-destructive/10 hover:border-destructive hover:text-destructive transition-colors"
-        >
-          <X size={32} weight="bold" />
-        </Button>
-
-        <Button
-          size="lg"
-          onClick={() => handleSwipe(true)}
-          disabled={!currentStartup || isProcessingSwipe}
-          className="w-16 h-16 rounded-full bg-pink-500/80 hover:bg-pink-500/90 text-white shadow-lg"
-        >
-          <Heart size={32} weight="fill" />
-        </Button>
-      </div>
     </div>
   )
 }
+
+

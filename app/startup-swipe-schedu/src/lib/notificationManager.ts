@@ -28,12 +28,9 @@ export class NotificationManager {
     }
 
     try {
-      // Register service worker
-      this.registration = await navigator.serviceWorker.register('/service-worker.js', {
-        scope: '/'
-      });
-
-      console.log('Service Worker registered:', this.registration);
+      // Service worker completely removed
+      console.log('Service Worker disabled');
+      this.registration = null;
 
       // Wait for service worker to be ready
       await navigator.serviceWorker.ready;

@@ -10,11 +10,19 @@ export interface Startup {
   maturity: string
   maturity_score?: number
   totalFunding?: string
+  total_funding?: number
+  total_equity_funding?: number
+  last_funding_date?: string
+  valuation?: number
+  latest_revenue_min?: number
+  latest_revenue_max?: number
+  revenue_date?: string
   employees?: string
   billingCity?: string
   billingCountry?: string
   dateFounded?: string
   currentInvestmentStage?: string
+  funding_stage?: string
   "Company Name"?: string
   "Company Description"?: string
   "Category"?: string
@@ -29,6 +37,33 @@ export interface Startup {
   logo?: string
   contactPerson?: string
   contactEmail?: string
+  // AXA Evaluation Fields
+  axa_evaluation_date?: string
+  axaEvaluationDate?: string
+  axa_overall_score?: number
+  axaOverallScore?: number
+  axa_priority_tier?: string
+  axaPriorityTier?: string
+  axa_can_use_as_provider?: boolean
+  axaCanUseAsProvider?: boolean
+  axa_business_leverage?: string
+  axaBusinessLeverage?: string
+  axa_primary_topic?: string
+  axaPrimaryTopic?: string
+  axa_use_cases?: string | string[]
+  axaUseCases?: string | string[]
+  // Product & Market Fields
+  value_proposition?: string
+  core_product?: string
+  target_customers?: string
+  problem_solved?: string
+  key_differentiator?: string
+  business_model?: string
+  vp_competitors?: string
+  extracted_product?: string
+  extracted_market?: string
+  extracted_competitors?: string
+  company_name?: string
 }
 
 export interface Vote {

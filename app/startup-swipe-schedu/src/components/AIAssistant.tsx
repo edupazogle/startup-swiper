@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { ChatMessage } from '@/lib/types'
 import { PaperPlaneRight, Robot, User, Sparkle } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useKV } from '@github/spark/hooks'
+import { useKV } from '@/lib/useKV'
 
 interface AIAssistantProps {
   startups: any[]

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKV } from '@/lib/useKV'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { ChatMessage } from '@/lib/types'
 import { Button } from '@/components/ui/button'

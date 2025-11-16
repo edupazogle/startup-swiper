@@ -106,8 +106,8 @@ def export_to_csv(startups: List[Dict], output_file: str, fields: Optional[List[
         fields = [
             'id', 'name', 'website', 'shortDescription',
             'billingCountry', 'billingCity', 'maturity',
-            'employees', 'totalFunding', 'currentInvestmentStage',
-            'dateFounded', 'is_enriched'
+            'employees', 'dateFounded', 'is_enriched',
+            'total_funding', 'valuation', 'last_funding_date'  # CB Insights funding data
         ]
     
     # Add enrichment fields if available

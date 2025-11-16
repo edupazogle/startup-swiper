@@ -162,6 +162,15 @@ def create_idea(db: Session, idea: schemas.IdeaCreate):
     db.refresh(db_idea)
     return db_idea
 
+def update_idea(db: Session, idea_id: int, idea: schemas.IdeaCreate):
+    db_idea = db.query(models.Idea).filter(models.Idea.id == idea_id).first()
+    if db_idea:
+        for key, value in idea.model_dump().items():
+            setattr(db_idea, key, value)
+        db.commit()
+        db.refresh(db_idea)
+    return db_idea
+
 # Startup Ratings CRUD
 def get_startup_rating(db: Session, startup_id: str):
     return db.query(models.StartupRating).filter(models.StartupRating.startupId == startup_id).first()

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -9,15 +9,17 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { AIStartupInsights } from '@/components/AIStartupInsights'
 import { AITimeSlotSuggester } from '@/components/AITimeSlotSuggester'
+import { FeedbackChatModal } from '@/components/FeedbackChatModal'
+import { MeetingAIModal } from '@/components/MeetingAIModal'
 import { Startup, Vote, CalendarEvent } from '@/lib/types'
-import { Users, Heart, CalendarBlank, Check, Rocket, MapPin, CurrencyDollar, Sparkle, GlobeHemisphereWest, Calendar, TrendUp, MagnifyingGlass, X } from '@phosphor-icons/react'
+import { Users, Heart, CalendarBlank, Check, Rocket, MapPin, CurrencyDollar, GlobeHemisphereWest, Calendar, TrendUp, MagnifyingGlass, X, Target, CheckCircle, Star, Sparkle, Briefcase } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { useKV } from '@github/spark/hooks'
 import { getTopicColor, getTechColor, getMaturityColor, getLocationColor } from '@/lib/badgeColors'
-import { cn } from '@/lib/utils'
+import { cn, parseArray } from '@/lib/utils'
 import { api } from '@/lib/api'
+import { fetchAllTopics } from '@/lib/topicsUseCases'
 
 interface DashboardViewProps {
   startups: Startup[]
@@ -35,14 +37,29 @@ interface StartupWithVotes extends Startup {
   totalRatings?: number
 }
 
+interface TopicHierarchy {
+  id: number
+  name: string
+  use_cases: UseCase[]
+}
+
+interface UseCase {
+  id: number
+  name: string
+}
+
 export function DashboardView({ startups, votes, events, currentUserId, onScheduleMeeting }: DashboardViewProps) {
   const [selectedStartup, setSelectedStartup] = useState<StartupWithVotes | null>(null)
   const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false)
+  const [showInsightsAI, setShowInsightsAI] = useState(false)
+  const [showMeetingAI, setShowMeetingAI] = useState(false)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [sortBy, setSortBy] = useState<'votes' | 'funding'>('votes')
   const [selectedStages, setSelectedStages] = useState<Set<string>>(new Set())
   const [selectedTopics, setSelectedTopics] = useState<Set<string>>(new Set())
   const [selectedTechs, setSelectedTechs] = useState<Set<string>>(new Set())
+  const [selectedUseCases, setSelectedUseCases] = useState<Set<string>>(new Set())
+  const [topicHierarchy, setTopicHierarchy] = useState<TopicHierarchy[]>([])
   const [localVotes, setLocalVotes] = useState<Vote[]>(votes)
   const [formData, setFormData] = useState({
     startTime: '',
@@ -52,12 +69,32 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
   })
   const [startupRatings, setStartupRatings] = useKV<Record<string, Record<string, number>>>('startup-ratings', {})
 
+  // Fetch topic hierarchy on mount
+  useEffect(() => {
+    const fetchTopicHierarchy = async () => {
+      try {
+        const response = await fetchAllTopics()
+        setTopicHierarchy(response.topics || [])
+      } catch (error) {
+        console.error('Failed to fetch topic hierarchy:', error)
+      }
+    }
+    fetchTopicHierarchy()
+  }, [])
+
+  // Clear use cases when topic is deselected
+  useEffect(() => {
+    if (selectedTopics.size === 0) {
+      setSelectedUseCases(new Set())
+    }
+  }, [selectedTopics])
+
   // Extract unique stages, topics, and techs for filters
   const uniqueStages = useMemo(() => {
     const stages = new Set<string>()
     startups.forEach(s => {
       const stage = s.Stage || s.currentInvestmentStage || s.maturity
-      if (stage) stages.add(stage)
+      if (stage && String(stage).trim()) stages.add(String(stage).trim())
     })
     return Array.from(stages).sort()
   }, [startups])
@@ -65,20 +102,12 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
   const uniqueTopics = useMemo(() => {
     const topics = new Set<string>()
     startups.forEach(s => {
-      let topicArray: string[] = []
-      if (Array.isArray(s.topics)) {
-        topicArray = s.topics
-      } else if (typeof s.topics === 'string') {
-        // Handle JSON string or comma-separated values
-        try {
-          topicArray = JSON.parse(s.topics)
-        } catch {
-          topicArray = s.topics.split(',').map(t => t.trim())
-        }
+      const topicArray = parseArray(s.topics)
+      if (Array.isArray(topicArray)) {
+        topicArray.forEach(t => {
+          if (t && String(t).trim()) topics.add(String(t).trim())
+        })
       }
-      topicArray.forEach(t => {
-        if (typeof t === 'string') topics.add(t.trim())
-      })
     })
     return Array.from(topics).sort()
   }, [startups])
@@ -86,20 +115,12 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
   const uniqueTechs = useMemo(() => {
     const techs = new Set<string>()
     startups.forEach(s => {
-      let techArray: string[] = []
-      if (Array.isArray(s.tech)) {
-        techArray = s.tech
-      } else if (typeof s.tech === 'string') {
-        // Handle JSON string or comma-separated values
-        try {
-          techArray = JSON.parse(s.tech)
-        } catch {
-          techArray = s.tech.split(',').map(t => t.trim())
-        }
+      const techArray = parseArray(s.tech)
+      if (Array.isArray(techArray)) {
+        techArray.forEach(t => {
+          if (t && String(t).trim()) techs.add(String(t).trim())
+        })
       }
-      techArray.forEach(t => {
-        if (typeof t === 'string') techs.add(t.trim())
-      })
     })
     return Array.from(techs).sort()
   }, [startups])
@@ -134,34 +155,24 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
     // Apply topics filter
     if (selectedTopics.size > 0) {
       filtered = filtered.filter(s => {
-        let topicArray: string[] = []
-        if (Array.isArray(s.topics)) {
-          topicArray = s.topics
-        } else if (typeof s.topics === 'string') {
-          try {
-            topicArray = JSON.parse(s.topics)
-          } catch {
-            topicArray = s.topics.split(',').map(t => t.trim())
-          }
-        }
-        return topicArray.some(t => selectedTopics.has(t.trim()))
+        const topicArray = parseArray(s.topics)
+        return topicArray.some(t => selectedTopics.has(t))
       })
     }
 
     // Apply tech filter
     if (selectedTechs.size > 0) {
       filtered = filtered.filter(s => {
-        let techArray: string[] = []
-        if (Array.isArray(s.tech)) {
-          techArray = s.tech
-        } else if (typeof s.tech === 'string') {
-          try {
-            techArray = JSON.parse(s.tech)
-          } catch {
-            techArray = s.tech.split(',').map(t => t.trim())
-          }
-        }
-        return techArray.some(t => selectedTechs.has(t.trim()))
+        const techArray = parseArray(s.tech)
+        return techArray.some(t => selectedTechs.has(t))
+      })
+    }
+
+    // Apply use cases filter (only if a topic is selected)
+    if (selectedUseCases.size > 0 && selectedTopics.size > 0) {
+      filtered = filtered.filter(s => {
+        const useCasesArray = parseArray(s.axa_use_cases)
+        return useCasesArray.some(u => selectedUseCases.has(u))
       })
     }
 
@@ -202,38 +213,11 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
     }
     
     return sorted
-  }, [startups, localVotes, events, searchQuery, startupRatings, sortBy, selectedStages, selectedTopics, selectedTechs])
+  }, [startups, localVotes, events, searchQuery, startupRatings, sortBy, selectedStages, selectedTopics, selectedTechs, selectedUseCases])
 
   const highPriority = startupsWithVotes.filter(s => s.interestedVotes.length >= 3)
   const mediumPriority = startupsWithVotes.filter(s => s.interestedVotes.length > 0 && s.interestedVotes.length < 3)
   const noPriority = startupsWithVotes.filter(s => s.interestedVotes.length === 0)
-
-  const handleScheduleMeeting = () => {
-    if (!selectedStartup || !formData.startTime || !formData.endTime) {
-      toast.error('Please fill in all required fields')
-      return
-    }
-
-    onScheduleMeeting(String(selectedStartup.id), {
-      title: `Meeting: ${selectedStartup.name || selectedStartup["Company Name"]}`,
-      description: formData.description,
-      startTime: new Date(formData.startTime),
-      endTime: new Date(formData.endTime),
-      location: formData.location,
-      type: 'meeting',
-      confirmed: true
-    })
-
-    setFormData({ startTime: '', endTime: '', location: '', description: '' })
-    setIsScheduleDialogOpen(false)
-    setSelectedStartup(null)
-    toast.success(`Meeting scheduled with ${selectedStartup["Company Name"]}!`)
-  }
-
-  const openScheduleDialog = (startup: StartupWithVotes) => {
-    setSelectedStartup(startup)
-    setIsScheduleDialogOpen(true)
-  }
 
   const getInitials = (name: string) => {
     return name
@@ -370,34 +354,23 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
     
     return (
       <Card key={startup.id} className="p-4 md:p-6 hover:shadow-md transition-shadow">
-        <div className="flex items-start gap-3 md:gap-4">
+        <div className="flex flex-col sm:flex-row items-start gap-3 md:gap-4">
           {displayLogo && (
             <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-background flex items-center justify-center overflow-hidden flex-shrink-0 border border-border/50 shadow-sm">
               <img src={displayLogo} alt={displayName} className="w-full h-full object-contain p-1" />
             </div>
           )}
           
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-3 md:gap-4 mb-2">
+          <div className="flex-1 min-w-0 w-full">
+            <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-2 sm:gap-3 md:gap-4 mb-2">
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg md:text-xl font-semibold mb-1.5 leading-tight tracking-tight">{displayName}</h3>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <h3 className="text-lg md:text-xl font-semibold leading-tight tracking-tight">{displayName}</h3>
+                </div>
                 <div className="flex flex-wrap gap-x-2 md:gap-x-3 gap-y-1.5 md:gap-y-2 mb-2">
                   {(() => {
-                    // Helper function to check if topics exist and parse them
-                    let topicArray: string[] = []
-                    if (startup.topics) {
-                      if (Array.isArray(startup.topics)) {
-                        topicArray = startup.topics
-                      } else if (typeof startup.topics === 'string') {
-                        try {
-                          topicArray = JSON.parse(startup.topics)
-                        } catch {
-                          topicArray = startup.topics.split(',').map(t => t.trim())
-                        }
-                      }
-                    }
-                    
-                    return topicArray.length > 0 && (
+                    const topicArray = parseArray(startup.topics)
+                    return Array.isArray(topicArray) && topicArray.length > 0 && (
                       <div className="flex flex-col gap-0.5">
                         <span className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Topics</span>
                         <div className="flex flex-wrap gap-1">
@@ -417,44 +390,9 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                       </div>
                     )
                   })()}
-                  {(() => {
-                    // Helper function to check if tech exists and parse them
-                    let techArray: string[] = []
-                    if (startup.tech) {
-                      if (Array.isArray(startup.tech)) {
-                        techArray = startup.tech
-                      } else if (typeof startup.tech === 'string') {
-                        try {
-                          techArray = JSON.parse(startup.tech)
-                        } catch {
-                          techArray = startup.tech.split(',').map(t => t.trim())
-                        }
-                      }
-                    }
-                    
-                    return techArray.length > 0 && (
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Tech</span>
-                        <div className="flex flex-wrap gap-1">
-                          {techArray.slice(0, 2).map((t, i) => {
-                            const colors = getTechColor(t)
-                            return (
-                              <Badge 
-                                key={i} 
-                                variant="outline" 
-                                className={cn("text-[10px] md:text-xs font-medium border", colors.bg, colors.text, colors.border)}
-                              >
-                                {t}
-                              </Badge>
-                            )
-                          })}
-                        </div>
-                      </div>
-                    )
-                  })()}
                   {startup.maturity && (
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Stage</span>
+                      <span className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Maturity</span>
                       {(() => {
                         const colors = getMaturityColor(startup.maturity)
                         return (
@@ -468,6 +406,7 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                       })()}
                     </div>
                   )}
+
                   {startup.scheduledEvent && (
                     <div className="flex flex-col gap-0.5">
                       <span className="text-[9px] md:text-[10px] text-transparent uppercase tracking-wider font-medium select-none">_</span>
@@ -480,50 +419,114 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                 </div>
               </div>
               
-              <div className="flex items-center gap-2 md:gap-3 flex-shrink-0 relative">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleHeartToggle(startup)
+              <div className="flex flex-wrap items-center gap-2 flex-shrink-0">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setSelectedStartup(startup)
+                    setShowInsightsAI(true)
                   }}
-                  className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group hover:scale-110 active:scale-95"
-                  title={localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? 'Unlike this startup' : 'Like this startup'}
+                  className="text-xs"
                 >
-                  <Heart 
-                    size={20} 
-                    weight={localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? "fill" : "regular"}
-                    className={cn(
-                      "transition-all duration-200",
-                      localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? "text-pink-500" : "text-gray-400 group-hover:text-pink-400"
-                    )}
-                  />
-                </button>
-                <div className="flex items-center gap-1 md:gap-2">
-                  <Heart weight="fill" className="text-accent" size={16} />
-                  <span className="text-xl md:text-2xl font-bold text-accent">
-                    {localVotes.filter(v => String(v.startupId) === String(startup.id) && v.interested).length}
-                  </span>
-                </div>
-                <RocketRating 
-                  startupId={String(startup.id)}
-                  currentRating={userRating}
-                  averageRating={startup.averageRating || 0}
-                  totalRatings={startup.totalRatings || 0}
-                />
+                  💡 Insights AI
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setSelectedStartup(startup)
+                    setShowMeetingAI(true)
+                  }}
+                  className="text-xs"
+                >
+                  💼 Meeting AI
+                </Button>
               </div>
             </div>
 
+            {/* Venture Clienting Analysis */}
+            {(startup.axa_overall_score !== undefined || startup.axaOverallScore !== undefined) && (
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Target size={16} className="text-blue-600 dark:text-blue-400" weight="duotone" />
+                  <h3 className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Venture Clienting Analysis</h3>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3 bg-blue-500/5 p-3 rounded-lg border border-blue-200 dark:border-blue-900/30">
+                  {/* Left Column: Score & Provider Status */}
+                  <div className="space-y-3">
+                    {/* Score Section */}
+                    <div>
+                      <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">Rise Score</p>
+                      <div className="flex items-end gap-2">
+                        <span className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
+                          {(startup.axa_overall_score || startup.axaOverallScore)?.toFixed(0)}%
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Provider Status */}
+                    {(startup.axa_can_use_as_provider !== undefined || startup.axaCanUseAsProvider !== undefined) && (
+                      <div className="flex items-center gap-2">
+                        <CheckCircle 
+                          size={14} 
+                          weight="fill"
+                          className={cn(
+                            (startup.axa_can_use_as_provider || startup.axaCanUseAsProvider) 
+                              ? 'text-green-600 dark:text-green-400' 
+                              : 'text-slate-400 dark:text-slate-600'
+                          )} 
+                        />
+                        <span className="text-xs text-muted-foreground">
+                          {(startup.axa_can_use_as_provider || startup.axaCanUseAsProvider) 
+                            ? 'Can be used as provider'
+                            : 'Research opportunity'}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right Column: Use Cases */}
+                  {(() => {
+                    const useCases = startup.axa_use_cases || startup.axaUseCases
+                    const useCaseArray = parseArray(useCases)
+
+                    return useCaseArray.length > 0 && (
+                      <div className="pt-2">
+                        <p className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-wide font-medium mb-1">Use Cases</p>
+                        <div className="flex flex-wrap gap-1">
+                          {useCaseArray.map((useCase: string, idx: number) => (
+                            <div key={idx} className="flex items-center gap-1 bg-green-500/90 px-1.5 py-0.5 rounded border border-green-600/80">
+                              <CheckCircle size={9} weight="bold" className="text-white flex-shrink-0" />
+                              <span className="text-[9px] md:text-[10px] text-white font-medium">
+                                {useCase}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })()}
+                </div>
+              </div>
+            )}
+
+            {/* Value Proposition */}
+            {(startup.value_proposition || startup.shortDescription) && (
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Star size={16} className="text-pink-600 dark:text-pink-400" weight="duotone" />
+                  <h3 className="text-xs text-pink-700 dark:text-pink-300 uppercase tracking-wide font-medium">Value Proposition</h3>
+                </div>
+                <div className="text-sm leading-relaxed text-foreground bg-pink-500/5 p-3 rounded-lg border border-pink-200 dark:border-pink-900/30">
+                  <p>{startup.value_proposition || startup.shortDescription}</p>
+                </div>
+              </div>
+            )}
+
             {displayUSP && (
               <>
-                <div className="mb-3 md:mb-4">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <Sparkle size={14} className="text-accent md:w-4 md:h-4" weight="duotone" />
-                    <h4 className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide font-medium">Value Proposition</h4>
-                  </div>
-                  <p className="text-xs md:text-sm leading-relaxed text-accent-foreground bg-accent/5 p-2 md:p-3 rounded-md border border-accent/20">
-                    {displayUSP}
-                  </p>
-                </div>
                 <Separator className="mb-3 md:mb-4" />
               </>
             )}
@@ -596,46 +599,52 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
             </div>
 
             {startup.interestedVotes.length > 0 && (
-              <>
-                <Separator className="mb-3 md:mb-4" />
-                <AIStartupInsights 
-                  startup={startup}
-                  userVotes={votes}
-                />
-                <Separator className="my-3 md:my-4" />
-              </>
+              <div className="flex items-center gap-1.5 md:gap-2">
+                <Users size={14} className="text-muted-foreground md:w-4 md:h-4" />
+                <div className="flex -space-x-1.5 md:-space-x-2">
+                  {startup.interestedVotes.map((vote, idx) => (
+                    <Avatar key={idx} className="w-6 h-6 md:w-8 md:h-8 border-2 border-background">
+                      <AvatarFallback className="bg-primary text-primary-foreground text-[10px] md:text-xs">
+                        {getInitials(vote.userName)}
+                      </AvatarFallback>
+                    </Avatar>
+                  ))}
+                </div>
+                <span className="text-[10px] md:text-xs text-muted-foreground ml-0.5 md:ml-1 hidden md:inline">
+                  {startup.interestedVotes.map(v => v.userName).join(', ')}
+                </span>
+              </div>
             )}
 
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-4">
-              {startup.interestedVotes.length > 0 && (
-                <div className="flex items-center gap-1.5 md:gap-2">
-                  <Users size={14} className="text-muted-foreground md:w-4 md:h-4" />
-                  <div className="flex -space-x-1.5 md:-space-x-2">
-                    {startup.interestedVotes.map((vote, idx) => (
-                      <Avatar key={idx} className="w-6 h-6 md:w-8 md:h-8 border-2 border-background">
-                        <AvatarFallback className="bg-primary text-primary-foreground text-[10px] md:text-xs">
-                          {getInitials(vote.userName)}
-                        </AvatarFallback>
-                      </Avatar>
-                    ))}
-                  </div>
-                  <span className="text-[10px] md:text-xs text-muted-foreground ml-0.5 md:ml-1 hidden md:inline">
-                    {startup.interestedVotes.map(v => v.userName).join(', ')}
-                  </span>
-                </div>
-              )}
-              
-              {startup.interestedVotes.length > 0 && !startup.scheduledEvent && (
-                <Button 
-                  size="sm" 
-                  onClick={() => openScheduleDialog(startup)}
-                  className="gap-1.5 md:gap-2 text-xs"
-                >
-                  <CalendarBlank size={14} weight="bold" className="md:w-4 md:h-4" />
-                  <span className="hidden md:inline">Schedule Meeting</span>
-                  <span className="md:hidden">Schedule</span>
-                </Button>
-              )}
+            {/* Bottom Action Bar with Heart and Rocket */}
+            <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleHeartToggle(startup)
+                }}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200 group hover:scale-105 active:scale-95 flex-shrink-0"
+                title={localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? 'Unlike this startup' : 'Like this startup'}
+              >
+                <Heart 
+                  size={16} 
+                  weight={localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? "fill" : "regular"}
+                  className={cn(
+                    "transition-all duration-200",
+                    localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? "text-pink-500" : "text-gray-400 group-hover:text-pink-400"
+                  )}
+                />
+                <span className="font-semibold text-sm">
+                  {localVotes.filter(v => String(v.startupId) === String(startup.id) && v.interested).length}
+                </span>
+              </button>
+
+              <RocketRating 
+                startupId={String(startup.id)}
+                currentRating={userRating}
+                averageRating={startup.averageRating || 0}
+                totalRatings={startup.totalRatings || 0}
+              />
             </div>
           </div>
         </div>
@@ -647,48 +656,20 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
     <>
       <div className="h-full">
         <div className="max-w-4xl mx-auto p-3 md:p-6 space-y-4 md:space-y-6">
-          {/* Total Startups Banner */}
-          <div className="p-3 md:p-4 rounded-lg">
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2 md:gap-3">
-                <Rocket size={24} weight="duotone" className="text-primary md:w-8 md:h-8" />
-                <div>
-                  <h3 className="text-base md:text-lg font-extrabold text-foreground">Total Startups Available</h3>
-                  <p className="text-xs md:text-sm text-muted-foreground">All startups from Slush 2025</p>
-                </div>
-              </div>
-              <div className="text-3xl md:text-4xl font-black text-primary">
-                {startups.length}
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {/* Search Bar */}
-            <div className="flex items-center gap-3 md:gap-4 flex-wrap p-3 md:p-4 rounded-md bg-secondary/30">
-              <div className="flex items-center gap-2 text-foreground">
-                <MagnifyingGlass size={18} weight="duotone" />
-                <span className="text-xs md:text-sm font-bold">Search:</span>
-              </div>
-              
-              <div className="flex-1 min-w-[200px] max-w-md">
+          {/* Search and Filters - Single Row */}
+          <div className="flex flex-wrap gap-2 md:gap-3 items-end p-3 md:p-4 rounded-md bg-secondary/30">
+              {/* Search Input */}
+              <div className="flex items-center gap-2 flex-1 min-w-[150px] sm:min-w-[200px]">
+                <MagnifyingGlass size={16} weight="duotone" className="text-foreground flex-shrink-0" />
                 <Input
                   type="text"
-                  placeholder="Type at least 3 characters to search by name..."
+                  placeholder="Search by name..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="text-xs md:text-sm"
+                  className="text-xs md:text-sm h-8 md:h-9"
                 />
               </div>
 
-              <div className="ml-auto text-xs md:text-sm text-muted-foreground">
-                {startupsWithVotes.length} startup{startupsWithVotes.length !== 1 ? 's' : ''}
-                {searchQuery.trim().length < 3 && selectedStages.size === 0 && selectedTopics.size === 0 && selectedTechs.size === 0 && startupsWithVotes.length === 100 && ' (showing first 100)'}
-              </div>
-            </div>
-
-            {/* Sort and Filter Controls - Single Row on All Devices */}
-            <div className="flex flex-wrap gap-2 md:gap-3 items-end">
               {/* Sort By Dropdown */}
               <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
                 <label className="text-[10px] md:text-xs font-bold text-foreground mb-1 block">Sort</label>
@@ -703,11 +684,11 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                 </Select>
               </div>
 
-              {/* Stage Filter Dropdown */}
+              {/* Maturity Filter Dropdown */}
               {uniqueStages.length > 0 && (
                 <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[10px] md:text-xs font-bold text-foreground">Stage</label>
+                    <label className="text-[10px] md:text-xs font-bold text-foreground">Maturity</label>
                     {selectedStages.size > 0 && (
                       <button
                         onClick={() => setSelectedStages(new Set())}
@@ -728,7 +709,7 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                     }}
                   >
                     <SelectTrigger className="w-full text-[11px] md:text-xs h-8 md:h-9">
-                      <SelectValue placeholder="Select stage...">
+                      <SelectValue placeholder="Select maturity...">
                         {selectedStages.size > 0 
                           ? Array.from(selectedStages)[0]
                           : 'All'
@@ -736,8 +717,8 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent className="max-h-[150px] md:max-h-[300px]">
-                      <SelectItem value="__all__">All Stages</SelectItem>
-                      {uniqueStages.map(stage => (
+                      <SelectItem value="__all__">All Maturity</SelectItem>
+                      {uniqueStages.filter(s => s && s.trim()).map(stage => (
                         <SelectItem key={stage} value={stage}>
                           {stage}
                         </SelectItem>
@@ -781,7 +762,7 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                     </SelectTrigger>
                     <SelectContent className="max-h-[150px] md:max-h-[300px]">
                       <SelectItem value="__all__">All Topics</SelectItem>
-                      {uniqueTopics.map(topic => (
+                      {uniqueTopics.filter(t => t && t.trim()).map(topic => (
                         <SelectItem key={topic} value={topic}>
                           {topic}
                         </SelectItem>
@@ -791,51 +772,57 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                 </div>
               )}
 
-              {/* Tech Filter Dropdown */}
-              {uniqueTechs.length > 0 && (
-                <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="text-[10px] md:text-xs font-bold text-foreground">Tech</label>
-                    {selectedTechs.size > 0 && (
-                      <button
-                        onClick={() => setSelectedTechs(new Set())}
-                        className="text-[9px] md:text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5"
-                      >
-                        <X size={10} />
-                      </button>
-                    )}
-                  </div>
-                  <Select
-                    value={selectedTechs.size === 0 ? '__all__' : Array.from(selectedTechs)[0]}
-                    onValueChange={(value) => {
-                      if (value === '__all__') {
-                        setSelectedTechs(new Set())
-                      } else {
-                        setSelectedTechs(new Set([value]))
-                      }
-                    }}
-                  >
-                    <SelectTrigger className="w-full text-[11px] md:text-xs h-8 md:h-9">
-                      <SelectValue placeholder="Select tech...">
-                        {selectedTechs.size > 0 
-                          ? Array.from(selectedTechs)[0]
-                          : 'All'
+              {/* Use Cases Filter Dropdown - Only enabled if topic is selected */}
+              {selectedTopics.size > 0 && topicHierarchy.length > 0 && (() => {
+                const selectedTopic = Array.from(selectedTopics)[0]
+                const topicData = topicHierarchy.find(t => t.name === selectedTopic)
+                const useCases = (topicData?.use_cases || []).filter(uc => uc && uc.name && uc.name.trim() !== '')
+                
+                return useCases.length > 0 ? (
+                  <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[10px] md:text-xs font-bold text-foreground">Use Cases</label>
+                      {selectedUseCases.size > 0 && (
+                        <button
+                          onClick={() => setSelectedUseCases(new Set())}
+                          className="text-[9px] md:text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5"
+                        >
+                          <X size={10} />
+                        </button>
+                      )}
+                    </div>
+                    <Select
+                      value={selectedUseCases.size === 0 ? '__all__' : Array.from(selectedUseCases)[0]}
+                      onValueChange={(value) => {
+                        if (value === '__all__') {
+                          setSelectedUseCases(new Set())
+                        } else {
+                          setSelectedUseCases(new Set([value]))
                         }
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="max-h-[150px] md:max-h-[300px]">
-                      <SelectItem value="__all__">All Tech</SelectItem>
-                      {uniqueTechs.map(tech => (
-                        <SelectItem key={tech} value={tech}>
-                          {tech}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
+                      }}
+                    >
+                      <SelectTrigger className="w-full text-[11px] md:text-xs h-8 md:h-9">
+                        <SelectValue placeholder="Select use case...">
+                          {selectedUseCases.size > 0 
+                            ? Array.from(selectedUseCases)[0]
+                            : 'All'
+                          }
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent className="max-h-[150px] md:max-h-[300px]">
+                        <SelectItem value="__all__">All Use Cases</SelectItem>
+                        {useCases.map(useCase => (
+                          <SelectItem key={useCase.id} value={useCase.name}>
+                            {useCase.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                ) : null
+              })()}
+
             </div>
-          </div>
           {highPriority.length > 0 && (
             <div>
               <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
@@ -970,10 +957,49 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
             <Button variant="outline" onClick={() => setIsScheduleDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleScheduleMeeting}>Schedule Meeting</Button>
+            <Button onClick={() => {
+              if (!selectedStartup || !formData.startTime || !formData.endTime) {
+                toast.error('Please fill in all required fields')
+                return
+              }
+              onScheduleMeeting(String(selectedStartup.id), {
+                title: `Meeting: ${selectedStartup.name || selectedStartup["Company Name"]}`,
+                description: formData.description,
+                startTime: new Date(formData.startTime),
+                endTime: new Date(formData.endTime),
+                location: formData.location,
+                type: 'meeting',
+                confirmed: true
+              })
+              setFormData({ startTime: '', endTime: '', location: '', description: '' })
+              setIsScheduleDialogOpen(false)
+              setSelectedStartup(null)
+              toast.success(`Meeting scheduled with ${selectedStartup["Company Name"]}!`)
+            }}>Schedule Meeting</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Insights AI Modal */}
+      {selectedStartup && (
+        <>
+          <FeedbackChatModal
+            isOpen={showInsightsAI}
+            onClose={() => setShowInsightsAI(false)}
+            startupId={selectedStartup?.id}
+            startupName={selectedStartup?.name || selectedStartup?.["Company Name"] || 'Unknown'}
+            startupDescription={selectedStartup?.description || selectedStartup?.shortDescription || ''}
+            userId={currentUserId}
+          />
+
+          <MeetingAIModal
+            isOpen={showMeetingAI}
+            onClose={() => setShowMeetingAI(false)}
+            startup={selectedStartup}
+            userId={currentUserId}
+          />
+        </>
+      )}
     </>
   )
 }

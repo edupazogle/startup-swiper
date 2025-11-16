@@ -1,11 +1,60 @@
 import { Idea, IdeaCategory } from '@/lib/types'
-import { Lightbulb } from '@phosphor-icons/react'
+import { Lightbulb, PencilSimple } from '@phosphor-icons/react'
+import { useState } from 'react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { api } from '@/lib/api'
+import { toast } from 'sonner'
 
 interface InsightsViewProps {
   ideas: Idea[]
+  onIdeaUpdated?: () => void
 }
 
-export function InsightsView({ ideas }: InsightsViewProps) {
+export function InsightsView({ ideas, onIdeaUpdated }: InsightsViewProps) {
+  const [editingIdea, setEditingIdea] = useState<Idea | null>(null)
+  const [editTitle, setEditTitle] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+  const [editTags, setEditTags] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
+
+  const handleEditClick = (idea: Idea) => {
+    setEditingIdea(idea)
+    setEditTitle(idea.title)
+    setEditDescription(idea.description)
+    setEditTags(idea.tags.join(', '))
+  }
+
+  const handleSaveEdit = async () => {
+    if (!editingIdea) return
+    
+    setIsSaving(true)
+    try {
+      await api.updateIdea(editingIdea.id, {
+        title: editTitle,
+        description: editDescription,
+        tags: editTags.split(',').map(t => t.trim()).filter(t => t),
+        name: editingIdea.name,
+        timestamp: editingIdea.timestamp,
+        category: editingIdea.category,
+        images: editingIdea.images || []
+      })
+      
+      toast.success('Insight updated successfully')
+      setEditingIdea(null)
+      if (onIdeaUpdated) {
+        onIdeaUpdated()
+      }
+    } catch (error) {
+      console.error('Error updating insight:', error)
+      toast.error('Failed to update insight')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
   const categoryConfig: Record<IdeaCategory, { title: string; description: string; color: string; section: 'observed' | 'impacts' | 'meetings' }> = {
     '1': {
       title: '1. AI: Present and Future',
@@ -186,9 +235,17 @@ export function InsightsView({ ideas }: InsightsViewProps) {
                         categoryIdeas.map((idea) => (
                           <div
                             key={idea.id}
-                            className="bg-white/60 backdrop-blur-sm rounded-md p-3 shadow-md border border-white/30 transition-all duration-200 hover:bg-white/75 hover:border-white/50"
+                            className="bg-white/60 backdrop-blur-sm rounded-md p-3 shadow-md border border-white/30 transition-all duration-200 hover:bg-white/75 hover:border-white/50 relative group"
                           >
-                            <h5 className="font-semibold text-gray-900 text-sm mb-2">
+                            <button
+                              onClick={() => handleEditClick(idea)}
+                              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md bg-white/80 hover:bg-white shadow-sm"
+                              title="Edit insight"
+                            >
+                              <PencilSimple size={14} weight="bold" className="text-gray-700" />
+                            </button>
+                            
+                            <h5 className="font-semibold text-gray-900 text-sm mb-2 pr-8">
                               {idea.title}
                             </h5>
                             <p className="text-xs text-gray-800 mb-3 whitespace-pre-wrap leading-relaxed">
@@ -235,6 +292,58 @@ export function InsightsView({ ideas }: InsightsViewProps) {
           </div>
         ))}
       </div>
+
+      {/* Edit Dialog */}
+      <Dialog open={editingIdea !== null} onOpenChange={(open) => !open && setEditingIdea(null)}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Edit Insight</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Title</label>
+              <Input
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                placeholder="Enter insight title"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Description</label>
+              <Textarea
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                placeholder="Enter insight description"
+                rows={6}
+                className="resize-none"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Tags (comma separated)</label>
+              <Input
+                value={editTags}
+                onChange={(e) => setEditTags(e.target.value)}
+                placeholder="e.g., AI, Insurance, Innovation"
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button
+                variant="outline"
+                onClick={() => setEditingIdea(null)}
+                disabled={isSaving}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSaveEdit}
+                disabled={isSaving}
+              >
+                {isSaving ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

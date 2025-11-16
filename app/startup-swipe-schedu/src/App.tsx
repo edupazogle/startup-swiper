@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useKV } from '@/lib/useKV'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { LoginView } from '@/components/LoginView'
 import { AuroralBackground } from '@/components/AuroralBackground'
@@ -11,7 +10,6 @@ import { AIAssistantView } from '@/components/AIAssistantView'
 import { AdminView } from '@/components/AdminView'
 import { AddStartupDialog } from '@/components/AddStartupDialog'
 import { AddIdeaDialog } from '@/components/AddIdeaDialog'
-import { PendingInsightsNotification } from '@/components/PendingInsightsNotification'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Startup, Vote, CalendarEvent, Idea } from '@/lib/types'
@@ -27,9 +25,9 @@ import logoMain from '@/assets/images/f8cba53d-0d66-4aab-b97c-8fa66871fa8b.png'
 
 function App() {
   const isMobile = useIsMobile()
-  const [isAuthenticated, setIsAuthenticated] = useKV<boolean>('is-authenticated', false)
-  const [currentUserId, setCurrentUserId] = useKV<string>('current-user-id', '')
-  const [currentUserName, setCurrentUserName] = useKV<string>('current-user-name', '')
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+  const [currentUserId, setCurrentUserId] = useState<string>('')
+  const [currentUserName, setCurrentUserName] = useState<string>('')
   const [notificationManager, setNotificationManager] = useState<null>(null)
   const [notificationsEnabled, setNotificationsEnabled] = useState(false)
   const [showNotificationSetup, setShowNotificationSetup] = useState(false)
@@ -75,6 +73,26 @@ function App() {
   useEffect(() => {
     const initializeUser = async () => {
       try {
+        // First, check if user is already stored in localStorage (persistent session)
+        // NOTE: localStorage is per-browser/device, so each user on their own computer
+        // will have their own separate session stored. No cross-user conflicts.
+        const savedSession = localStorage.getItem('startup_swiper_session')
+        if (savedSession) {
+          try {
+            const session = JSON.parse(savedSession)
+            if (session.userId && session.userName) {
+              setCurrentUserId(session.userId)
+              setCurrentUserName(session.userName)
+              setIsAuthenticated(true)
+              console.log('✓ Restored session from localStorage:', session.userId)
+              return
+            }
+          } catch (e) {
+            console.warn('Failed to parse saved session:', e)
+            localStorage.removeItem('startup_swiper_session')
+          }
+        }
+
         // If a hosted SSO/Spark provider is available, use it to sign users in.
         if (typeof window !== 'undefined' && (window as any).spark && typeof (window as any).spark.user === 'function') {
           const user = await (window as any).spark.user()
@@ -83,7 +101,12 @@ function App() {
             setCurrentUserId(userId)
             if (user.login) setCurrentUserName(user.login)
             setIsAuthenticated(true)
-            console.log('Signed in via Spark provider:', userId)
+            // Save to localStorage for persistence (isolated to this browser/device)
+            localStorage.setItem('startup_swiper_session', JSON.stringify({
+              userId,
+              userName: user.login || 'User'
+            }))
+            console.log('✓ Signed in via Spark provider:', userId)
             return
           }
         }
@@ -109,19 +132,19 @@ function App() {
   const [startups, setStartups] = useState<Startup[]>([])
   const [allStartups, setAllStartups] = useState<Startup[]>([])
   const [isLoadingStartups, setIsLoadingStartups] = useState(true)
-  const [votes, setVotes] = useKV<Vote[]>('votes', [])
+  const [votes, setVotes] = useState<Vote[]>([])
   
   // Fetch AXA-filtered startups for swiper and all startups for dashboard
   // We require an authenticated user; `safeUserId` is the authenticated id.
   const safeUserId = currentUserId
 
-  // Fetch votes from API on app load
+  // Fetch votes from API on app load and refresh them
   useEffect(() => {
     const fetchVotes = async () => {
       try {
         const apiVotes = await api.getVotes(0, 10000)
         if (apiVotes && Array.isArray(apiVotes)) {
-          // Convert API votes to frontend format and merge with local votes
+          // Convert API votes to frontend format
           const convertedVotes: Vote[] = apiVotes.map(v => ({
             startupId: v.startupId,
             userId: v.userId,
@@ -131,23 +154,19 @@ function App() {
             meetingScheduled: v.meetingScheduled || false
           }))
           
-          // Merge: API votes take precedence, then local votes
-          const mergedVotes = [...convertedVotes]
-          const apiVoteKeys = new Set(convertedVotes.map(v => `${v.startupId}-${v.userId}`))
-          
-          const localVotes = votes.filter(v => !apiVoteKeys.has(`${v.startupId}-${v.userId}`))
-          mergedVotes.push(...localVotes)
-          
-          setVotes(mergedVotes)
+          setVotes(convertedVotes)
           console.log(`✓ Loaded ${convertedVotes.length} votes from API`)
         }
       } catch (error) {
         console.error('Failed to fetch votes from API:', error)
-        // Continue with local votes if API fails
+        setVotes([])
       }
     }
     
     fetchVotes()
+    // Refresh votes every 5 seconds to stay in sync with API
+    const interval = setInterval(fetchVotes, 5000)
+    return () => clearInterval(interval)
   }, [])
 
   useEffect(() => {
@@ -155,15 +174,22 @@ function App() {
       try {
         setIsLoadingStartups(true)
         
-        // Fetch AXA-filtered startups for swiper (top 300)
+        // Fetch Phase 1 startups (top 20 funded with topic variety)
         let swiperData
         try {
-          swiperData = await api.getAxaFilteredStartups(300, 25)
-          console.log('✓ Loaded AXA-filtered startups for swiper (NVIDIA NIM enhanced)')
+          swiperData = await api.getPhase1Startups(safeUserId)
+          console.log('✓ Loaded Phase 1 startups (20 top-funded with category variety)')
         } catch (error) {
-          console.warn('AXA filtered endpoint not available, falling back to standard prioritization:', error)
-          // Fallback to standard prioritized startups if AXA endpoint fails
-          swiperData = await api.getPrioritizedStartups(safeUserId, 300, 30)
+          console.warn('Phase 1 endpoint not available, falling back to AXA filtering:', error)
+          // Fallback to AXA-filtered if phase endpoint fails
+          try {
+            swiperData = await api.getAxaFilteredStartups(300, 25)
+            console.log('✓ Loaded AXA-filtered startups for swiper (NVIDIA NIM enhanced)')
+          } catch (fallbackError) {
+            console.warn('AXA filtered endpoint not available, falling back to standard prioritization:', fallbackError)
+            // Final fallback to standard prioritized startups if AXA endpoint fails
+            swiperData = await api.getPrioritizedStartups(safeUserId, 300, 30)
+          }
         }
         
         if (swiperData.startups && Array.isArray(swiperData.startups)) {
@@ -184,13 +210,30 @@ function App() {
 
           const transformedSwiperStartups = swiperData.startups.map((s: any, i: number) => ({
             id: s.id || `startup-${i}`,
-            "Company Name": s.company_name || s.name || s["Company Name"] || "Unknown",
-            "Company Description": s.company_description || s.description || s["Company Description"] || "",
-            "Category": s.primary_industry || s.category || "General",
-            "Stage": s.currentInvestmentStage || s.stage || s.Stage || "Unknown",
-            "Website": s.website || s.Website || "",
+            name: s.name || s.company_name || "Unknown",
+            description: s.description || s.company_description || "",
+            shortDescription: s.shortDescription || "",
+            website: s.website || "",
             topics: parseArray(s.topics || s.Topics),
             tech: parseArray(s.tech || s.Tech || s.technologies),
+            maturity: s.maturity || "Undisclosed",
+            employees: s.employees,
+            billingCity: s.billingCity,
+            billingCountry: s.billingCountry,
+            maturity_score: s.maturity_score,
+            logoUrl: s.logoUrl,
+            total_funding: s.total_funding,
+            last_funding_date: s.last_funding_date,
+            valuation: s.valuation,
+            funding_stage: s.funding_stage,
+            currentInvestmentStage: s.currentInvestmentStage,
+            dateFounded: s.dateFounded,
+            // Legacy fields
+            "Company Name": s.company_name || s.name || "Unknown",
+            "Company Description": s.company_description || s.description || "",
+            "Category": s.primary_industry || s.category || "General",
+            "Stage": s.currentInvestmentStage || s.funding_stage || s.stage || "Unknown",
+            "Website": s.website || "",
             ...s // Include all other fields
           }))
           setStartups(transformedSwiperStartups)
@@ -229,13 +272,30 @@ function App() {
 
               return {
                 id: s.id || `startup-${i}`,
-                "Company Name": s.company_name || s.name || s["Company Name"] || "Unknown",
-                "Company Description": s.company_description || s.description || s["Company Description"] || "",
+                name: s.name || s.company_name || "Unknown",
+                description: s.description || s.company_description || "",
+                shortDescription: s.shortDescription || "",
+                website: s.website || "",
+                topics: parseArray(s.topics),
+                tech: parseArray(s.tech),
+                maturity: s.maturity || "Undisclosed",
+                employees: s.employees,
+                billingCity: s.billingCity,
+                billingCountry: s.billingCountry,
+                maturity_score: s.maturity_score,
+                logoUrl: s.logoUrl,
+                total_funding: s.total_funding,
+                last_funding_date: s.last_funding_date,
+                valuation: s.valuation,
+                funding_stage: s.funding_stage,
+                currentInvestmentStage: s.currentInvestmentStage,
+                dateFounded: s.dateFounded,
+                // Legacy fields
+                "Company Name": s.company_name || s.name || "Unknown",
+                "Company Description": s.description || s.company_description || "",
                 "Category": s.primary_industry || s.category || "General",
-                "Stage": s.currentInvestmentStage || s.stage || s.Stage || "Unknown",
-                "Website": s.website || s.Website || "",
-                topics: parseArray(s.topics || s.Topics),
-                tech: parseArray(s.tech || s.Tech || s.technologies),
+                "Stage": s.currentInvestmentStage || s.funding_stage || s.stage || "Unknown",
+                "Website": s.website || "",
                 ...s // Include all other fields
               }
             })
@@ -263,13 +323,111 @@ function App() {
       fetchStartups()
     }
   }, [safeUserId])
+  
+  // Load Phase 2 startups when user completes Phase 1 (20+ swipes)
+  const [phase2Loaded, setPhase2Loaded] = useState(false)
+  useEffect(() => {
+    const loadPhase2IfNeeded = async () => {
+      try {
+        // Count votes
+        const userVotes = votes.filter(v => v.userId === currentUserId)
+        const swipeCount = userVotes.length
+        
+        // If user has 20+ swipes and Phase 2 not yet loaded, load it
+        if (swipeCount >= 20 && !phase2Loaded) {
+          console.log('🎯 Phase 1 complete! Loading Phase 2 startups...')
+          const phase2Data = await api.getPhase2Startups(safeUserId)
+          
+          if (phase2Data && phase2Data.startups) {
+            // Transform Phase 2 startups the same way as Phase 1
+            const parseArray = (value: any): string[] => {
+              if (Array.isArray(value)) return value
+              if (typeof value === 'string') {
+                try {
+                  const parsed = JSON.parse(value)
+                  return Array.isArray(parsed) ? parsed : []
+                } catch {
+                  return value.split(',').map((v: string) => v.trim()).filter((v: string) => v)
+                }
+              }
+              return []
+            }
+            
+            const transformedPhase2 = phase2Data.startups.map((s: any, i: number) => ({
+              id: s.id || `startup-${i}`,
+              name: s.name || s.company_name || "Unknown",
+              description: s.description || s.company_description || "",
+              shortDescription: s.shortDescription || "",
+              website: s.website || "",
+              topics: parseArray(s.topics || s.Topics),
+              tech: parseArray(s.tech || s.Tech || s.technologies),
+              maturity: s.maturity || "Undisclosed",
+              employees: s.employees,
+              billingCity: s.billingCity,
+              billingCountry: s.billingCountry,
+              maturity_score: s.maturity_score,
+              logoUrl: s.logoUrl,
+              total_funding: s.total_funding,
+              axa_overall_score: s.axa_overall_score,
+              axaOverallScore: s.axa_overall_score,
+              axa_priority_tier: s.axa_priority_tier,
+              axaPriorityTier: s.axa_priority_tier,
+              axa_use_cases: parseArray(s.axa_use_cases),
+              axaUseCases: parseArray(s.axa_use_cases),
+            }))
+            
+            // Append Phase 2 startups to existing pool
+            setStartups(prev => [...prev, ...transformedPhase2])
+            setPhase2Loaded(true)
+            console.log(`✓ Loaded ${phase2Data.startups.length} Phase 2 startups (tier: ${phase2Data.tier_used})`)
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load Phase 2 startups:', error)
+      }
+    }
+    
+    if (safeUserId && votes.length > 0) {
+      loadPhase2IfNeeded()
+    }
+  }, [votes.length, safeUserId, phase2Loaded])
 
-  // Only store user-generated data in KV
-  const [userEvents, setUserEvents] = useKV<CalendarEvent[]>('user-events', [])
-  const [ideas, setIdeas] = useKV<Idea[]>('ideas', [])
+  // User-generated data (not synced to API)
+  const [userEvents, setUserEvents] = useState<CalendarEvent[]>([])
+  const [ideas, setIdeas] = useState<Idea[]>([])
   const [currentView, setCurrentView] = useState<'swipe' | 'dashboard' | 'insights' | 'calendar' | 'ai' | 'admin'>('swipe')
   const [isAddStartupDialogOpen, setIsAddStartupDialogOpen] = useState(false)
   const [isAddIdeaDialogOpen, setIsAddIdeaDialogOpen] = useState(false)
+
+  // Load categorized insights and merge with ideas
+  const fetchCategorizedInsights = async () => {
+    try {
+      // Fetch categorized insights from all categories
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/insights/categorized/all`)
+      if (response.ok) {
+        const byCategory = await response.json()
+        
+        // Flatten into array of ideas
+        const allCategorizedInsights: Idea[] = []
+        for (const category in byCategory) {
+          allCategorizedInsights.push(...byCategory[category])
+        }
+        
+        // Replace all ideas with the fetched ones
+        setIdeas(allCategorizedInsights)
+        
+        const categoriesWithInsights = Object.keys(byCategory).filter(k => byCategory[k].length > 0)
+        console.log(`✓ Loaded ${allCategorizedInsights.length} categorized insights across ${categoriesWithInsights.length} categories`)
+        console.log(`  Categories populated: ${categoriesWithInsights.join(', ')}`)
+      }
+    } catch (error) {
+      console.warn('Failed to load categorized insights:', error)
+    }
+  }
+
+  useEffect(() => {
+    fetchCategorizedInsights()
+  }, []) // Run once on mount
 
   // Combine fixed events from DB with user events
   const safeVotes = votes ?? []
@@ -507,6 +665,11 @@ function App() {
           setCurrentUserId(email)
           setCurrentUserName(name)
           setIsAuthenticated(true)
+          // Save session to localStorage for persistence
+          localStorage.setItem('startup_swiper_session', JSON.stringify({
+            userId: email,
+            userName: name
+          }))
           toast.success(`Welcome, ${name}!`)
         }}
       />
@@ -529,8 +692,9 @@ function App() {
 
   return (
     <AuroralBackground>
-      <div className="h-screen flex flex-col overflow-hidden">
-        <header className={`border-b border-white/20 bg-white/20 backdrop-blur-md flex-shrink-0 ${isMobile ? 'pb-2' : ''}`}>
+      <div className="flex flex-col h-dvh overflow-hidden" style={{ paddingTop: 'var(--safe-top)' }}>
+        {(currentView !== 'ai' || !isMobile) && (
+          <header className={`border-b border-white/20 bg-white/20 backdrop-blur-md flex-shrink-0 py-2 sm:py-3 md:py-4 px-3 sm:px-4`}>
           <div className="container mx-auto px-4 py-3 md:py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-start gap-2 md:gap-3 flex-shrink-0" style={{ width: isMobile ? 'auto' : '200px' }}>
@@ -577,7 +741,7 @@ function App() {
                       onClick={handleEnableNotifications}
                       variant="ghost"
                       size={isMobile ? 'sm' : 'default'}
-                      className={`${
+                      className={`h-10 sm:h-12 md:h-14 ${
                         notificationsEnabled
                           ? 'text-green-400 hover:text-green-300'
                           : 'text-white/60 hover:text-white'
@@ -598,9 +762,9 @@ function App() {
                       currentView === 'admin' 
                         ? 'bg-white/90 text-gray-900' 
                         : 'text-white hover:bg-white/30 hover:text-white'
-                    } h-14 ${isMobile ? 'px-3' : 'px-6'} font-bold text-xl`}
+                    } h-10 sm:h-12 md:h-14 ${isMobile ? 'px-3' : 'px-6'} font-bold text-lg sm:text-xl`}
                   >
-                    <UserGear size={32} className={isMobile ? '' : 'mr-3'} weight="bold" />
+                    <UserGear size={28} className={isMobile ? '' : 'mr-3'} weight="bold" />
                     {!isMobile && 'Admin'}
                   </Button>
                   <Button
@@ -608,10 +772,12 @@ function App() {
                       setIsAuthenticated(false)
                       setCurrentUserId('')
                       setCurrentUserName('')
+                      // Clear session from localStorage
+                      localStorage.removeItem('startup_swiper_session')
                       toast('Signed out')
                     }}
                     variant="ghost"
-                    className={`text-white hover:bg-white/10 h-14 ${isMobile ? 'px-3' : 'px-6'} font-bold text-lg`}
+                    className={`text-white hover:bg-white/10 h-10 sm:h-12 md:h-14 ${isMobile ? 'px-3' : 'px-6'} font-bold text-base sm:text-lg`}
                   >
                     <SignOut size={24} className={isMobile ? '' : 'mr-2'} />
                     {!isMobile && 'Sign out'}
@@ -621,9 +787,7 @@ function App() {
             </div>
           </div>
         </header>
-
-        {/* Pending Insights Notification Banner */}
-        <PendingInsightsNotification userId={safeUserId} />
+        )}
 
         {/* Notification Setup Prompt */}
         {showNotificationSetup && !notificationsEnabled && (
@@ -661,7 +825,7 @@ function App() {
           </div>
         )}
 
-        <main className={`flex-1 min-h-0 overflow-y-auto overflow-x-hidden ${isMobile ? 'pb-20' : ''}`}>
+        <main className={`flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col ${isMobile ? 'pb-[calc(var(--nav-height-mobile)+env(safe-area-inset-bottom)+8px)]' : ''}`}>
           {currentView === 'swipe' && (
             <SwipeView
               startups={startups}
@@ -679,12 +843,14 @@ function App() {
               events={safeEvents}
               currentUserId={safeUserId}
               onScheduleMeeting={handleScheduleMeeting}
+              onVoteChange={handleChangeVote}
             />
           )}
           
           {currentView === 'insights' && (
             <InsightsView
               ideas={safeIdeas}
+              onIdeaUpdated={fetchCategorizedInsights}
             />
           )}
           
@@ -716,66 +882,66 @@ function App() {
 
         {isMobile && (
           <>
-            <nav className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md border-t border-white/10 z-50">
-              <div className="flex items-center justify-around px-2 py-2 safe-area-bottom">
+            <nav className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md border-t border-white/10 z-[51]" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+              <div className="flex items-center justify-around px-2 py-1 sm:py-2">
                   <button
                     onClick={() => setCurrentView('swipe')}
-                    className={`flex flex-col items-center gap-1 px-3 py-2 rounded-md transition-colors ${
+                    className={`flex flex-col items-center justify-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1.5 sm:py-2 min-h-[48px] text-[10px] xs:text-[11px] sm:text-xs md:text-sm rounded-md transition-colors ${
                       currentView === 'swipe' 
                         ? 'bg-white/20 text-white' 
                         : 'text-white'
                     }`}
                   >
-                    <Swatches size={32} weight={currentView === 'swipe' ? 'fill' : 'bold'} />
-                    <span className="text-sm font-bold">Swipe</span>
+                    <Swatches size={24} weight={currentView === 'swipe' ? 'fill' : 'bold'} />
+                    <span className="text-center font-bold">Swipe</span>
                   </button>
                   
                   <button
                     onClick={() => setCurrentView('dashboard')}
-                    className={`flex flex-col items-center gap-1 px-3 py-2 rounded-md transition-colors ${
+                    className={`flex flex-col items-center justify-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1.5 sm:py-2 min-h-[48px] text-[10px] xs:text-[11px] sm:text-xs md:text-sm rounded-md transition-colors ${
                       currentView === 'dashboard' 
                         ? 'bg-white/20 text-white' 
                         : 'text-white'
                     }`}
                   >
-                    <Rocket size={32} weight={currentView === 'dashboard' ? 'fill' : 'bold'} />
-                    <span className="text-sm font-bold">Startups</span>
+                    <Rocket size={24} weight={currentView === 'dashboard' ? 'fill' : 'bold'} />
+                    <span className="text-center font-bold">Startups</span>
                   </button>
                   
                   <button
                     onClick={() => setCurrentView('insights')}
-                    className={`flex flex-col items-center gap-1 px-3 py-2 rounded-md transition-colors ${
+                    className={`flex flex-col items-center justify-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1.5 sm:py-2 min-h-[48px] text-[10px] xs:text-[11px] sm:text-xs md:text-sm rounded-md transition-colors ${
                       currentView === 'insights' 
                         ? 'bg-white/20 text-white' 
                         : 'text-white'
                     }`}
                   >
-                    <Lightbulb size={32} weight={currentView === 'insights' ? 'fill' : 'bold'} />
-                    <span className="text-sm font-bold">Insights</span>
+                    <Lightbulb size={24} weight={currentView === 'insights' ? 'fill' : 'bold'} />
+                    <span className="text-center font-bold">Insights</span>
                   </button>
                   
                   <button
                     onClick={() => setCurrentView('calendar')}
-                    className={`flex flex-col items-center gap-1 px-3 py-2 rounded-md transition-colors ${
+                    className={`flex flex-col items-center justify-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1.5 sm:py-2 min-h-[48px] text-[10px] xs:text-[11px] sm:text-xs md:text-sm rounded-md transition-colors ${
                       currentView === 'calendar' 
                         ? 'bg-white/20 text-white' 
                         : 'text-white'
                     }`}
                   >
-                    <CalendarBlank size={32} weight={currentView === 'calendar' ? 'fill' : 'bold'} />
-                    <span className="text-sm font-bold">Calendar</span>
+                    <CalendarBlank size={24} weight={currentView === 'calendar' ? 'fill' : 'bold'} />
+                    <span className="text-center font-bold">Calendar</span>
                   </button>
                   
                   <button
                     onClick={() => setCurrentView('ai')}
-                    className={`flex flex-col items-center gap-1 px-3 py-2 rounded-md transition-colors ${
+                    className={`flex flex-col items-center justify-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1.5 sm:py-2 min-h-[48px] text-[10px] xs:text-[11px] sm:text-xs md:text-sm rounded-md transition-colors ${
                       currentView === 'ai' 
                         ? 'bg-white/20 text-white' 
                         : 'text-white'
                     }`}
                   >
-                    <Robot size={32} weight={currentView === 'ai' ? 'fill' : 'bold'} />
-                    <span className="text-sm font-bold">Concierge</span>
+                    <Robot size={24} weight={currentView === 'ai' ? 'fill' : 'bold'} />
+                    <span className="text-center font-bold">Concierge</span>
                   </button>
               </div>
             </nav>

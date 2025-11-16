@@ -6,6 +6,7 @@ This module configures LiteLLM with:
 - NVIDIA NIM support for DeepSeek models
 - All LLM requests and responses logged to /logs/llm folder
 - Environment-based model selection
+- LangSmith tracing integration
 """
 
 import os
@@ -17,6 +18,7 @@ from typing import Optional, Dict, Any, List
 import asyncio
 from functools import wraps
 from dotenv import load_dotenv
+from langsmith import traceable
 
 # Load environment variables from multiple possible locations
 env_paths = [
@@ -48,7 +50,7 @@ LOGS_DIR.mkdir(parents=True, exist_ok=True)
 NVIDIA_NIM_CONFIG = {
     "api_key": os.getenv("NVIDIA_API_KEY"),
     "base_url": os.getenv("NVIDIA_NIM_BASE_URL", "https://integrate.api.nvidia.com/v1"),
-    "default_model": os.getenv("NVIDIA_DEFAULT_MODEL", "deepseek-ai/deepseek-r1"),
+    "default_model": os.getenv("NVIDIA_DEFAULT_MODEL", "qwen/qwen3-next-80b-a3b-instruct"),
     "embedding_model": os.getenv("NVIDIA_EMBEDDING_MODEL", "nvidia/llama-3.2-nemoretriever-300m-embed-v2"),
 }
 
@@ -187,6 +189,11 @@ def generate_request_id() -> str:
     return str(uuid.uuid4())
 
 
+@traceable(
+    name="llm_completion",
+    run_type="llm",
+    tags=["llm", "completion"]
+)
 async def llm_completion(
     messages: List[Dict[str, Any]],
     model: Optional[str] = None,
@@ -195,6 +202,8 @@ async def llm_completion(
     stream: bool = False,
     metadata: Optional[Dict[str, Any]] = None,
     use_nvidia_nim: bool = True,
+    tools: Optional[List[Dict[str, Any]]] = None,
+    tool_choice: Optional[str] = None,
     **kwargs
 ) -> Any:
     """
@@ -209,6 +218,8 @@ async def llm_completion(
         stream: Whether to stream the response (not supported in this version)
         metadata: Additional metadata to log
         use_nvidia_nim: If True and no model specified, use NVIDIA NIM default model
+        tools: List of tool definitions for function calling (OpenAI format)
+        tool_choice: Control which tool the model should use ("auto", "none", or specific tool)
         **kwargs: Additional arguments to pass to LiteLLM
 
     Returns:
@@ -225,7 +236,7 @@ async def llm_completion(
     
     # Configure NVIDIA NIM headers if using NIM model
     if use_nvidia_nim and NVIDIA_NIM_CONFIG["api_key"]:
-        if "nvidia" in model.lower() or "deepseek" in model.lower():
+        if "nvidia" in model.lower() or "deepseek" in model.lower() or "qwen" in model.lower():
             kwargs.setdefault("api_key", NVIDIA_NIM_CONFIG["api_key"])
             kwargs.setdefault("api_base", NVIDIA_NIM_CONFIG["base_url"])
             # When using api_base, use openai/ prefix for compatibility or just the model name
@@ -238,19 +249,27 @@ async def llm_completion(
                 model = f"openai/{model}"
     elif use_nvidia_nim and not NVIDIA_NIM_CONFIG["api_key"]:
         # Fall back to GPT-4o if NVIDIA NIM is requested but no API key is set
-        if "deepseek" in model.lower():
+        if "deepseek" in model.lower() or "qwen" in model.lower():
             model = "gpt-4o"
 
     try:
         # Make the LLM call (non-streaming only for now)
-        response = await litellm.acompletion(
-            model=model,
-            messages=messages,
-            temperature=temperature,
-            max_tokens=max_tokens,
-            stream=False,  # Force non-streaming to avoid async generator issue
+        call_kwargs = {
+            "model": model,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "stream": False,  # Force non-streaming to avoid async generator issue
             **kwargs
-        )
+        }
+        
+        # Add tools if provided
+        if tools:
+            call_kwargs["tools"] = tools
+            if tool_choice:
+                call_kwargs["tool_choice"] = tool_choice
+        
+        response = await litellm.acompletion(**call_kwargs)
 
         end_time = datetime.now()
         duration_ms = (end_time - start_time).total_seconds() * 1000
@@ -317,7 +336,7 @@ def llm_completion_sync(
     
     # Format model for NVIDIA NIM
     if use_nvidia_nim and NVIDIA_NIM_CONFIG["api_key"]:
-        if "deepseek" in model.lower() or "nvidia" in model.lower():
+        if "deepseek" in model.lower() or "nvidia" in model.lower() or "qwen" in model.lower():
             # Set base URL and API key for NVIDIA NIM
             kwargs.setdefault("api_key", NVIDIA_NIM_CONFIG["api_key"])
             kwargs.setdefault("api_base", NVIDIA_NIM_CONFIG["base_url"])
@@ -328,7 +347,7 @@ def llm_completion_sync(
                 model = f"openai/{model}"
     elif use_nvidia_nim and not NVIDIA_NIM_CONFIG["api_key"]:
         # Fall back to GPT-4o if NVIDIA NIM is requested but no API key is set
-        if "deepseek" in model.lower():
+        if "deepseek" in model.lower() or "qwen" in model.lower():
             model = "gpt-4o"
     
     try:

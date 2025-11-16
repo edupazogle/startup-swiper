@@ -171,8 +171,8 @@ class ContextRetriever:
         for startup in startups:
             context_parts.append(f"\n- **{startup.get('name')}**")
             context_parts.append(f"  Description: {startup.get('shortDescription', 'N/A')}")
-            context_parts.append(f"  Funding: ${startup.get('totalFunding', '0')}M")
-            context_parts.append(f"  Stage: {startup.get('currentInvestmentStage', 'N/A')}")
+            if startup.get('total_funding'):
+                context_parts.append(f"  Total Funding: ${startup.get('total_funding')}M (CB Insights)")
             context_parts.append(f"  Employees: {startup.get('employees', 'N/A')}")
             context_parts.append(f"  Website: {startup.get('website', 'N/A')}")
             
@@ -343,15 +343,72 @@ class AIConcierge:
         Returns:
             AI-generated answer
         """
-        # Check if this is a LinkedIn post request first
+        # Check if this is a quick action request (LinkedIn, Startups, People, Calendar)
         question_lower = question.lower()
+        
+        # LinkedIn action
         if any(phrase in question_lower for phrase in [
-            "write a linkedin post", "write linkedin post", "create linkedin post",
+            "linkedin", "write a linkedin post", "write linkedin post", "create linkedin post",
             "generate linkedin post", "linkedin post", "write a post", "write post",
-            "create a post", "generate post"
+            "create a post", "generate post", "compelling linkedin", "amazing post"
         ]):
-            # For LinkedIn posts, ask clarifying questions to gather context
+            # For LinkedIn posts, ask clarifying questions in a conversational way
+            # We'll have a natural back-and-forth conversation, asking follow-up questions
+            # based on what they share
             return await self._ask_linkedin_clarification_questions(question)
+        
+        # Startups action
+        if any(phrase in question_lower for phrase in [
+            "discover", "promising startups", "learn about startups", "find startups",
+            "startup matches", "match my interests", "startups that match",
+            "promising companies", "find companies"
+        ]):
+            return await self._ask_startup_discovery_questions(question)
+        
+        # People action
+        if any(phrase in question_lower for phrase in [
+            "find", "connect with", "the right people", "investors", "founders",
+            "industry experts", "ceos", "entrepreneurs", "venture capitalists",
+            "people at slush", "meet people", "who to talk to"
+        ]):
+            return await self._ask_people_discovery_questions(question)
+        
+        # Calendar action
+        if any(phrase in question_lower for phrase in [
+            "show me", "key events", "sessions", "shouldn't miss", "must attend",
+            "calendar", "schedule", "happening at slush", "what's going on",
+            "what events", "important sessions"
+        ]):
+            return await self._ask_calendar_questions(question)
+        
+        # Check if this is an advanced research request
+        # Include common typos and variations
+        if any(phrase in question_lower for phrase in [
+            "advanced research", "advance research",  # Include typo
+            "deep research", "detailed analysis", 
+            "research this startup", "research on",
+            "in-depth analysis", "comprehensive analysis",
+            "do an advanced", "do advanced", "perform advanced", "perform an advanced"
+        ]):
+            # Check credentials first
+            creds_check = cb_chat.check_credentials()
+            if not creds_check["configured"]:
+                return f"""⚠️ **CB Insights API Credentials Required**
+
+To perform advanced research using ChatCBI, please ensure your CB Insights API credentials are configured in:
+
+📁 `app/startup-swipe-schedu/.env`
+
+Required credentials:
+- `CB_INSIGHTS_CLIENT_ID`
+- `CB_INSIGHTS_CLIENT_SECRET`
+
+Once configured, I'll be able to provide comprehensive research using CB Insights' advanced AI chatbot.
+
+Would you like me to help with a regular search using our local database instead?"""
+            
+            # Proceed with ChatCBI research
+            return await self._perform_advanced_research(question)
         
         # Determine question type and gather relevant context
         context_parts = []
@@ -381,12 +438,16 @@ class AIConcierge:
                 startup_context = self.context_retriever.get_startup_context(question)
                 context_parts.append(startup_context)
                 
-                # Also try CB Insights for additional data
+                # Suggest using ChatCBI for more detailed research
+                context_parts.append("\n💡 **Tip:** For comprehensive research with market analysis, competitive landscape, and funding trends, ask me to 'do an advanced research on [startup name]' using CB Insights ChatCBI.")
+                
+                # Also try CB Insights for additional data (but don't fail if it doesn't work)
                 try:
                     cb_response = await cb_chat.ask_question(question)
-                    if cb_response and "error" not in cb_response.lower():
-                        context_parts.append(f"\nCB Insights Research:\n{cb_response}")
-                except:
+                    if cb_response and "error" not in cb_response.lower() and "not configured" not in cb_response.lower():
+                        context_parts.append(f"\n**CB Insights Research:**\n{cb_response}")
+                except Exception as e:
+                    logger.debug(f"CB Insights lookup skipped: {e}")
                     pass
             
             # Event-related questions
@@ -425,9 +486,20 @@ You have access to information about:
 - Venue locations and directions
 - Attendee information
 
+**Advanced Research Capability:**
+When users ask for "advanced research" or "detailed analysis" on a startup, you can use CB Insights' ChatCBI API 
+to provide comprehensive market intelligence including:
+- Business model analysis
+- Competitive landscape
+- Funding history and trends
+- Market position and trajectory
+- Technology stack insights
+
 Provide helpful, accurate, and friendly responses. If you're asked for directions, provide clear step-by-step instructions.
 If information is not available in the provided context, say so clearly but offer to help in other ways.
-Always be professional and enthusiastic about helping attendees make the most of Slush 2025."""
+Always be professional and enthusiastic about helping attendees make the most of Slush 2025.
+
+When you see startup-related questions, suggest the advanced research option if appropriate."""
         
         user_prompt = f"""Question: {question}
 
@@ -506,30 +578,45 @@ Please provide a helpful and comprehensive answer based on the available informa
         
         # Build context about found startups
         if mentioned_startups:
-            startup_context = "\n\n🔍 **Found in Slush Database**: I discovered relevant startups:\n"
+            startup_context = "\n\nI found some relevant startups in our Slush database:\n"
             for startup in mentioned_startups[:3]:  # Limit to top 3
-                startup_context += f"• **{startup['name']}** | {startup['industry']} | {startup['location']}\n"
+                startup_context += f"- {startup['name']} ({startup['industry']}, {startup['location']})\n"
                 if startup['description']:
                     startup_context += f"  {startup['description']}...\n"
         
-        system_message = """You are a friendly and knowledgeable LinkedIn content strategist for Slush 2025. 
-You have access to real startup data and can help write amazing posts.
+        system_message = """You are a warm, human concierge working with the AXA Venture Clienteling team at Slush 2025.
 
-When a user asks to write a LinkedIn post, ask clarifying questions to understand:
-1. What specific topic or subject they want to write about
-2. Whether it's about a specific startup, event, or announcement  
-3. The key message or goal of the post
-4. Any specific companies, people, or events to mention
+Your role is to help AXA team members craft authentic LinkedIn posts that:
+- Showcase innovative startups solving real insurance problems
+- Highlight AXA's venture clienteling activities and approach
+- Tell compelling stories about how startups are transforming insurance with a human-first perspective
+- Position AXA as innovation-forward and open to ecosystem partnerships
 
-Ask questions in a conversational, friendly manner. If relevant startups have been found, 
-naturally mention them and suggest how they could be included. Make it feel like a helpful expert conversation.
-Ask 3-4 key questions, not overwhelming."""
+You're NOT a marketing robot. You're a friendly colleague who understands:
+- The insurance industry and its challenges
+- How startups are bringing fresh thinking to insurance
+- The importance of authentic storytelling
+- That great posts come from genuine insights, not marketing templates
+
+Your approach: Ask ONE question at a time, in a natural, conversational way. Like you're having coffee with someone.
+Wait for their answer before moving to the next question. Let the conversation flow naturally.
+
+Context: AXA is here to discover solutions that help customers in human ways. The startups at Slush are pioneers in this space."""
         
-        user_prompt = f"""The user asked: "{question}"
-{startup_context}
+        user_prompt = f"""The user wants to write a LinkedIn post: "{question}"
 
-Generate 3-4 conversational, specific clarifying questions to help them write the perfect LinkedIn post. 
-Make it feel natural and expert-like, as if you're collaborating with them."""
+You're helping an AXA Venture Clienteling team member at Slush write an authentic post about startups they've discovered, our venture clienteling activity, or innovative insurance solutions.
+
+Here's how to help them:
+1. Start conversational - acknowledge their interest
+2. Ask questions ONE at a time (not all at once)
+3. Listen to understand what genuinely excited them at Slush
+4. Help them tell that story authentically
+5. Make it about real insights, not marketing
+
+Start by asking: What was the most interesting conversation or startup you met at Slush so far? What made it stand out?
+
+Wait for their response before asking more."""
         
         messages = [
             {"role": "system", "content": system_message},
@@ -539,13 +626,13 @@ Make it feel natural and expert-like, as if you're collaborating with them."""
         try:
             response = await llm_completion(
                 messages=messages,
-                model=None,  # Use NVIDIA NIM default
-                temperature=0.7,
-                max_tokens=1000,
+                model=None,
+                temperature=0.85,  # Higher for natural, conversational tone
+                max_tokens=400,  # Shorter responses - one question at a time
                 use_nvidia_nim=True,
                 metadata={
                     "feature": "ai_concierge",
-                    "question_type": "linkedin_clarification",
+                    "question_type": "linkedin_axa_post",
                     "startups_found": len(mentioned_startups)
                 }
             )
@@ -553,26 +640,247 @@ Make it feel natural and expert-like, as if you're collaborating with them."""
             return response.choices[0].message.content
         except Exception as e:
             logger.error(f"Error in LinkedIn clarification: {e}")
-            # Fallback response with manual questions
-            fallback = """I'd love to help you write a compelling LinkedIn post! Here are a few questions to get started:
-
-1️⃣ **What's the focus?** Are you writing about a specific startup announcement, industry trend, event insight, or thought leadership?
-
-2️⃣ **Key companies or people?** Should we mention any specific startups, companies, or individuals?
-
-3️⃣ **Main message?** What's the 1-2 key things you want readers to remember or learn?
-
-4️⃣ **Your tone?** Professional and data-driven, or more casual and energetic?
-
-Let me know and I'll craft an amazing post! 🚀"""
-            
-            if mentioned_startups:
-                fallback += f"\n\n**Heads up:** I found some relevant startups in our Slush database:\n"
-                for startup in mentioned_startups[:3]:
-                    fallback += f"✓ **{startup['name']}** - {startup['industry']} ({startup['location']})\n"
-                fallback += "\nWe can definitely feature any of these!"
-            
+            # Fallback response - conversational, one question at a time
+            fallback = "Hey! Happy to help you share what you're discovering at Slush. So tell me—what was the most interesting conversation or startup you've come across so far? What made it really stand out to you?"
             return fallback
+    
+    async def _generate_linkedin_post(self, user_responses: str) -> str:
+        """
+        Generate an authentic LinkedIn post based on the user's framework responses
+        
+        Args:
+            user_responses: The user's answers to the framework questions
+            
+        Returns:
+            A polished LinkedIn post that sounds like a real person
+        """
+        system_message = """You are a skilled ghostwriter helping AXA Venture Clienteling team members craft authentic LinkedIn posts about Slush 2025.
+
+Your posts should naturally highlight:
+- Innovative startups solving real insurance problems in human-centered ways
+- How AXA is actively engaging in venture clienteling and innovation
+- The market's solutions for modern insurance challenges
+- Genuine insights about the future of insurance
+
+But never feel promotional or fake. The best posts are the ones that sound like a real person sharing something they genuinely learned or discovered.
+
+Key principles:
+✅ **Opens with a real moment or conversation** from Slush
+✅ **Tells a genuine story** (not a press release)
+✅ **Includes specific startup or speaker names** where relevant
+✅ **Shows authentic perspective** on what matters
+✅ **Ends with a real question or reflection** that invites conversation
+✅ **Uses simple, conversational language** (no corporate jargon)
+✅ **Has 3-5 relevant hashtags**
+✅ **Is mobile-readable** with good spacing
+
+Most importantly: Sound like a human. Someone thoughtful. Someone who gets excited about good ideas and isn't afraid to share what they really think."""
+        
+        user_prompt = f"""Here's what the AXA team member shared about their Slush experience:
+
+{user_responses}
+
+Create an authentic LinkedIn post that sounds like them sharing a genuine insight. The post should:
+- Start with their actual moment/story from Slush
+- Talk about what they discovered or learned
+- Feel like a real conversation, not a corporate announcement
+- Mention the startup or speaker if relevant
+- End naturally (question, reflection, or call to action)
+
+Keep it conversational and real. This should feel like they're genuinely sharing something cool they found."""
+        
+        messages = [
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": user_prompt}
+        ]
+        
+        try:
+            response = await llm_completion(
+                messages=messages,
+                model=None,
+                temperature=0.75,
+                max_tokens=1200,
+                use_nvidia_nim=True,
+                metadata={
+                    "feature": "ai_concierge",
+                    "question_type": "linkedin_post_generation",
+                    "organization": "AXA_Venture_Clienteling"
+                }
+            )
+            
+            post = response.choices[0].message.content
+            
+            return f"""{post}
+
+Before you post: Does this sound like you? If not, let me know what to adjust. Any specific startups or people you want to tag? Want to add anything else?"""
+            
+        except Exception as e:
+            logger.error(f"Error generating LinkedIn post: {e}")
+            return "Hmm, I hit a snag generating that. No worries—let me try again with what you shared. Can you quickly remind me: What was the most interesting thing you discovered? Was it about a specific startup, or more about the broader market? That'll help me craft something better."
+    
+    async def _ask_startup_discovery_questions(self, question: str) -> str:
+        """
+        Ask detailed questions to help user discover and learn about startups
+        """
+        system_message = """You are a friendly startup discovery advisor at Slush 2025. 
+Your goal is to help attendees find startups that match what they're looking for.
+
+You ask ONE question at a time, in a natural conversational way. You listen to their answer before asking the next question.
+You help them find startups by understanding their interests—what industries they care about, what stage they're looking for, what problems they want to solve.
+
+Sound like a friendly colleague having a conversation, not someone reading from a script."""
+        
+        user_prompt = f"""The user said: "{question}"
+
+Ask ONE natural, friendly question to understand what startups they're looking for. Just one question - something to get the conversation started.
+Keep it conversational and warm. Wait for their answer before you ask anything else."""
+        
+        messages = [
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": user_prompt}
+        ]
+        
+        try:
+            response = await llm_completion(
+                messages=messages,
+                model=None,
+                temperature=0.85,
+                max_tokens=400,
+                use_nvidia_nim=True,
+                metadata={
+                    "feature": "ai_concierge",
+                    "question_type": "startup_discovery"
+                }
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            return "I'd love to help you find startups that match what you're looking for. Let me start with the basics—what industries or sectors are you most interested in exploring? For example, are you looking at fintech, healthtech, AI, or something else?"
+    
+    async def _ask_people_discovery_questions(self, question: str) -> str:
+        """
+        Ask detailed questions to help user find and connect with the right people
+        """
+        system_message = """You are a friendly networking advisor at Slush 2025.
+Your goal is to help attendees find the right people to connect with.
+
+You ask ONE question at a time, in a natural conversational way. You listen to their answer before asking the next question.
+You help them by understanding what they're looking for—what roles, expertise, or goals drive their networking.
+
+Sound like a friendly colleague helping them navigate the event, not someone reading from a script."""
+        
+        user_prompt = f"""The user said: "{question}"
+
+Ask ONE natural, friendly question to understand who they want to meet at Slush. Just one question - something to get the conversation started.
+Keep it conversational and warm. Wait for their answer before you ask anything else."""
+        
+        messages = [
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": user_prompt}
+        ]
+        
+        try:
+            response = await llm_completion(
+                messages=messages,
+                model=None,
+                temperature=0.85,
+                max_tokens=400,
+                use_nvidia_nim=True,
+                metadata={
+                    "feature": "ai_concierge",
+                    "question_type": "people_discovery"
+                }
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            return "I can definitely help you connect with the right people at Slush. First question—who are you hoping to meet? Are you looking for founders, investors, engineers, or someone specific to your industry?"
+    
+    async def _ask_calendar_questions(self, question: str) -> str:
+        """
+        Ask detailed questions to help user navigate the calendar and find key events
+        """
+        system_message = """You are a friendly event guide at Slush 2025.
+Your goal is to help attendees discover the sessions and events that matter most to them.
+
+You ask ONE question at a time, in a natural conversational way. You listen to their answer before asking the next question.
+You help them by understanding what they care about—what topics, what format, what they want to learn.
+
+Sound like a friendly colleague helping them plan their day, not someone reading from a script."""
+        
+        user_prompt = f"""The user said: "{question}"
+
+Ask ONE natural, friendly question to understand what events they're interested in at Slush. Just one question - something to get the conversation started.
+Keep it conversational and warm. Wait for their answer before you ask anything else."""
+        
+        messages = [
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": user_prompt}
+        ]
+        
+        try:
+            response = await llm_completion(
+                messages=messages,
+                model=None,
+                temperature=0.85,
+                max_tokens=400,
+                use_nvidia_nim=True,
+                metadata={
+                    "feature": "ai_concierge",
+                    "question_type": "calendar_discovery"
+                }
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            return "Let's find the events that'll matter most for you at Slush. What topics are you most interested in learning about? For example, are you focused on fundraising, scaling, new technologies, or something else?"
+    
+    async def _perform_advanced_research(self, question: str) -> str:
+        """
+        Perform advanced research using CB Insights ChatCBI API with LLM-optimized queries
+        
+        Args:
+            question: Research question about a startup
+            
+        Returns:
+            Comprehensive research answer from ChatCBI
+        """
+        try:
+            # Extract startup name from the question if possible
+            words = question.split()
+            company_name = None
+            
+            # Build the ChatCBI query - let Qwen LLM optimize it
+            chatcbi_query = question
+            
+            # Try to extract company name for focused optimization
+            for i, word in enumerate(words):
+                if word.lower() in ["research", "analyze", "about", "on"]:
+                    if i + 1 < len(words):
+                        # Take next 1-3 words as potential company name
+                        potential_name = " ".join(words[i+1:min(i+4, len(words))])
+                        company_name = potential_name.strip('.,!?')
+                        break
+            
+            # Call ChatCBI with LLM optimization
+            logger.info(f"🔍 Performing advanced research: {chatcbi_query}")
+            research_result = await cb_chat.ask_question(
+                chatcbi_query, 
+                company_name=company_name,
+                optimize_query=True  # Enable Qwen LLM query optimization
+            )
+            
+            # Format the response
+            formatted_response = f"""## 🔬 Advanced Research Results (CB Insights ChatCBI)
+
+{research_result}
+
+---
+*This research was powered by CB Insights ChatCBI with query optimization via Qwen LLM.*
+"""
+            
+            return formatted_response
+            
+        except Exception as e:
+            logger.error(f"Error in advanced research: {e}")
+            return f"I encountered an error while performing advanced research: {str(e)}\n\nWould you like me to try a regular database search instead?"
     
     async def _add_directions_context(self, question: str, context_parts: List[str]):
         """Add directions context for location-based questions"""
@@ -712,10 +1020,14 @@ Let me know and I'll craft an amazing post! 🚀"""
         details.append(f"**Location:** {startup.get('billingCity', 'N/A')}, {startup.get('billingCountry', 'N/A')}")
         details.append(f"**Website:** {startup.get('website', 'N/A')}\n")
         
-        details.append(f"**Funding Information:**")
-        details.append(f"- Total Funding: ${startup.get('totalFunding', '0')}M")
-        details.append(f"- Investment Stage: {startup.get('currentInvestmentStage', 'N/A')}")
-        details.append(f"- Last Funding: {startup.get('lastFundingDate', 'N/A')}\n")
+        # Funding information from CB Insights
+        if startup.get('total_funding'):
+            details.append(f"**Funding Information (CB Insights):**")
+            details.append(f"- Total Funding: ${startup.get('total_funding')}M")
+            if startup.get('valuation'):
+                details.append(f"- Latest Valuation: ${startup.get('valuation')}M")
+            if startup.get('last_funding_date'):
+                details.append(f"- Last Funding Date: {startup.get('last_funding_date')}\n")
         
         # Categories
         categories = startup.get("categories", [])
@@ -802,7 +1114,8 @@ class MCPEnhancedAIConcierge(AIConcierge):
         self,
         question: str,
         user_context: Optional[Dict[str, Any]] = None,
-        use_nvidia_nim: bool = True
+        use_nvidia_nim: bool = True,
+        max_iterations: int = 5
     ) -> str:
         """
         Answer a question with tool calling support
@@ -814,6 +1127,7 @@ class MCPEnhancedAIConcierge(AIConcierge):
             question: User's question
             user_context: Optional user context
             use_nvidia_nim: Whether to use NVIDIA NIM for LLM calls
+            max_iterations: Maximum number of tool call iterations
         
         Returns:
             AI-generated answer with potentially tool-enhanced context
@@ -835,49 +1149,105 @@ class MCPEnhancedAIConcierge(AIConcierge):
             # For name queries, use the enhanced answer_question method with name detection
             return await self.answer_question(question, user_context)
         
-        # Build system message with tool information
-        tools_info = json.dumps(self.get_tool_definitions(), indent=2)
+        # Get tool definitions in OpenAI function calling format
+        tools = self.get_tool_definitions()
         
-        system_message = f"""You are an intelligent AI Concierge assistant for Slush 2025.
+        # Build system message WITHOUT listing tools (they're passed as tools parameter)
+        system_message = """You are an intelligent AI Concierge assistant for Slush 2025.
 
-You have access to the following tools to query startup information from the database:
-
-{tools_info}
-
-When a user asks about startups, you can use these tools to get accurate information.
-Always use the tools when you need specific startup data to answer questions accurately.
+You have access to tools to query startup information from the database.
+When a user asks about startups, use the available tools to get accurate information.
 
 Guidelines:
 1. Use tools to search for startups by name, industry, funding, or location
 2. Get detailed startup information when needed
 3. Use enrichment data for team, tech stack, and social information
-4. Always provide accurate, sourced information
-5. If tools return no results, explain that clearly to the user"""
+4. Always provide accurate, sourced information from the tools
+5. If tools return no results, explain that clearly to the user
+6. DO NOT show tool call JSON to the user - execute tools silently and show only results"""
         
         messages = [
             {"role": "system", "content": system_message},
             {"role": "user", "content": question}
         ]
         
-        try:
-            # Make LLM call with tool support
-            response = await llm_completion(
-                messages=messages,
-                use_nvidia_nim=use_nvidia_nim,
-                temperature=0.7,
-                max_tokens=2000
-            )
+        # Iterative tool calling loop
+        for iteration in range(max_iterations):
+            try:
+                # Make LLM call with tools
+                response = await llm_completion(
+                    messages=messages,
+                    use_nvidia_nim=use_nvidia_nim,
+                    temperature=0.7,
+                    max_tokens=2000,
+                    tools=tools,
+                    tool_choice="auto"
+                )
+                
+                # Check if the model wants to call tools
+                if hasattr(response, 'choices') and len(response.choices) > 0:
+                    choice = response.choices[0]
+                    message = choice.message
+                    
+                    # Check for tool calls
+                    if hasattr(message, 'tool_calls') and message.tool_calls:
+                        # Execute all tool calls
+                        tool_results = []
+                        for tool_call in message.tool_calls:
+                            tool_name = tool_call.function.name
+                            tool_args = json.loads(tool_call.function.arguments)
+                            
+                            logger.info(f"Executing tool: {tool_name} with args: {tool_args}")
+                            
+                            # Call the tool
+                            result = await self.handle_tool_call(tool_name, **tool_args)
+                            
+                            tool_results.append({
+                                "tool_call_id": tool_call.id,
+                                "role": "tool",
+                                "name": tool_name,
+                                "content": json.dumps(result)
+                            })
+                        
+                        # Add assistant message with tool calls
+                        messages.append({
+                            "role": "assistant",
+                            "content": message.content or "",
+                            "tool_calls": [
+                                {
+                                    "id": tc.id,
+                                    "type": "function",
+                                    "function": {
+                                        "name": tc.function.name,
+                                        "arguments": tc.function.arguments
+                                    }
+                                }
+                                for tc in message.tool_calls
+                            ]
+                        })
+                        
+                        # Add tool results
+                        messages.extend(tool_results)
+                        
+                        # Continue loop to let LLM process tool results
+                        continue
+                    
+                    # No tool calls - return the response
+                    return message.content or str(response)
+                
+                # Fallback
+                return str(response)
             
-            # Extract response
-            if hasattr(response, 'choices') and len(response.choices) > 0:
-                return response.choices[0].message.content
-            
-            return str(response)
+            except Exception as e:
+                logger.error(f"Error in tool-enhanced answer (iteration {iteration}): {e}")
+                # Fall back to regular answer without tools
+                if iteration == 0:
+                    return await self.answer_question(question, user_context)
+                else:
+                    return f"I encountered an error while processing your question: {str(e)}"
         
-        except Exception as e:
-            logger.error(f"Error in tool-enhanced answer: {e}")
-            # Fall back to regular answer without tools
-            return await self.answer_question(question, user_context)
+        # Max iterations reached
+        return "I apologize, but I'm having trouble processing your question. Please try rephrasing it."
     
     async def handle_tool_call(self, tool_name: str, **kwargs) -> Dict[str, Any]:
         """

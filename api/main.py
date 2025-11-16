@@ -43,12 +43,19 @@ from auth import (
     get_current_active_user,
     ACCESS_TOKEN_EXPIRE_MINUTES
 )
-from ai_concierge import create_concierge
+from qwen_agentic_concierge import create_qwen_concierge  # Legacy Qwen Agentic
+from qwen_enhanced_concierge import create_enhanced_qwen_concierge  # Enhanced with proper function calling
+from qwen_agent_enhanced_concierge import create_qwen_agent_concierge  # NEW: Production Qwen-Agent with LangSmith
+from insights_agent import create_insights_agent  # AI-powered insights generation
 # from notification_service import NotificationService, notification_worker
 from pathlib import Path
 from startup_prioritization import prioritizer
 from meeting_feedback_llm import feedback_assistant
+from whitepaper_insights_agent import whitepaper_agent
+from conversational_insights_agent import conversational_insights_agent
 import db_queries
+from routes_phase_endpoints import router as phase_router
+from routes_topics_usecases import router as topics_router
 
 # Create database tables
 try:
@@ -68,37 +75,49 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
-# Legacy support - will be removed after migration
-STARTUPS_FILE = Path(__file__).parent / "startups_data.json"
-BACKUP_FILE = Path(__file__).parent.parent / "docs/architecture/ddbb/slush2_extracted.json"
-ALL_STARTUPS = []
+# Add CORS headers to error responses
+from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": str(exc.detail)},
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+        }
+    )
+
+@app.exception_handler(Exception)
+async def general_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error", "error": str(exc)},
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+        }
+    )
+
+# Include Phase 1 & 2 endpoints
+app.include_router(phase_router)
+
+# Include Topics & Use Cases endpoints
+app.include_router(topics_router)
 
 # Load from DB function
 def get_all_startups_from_db(db: Session, skip: int = 0, limit: int = 10000):
     """Get startups from database instead of JSON."""
     return db_queries.get_all_startups(db, skip=skip, limit=limit)
-
-try:
-    # Try primary file first (legacy fallback)
-    if STARTUPS_FILE.exists():
-        with open(STARTUPS_FILE, "r") as f:
-            ALL_STARTUPS = json.load(f)
-        print(f"⚠️  Legacy: Loaded {len(ALL_STARTUPS)} startups from {STARTUPS_FILE.name}")
-        print(f"💡 Switch to database with db_queries.get_all_startups()")
-    # Fallback to backup location
-    elif BACKUP_FILE.exists():
-        with open(BACKUP_FILE, "r") as f:
-            ALL_STARTUPS = json.load(f)
-        print(f"⚠️  Legacy: Loaded {len(ALL_STARTUPS)} startups from {BACKUP_FILE.name}")
-        print(f"💡 Switch to database with db_queries.get_all_startups()")
-    else:
-        print(f"✓ Using database for startup data (no legacy JSON files)")
-        ALL_STARTUPS = []
-except Exception as e:
-    print(f"⚠️  Warning: Could not load legacy startups data: {e}")
-    ALL_STARTUPS = []
 
 # Initialize notification service
 # notification_service = NotificationService()  # Temporarily disabled - install pywebpush first
@@ -106,41 +125,18 @@ except Exception as e:
 # Startup event - ensure database is initialized
 @app.on_event("startup")
 async def startup_event():
-    """Initialize database and load startup data on app startup"""
+    """Initialize database on app startup"""
     try:
         # Ensure tables exist
         models.Base.metadata.create_all(bind=engine)
         models_startup.Base.metadata.create_all(bind=engine)
         print(f"✓ Database tables initialized/verified")
         
-        # Check if we need to load startup data
+        # Check database status
         db = SessionLocal()
         try:
             startup_count = db.query(models_startup.Startup).count()
-            if startup_count == 0:
-                print(f"📊 Database is empty, loading startup data...")
-                # Try to load from file
-                if STARTUPS_FILE.exists():
-                    with open(STARTUPS_FILE, "r") as f:
-                        startup_data = json.load(f)
-                    print(f"📥 Loaded {len(startup_data)} startups from {STARTUPS_FILE.name}")
-                    
-                    # Import into database
-                    from create_startup_database import import_startups
-                    imported, skipped, errors = import_startups(engine, startup_data)
-                    print(f"✓ Database loaded: {imported} imported, {skipped} skipped, {errors} errors")
-                elif BACKUP_FILE.exists():
-                    with open(BACKUP_FILE, "r") as f:
-                        startup_data = json.load(f)
-                    print(f"📥 Loaded {len(startup_data)} startups from {BACKUP_FILE.name}")
-                    
-                    from create_startup_database import import_startups
-                    imported, skipped, errors = import_startups(engine, startup_data)
-                    print(f"✓ Database loaded: {imported} imported, {skipped} skipped, {errors} errors")
-                else:
-                    print(f"⚠️  No startup data files found")
-            else:
-                print(f"✓ Database ready with {startup_count} startups")
+            print(f"✓ Database ready with {startup_count} startups")
         finally:
             db.close()
             
@@ -175,13 +171,19 @@ class ChatRequest(BaseModel):
 
 # Health Check Endpoint
 @app.get("/health")
-async def health_check():
+async def health_check(db: Session = Depends(get_db)):
     """Health check endpoint for deployment platforms"""
+    try:
+        startup_count = db_queries.count_startups(db)
+    except Exception as e:
+        logger.error(f"Error counting startups: {e}")
+        startup_count = 0
+    
     return {
         "status": "healthy",
         "service": "startup-swiper-api",
         "version": "1.0.0",
-        "startups_loaded": len(ALL_STARTUPS)
+        "startups_loaded": startup_count
     }
 
 # LLM Endpoints
@@ -413,6 +415,13 @@ def read_idea(idea_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Idea not found")
     return idea
 
+@app.put("/ideas/{idea_id}", response_model=schemas.Idea)
+def update_idea(idea_id: int, idea: schemas.IdeaCreate, db: Session = Depends(get_db)):
+    db_idea = crud.update_idea(db, idea_id=idea_id, idea=idea)
+    if db_idea is None:
+        raise HTTPException(status_code=404, detail="Idea not found")
+    return db_idea
+
 # Startup Ratings endpoints
 @app.post("/startup-ratings/", response_model=schemas.StartupRating)
 def create_startup_rating(rating: schemas.StartupRatingCreate, db: Session = Depends(get_db)):
@@ -513,46 +522,50 @@ class LinkedInPostRequest(BaseModel):
     call_to_action: Optional[str] = None
     link: Optional[str] = None
 
+
+class AdvancedResearchRequest(BaseModel):
+    company_name: str
+    focus: Optional[str] = ''
+
+
 @app.post("/concierge/ask", response_model=ConciergeResponse)
 async def ask_concierge(request: ConciergeRequest, db: Session = Depends(get_db)):
     """
     Ask the AI Concierge any question about:
-    - Startups (database + CB Insights) - uses MCP for database queries
+    - Startups (database + CB Insights)
     - Events and schedules
-    - Meetings and participants
-    - Directions and locations
-    - Attendees
+    - People/Attendees
+    - Research and insights
     
-    Uses NVIDIA NIM (DeepSeek-R1) + MCP for intelligent responses
+    Uses Qwen-Agent with proper function calling, LangSmith tracing, and ChatCBI integration
+    Model: qwen/qwen3-next-80b-a3b-instruct
     """
-    concierge = create_concierge(db)
-    # Use tool-enhanced answer with NVIDIA NIM and MCP
-    answer = await concierge.answer_question_with_tools(request.question, request.user_context, use_nvidia_nim=True)
-    question_type = concierge._classify_question(request.question)
+    concierge = create_qwen_agent_concierge(db)  # Production Qwen-Agent implementation
+    # Use tool-enhanced answer with proper function calling
+    answer = await concierge.chat(request.question)
     
-    return ConciergeResponse(answer=answer, question_type=question_type)
+    return ConciergeResponse(answer=answer, question_type="general")
 
 @app.post("/concierge/ask-with-tools", response_model=ConciergeResponse)
 async def ask_concierge_with_explicit_tools(request: ConciergeRequest, db: Session = Depends(get_db)):
     """
-    Ask the AI Concierge with explicit MCP tool support
+    Ask the AI Concierge with explicit tool support
     
     This endpoint explicitly enables:
-    - NVIDIA NIM (DeepSeek-R1) for advanced reasoning
-    - MCP (Model Context Protocol) for database queries
-    - Tool calling for precise startup information retrieval
+    - Qwen model with native function calling
+    - Database queries for startups and attendees
+    - Tool calling for precise information retrieval
     
     Best for startup-specific questions like:
     - "Find startups in Finland with Series A funding"
     - "Which startups are in the AI space?"
     - "Show me companies founded after 2020"
     """
-    concierge = create_concierge(db)
-    # Explicitly use tool-enhanced answer with maximum MCP integration
-    answer = await concierge.answer_question_with_tools(request.question, request.user_context, use_nvidia_nim=True)
-    question_type = concierge._classify_question(request.question)
+    concierge = create_enhanced_qwen_concierge(db)  # Enhanced version with function calling
+    # Use advanced answer with tool execution
+    answer = await concierge.answer_question(request.question)
     
-    return ConciergeResponse(answer=answer, question_type=question_type)
+    return ConciergeResponse(answer=answer, question_type="startup_search")
 
 @app.post("/concierge/startup-details", response_model=ConciergeResponse)
 async def get_startup_details(query: StartupQuery, db: Session = Depends(get_db)):
@@ -561,8 +574,10 @@ async def get_startup_details(query: StartupQuery, db: Session = Depends(get_db)
     - Uses local database
     - Enriched with CB Insights data
     """
-    concierge = create_concierge(db)
-    details = await concierge.get_startup_details(query.startup_name)
+    concierge = create_enhanced_qwen_concierge(db)  # Enhanced version with function calling
+    # For startup details, build a focused question
+    question = f"Get detailed information about {query.startup_name}"
+    details = await concierge.answer_question(question)
     
     return ConciergeResponse(answer=details, question_type="startup_details")
 
@@ -624,6 +639,40 @@ async def generate_linkedin_post(request: LinkedInPostRequest, db: Session = Dep
     
     return ConciergeResponse(answer=post, question_type="linkedin_post")
 
+
+@app.post("/concierge/advanced-research", response_model=ConciergeResponse)
+async def advanced_research_chatcbi(request: AdvancedResearchRequest, db: Session = Depends(get_db)):
+    """
+    Perform advanced market research using CB Insights ChatCBI API
+    
+    **REQUIRES:** CB Insights API credentials configured in `.env`
+    
+    This endpoint:
+    - Uses CB Insights ChatCBI for deep market intelligence
+    - Consumes CB Insights API credits
+    - Provides business model analysis, competitive landscape, funding trends
+    - Optimizes queries using Qwen LLM for best results
+    
+    **Request Body:**
+    ```json
+    {
+        "company_name": "SimplifAI",
+        "focus": "funding"  // Optional: funding|competitors|technology|market
+    }
+    ```
+    
+    **Note:** Make sure CB Insights credentials are configured:
+    - CBINSIGHTS_CLIENT_ID
+    - CBINSIGHTS_CLIENT_SECRET
+    
+    in `app/startup-swipe-schedu/.env`
+    """
+    concierge = create_enhanced_qwen_concierge(db)
+    result = await concierge.perform_advanced_research(request.company_name, request.focus)
+    
+    return ConciergeResponse(answer=result, question_type="advanced_research")
+
+
 @app.get("/concierge/search-startups")
 async def search_startups(query: str, limit: int = 10, db: Session = Depends(get_db)):
     """
@@ -650,7 +699,7 @@ class PrioritizedStartupsRequest(BaseModel):
     limit: Optional[int] = 50
 
 @app.get("/startups/all")
-def get_all_startups(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def get_all_startups(skip: int = 0, limit: int = 10000, db: Session = Depends(get_db)):
     """
     Get all startups from database
     """
@@ -717,60 +766,36 @@ def get_axa_filtered_startups(
     db: Session = Depends(get_db)
 ):
     """
-    Get AXA-filtered startups. Falls back to all startups if enhanced data unavailable.
+    Get AXA-filtered startups directly from database.
+    Returns Tier 2 startups sorted by funding.
     """
     try:
-        # Load AXA filtered results from enhanced final JSON file
-        axa_results_path = Path(__file__).parent.parent / "downloads" / "axa_enhanced_final.json"
-        
-        if not axa_results_path.exists():
-            axa_results_path = Path(__file__).parent.parent / "downloads" / "axa_300startups.json"
-        
-        if axa_results_path.exists():
-            with open(axa_results_path, 'r') as f:
-                axa_startups = json.load(f)
-            
-            # Ensure axa_startups is a list
-            if isinstance(axa_startups, dict) and 'startups' in axa_startups:
-                axa_startups = axa_startups['startups']
-            
-            if isinstance(axa_startups, list) and len(axa_startups) > 0:
-                results = axa_startups[:limit]
-                return {
-                    "total": len(axa_startups),
-                    "returned": len(results),
-                    "min_score": min_score,
-                    "source": "axa_enhanced_filter",
-                    "processing": {
-                        "method": "NVIDIA NIM Enhanced Scoring",
-                        "llm_model": "deepseek-ai/deepseek-r1"
-                    },
-                    "startups": results
-                }
-        
-        # Fallback: return all startups from database
-        logger.info("AXA results file not found, using all database startups")
-        all_startups = db_queries.get_all_startups(db, skip=0, limit=limit)
+        # Query Tier 2 startups from database, ordered by funding
+        startups = db.query(models_startup.Startup).filter(
+            models_startup.Startup.axa_priority_tier.contains("Tier 2")
+        ).order_by(
+            models_startup.Startup.total_funding.desc()
+        ).limit(limit).all()
         
         return {
-            "total": len(all_startups),
-            "returned": len(all_startups),
+            "total": len(startups),
+            "returned": len(startups),
             "min_score": min_score,
-            "source": "database_fallback",
+            "source": "database",
             "processing": {
-                "method": "Standard database retrieval"
+                "method": "Direct database query",
+                "tier": "Tier 2: High Priority"
             },
-            "startups": all_startups
+            "startups": startups
         }
     except Exception as e:
         logger.error(f"Error in AXA filter endpoint: {e}", exc_info=True)
-        # Return empty but valid response instead of error
         return {
             "total": 0,
             "returned": 0,
             "min_score": min_score,
-            "source": "error_fallback",
-            "processing": {"method": "Error fallback"},
+            "source": "error",
+            "processing": {"method": "Error"},
             "startups": []
         }
 
@@ -812,6 +837,68 @@ def get_batch_startup_insights(startup_ids: List[str], db: Session = Depends(get
             })
 
     return {"results": results, "count": len(results)}
+
+
+@app.post("/startups/generate-ai-insights")
+async def generate_ai_insights(company_name: str, db: Session = Depends(get_db)):
+    """
+    Generate AI-powered insights for a startup using Qwen model.
+    
+    This endpoint is triggered when the user clicks the "Generate AI Insights" button.
+    It performs comprehensive analysis including:
+    - Strategic fit with AXA
+    - Technology assessment  
+    - Market opportunity analysis
+    - Business viability
+    - Risk factors
+    - Recommended next steps
+    
+    Uses qwen/qwen3-next-80b-a3b-instruct model with LangSmith tracing
+    """
+    try:
+        insights_agent = create_insights_agent(db)
+        result = await insights_agent.generate_insights(company_name)
+        
+        if not result.get("success"):
+            raise HTTPException(
+                status_code=404 if "not found" in result.get("error", "").lower() else 500,
+                detail=result.get("error", "Failed to generate insights")
+            )
+        
+        return {
+            "success": True,
+            "company_name": company_name,
+            "insights": result["insights"],
+            "generated_at": result.get("timestamp")
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating AI insights: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/startups/compare-insights")
+async def compare_startup_insights(company_names: List[str], db: Session = Depends(get_db)):
+    """
+    Generate comparative insights for multiple startups.
+    Useful for tier-based evaluation and ranking.
+    """
+    try:
+        insights_agent = create_insights_agent(db)
+        result = await insights_agent.generate_comparative_insights(company_names)
+        
+        if not result.get("success"):
+            raise HTTPException(status_code=500, detail=result.get("error", "Failed to generate comparative insights"))
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating comparative insights: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
 
 # ============================================
 # Enriched Data Endpoints
@@ -927,6 +1014,7 @@ async def get_startups_by_enriched_field(
     field_name: str = None,
     field_value: str = None,
     limit: int = 20,
+    db: Session = Depends(get_db),
     # Also accept from JSON body
     body: Optional[Dict[str, Any]] = None
 ):
@@ -944,14 +1032,22 @@ async def get_startups_by_enriched_field(
     if not field_name or not field_value:
         raise HTTPException(status_code=400, detail="field_name and field_value are required")
     
+    # Query enriched startups from database
+    enriched = db_queries.get_enriched_startups(db, limit=1000)
+    
     results = []
     field_value_lower = field_value.lower()
     
-    for startup in ALL_STARTUPS:
-        if not startup.get('is_enriched'):
-            continue
+    for startup in enriched:
+        enrichment_json = startup.get('enrichment', '{}')
+        if isinstance(enrichment_json, str):
+            try:
+                enrichment = json.loads(enrichment_json)
+            except (json.JSONDecodeError, TypeError):
+                enrichment = {}
+        else:
+            enrichment = enrichment_json
         
-        enrichment = startup.get('enrichment', {})
         found = False
         
         if field_name == 'email':
@@ -974,7 +1070,7 @@ async def get_startups_by_enriched_field(
         if found:
             results.append({
                 "id": startup.get('id'),
-                "name": startup.get('name'),
+                "name": startup.get('company_name'),
                 "website": startup.get('website'),
                 "matched_field": field_name,
                 "enrichment_date": startup.get('last_enriched_date')
@@ -1054,6 +1150,208 @@ async def get_meeting_insights(meeting_id: str, db: Session = Depends(get_db)):
         models.MeetingInsight.meetingId == meeting_id
     ).all()
     return insights
+
+@app.get("/insights/as-ideas")
+async def get_insights_as_ideas(db: Session = Depends(get_db)):
+    """
+    Get all meeting insights formatted as Idea objects for the Insights page
+    - Converts meeting_insights to category '10' (Startups) ideas
+    - Compatible with InsightsView component
+    """
+    insights = db.query(models.MeetingInsight).all()
+    
+    ideas = []
+    for insight in insights:
+        # Convert meeting insight to Idea format
+        idea = {
+            "id": f"insight_{insight.id}",
+            "name": insight.startupName,
+            "title": f"Meeting with {insight.startupName}",
+            "category": "10",  # Category 10: Startups
+            "description": insight.insight or "",
+            "tags": insight.tags or [],
+            "timestamp": int(insight.timestamp.timestamp() * 1000) if insight.timestamp else 0,
+            "rating": insight.rating,
+            "meetingId": insight.meetingId,
+            "userId": insight.userId
+        }
+        ideas.append(idea)
+    
+    return ideas
+
+@app.get("/insights/categorized/all")
+async def get_all_categorized_insights(db: Session = Depends(get_db)):
+    """
+    Get all categorized insights grouped by category
+    Perfect for populating all 10 whitepaper sections at once
+    """
+    insights = db.query(models.CategorizedInsight).order_by(
+        models.CategorizedInsight.created_at.desc()
+    ).all()
+    
+    # Group by category
+    by_category = {}
+    for i in range(1, 11):
+        by_category[str(i)] = []
+    
+    for insight in insights:
+        if insight.category in by_category:
+            by_category[insight.category].append({
+                "id": f"insight_{insight.id}",
+                "name": insight.startup_name,
+                "title": insight.title,
+                "category": insight.category,
+                "description": insight.insight,  # Use 'insight' field as description
+                "tags": insight.tags or [],
+                "timestamp": int(insight.created_at.timestamp() * 1000),
+                "confidence": insight.confidence_score,
+                "meetingId": insight.meeting_id,
+                "userName": insight.user_name,
+                "userEmail": insight.user_email,
+                "insuranceRelevance": insight.insurance_relevance,
+                "metrics": insight.metrics or [],
+                "isEdited": insight.is_edited,
+                "evidenceSource": insight.evidence_source
+            })
+    
+    return by_category
+
+@app.get("/insights/categorized/category/{category_id}")
+async def get_insights_by_category(
+    category_id: str,
+    limit: int = 50,
+    offset: int = 0,
+    db: Session = Depends(get_db)
+):
+    """
+    Get insights for a specific category
+    Returns in Idea format compatible with InsightsView
+    """
+    if category_id not in [str(i) for i in range(1, 11)]:
+        raise HTTPException(status_code=400, detail="Invalid category. Must be 1-10")
+    
+    insights = db.query(models.CategorizedInsight).filter(
+        models.CategorizedInsight.category == category_id
+    ).order_by(
+        models.CategorizedInsight.created_at.desc()
+    ).offset(offset).limit(limit).all()
+    
+    ideas = []
+    for insight in insights:
+        idea = {
+            "id": f"insight_{insight.id}",
+            "name": insight.startup_name,
+            "title": insight.title,
+            "category": insight.category,
+            "description": insight.insight,
+            "tags": insight.tags or [],
+            "timestamp": int(insight.created_at.timestamp() * 1000),
+            "confidence": insight.confidence_score,
+            "meetingId": insight.meeting_id,
+            "userName": insight.user_name,
+            "userEmail": insight.user_email,
+            "insuranceRelevance": insight.insurance_relevance,
+            "metrics": insight.metrics or [],
+            "isEdited": insight.is_edited
+        }
+        ideas.append(idea)
+    
+    return ideas
+
+@app.put("/insights/categorized/{insight_id}/edit")
+async def edit_categorized_insight(
+    insight_id: int,
+    update_data: Dict[str, Any],
+    db: Session = Depends(get_db)
+):
+    """
+    Edit a categorized insight
+    - Update title, insight text, tags, category
+    - Track edit history
+    """
+    insight = db.query(models.CategorizedInsight).filter_by(id=insight_id).first()
+    
+    if not insight:
+        raise HTTPException(status_code=404, detail="Insight not found")
+    
+    # Save original on first edit
+    if not insight.is_edited:
+        insight.original_insight = insight.insight
+        insight.is_edited = True
+    
+    # Update fields
+    if 'title' in update_data:
+        insight.title = update_data['title']
+    if 'insight' in update_data:
+        insight.insight = update_data['insight']
+    if 'category' in update_data:
+        if update_data['category'] in [str(i) for i in range(1, 11)]:
+            insight.category = update_data['category']
+    if 'tags' in update_data:
+        insight.tags = update_data['tags']
+    if 'insurance_relevance' in update_data:
+        insight.insurance_relevance = update_data['insurance_relevance']
+    
+    insight.edited_at = datetime.utcnow()
+    insight.updated_at = datetime.utcnow()
+    
+    db.commit()
+    db.refresh(insight)
+    
+    return {
+        "id": insight.id,
+        "title": insight.title,
+        "insight": insight.insight,
+        "category": insight.category,
+        "is_edited": insight.is_edited,
+        "edited_at": insight.edited_at,
+        "message": "Insight updated successfully"
+    }
+
+@app.delete("/insights/categorized/{insight_id}")
+async def delete_categorized_insight(
+    insight_id: int,
+    db: Session = Depends(get_db)
+):
+    """Delete a categorized insight"""
+    insight = db.query(models.CategorizedInsight).filter_by(id=insight_id).first()
+    
+    if not insight:
+        raise HTTPException(status_code=404, detail="Insight not found")
+    
+    db.delete(insight)
+    db.commit()
+    
+    return {"message": "Insight deleted successfully", "id": insight_id}
+
+@app.post("/insights/categorized/{insight_id}/move")
+async def move_insight_category(
+    insight_id: int,
+    new_category: str,
+    db: Session = Depends(get_db)
+):
+    """Move insight to a different category"""
+    if new_category not in [str(i) for i in range(1, 11)]:
+        raise HTTPException(status_code=400, detail="Invalid category. Must be 1-10")
+    
+    insight = db.query(models.CategorizedInsight).filter_by(id=insight_id).first()
+    
+    if not insight:
+        raise HTTPException(status_code=404, detail="Insight not found")
+    
+    old_category = insight.category
+    insight.category = new_category
+    insight.is_edited = True
+    insight.edited_at = datetime.utcnow()
+    
+    db.commit()
+    
+    return {
+        "message": f"Insight moved from Category {old_category} to {new_category}",
+        "old_category": old_category,
+        "new_category": new_category,
+        "id": insight_id
+    }
 
 # ============================================
 # LLM-Powered Feedback Collection
@@ -1183,11 +1481,19 @@ async def chat_feedback(
 
     # Save answer for current question
     current_question = questions[current_idx]
-    session.answers[str(current_question["id"])] = {
+    
+    # Update answers dict - need to replace the whole dict for SQLAlchemy to track changes
+    answers_copy = dict(session.answers) if session.answers else {}
+    answers_copy[str(current_question["id"])] = {
         "question": current_question["question"],
         "answer": message_data.message,
         "category": current_question["category"]
     }
+    session.answers = answers_copy
+    
+    # Mark as modified for SQLAlchemy
+    from sqlalchemy.orm.attributes import flag_modified
+    flag_modified(session, "answers")
 
     # Process with LLM
     response_data = await feedback_assistant.process_conversation_turn(
@@ -1213,21 +1519,22 @@ async def chat_feedback(
         session.completed_at = datetime.utcnow()
 
         # Generate completion summary
-        qa_pairs = [
-            {
-                **session.answers[str(q["id"])],
-                "question": q["question"],
-                "category": q["category"]
-            }
-            for q in questions
-        ]
-
+        qa_pairs = []
+        for q in questions:
+            q_id = str(q["id"])
+            if q_id in session.answers:
+                qa_pairs.append({
+                    **session.answers[q_id],
+                    "question": q["question"],
+                    "category": q["category"]
+                })
+        
         completion_message = await feedback_assistant.generate_completion_summary(
             startup_name=session.startupName,
             qa_pairs=qa_pairs
         )
 
-        # Create meeting insight from Q&A
+        # Create meeting insight from Q&A (legacy format)
         insight_data = feedback_assistant.format_insights_for_storage(
             qa_pairs=qa_pairs,
             meeting_id=session.meetingId,
@@ -1236,9 +1543,85 @@ async def chat_feedback(
             user_id=session.userId
         )
 
-        # Save insight
+        # Save legacy insight
         insight = models.MeetingInsight(**insight_data)
         db.add(insight)
+        
+        # NEW: Categorize insights using LLM
+        try:
+            # Get startup data from database
+            startup = db.query(models_startup.Startup).filter(
+                models_startup.Startup.id == session.startupId
+            ).first()
+            
+            startup_data = {
+                "name": session.startupName,
+                "description": session.startupDescription or "",
+                "category": getattr(startup, 'category', 'N/A') if startup else 'N/A',
+                "funding": getattr(startup, 'total_funding', 'Undisclosed') if startup else 'Undisclosed',
+                "tech": getattr(startup, 'tech', []) if startup else [],
+                "maturity": getattr(startup, 'maturity', 'Unknown') if startup else 'Unknown'
+            }
+            
+            # TODO: Get AXA evaluation if exists (placeholder for now)
+            axa_evaluation = {
+                "priority_score": 75,
+                "technical_score": 80,
+                "business_fit": "High",
+                "innovation_level": "Medium"
+            }
+            
+            # User info for attribution
+            user_info = {
+                "id": session.userId,
+                "name": session.userId.split('@')[0].replace('.', ' ').title(),  # Extract name from email
+                "email": session.userId
+            }
+            
+            # Analyze and categorize insights
+            categorized = await feedback_assistant.analyze_and_categorize_insights(
+                qa_pairs=qa_pairs,
+                startup_data=startup_data,
+                axa_evaluation=axa_evaluation,
+                user_info=user_info
+            )
+            
+            # Save categorized insights to database
+            insights_created = 0
+            categories_populated = []
+            
+            for category, insights_list in categorized.items():
+                if insights_list:
+                    categories_populated.append(category)
+                    
+                for insight_item in insights_list:
+                    categorized_insight = models.CategorizedInsight(
+                        meeting_id=session.meetingId,
+                        startup_id=session.startupId or "",
+                        startup_name=session.startupName,
+                        user_id=user_info['id'],
+                        user_name=user_info['name'],
+                        user_email=user_info['email'],
+                        category=category,
+                        title=insight_item.get('title', ''),
+                        insight=insight_item.get('insight', ''),
+                        insurance_relevance=insight_item.get('insurance_relevance', 'general'),
+                        metrics=insight_item.get('metrics', []),
+                        tags=insight_item.get('tags', []),
+                        confidence_score=insight_item.get('confidence', 0.8),
+                        evidence_source=insight_item.get('evidence_source', ''),
+                        feedback_session_id=session.id
+                    )
+                    db.add(categorized_insight)
+                    insights_created += 1
+            
+            print(f"✓ Created {insights_created} categorized insights across {len(categories_populated)} categories")
+            
+        except Exception as e:
+            print(f"⚠️  Error creating categorized insights: {e}")
+            # Continue anyway - legacy insight was created
+            insights_created = 0
+            categories_populated = []
 
         db.commit()
 
@@ -1252,7 +1635,9 @@ async def chat_feedback(
                 "answered": len(questions)
             },
             session_id=session.id,
-            completed=True
+            completed=True,
+            insights_created=insights_created,
+            categories_populated=categories_populated
         )
 
     # Move to next question
@@ -1378,6 +1763,542 @@ async def preview_feedback_questions(
 # async def schedule_meeting_notification(...)
 
 # Notifications will be enabled in a future update
+
+# ============================================
+# Whitepaper Insights Agent Endpoints
+# ============================================
+
+@app.get("/whitepaper/meeting-prep/load")
+def load_existing_outline(
+    startup_id: str,
+    startup_name: str,
+    user_id: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Load existing meeting prep outline if it exists.
+    Tries multiple matching strategies to find the outline.
+    """
+    try:
+        from models import MeetingPrepOutline
+        
+        # Try exact startup_id match first
+        outline = db.query(MeetingPrepOutline).filter(
+            MeetingPrepOutline.startup_id == startup_id,
+            MeetingPrepOutline.user_id == user_id
+        ).order_by(MeetingPrepOutline.updated_at.desc()).first()
+        
+        # If not found, try by startup name (more flexible)
+        if not outline:
+            outline = db.query(MeetingPrepOutline).filter(
+                MeetingPrepOutline.startup_name.ilike(startup_name),
+                MeetingPrepOutline.user_id == user_id
+            ).order_by(MeetingPrepOutline.updated_at.desc()).first()
+        
+        if outline:
+            return {
+                "success": True,
+                "found": True,
+                "outline": outline.outline,
+                "talking_points": outline.talking_points,
+                "critical_questions": outline.critical_questions,
+                "generated_at": outline.generated_at.isoformat() if outline.generated_at else None
+            }
+        else:
+            return {
+                "success": True,
+                "found": False
+            }
+    except Exception as e:
+        print(f"Error loading outline: {e}")
+        return {
+            "success": False,
+            "found": False,
+            "error": str(e)
+        }
+
+
+@app.post("/whitepaper/meeting-prep/start")
+async def start_whitepaper_meeting_prep(
+    user_id: str,
+    startup_id: str,
+    startup_name: str,
+    startup_description: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Start whitepaper preparation session for meeting with startup
+    Generates initial outline with talking points and questions
+    """
+    try:
+        # Try to get startup data from database
+        startup = None
+        try:
+            startup = db.query(models_startup.Startup).filter(
+                models_startup.Startup.id == startup_id
+            ).first()
+        except:
+            startup = db.query(models_startup.Startup).filter(
+                models_startup.Startup.name == startup_name
+            ).first()
+        
+        # Build startup data
+        if startup:
+            startup_data = {
+                "name": startup_name,
+                "description": startup_description or getattr(startup, 'Company Description', ''),
+                "category": getattr(startup, 'Category', getattr(startup, 'category', '')),
+                "technologies": [],
+                "total_funding": getattr(startup, 'Funding', getattr(startup, 'total_funding', 0)),
+                "stage": getattr(startup, 'Stage', getattr(startup, 'stage', 'Unknown'))
+            }
+            try:
+                topics = getattr(startup, 'topics', [])
+                if topics and isinstance(topics, (list, tuple)):
+                    startup_data["technologies"] = [str(t) for t in topics[:5]]
+                else:
+                    startup_data["technologies"] = []
+            except Exception as e:
+                print(f"Error extracting topics: {e}")
+                startup_data["technologies"] = []
+        else:
+            startup_data = {
+                "name": startup_name,
+                "description": startup_description,
+                "category": "AI/Enterprise",
+                "technologies": [],
+                "total_funding": 0,
+                "stage": "Unknown"
+            }
+        
+        # Generate initial meeting prep outline
+        initial_outline = await whitepaper_agent.generate_initial_outline(
+            startup_name=startup_name,
+            startup_description=startup_description,
+            startup_data=startup_data
+        )
+        
+        # Save outline to database
+        try:
+            from models import MeetingPrepOutline
+            
+            meeting_prep = MeetingPrepOutline(
+                startup_id=startup_id,
+                startup_name=startup_name,
+                user_id=user_id,
+                outline=initial_outline,
+                talking_points=[],  # Could parse these from outline if needed
+                critical_questions=[],  # Could parse these from outline if needed
+                whitepaper_relevance={}
+            )
+            db.add(meeting_prep)
+            db.commit()
+        except Exception as e:
+            print(f"Warning: Could not save outline to database: {e}")
+            # Don't fail if saving fails, just log it
+        
+        return {
+            "success": True,
+            "session_id": f"prep_{startup_id}_{user_id}_{datetime.utcnow().timestamp()}",
+            "startup_name": startup_name,
+            "outline": initial_outline,
+            "message": f"✓ Meeting prep outline generated for {startup_name}\n\nReview the talking points and questions below. Provide feedback or observations to refine the outline further."
+        }
+        
+    except Exception as e:
+        print(f"Error starting whitepaper prep: {e}")
+        import traceback
+        traceback.print_exc()
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+
+@app.post("/whitepaper/meeting-prep/chat")
+async def whitepaper_meeting_prep_chat(
+    session_id: str,
+    message: str,
+    startup_name: str,
+    startup_description: str,
+    previous_outline: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Process analyst feedback and adapt the outline
+    """
+    try:
+        # Get startup data for context
+        startup = None
+        try:
+            startup = db.query(models_startup.Startup).filter(
+                models_startup.Startup.name == startup_name
+            ).first()
+        except:
+            pass
+        
+        startup_data = {
+            "name": startup_name,
+            "description": startup_description,
+            "category": getattr(startup, 'Category', 'AI/Enterprise') if startup else 'AI/Enterprise',
+            "technologies": [],
+            "total_funding": getattr(startup, 'Funding', 0) if startup else 0,
+            "stage": getattr(startup, 'Stage', 'Unknown') if startup else 'Unknown'
+        }
+
+        # Generate adapted outline based on feedback
+        adapted_outline = await whitepaper_agent.generate_adapted_outline(
+            startup_name=startup_name,
+            startup_description=startup_description,
+            startup_data=startup_data,
+            previous_outline=previous_outline,
+            user_feedback=message
+        )
+        
+        return {
+            "success": True,
+            "outline": adapted_outline,
+            "message": f"✓ Outline updated based on your feedback\n\nThe talking points and questions have been refined to focus on your insights."
+        }
+        
+    except Exception as e:
+        print(f"Error in whitepaper prep chat: {e}")
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+
+# ============================================
+# Conversational Insights Agent Request Models
+# ============================================
+
+class DebriefStartRequest(BaseModel):
+    user_id: str
+    startup_id: str
+    startup_name: str
+    meeting_prep_outline: str = ""
+
+class DebriefChatRequest(BaseModel):
+    session_id: str
+    user_message: str
+    startup_name: str
+    meeting_prep_outline: str
+    conversation_history: List[Dict[str, str]] = []
+
+class DebriefGenerateQuestionsRequest(BaseModel):
+    session_id: str
+    startup_name: str
+    meeting_prep_outline: str
+    conversation_history: List[Dict[str, str]]
+
+class DebriefCompleteRequest(BaseModel):
+    session_id: str
+    startup_id: str
+    startup_name: str
+    user_id: str
+    meeting_prep_outline: str
+    conversation_history: List[Dict[str, str]]
+    ratings: Dict[int, int]  # {question_index: rating_1_to_5}
+    final_notes: str = ""
+
+
+# ============================================
+# Conversational Insights Agent Endpoints
+# ============================================
+
+@app.post("/insights/debrief/start")
+async def start_meeting_debrief(
+    request: DebriefStartRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Start a casual debrief conversation about the meeting
+    Returns initial greeting
+    """
+    try:
+        greeting = await conversational_insights_agent.start_debrief(
+            startup_name=request.startup_name,
+            meeting_prep_outline=request.meeting_prep_outline
+        )
+        
+        return {
+            "success": True,
+            "session_id": f"debrief_{request.startup_id}_{request.user_id}_{datetime.utcnow().timestamp()}",
+            "startup_name": request.startup_name,
+            "message": greeting,
+            "conversation": []
+        }
+        
+    except Exception as e:
+        print(f"Error starting debrief: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to start debrief: {str(e)}"
+        )
+
+
+@app.post("/insights/debrief/chat")
+async def debrief_conversation(
+    request: DebriefChatRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Process analyst message and generate conversational follow-up
+    """
+    try:
+        # Generate natural follow-up response
+        response = await conversational_insights_agent.generate_follow_up(
+            conversation_history=request.conversation_history,
+            startup_name=request.startup_name,
+            meeting_prep_outline=request.meeting_prep_outline,
+            last_user_message=request.user_message
+        )
+        
+        return {
+            "success": True,
+            "message": response,
+            "session_id": request.session_id
+        }
+        
+    except Exception as e:
+        print(f"Error in debrief chat: {e}")
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+
+@app.post("/insights/debrief/generate-questions")
+async def generate_debrief_questions(
+    request: DebriefGenerateQuestionsRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Generate exactly 3 questions after initial conversation
+    """
+    try:
+        questions = await conversational_insights_agent.generate_three_questions(
+            conversation_history=request.conversation_history,
+            startup_name=request.startup_name,
+            meeting_prep_outline=request.meeting_prep_outline
+        )
+        
+        return {
+            "success": True,
+            "session_id": request.session_id,
+            "questions": questions
+        }
+        
+    except Exception as e:
+        print(f"Error generating questions: {e}")
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+
+@app.post("/insights/debrief/complete")
+async def complete_debrief(
+    request: DebriefCompleteRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Complete debrief with analyst ratings and feedback.
+    SAVES DEBRIEF DATA FIRST, then extracts insights asynchronously.
+    If insights extraction fails, the debrief data is already safely stored and can be regenerated.
+    """
+    try:
+        from models import DebriefSession, CategorizedInsight
+        
+        print(f"[DebreefComplete] Starting debrief for {request.startup_name}")
+        print(f"[DebreefComplete] User: {request.user_id}, Startup ID: {request.startup_id}")
+        print(f"[DebreefComplete] Messages count: {len(request.conversation_history)}")
+        
+        # STEP 1: Save debrief session to database FIRST (this is critical)
+        # This ensures we don't lose the conversation data even if insights extraction fails
+        debrief_session = DebriefSession(
+            session_id=request.session_id,
+            startup_id=request.startup_id,
+            startup_name=request.startup_name,
+            user_id=request.user_id,
+            conversation_history=request.conversation_history,
+            ratings=request.ratings,
+            final_notes=request.final_notes,
+            status="completed",
+            completed_at=datetime.utcnow()
+        )
+        db.add(debrief_session)
+        db.flush()  # Flush to get debrief_session.id
+        db.commit()
+        
+        print(f"[DebreefComplete] ✓ Debrief session saved successfully")
+        
+        # STEP 2: Extract insights (this can fail without losing the debrief data)
+        saved_count = 0
+        insights_extraction_success = False
+        insights_data = {"insights": [], "success": False}
+        
+        try:
+            insights_data = await conversational_insights_agent.extract_insights_from_conversation(
+                startup_name=request.startup_name,
+                conversation_history=request.conversation_history,
+                meeting_prep_outline=request.meeting_prep_outline
+            )
+            
+            print(f"[DebreefComplete] Extraction result: {insights_data}")
+            
+            # Save extracted insights to CategorizedInsight table
+            insights_list = insights_data.get("insights", [])
+            print(f"[DebreefComplete] Insights list type: {type(insights_list)}, length: {len(insights_list) if isinstance(insights_list, list) else 'N/A'}")
+            
+            if isinstance(insights_list, list) and len(insights_list) > 0:
+                for i, insight in enumerate(insights_list):
+                    try:
+                        print(f"[DebreefComplete] Processing insight {i+1}: {insight}")
+                        categorized_insight = CategorizedInsight(
+                            meeting_id=request.session_id,
+                            startup_id=request.startup_id,
+                            startup_name=request.startup_name,
+                            user_id=request.user_id,
+                            user_name=request.user_id.split('@')[0] if '@' in request.user_id else request.user_id,
+                            user_email=request.user_id,
+                            category=str(insight.get("section", "")),
+                            title=insight.get("title", ""),
+                            insight=insight.get("insight", ""),
+                            insurance_relevance=insight.get("insurance_relevance", ""),
+                            metrics=insight.get("metrics", []),
+                            tags=insight.get("tags", []),
+                            confidence_score=float(insight.get("confidence_score", 0.8)),
+                            evidence_source=insight.get("evidence_source", "")
+                        )
+                        db.add(categorized_insight)
+                        saved_count += 1
+                    except Exception as e:
+                        print(f"[DebreefComplete] Error saving insight {i+1}: {e}")
+            
+            db.commit()
+            insights_extraction_success = True
+            print(f"[DebreefComplete] ✓ Saved {saved_count} insights to database")
+            
+        except Exception as e:
+            print(f"[DebreefComplete] ⚠️ Insights extraction failed: {e}")
+            print(f"[DebreefComplete] BUT debrief data is safely stored! Insights can be regenerated later.")
+            import traceback
+            traceback.print_exc()
+        
+        # STEP 3: Return success - debrief is saved regardless of insights extraction
+        return {
+            "success": True,
+            "session_id": request.session_id,
+            "startup_name": request.startup_name,
+            "insights_saved": saved_count,
+            "insights_extraction_success": insights_extraction_success,
+            "insights": insights_data.get("insights", []),
+            "message": f"✓ Debrief completed and saved! {saved_count} insights extracted." if insights_extraction_success else f"✓ Debrief saved! {saved_count} insights extracted. (Insights can be regenerated if needed)"
+        }
+        
+    except Exception as e:
+        print(f"[DebreefComplete] Error completing debrief: {e}")
+        import traceback
+        traceback.print_exc()
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+
+@app.post("/insights/debrief/regenerate-insights")
+async def regenerate_insights(
+    request: dict,
+    db: Session = Depends(get_db)
+):
+    """
+    Regenerate insights for an existing debrief session.
+    Used when initial insights extraction failed.
+    Retrieves the debrief from database and re-runs insights extraction.
+    """
+    try:
+        from models import DebriefSession, CategorizedInsight
+        
+        session_id = request.get("session_id")
+        if not session_id:
+            return {"success": False, "error": "session_id is required"}
+        
+        print(f"[RegenerateInsights] Regenerating insights for session: {session_id}")
+        
+        # Get the existing debrief session
+        debrief = db.query(DebriefSession).filter_by(session_id=session_id).first()
+        if not debrief:
+            return {"success": False, "error": f"Debrief session {session_id} not found"}
+        
+        print(f"[RegenerateInsights] Found debrief: {debrief.startup_name}")
+        
+        # Delete any previous insights for this session
+        db.query(CategorizedInsight).filter_by(meeting_id=session_id).delete()
+        db.commit()
+        print(f"[RegenerateInsights] Cleared previous insights")
+        
+        # Extract insights again
+        insights_data = await conversational_insights_agent.extract_insights_from_conversation(
+            startup_name=debrief.startup_name,
+            conversation_history=debrief.conversation_history,
+            meeting_prep_outline=request.get("meeting_prep_outline", "")
+        )
+        
+        print(f"[RegenerateInsights] Extraction result: {insights_data}")
+        
+        saved_count = 0
+        insights_list = insights_data.get("insights", [])
+        
+        if isinstance(insights_list, list) and len(insights_list) > 0:
+            for i, insight in enumerate(insights_list):
+                try:
+                    print(f"[RegenerateInsights] Processing insight {i+1}: {insight}")
+                    categorized_insight = CategorizedInsight(
+                        meeting_id=debrief.session_id,
+                        startup_id=debrief.startup_id,
+                        startup_name=debrief.startup_name,
+                        user_id=debrief.user_id,
+                        user_name=debrief.user_id.split('@')[0] if '@' in debrief.user_id else debrief.user_id,
+                        user_email=debrief.user_id,
+                        category=str(insight.get("section", "")),
+                        title=insight.get("title", ""),
+                        insight=insight.get("insight", ""),
+                        insurance_relevance=insight.get("insurance_relevance", ""),
+                        metrics=insight.get("metrics", []),
+                        tags=insight.get("tags", []),
+                        confidence_score=float(insight.get("confidence_score", 0.8)),
+                        evidence_source=insight.get("evidence_source", "")
+                    )
+                    db.add(categorized_insight)
+                    saved_count += 1
+                except Exception as e:
+                    print(f"[RegenerateInsights] Error saving insight {i+1}: {e}")
+        
+        db.commit()
+        print(f"[RegenerateInsights] ✓ Saved {saved_count} insights to database")
+        
+        return {
+            "success": True,
+            "session_id": session_id,
+            "startup_name": debrief.startup_name,
+            "insights_saved": saved_count,
+            "insights": insights_data.get("insights", []),
+            "message": f"✓ Successfully regenerated {saved_count} insights"
+        }
+        
+    except Exception as e:
+        print(f"[RegenerateInsights] Error regenerating insights: {e}")
+        import traceback
+        traceback.print_exc()
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
 
 # ============================================
 # Utility Endpoints for Normalized DB

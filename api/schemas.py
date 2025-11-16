@@ -310,6 +310,8 @@ class FeedbackChatResponse(BaseModel):
     progress: Dict[str, Any]
     session_id: int
     completed: bool
+    insights_created: Optional[int] = 0
+    categories_populated: Optional[List[str]] = []
 
 # Notification Queue schemas
 class NotificationQueueBase(BaseModel):

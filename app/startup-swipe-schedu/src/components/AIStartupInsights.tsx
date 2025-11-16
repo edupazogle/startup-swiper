@@ -5,10 +5,13 @@ import { Badge } from '@/components/ui/badge'
 import { Sparkle, TrendUp, Target, Lightbulb } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
+import { FeedbackChatModal } from '@/components/FeedbackChatModal'
 
 interface AIStartupInsightsProps {
   startup: any
   userVotes: any[]
+  userId?: string
+  meetingId?: string
 }
 
 interface Insight {
@@ -16,10 +19,11 @@ interface Insight {
   content: string
 }
 
-export function AIStartupInsights({ startup, userVotes }: AIStartupInsightsProps) {
+export function AIStartupInsights({ startup, userVotes, userId, meetingId }: AIStartupInsightsProps) {
   const [insights, setInsights] = useState<Insight[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [hasGenerated, setHasGenerated] = useState(false)
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false)
 
   const generateInsights = async () => {
     setIsLoading(true)
@@ -103,16 +107,30 @@ Keep each insight under 100 characters.
 
   if (!hasGenerated) {
     return (
-      <Button
-        onClick={generateInsights}
-        disabled={isLoading}
-        variant="outline"
-        size="sm"
-        className="w-full gap-2"
-      >
-        <Sparkle size={16} weight={isLoading ? 'duotone' : 'fill'} className={isLoading ? 'animate-pulse' : ''} />
-        {isLoading ? 'Generating AI Insights...' : 'Generate AI Insights'}
-      </Button>
+      <>
+        <Button
+          onClick={() => setShowFeedbackModal(true)}
+          disabled={isLoading}
+          variant="outline"
+          size="sm"
+          className="w-full gap-2"
+        >
+          <Sparkle size={16} weight="fill" />
+          Generate AI Insights
+        </Button>
+        
+        {showFeedbackModal && (
+          <FeedbackChatModal
+            isOpen={showFeedbackModal}
+            onClose={() => setShowFeedbackModal(false)}
+            meetingId={meetingId || `meeting_${Date.now()}`}
+            userId={userId || '1'}
+            startupId={startup.id || startup["Company Name"]}
+            startupName={startup["Company Name"] || startup.name}
+            startupDescription={startup["Company Description"] || startup.description || ''}
+          />
+        )}
+      </>
     )
   }
 

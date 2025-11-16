@@ -86,7 +86,7 @@ Return as JSON array:
         try:
             response = await simple_llm_call_async(
                 prompt=prompt,
-                model="gpt-4o-mini",
+                model="qwen/qwen3-next-80b-a3b-instruct",  # Use NVIDIA NIM
                 system_message=self.system_prompts["question_generator"],
                 temperature=0.7
             )
@@ -169,7 +169,7 @@ Keep it warm and conversational."""
         try:
             response = await simple_llm_call_async(
                 prompt=prompt,
-                model="gpt-4o-mini",
+                model="qwen/qwen3-next-80b-a3b-instruct",
                 system_message=self.system_prompts["conversation_guide"],
                 temperature=0.7
             )
@@ -220,7 +220,7 @@ Keep it friendly and professional."""
         try:
             response = await simple_llm_call_async(
                 prompt=prompt,
-                model="gpt-4o-mini",
+                model="qwen/qwen3-next-80b-a3b-instruct",
                 system_message=self.system_prompts["conversation_guide"],
                 temperature=0.7
             )
@@ -250,7 +250,7 @@ If complete, acknowledge it. If not, suggest 1-2 specific follow-up questions.""
         try:
             response = await simple_llm_call_async(
                 prompt=prompt,
-                model="gpt-4o-mini",
+                model="qwen/qwen3-next-80b-a3b-instruct",
                 system_message=self.system_prompts["answer_enhancer"],
                 temperature=0.5
             )
@@ -287,8 +287,11 @@ If complete, acknowledge it. If not, suggest 1-2 specific follow-up questions.""
         tags = list(set([qa['category'] for qa in qa_pairs]))
 
         # Calculate rating based on answer quality (simple heuristic)
-        avg_length = sum(len(qa['answer']) for qa in qa_pairs) / len(qa_pairs)
-        rating = min(5, max(3, int(avg_length / 50) + 3))  # 3-5 stars based on detail
+        if len(qa_pairs) > 0:
+            avg_length = sum(len(qa['answer']) for qa in qa_pairs) / len(qa_pairs)
+            rating = min(5, max(3, int(avg_length / 50) + 3))  # 3-5 stars based on detail
+        else:
+            rating = 3  # Default rating
 
         return {
             "meetingId": meeting_id,
@@ -300,8 +303,240 @@ If complete, acknowledge it. If not, suggest 1-2 specific follow-up questions.""
             "rating": rating,
             "followUp": any("follow" in qa['answer'].lower() or "next step" in qa['answer'].lower() for qa in qa_pairs),
             "structured_qa": qa_pairs,  # Store the structured Q&A for editing
-            "timestamp": datetime.utcnow().isoformat()
+            # Don't set timestamp - let SQLAlchemy handle it with default=datetime.utcnow
         }
+
+    async def analyze_and_categorize_insights(
+        self,
+        qa_pairs: List[Dict],
+        startup_data: Dict,
+        axa_evaluation: Dict,
+        user_info: Dict
+    ) -> Dict[str, List[Dict]]:
+        """
+        Analyze meeting Q&A and extract whitepaper-ready insights for each relevant category.
+        
+        Returns insights grouped by category (1-10), with each insight being:
+        - Concise (1-2 phrases, 30-80 words)
+        - Insurance-focused
+        - Including metrics and evidence
+        """
+        
+        system_prompt = self._get_categorization_system_prompt()
+        user_prompt = self._build_categorization_prompt(qa_pairs, startup_data, axa_evaluation)
+        
+        try:
+            response = await simple_llm_call_async(
+                prompt=user_prompt,
+                system_message=system_prompt,
+                temperature=0.7,
+                use_nvidia_nim=True
+            )
+            
+            # Clean response - remove markdown code blocks if present
+            response_text = response.strip()
+            if response_text.startswith('```json'):
+                response_text = response_text[7:]
+            if response_text.startswith('```'):
+                response_text = response_text[3:]
+            if response_text.endswith('```'):
+                response_text = response_text[:-3]
+            response_text = response_text.strip()
+            
+            # Parse and validate response
+            categorized = json.loads(response_text)
+            
+            # Add user info to each insight
+            for category in categorized.values():
+                for insight in category:
+                    insight['user_name'] = user_info.get('name', 'Unknown')
+                    insight['user_email'] = user_info.get('email', '')
+                    insight['user_id'] = user_info.get('id', '')
+            
+            return categorized
+            
+        except Exception as e:
+            print(f"Error in categorization: {e}")
+            # Fallback: create basic Category 10 insight
+            return {
+                "10": [{
+                    "title": f"Meeting with {startup_data.get('name', 'Startup')}",
+                    "insight": self._create_fallback_insight(qa_pairs, startup_data),
+                    "insurance_relevance": "general",
+                    "metrics": [],
+                    "tags": [startup_data.get('name', 'Startup')],
+                    "confidence": 0.7,
+                    "evidence_source": "All Q&A",
+                    "user_name": user_info.get('name', 'Unknown'),
+                    "user_email": user_info.get('email', ''),
+                    "user_id": user_info.get('id', '')
+                }]
+            }
+    
+    def _get_categorization_system_prompt(self) -> str:
+        """System prompt for categorizing insights"""
+        return """You are an expert analyst creating whitepaper-ready insights for AXA's insurance AI report.
+
+CRITICAL REQUIREMENTS:
+1. CONCISE: Each insight must be 1-2 phrases (30-80 words maximum)
+2. INSURANCE-FOCUSED: Every insight must relate to insurance operations (claims, underwriting, customer service, risk assessment, fraud detection, compliance)
+3. ACTIONABLE: Provide concrete, specific information with metrics when available
+4. PROFESSIONAL: Authoritative tone suitable for executive whitepaper
+5. EVIDENCE-BASED: Ground insights in meeting data, don't speculate
+
+CATEGORY GUIDELINES:
+Only create insights for categories where there's meaningful, specific content from the meeting.
+Each category must clearly support the whitepaper section's goal.
+
+OUTPUT FORMAT (JSON):
+{
+  "1": [
+    {
+      "title": "Brief Title (5-8 words)",
+      "insight": "Concise 1-2 phrase insight (30-80 words)",
+      "insurance_relevance": "claims|underwriting|customer-service|risk-assessment|fraud-detection|compliance|operational-efficiency",
+      "metrics": ["95% accuracy", "80% cost reduction"],
+      "tags": ["GPT-4", "Claims", "Automation"],
+      "confidence": 0.9,
+      "evidence_source": "Q1 technical capabilities"
+    }
+  ],
+  "2": [...],
+  ...
+}
+
+QUALITY CRITERIA:
+- Minimum confidence: 0.7
+- Minimum insight length: 30 words
+- Must include clear insurance connection
+- Prefer insights with quantified metrics
+- Only include insights grounded in meeting data"""
+
+    def _build_categorization_prompt(self, qa_pairs: List[Dict], startup_data: Dict, axa_evaluation: Dict) -> str:
+        """Build user prompt with meeting data"""
+        
+        # Format Q&A
+        qa_text = "\n\n".join([
+            f"Q: {qa['question']}\nA: {qa['answer']}\nCategory: {qa['category']}"
+            for qa in qa_pairs
+        ])
+        
+        return f"""Extract whitepaper-ready insights from this meeting for AXA's insurance AI report.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MEETING TRANSCRIPT:
+{qa_text}
+
+STARTUP INFORMATION:
+• Name: {startup_data.get('name', 'Unknown')}
+• Description: {startup_data.get('description', 'N/A')}
+• Category: {startup_data.get('category', 'N/A')}
+• Funding: {startup_data.get('funding', 'Undisclosed')}
+• Technologies: {', '.join(startup_data.get('tech', []))}
+• Maturity: {startup_data.get('maturity', 'Unknown')}
+
+AXA EVALUATION:
+• Priority Score: {axa_evaluation.get('priority_score', 'N/A')}/100
+• Technical Score: {axa_evaluation.get('technical_score', 'N/A')}/100
+• Business Fit: {axa_evaluation.get('business_fit', 'N/A')}
+• Innovation Level: {axa_evaluation.get('innovation_level', 'N/A')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WHITEPAPER SECTIONS (Extract relevant insights for each):
+
+1. AI: Present and Future
+   Goal: Document AI evolution, foundation models, enterprise adoption
+   Extract: Foundation model mentions (GPT, Claude, Llama), AI capabilities, adoption metrics
+
+2. Agentic AI: The Forefront
+   Goal: Showcase autonomous AI systems revolutionizing insurance
+   Extract: Multi-agent systems, autonomous workflows, decision-making capabilities
+
+3. General Trends & Venture State
+   Goal: Capture market dynamics and funding patterns
+   Extract: Funding info, market trends, competitive landscape, growth metrics
+
+4. Other AXA Priorities
+   Goal: Document strategic focus areas
+   Extract: Health insurance, DeepTech (Quantum, Energy), HR, Sustainability
+
+5. AI Business Benefits & Adoption 2030
+   Goal: Quantify business impact and ROI
+   Extract: Cost savings, efficiency gains, ROI metrics, timeline projections (2025-2030)
+
+6. Tech & Ethical Choices
+   Goal: Guide technical and ethical decisions
+   Extract: Explainability, GDPR compliance, ethics, bias mitigation, security
+
+7. Make or Buy in Agentic AI Era
+   Goal: Provide strategic recommendations
+   Extract: Build vs buy analysis, integration complexity, partnership potential, time to value
+
+8. Talent and Culture
+   Goal: Team building and organizational insights
+   Extract: Team composition, skills, culture, expertise, organizational learnings
+
+9. Visionaries and Leaders
+   Goal: Capture leadership perspectives
+   Extract: Key people met, backgrounds, notable quotes, strategic vision
+
+10. Startups
+    Goal: Company profiles and partnership potential
+    Extract: Name, UVP, AXA-specific impact, next steps (pilot, POC, partnership)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EXTRACTION RULES:
+
+✅ DO:
+- Keep insights to 1-2 phrases (30-80 words)
+- Include specific metrics when mentioned in the meeting
+- Connect every insight to insurance operations
+- Use action verbs and concrete examples
+- Cite which Q&A provides the evidence
+- Only create insights with confidence > 0.7
+
+❌ DON'T:
+- Write long paragraphs or verbose explanations
+- Include vague or generic statements
+- Create insights without clear insurance relevance
+- Duplicate information across categories
+- Speculate beyond what was discussed in the meeting
+
+EXAMPLE HIGH-QUALITY INSIGHTS:
+
+Category 2 (Agentic AI):
+{{
+  "title": "Multi-Agent Claims Automation",
+  "insight": "Three specialized agents coordinate document extraction, fraud detection, and payment approval autonomously, reducing processing time from 5 days to 2 hours with 98% accuracy.",
+  "insurance_relevance": "claims",
+  "metrics": ["5 days to 2 hours", "98% accuracy", "3 agents"],
+  "tags": ["Multi-Agent", "Claims", "Automation"],
+  "confidence": 0.95,
+  "evidence_source": "Q1 technical architecture"
+}}
+
+Category 5 (Business Benefits):
+{{
+  "title": "Claims Cost Reduction Projection",
+  "insight": "80% processing cost reduction achievable by 2027, with early adopter pilots showing 60% improvement within 6 months of deployment.",
+  "insurance_relevance": "operational-efficiency",
+  "metrics": ["80% cost reduction", "60% in 6 months", "2027"],
+  "tags": ["ROI", "Cost-Savings", "Timeline"],
+  "confidence": 0.88,
+  "evidence_source": "Q2 business value discussion"
+}}
+
+Now extract whitepaper-ready insights from the meeting data above. Focus on insurance-relevant, concise, actionable insights with clear evidence from the meeting.
+
+IMPORTANT: Return ONLY valid JSON in the exact format specified above. No markdown, no code blocks, just the JSON object."""
+
+    def _create_fallback_insight(self, qa_pairs: List[Dict], startup_data: Dict) -> str:
+        """Create a basic insight if categorization fails"""
+        answers = " ".join([qa['answer'][:100] for qa in qa_pairs])
+        return f"{startup_data.get('name', 'Startup')} discussed: {answers[:150]}..."
 
 
 # Global instance

@@ -22,6 +22,13 @@ const defaultTheme = {
       coarse: { raw: "(pointer: coarse)" },
       fine: { raw: "(pointer: fine)" },
       pwa: { raw: "(display-mode: standalone)" },
+      'xs': '320px',
+      'sm': '375px',
+      'md': '640px',
+      'lg': '768px',
+      'xl': '1024px',
+      'landscape': { 'raw': '(orientation: landscape)' },
+      'touch': { 'raw': '(hover: none) and (pointer: coarse)' },
     },
     colors: {
       neutral: {
@@ -137,6 +144,15 @@ const defaultTheme = {
     72: "var(--size-72)",
     80: "var(--size-80)",
     96: "var(--size-96)",
+  },
+  spacing: {
+    'safe-top': 'env(safe-area-inset-top)',
+    'safe-bottom': 'env(safe-area-inset-bottom)',
+    'safe-left': 'env(safe-area-inset-left)',
+    'safe-right': 'env(safe-area-inset-right)',
+  },
+  width: {
+    'card-max': 'var(--card-max-width)',
   },
   darkMode: ["selector", '[data-appearance="dark"]'],
 }

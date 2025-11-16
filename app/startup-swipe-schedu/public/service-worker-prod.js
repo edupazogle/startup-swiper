@@ -1,12 +1,5 @@
-/* eslint-disable no-restricted-globals */
-/**
- * Service Worker for Push Notifications
- * Handles background push notifications and deep linking
- * PRODUCTION ONLY - Not used in development
- */
-
-// Only activate in production
-if (process.env.NODE_ENV === 'production') {
+// Removed: Service worker disabled intentionally
+if (false) {
   const CACHE_NAME = 'slush-2025-v1';
   const urlsToCache = [
     '/',
@@ -44,11 +37,21 @@ if (process.env.NODE_ENV === 'production') {
 
   // Fetch event - serve from cache when offline
   self.addEventListener('fetch', (event) => {
-    // Skip caching for API requests
-    if (event.request.url.includes('/api/') || event.request.url.includes(':8000')) {
+    const url = new URL(event.request.url);
+    
+    // Skip service worker entirely for API requests
+    // This allows CORS headers to work properly
+    if (url.port === '8000' || 
+        url.hostname.includes('localhost') && url.port === '8000' ||
+        event.request.url.includes('/api/') || 
+        event.request.url.includes(':8000') ||
+        event.request.url.includes('/feedback/') ||
+        event.request.url.includes('/insights/')) {
+      // Don't intercept - let browser handle it normally
       return;
     }
     
+    // Only cache non-API requests (static assets, pages, etc.)
     event.respondWith(
       caches.match(event.request)
         .then((response) => {
@@ -57,8 +60,12 @@ if (process.env.NODE_ENV === 'production') {
             return response;
           }
           return fetch(event.request);
-        }
-      )
+        })
+        .catch((error) => {
+          console.error('Service worker fetch error:', error);
+          // Fallback to network on error
+          return fetch(event.request);
+        })
     );
   });
 

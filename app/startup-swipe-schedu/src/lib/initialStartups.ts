@@ -32,6 +32,7 @@ export const initialStartups: Omit<Startup, 'id'>[] = allStartups.map((startup: 
   billingCountry: startup.billingCountry || undefined,
   dateFounded: startup.dateFounded || undefined,
   currentInvestmentStage: startup.currentInvestmentStage || 'Undisclosed',
+  funding_stage: startup.funding_stage || undefined,
   "Company Name": startup.name || '',
   "Company Description": startup.description || '',
   "Category": startup.category || startup.topics?.[0] || undefined,

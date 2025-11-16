@@ -44,3 +44,4 @@ coverage/
 # Deployment
 .vercel/
 .railway/
+docs/startups_export.json

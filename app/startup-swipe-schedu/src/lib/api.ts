@@ -21,6 +21,7 @@ export interface ApiStartup {
   logoUrl?: string
   totalFunding?: number
   currentInvestmentStage?: string
+  funding_stage?: string
   employees?: string
   [key: string]: any
 }
@@ -137,6 +138,45 @@ class ApiService {
     )
   }
 
+  async getPhase1Startups(userId: string) {
+    return this.fetchJson<{
+      startups: ApiStartup[]
+      phase: number
+      total_count: number
+      phase_transition_at: number
+      description: string
+    }>(
+      `/startups/phase1?user_id=${encodeURIComponent(userId)}`
+    )
+  }
+
+  async getPhase2Startups(userId: string, excludeIds?: string[]) {
+    const params = new URLSearchParams({
+      user_id: userId,
+      diversity_ratio: '0.3',
+      limit: '100'
+    })
+    if (excludeIds && excludeIds.length > 0) {
+      params.append('exclude_ids', excludeIds.join(','))
+    }
+    return this.fetchJson<{
+      startups: ApiStartup[]
+      phase: number
+      total_count: number
+      breakdown: {
+        preference_based: number
+        diverse: number
+      }
+      recommendation_data: {
+        topics: string[]
+        maturity_levels: Record<string, number>
+        categories: string[]
+      }
+    }>(
+      `/startups/phase2?${params.toString()}`
+    )
+  }
+
   async getEnrichmentStats() {
     return this.fetchJson<{
       total_startups: number
@@ -173,6 +213,13 @@ class ApiService {
   async createIdea(idea: Omit<ApiIdea, 'id'>) {
     return this.fetchJson<ApiIdea>('/ideas/', {
       method: 'POST',
+      body: JSON.stringify(idea),
+    })
+  }
+
+  async updateIdea(id: number, idea: Omit<ApiIdea, 'id'>) {
+    return this.fetchJson<ApiIdea>(`/ideas/${id}`, {
+      method: 'PUT',
       body: JSON.stringify(idea),
     })
   }
@@ -252,6 +299,18 @@ class ApiService {
         colors: string[]
       }>
     }>('/api/auroral-themes')
+  }
+
+  // AI Insights
+  async generateAIInsights(companyName: string) {
+    return this.fetchJson<{
+      success: boolean
+      company_name: string
+      insights: any
+      generated_at?: string
+    }>(`/startups/generate-ai-insights?company_name=${encodeURIComponent(companyName)}`, {
+      method: 'POST'
+    })
   }
 }
 

@@ -1,0 +1,47 @@
+/* Design Tokens - Single Source of Truth */
+/* 8px Grid System (Market Standard) */
+
+:root {
+  /* SPACING - 8px grid system */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* VIEWPORT COMPONENTS */
+  --header-height: 70px;
+  --nav-height-mobile: 64px;
+  --nav-height-desktop: 60px;
+  --card-max-width: 440px;
+
+  /* SAFE AREA (for notched devices - iPhone X+, Dynamic Island) */
+  --safe-top: max(0px, env(safe-area-inset-top));
+  --safe-bottom: max(0px, env(safe-area-inset-bottom));
+  --safe-left: max(0px, env(safe-area-inset-left));
+  --safe-right: max(0px, env(safe-area-inset-right));
+}
+
+/* TABLET BREAKPOINT */
+@media (max-width: 640px) {
+  :root {
+    --header-height: 60px;
+    --nav-height-mobile: 56px;
+  }
+}
+
+/* SMALL PHONE BREAKPOINT */
+@media (max-width: 375px) {
+  :root {
+    --header-height: 55px;
+    --nav-height-mobile: 52px;
+  }
+}
+
+/* TINY PHONE BREAKPOINT */
+@media (max-width: 320px) {
+  :root {
+    --header-height: 50px;
+    --nav-height-mobile: 48px;
+  }
+}

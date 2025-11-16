@@ -93,7 +93,8 @@ async def test_startup_search_with_context():
         print(f"  Company: {startup.get('name')}")
         print(f"  Website: {startup.get('website')}")
         print(f"  Industry: {startup.get('industry')}")
-        print(f"  Total Funding: ${startup.get('totalFunding', 'N/A')}M")
+        if startup.get('total_funding'):
+            print(f"  Total Funding (CB Insights): ${startup.get('total_funding')}M")
         print(f"  Current Stage: {startup.get('stage')}")
         print(f"  Location: {startup.get('location')}")
         print(f"  Description: {startup.get('description', 'N/A')[:150]}...")

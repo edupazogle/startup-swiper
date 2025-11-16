@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, JSON, Text
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, JSON, Text, Float
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 
@@ -213,3 +213,107 @@ class Attendee(Base):
     profile_link = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class CategorizedInsight(Base):
+    """
+    Whitepaper-ready insights extracted from meeting feedback.
+    Each insight is 1-2 phrases, insurance-focused, and categorized into one of 10 whitepaper sections.
+    """
+    __tablename__ = "categorized_insights"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    
+    # Meeting context
+    meeting_id = Column(String, index=True)
+    startup_id = Column(String, index=True)
+    startup_name = Column(String)
+    
+    # Contributor info (for avatar display)
+    user_id = Column(String, index=True)
+    user_name = Column(String)
+    user_email = Column(String)  # To get avatar from email hash
+    
+    # Category and content
+    category = Column(String, index=True)  # "1" through "10"
+    title = Column(String)  # Brief title (5-8 words)
+    insight = Column(Text)  # The 1-2 phrase insight (30-80 words)
+    
+    # Insurance context
+    insurance_relevance = Column(String)  # claims, underwriting, customer-service, etc
+    metrics = Column(JSON)  # List of quantified metrics mentioned
+    
+    # Metadata
+    tags = Column(JSON)  # List of tags
+    confidence_score = Column(Float, default=0.8)
+    evidence_source = Column(String)  # Which Q&A this came from
+    
+    # Editability tracking
+    is_edited = Column(Boolean, default=False)
+    edited_at = Column(DateTime, nullable=True)
+    original_insight = Column(Text, nullable=True)  # Keep original for comparison
+    
+    # Relations
+    feedback_session_id = Column(Integer, index=True)
+    
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class MeetingPrepOutline(Base):
+    """
+    Stored meeting preparation outlines with talking points and critical questions.
+    """
+    __tablename__ = "meeting_prep_outlines"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    startup_id = Column(String, index=True)
+    startup_name = Column(String)
+    user_id = Column(String, index=True)
+    
+    # The complete outline
+    outline = Column(Text)
+    
+    # Parsed sections
+    talking_points = Column(JSON)  # List of {title, description}
+    critical_questions = Column(JSON)  # List of {title, question}
+    whitepaper_relevance = Column(JSON)  # Dict of section -> relevance
+    
+    # Metadata
+    generated_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class DebriefSession(Base):
+    """
+    Tracks debrief conversations between analyst and insights agent.
+    """
+    __tablename__ = "debrief_sessions"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    session_id = Column(String, unique=True, index=True)
+    
+    startup_id = Column(String, index=True)
+    startup_name = Column(String)
+    user_id = Column(String, index=True)
+    
+    # Meeting prep reference
+    meeting_prep_id = Column(Integer, nullable=True)
+    
+    # Conversation history
+    conversation_history = Column(JSON)  # List of {role, content, timestamp}
+    
+    # Agent questions asked
+    questions_asked = Column(JSON)  # List of 3 questions asked by agent
+    
+    # Analyst ratings and feedback
+    ratings = Column(JSON)  # {question_index: rating_1_to_5}
+    final_notes = Column(Text, nullable=True)
+    
+    # Status
+    status = Column(String, default="in_progress")  # in_progress, awaiting_feedback, completed
+    
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    completed_at = Column(DateTime, nullable=True)

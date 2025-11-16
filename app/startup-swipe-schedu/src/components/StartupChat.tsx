@@ -1,12 +1,13 @@
-import { useState, useRef, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { ChatMessage } from '@/lib/types'
+import { useState, useEffect } from 'react'
+import { useKV } from '@/lib/useKV'
+import { ChatMessage as ChatMessageType } from '@/lib/types'
 import { Startup } from '@/lib/types'
-import { PaperPlaneRight, Robot, User } from '@phosphor-icons/react'
+import { Sparkle, Briefcase, Users, Calendar } from '@phosphor-icons/react'
+import { ConciergeChatHeader } from './ConciergeChatHeader'
+import { ChatMessageList, Message } from './ChatMessageList'
+import { ChatInputArea } from './ChatInputArea'
+import { QuickActionsBar, QuickAction } from './QuickActionsBar'
+import { formatMessageTime, deduplicateMessages } from '@/lib/chatUtils'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -15,34 +16,33 @@ interface StartupChatProps {
 }
 
 export function StartupChat({ startup }: StartupChatProps) {
-  const [messages, setMessages] = useKV<ChatMessage[]>('ai-assistant-messages', [])
+  const [messages, setMessages] = useKV<ChatMessageType[]>('ai-assistant-messages', [])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const scrollRef = useRef<HTMLDivElement>(null)
 
   const displayName = startup ? (startup.name || startup["Company Name"] || 'Unknown Startup') : 'Slush 2025'
+  const subtitle = startup ? `Ask about ${displayName}` : 'Your Slush 2025 companion'
 
+  // Initialize with welcome message
   useEffect(() => {
-    if ((!messages || messages.length === 0)) {
+    if (!messages || messages.length === 0) {
+      const welcomeMessage = startup
+        ? `I'm here to help you dive deep into ${displayName}. Whether you need competitive intelligence, market insights, team analysis, or strategic guidance, I can help you make the most of your Slush connections.`
+        : `I'm your intelligent companion for Slush 2025. I can help you navigate the event, discover amazing startups, connect with people, and stay on top of what's happening.`;
+
       setMessages([{
         id: '1',
         role: 'assistant',
-        content: `Hi! I'm your AI Concierge for Slush 2025, powered by NVIDIA NIM. ${startup ? `I can help you learn more about ${displayName}. Ask me anything about their business model, funding, team, technology, or market position.` : `Ask me about startups, meetings, schedules, or anything about the event! I have access to the startup database and can search by industry, location, funding, and more.`}`,
+        content: welcomeMessage,
         timestamp: Date.now()
       }])
     }
   }, [])
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
-    }
-  }, [messages])
-
-  const handleSend = async () => {
+  const handleSend = async (retryCount = 0, maxRetries = 2) => {
     if (!input.trim() || isLoading) return
 
-    const userMessage: ChatMessage = {
+    const userMessage: ChatMessageType = {
       id: Date.now().toString(),
       role: 'user',
       content: input.trim(),
@@ -55,8 +55,8 @@ export function StartupChat({ startup }: StartupChatProps) {
 
     try {
       let question = userMessage.content
-      
-      // Add startup context to the question if viewing a specific startup
+
+      // Add startup context if viewing a specific startup
       if (startup) {
         const startupContext = `
 Company: ${displayName}
@@ -71,14 +71,12 @@ Employees: ${startup.employees || 'N/A'}
 Founded: ${startup.dateFounded ? new Date(startup.dateFounded).getFullYear() : 'N/A'}
         `.trim()
 
-        question = `Based on this startup information:
-
-${startupContext}
-
-Answer this question: ${userMessage.content}`
+        question = `Based on this startup information:\n\n${startupContext}\n\nAnswer this question: ${userMessage.content}`
       }
 
-      // Call the backend concierge API with NVIDIA NIM
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 30000) // 30s timeout
+
       const response = await fetch(`${API_URL}/concierge/ask`, {
         method: 'POST',
         headers: {
@@ -87,16 +85,24 @@ Answer this question: ${userMessage.content}`
         body: JSON.stringify({
           question: question,
           user_context: startup ? { startup_name: displayName } : null
-        })
+        }),
+        signal: controller.signal
       })
 
+      clearTimeout(timeout)
+
       if (!response.ok) {
+        if (response.status >= 500 && retryCount < maxRetries) {
+          // Retry on server errors
+          setTimeout(() => handleSend(retryCount + 1, maxRetries), 1000 * (retryCount + 1))
+          return
+        }
         throw new Error(`API error: ${response.status}`)
       }
 
       const data = await response.json()
 
-      const assistantMessage: ChatMessage = {
+      const assistantMessage: ChatMessageType = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: data.answer || 'I apologize, but I could not generate a response.',
@@ -106,10 +112,20 @@ Answer this question: ${userMessage.content}`
       setMessages((prev) => [...(prev || []), assistantMessage])
     } catch (error) {
       console.error('Error getting AI response:', error)
-      const errorMessage: ChatMessage = {
+      
+      let errorContent = 'Sorry, I encountered an error. Please try again.'
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          errorContent = 'Request timed out. Please try again.'
+        } else if (error.message.includes('Failed to fetch')) {
+          errorContent = 'Network error. Please check your connection and try again.'
+        }
+      }
+      
+      const errorMessage: ChatMessageType = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Sorry, I encountered an error connecting to the AI assistant. Please try again.',
+        content: errorContent,
         timestamp: Date.now()
       }
       setMessages((prev) => [...(prev || []), errorMessage])
@@ -118,129 +134,160 @@ Answer this question: ${userMessage.content}`
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
+  const handleQuickAction = async (actionLabel: string, retryCount = 0, maxRetries = 2) => {
+    // Reset chat
+    setMessages([])
+    setInput('')
+    setIsLoading(true)
+
+    const actionQueries: { [key: string]: string } = {
+      'LinkedIn': 'I want to write a LinkedIn post about my Slush experience',
+      'Startups': 'Help me discover startups at Slush',
+      'People': 'Help me find the right people to connect with',
+      'Calendar': 'Help me navigate the Slush calendar and find key events'
     }
-  }
 
-  const quickQuestions = startup ? [
-    'What is their business model?',
-    'Who are their competitors?',
-    'What makes them unique?',
-    'What is their market opportunity?'
-  ] : [
-    'What meetings do I have today?',
-    'What startups should I prioritize?',
-    'Tell me about the Slush schedule',
-    'What are the key AI trends?'
-  ]
+    const query = actionQueries[actionLabel] || actionLabel
 
-  const handleQuickQuestion = (question: string) => {
-    setInput(question)
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 30000)
+
+      const response = await fetch(`${API_URL}/concierge/ask`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: query,
+          user_context: startup ? { startup_name: displayName } : null
+        }),
+        signal: controller.signal
+      })
+
+      clearTimeout(timeout)
+
+      if (!response.ok) {
+        if (response.status >= 500 && retryCount < maxRetries) {
+          setTimeout(() => handleQuickAction(actionLabel, retryCount + 1, maxRetries), 1000 * (retryCount + 1))
+          return
+        }
+        throw new Error(`API error: ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      const assistantMessage: ChatMessageType = {
+        id: '1',
+        role: 'assistant',
+        content: data.answer || 'I apologize, but I could not generate a response.',
+        timestamp: Date.now()
+      }
+
+      setMessages([assistantMessage])
+    } catch (error) {
+      console.error('Error getting AI response:', error)
+      
+      let errorContent = 'Sorry, I encountered an error. Please try again.'
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          errorContent = 'Request timed out. Please try again.'
+        } else if (error.message.includes('Failed to fetch')) {
+          errorContent = 'Network error. Please check your connection and try again.'
+        }
+      }
+      
+      const errorMessage: ChatMessageType = {
+        id: '1',
+        role: 'assistant',
+        content: errorContent,
+        timestamp: Date.now()
+      }
+      setMessages([errorMessage])
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const safeMessages = messages || []
 
+  // Convert messages to display format and deduplicate
+  const displayMessages: Message[] = deduplicateMessages(safeMessages).map(msg => ({
+    id: msg.id,
+    role: msg.role,
+    content: msg.content,
+    timestamp: formatMessageTime(msg.timestamp)
+  }))
+
+  // Quick actions with icons
+  const quickActions: QuickAction[] = [
+    {
+      id: 'linkedin',
+      label: 'LinkedIn',
+      icon: <Briefcase size={14} weight="duotone" />,
+      onClick: () => handleQuickAction('LinkedIn'),
+      description: 'Write posts'
+    },
+    {
+      id: 'startups',
+      label: 'Startups',
+      icon: <Sparkle size={14} weight="duotone" />,
+      onClick: () => handleQuickAction('Startups'),
+      description: 'Discover'
+    },
+    {
+      id: 'people',
+      label: 'People',
+      icon: <Users size={14} weight="duotone" />,
+      onClick: () => handleQuickAction('People'),
+      description: 'Network'
+    },
+    {
+      id: 'calendar',
+      label: 'Calendar',
+      icon: <Calendar size={14} weight="duotone" />,
+      onClick: () => handleQuickAction('Calendar'),
+      description: 'Events'
+    }
+  ]
+
   return (
-    <div className="h-full flex flex-col p-4">
-      <div className="flex items-center gap-2 mb-3">
-        <div className="w-8 h-8 bg-accent/10 rounded-md flex items-center justify-center">
-          <Robot size={18} weight="duotone" className="text-accent" />
-        </div>
-        <div>
-          <h3 className="text-sm font-semibold text-foreground">AI Assistant</h3>
-          <p className="text-xs text-muted-foreground">{startup ? `Ask about ${displayName}` : 'Your Slush 2025 companion'}</p>
-        </div>
+    <div className="h-full w-full flex flex-col bg-white/5 backdrop-blur-sm rounded-none md:rounded-lg border-0 md:border border-white/10 overflow-hidden">
+      <ConciergeChatHeader
+        title="AI Concierge"
+        subtitle={subtitle}
+        icon={<Sparkle size={20} weight="duotone" className="text-purple-500" />}
+      />
+
+      <ChatMessageList
+        messages={displayMessages}
+        isLoading={isLoading}
+        showThinkingBubble={true}
+        emptyStateMessage={
+          <div className="space-y-2">
+            <p className="font-medium text-sm sm:text-base">Start your conversation</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Ask me anything about Slush or{startup ? ` about ${displayName}` : ''}</p>
+          </div>
+        }
+      />
+
+      <div className="flex-shrink-0 px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 border-t border-border bg-background/95 backdrop-blur-sm">
+        <QuickActionsBar
+          actions={quickActions}
+          isVisible={true}
+          columns={2}
+        />
       </div>
 
-      <Card className="flex-1 flex flex-col min-h-0 overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-3" ref={scrollRef}>
-          <div className="space-y-3">
-            {safeMessages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex gap-2 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                {message.role === 'assistant' && (
-                  <div className="w-6 h-6 bg-accent/10 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Robot size={14} weight="duotone" className="text-accent" />
-                  </div>
-                )}
-                
-                <div
-                  className={`max-w-[80%] rounded-md px-3 py-2 text-sm ${
-                    message.role === 'user'
-                      ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
-                      : 'bg-muted text-foreground'
-                  }`}
-                >
-                  <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
-                </div>
-
-                {message.role === 'user' && (
-                  <div className="w-6 h-6 bg-primary/10 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <User size={14} weight="duotone" className="text-primary" />
-                  </div>
-                )}
-              </div>
-            ))}
-            
-            {isLoading && (
-              <div className="flex gap-2 justify-start">
-                <div className="w-6 h-6 bg-accent/10 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Robot size={14} weight="duotone" className="text-accent" />
-                </div>
-                <div className="bg-muted rounded-md px-3 py-2">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {safeMessages.length === 1 && (
-          <div className="p-3 border-t border-border">
-            <p className="text-xs text-muted-foreground mb-2">Quick questions:</p>
-            <div className="flex flex-wrap gap-1.5">
-              {quickQuestions.map((question, idx) => (
-                <Badge
-                  key={idx}
-                  variant="outline"
-                  className="cursor-pointer hover:bg-accent/10 transition-colors text-xs"
-                  onClick={() => handleQuickQuestion(question)}
-                >
-                  {question}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="p-3 border-t border-border flex gap-2">
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Ask a question..."
-            className="flex-1 text-sm"
-            disabled={isLoading}
-          />
-          <Button
-            onClick={handleSend}
-            disabled={!input.trim() || isLoading}
-            size="icon"
-            className="flex-shrink-0"
-          >
-            <PaperPlaneRight size={16} weight="bold" />
-          </Button>
-        </div>
-      </Card>
+      <div className="flex-shrink-0">
+        <ChatInputArea
+          value={input}
+          onChange={setInput}
+          onSubmit={handleSend}
+          isLoading={isLoading}
+          placeholder="Ask a question..."
+        />
+      </div>
     </div>
   )
 }
