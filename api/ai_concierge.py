@@ -462,14 +462,49 @@ Please provide a helpful and comprehensive answer based on the available informa
         """
         Ask clarifying questions for LinkedIn post requests
         This helps gather context about what the user wants to write about
+        Intelligently searches the startup database for relevant companies
         
         Args:
             question: The original LinkedIn post request
             
         Returns:
-            Response with clarifying questions for the user
+            Response with clarifying questions incorporating database context
         """
-        system_message = """You are a helpful LinkedIn content strategist. 
+        # Extract potential startup/company names from the question
+        startup_context = ""
+        mentioned_startups = []
+        
+        # Try to find startups mentioned in the question
+        words = question.split()
+        keywords_to_skip = {"write", "post", "linkedin", "help", "me", "a", "about", "on", "for", "the", "to", "create", "generate", "can", "you", "i", "want", "would", "like", "please"}
+        
+        potential_company_names = [word.strip('.,!?') for word in words if word.lower() not in keywords_to_skip and len(word) > 2]
+        
+        # Search database for mentioned startups
+        for company_name in potential_company_names:
+            results = self.startup_loader.search_startups(company_name, limit=3)
+            if results:
+                for result in results:
+                    startup_name = result.get('name', 'Unknown')
+                    industry = result.get('categories', [])
+                    if industry and isinstance(industry, list) and len(industry) > 0:
+                        industry_str = industry[0].get('name') if isinstance(industry[0], dict) else str(industry[0])
+                    else:
+                        industry_str = "N/A"
+                    mentioned_startups.append({
+                        'name': startup_name,
+                        'industry': industry_str,
+                        'original_query': company_name
+                    })
+        
+        # Build context about found startups
+        if mentioned_startups:
+            startup_context = "\n\nI found these relevant startups in our database:\n"
+            for startup in mentioned_startups:
+                startup_context += f"- **{startup['name']}** ({startup['industry']})\n"
+            startup_context += "\nWould any of these be relevant to mention?"
+        
+        system_message = """You are a helpful LinkedIn content strategist and startup expert. 
 When a user asks to write a LinkedIn post, you should ask clarifying questions to understand:
 1. What specific topic or subject they want to write about
 2. Whether it's about a specific startup, event, or announcement
@@ -477,16 +512,17 @@ When a user asks to write a LinkedIn post, you should ask clarifying questions t
 4. Any specific companies, people, or events to mention
 
 Ask these questions in a conversational, friendly manner. Be specific and helpful.
+If relevant startups have been identified in the database, mention them naturally in your questions.
 Format your response as a series of clear, actionable questions."""
         
         user_prompt = f"""The user has asked: "{question}"
+{startup_context}
 
 Please ask me clarifying questions to help write a great LinkedIn post. 
 I want to understand:
 - What they want to focus on (startup announcement, thought leadership, event recap, etc.)
-- Any specific startups, companies, or people to mention
+- Any specific startups, companies, or people to mention (use the found startups if relevant)
 - Key points or messages to include
-- Any links or resources to reference
 - The tone and target audience
 
 Make the questions conversational and not overwhelming - ask 3-4 key questions."""
@@ -501,11 +537,12 @@ Make the questions conversational and not overwhelming - ask 3-4 key questions."
                 messages=messages,
                 model=None,  # Use NVIDIA NIM default
                 temperature=0.7,
-                max_tokens=800,
+                max_tokens=1000,
                 use_nvidia_nim=True,
                 metadata={
                     "feature": "ai_concierge",
-                    "question_type": "linkedin_clarification"
+                    "question_type": "linkedin_clarification",
+                    "startups_found": len(mentioned_startups)
                 }
             )
             
@@ -513,18 +550,26 @@ Make the questions conversational and not overwhelming - ask 3-4 key questions."
         except Exception as e:
             logger.error(f"Error in LinkedIn clarification: {e}")
             # Fallback response with manual questions
-            return """Great! I'd love to help you write a compelling LinkedIn post. 
+            fallback = """Great! I'd love to help you write a compelling LinkedIn post. 
 To create the perfect post, please tell me:
 
 1️⃣ **Topic/Focus**: What's the main topic or subject? (e.g., "AI in insurance", "Our Series A announcement", "Takeaways from Slush 2025")
 
-2️⃣ **Context**: Is this about a specific startup, event, or general thought leadership? Any key companies or people to mention?
+2️⃣ **Companies/Startups**: Is this about a specific startup, company, or industry? Any key companies or people to mention?
 
 3️⃣ **Key Points**: What are 2-3 key points or messages you want to get across?
 
-4️⃣ **Links/Resources**: Do you have any articles, reports, or links to reference?
+4️⃣ **Tone**: What's your preferred tone - casual and engaging, or professional and data-driven?
 
 Once you provide these details, I'll generate a professional LinkedIn post with your VC partner perspective! 🚀"""
+            
+            if mentioned_startups:
+                fallback += f"\n\nBy the way, I found these relevant startups in our database:\n"
+                for startup in mentioned_startups:
+                    fallback += f"- **{startup['name']}** ({startup['industry']})\n"
+                fallback += "Feel free to mention any of these in your post!"
+            
+            return fallback
     
     async def _add_directions_context(self, question: str, context_parts: List[str]):
         """Add directions context for location-based questions"""

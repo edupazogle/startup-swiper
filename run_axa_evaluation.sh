@@ -33,9 +33,9 @@ fi
 echo -e "${GREEN}✓ Virtual environment activated${NC}"
 echo ""
 
-# Run the evaluator
+# Run the fast evaluator
 cd api
-python3 axa_comprehensive_evaluator.py "$@"
+python3 axa_comprehensive_evaluator_fast.py "$@"
 
 echo ""
 echo -e "${GREEN}✓ Evaluation complete!${NC}"
