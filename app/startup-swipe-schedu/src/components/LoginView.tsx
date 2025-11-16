@@ -15,40 +15,31 @@ export function LoginView({ onLogin }: LoginViewProps) {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  // Test credentials
-  const validCredentials = {
-    'nicolas.desaintromain@axa.com': '123',
-    'alice.jin@axa-uk.co.uk': '123',
-    'josep-oriol.ayats@axa.com': '123',
-    'wolfgang.sachsenhofer@axa.ch': '123',
-  }
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      // Validate credentials
-      const validPasswords = Object.entries(validCredentials).find(
-        ([validEmail]) => validEmail.toLowerCase() === email.toLowerCase()
-      )
+      // Call the actual API
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
 
-      if (!validPasswords) {
-        toast.error('Invalid email address')
+      if (!response.ok) {
+        const error = await response.json()
+        toast.error(error.detail || 'Invalid credentials')
         setIsLoading(false)
         return
       }
 
-      const [, validPassword] = validPasswords
-
-      if (password !== validPassword) {
-        toast.error('Invalid password')
-        setIsLoading(false)
-        return
-      }
-
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 500))
+      const data = await response.json()
+      
+      // Store token
+      localStorage.setItem('access_token', data.access_token)
 
       // Extract name from email
       const name = email.split('@')[0].split('.').map(part => 
@@ -58,7 +49,7 @@ export function LoginView({ onLogin }: LoginViewProps) {
       toast.success(`Welcome, ${name}!`)
       onLogin(email, name)
     } catch (error) {
-      toast.error('Login failed')
+      toast.error('Login failed. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -121,8 +112,9 @@ export function LoginView({ onLogin }: LoginViewProps) {
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-2"
+              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 touch-manipulation"
               disabled={isLoading}
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               {isLoading ? 'Logging in...' : 'Login'}
             </Button>
@@ -130,12 +122,9 @@ export function LoginView({ onLogin }: LoginViewProps) {
 
           {/* Test Credentials Info */}
           <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-lg">
-            <p className="text-xs text-white/60 mb-2 font-semibold">Test Credentials:</p>
+            <p className="text-xs text-white/60 mb-2 font-semibold">Available Credentials:</p>
             <div className="space-y-1 text-xs text-white/50 font-mono">
-              <p>nicolas.desaintromain@axa.com / 123</p>
-              <p>alice.jin@axa-uk.co.uk / 123</p>
-              <p>josep-oriol.ayats@axa.com / 123</p>
-              <p>wolfgang.sachsenhofer@axa.ch / 123</p>
+              <p>eduardo.paz@axa.com / 123</p>
             </div>
           </div>
 
