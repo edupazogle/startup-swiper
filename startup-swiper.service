@@ -1,0 +1,22 @@
+[Unit]
+Description=Startup Swiper Platform
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/startup-swiper
+ExecStart=/var/www/startup-swiper/launch-resilient.sh start
+ExecStop=/var/www/startup-swiper/launch-resilient.sh stop
+Restart=always
+RestartSec=10
+StandardOutput=append:/var/log/startup-swiper/service.log
+StandardError=append:/var/log/startup-swiper/service-error.log
+
+# Environment
+Environment="PATH=/var/www/startup-swiper/.venv/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="API_PORT=8000"
+Environment="FRONTEND_PORT=5000"
+
+[Install]
+WantedBy=multi-user.target

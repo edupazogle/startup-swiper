@@ -1,0 +1,85 @@
+name: Deploy Static App to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          cd app/startup-swipe-schedu
+          npm install
+
+      - name: Build for GitHub Pages (Static/Offline Mode)
+        run: |
+          cd app/startup-swipe-schedu
+          npm run build
+        env:
+          # Empty API URL means use local storage only
+          VITE_API_URL: ''
+          VITE_BASE_PATH: /startup-swiper/
+          VITE_OFFLINE_MODE: true
+
+      - name: Create deployment package
+        run: |
+          mkdir -p deploy
+          cp -r app/startup-swipe-schedu/dist/* deploy/
+          
+          # Copy static data files
+          mkdir -p deploy/data
+          
+          # Create a note about offline mode
+          cat > deploy/README.txt << 'NOTE'
+This is a static version of Startup Swiper running in offline mode.
+All data is stored in your browser's localStorage.
+
+Features available:
+- ✓ Browse startups (loaded from initial data)
+- ✓ Swipe and vote on startups
+- ✓ Add insights and ideas
+- ✓ Schedule meetings
+- ✓ PWA - Install as an app
+- ✓ Works completely offline
+
+Features requiring backend (not available):
+- ✗ Real-time sync across devices
+- ✗ AI chat features
+- ✗ User authentication sync
+NOTE
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'deploy'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
