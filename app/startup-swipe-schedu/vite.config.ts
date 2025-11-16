@@ -3,15 +3,11 @@ import { resolve } from 'path'
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from 'vite-plugin-pwa'
 
-// @ts-ignore
-import react from "@vitejs/plugin-react";
-
 const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname
 
 export default defineConfig({
   base: process.env.VITE_BASE_PATH || '/',
   plugins: [
-    react(),
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
@@ -71,6 +67,7 @@ export default defineConfig({
         ]
       },
       workbox: {
+        maximumFileSizeToCacheInBytes: 15000000, // 15MB
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
         runtimeCaching: [
           {
