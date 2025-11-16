@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug API - Startup Rise</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #8b5cf6;
+        }
+        .field {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f9f9f9;
+            border-left: 3px solid #8b5cf6;
+            font-family: monospace;
+        }
+        .success {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .error {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        button {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #7c3aed;
+        }
+        #loading {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 API Debug Tool</h1>
+    
+    <div class="card">
+        <h3>Test Startup Data Loading</h3>
+        <button onclick="testAPI()">🧪 Test API Now</button>
+        <button onclick="clearAndTest()">🗑️ Clear Cache & Test</button>
+        <button onclick="location.reload(true)">🔄 Hard Reload</button>
+    </div>
+    
+    <div id="results"></div>
+
+    <script>
+        async function clearAndTest() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<div class="card" id="loading">Clearing cache...</div>';
+            
+            try {
+                // Clear all caches
+                const cacheNames = await caches.keys();
+                await Promise.all(
+                    cacheNames.map(cacheName => caches.delete(cacheName))
+                );
+                
+                // Unregister service workers
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    await Promise.all(
+                        registrations.map(registration => registration.unregister())
+                    );
+                }
+                
+                results.innerHTML = '<div class="card success">✅ Cache cleared! Testing API...</div>';
+                setTimeout(testAPI, 1000);
+                
+            } catch (error) {
+                results.innerHTML = `<div class="card error">Error clearing cache: ${error.message}</div>`;
+            }
+        }
+        
+        async function testAPI() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<div class="card" id="loading">🔄 Loading from API...</div>';
+            
+            try {
+                // Force fresh request
+                const response = await fetch('/api/startups/all?skip=0&limit=2&_=' + Date.now(), {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                let html = '<div class="card">';
+                html += `<h3 class="success">✅ API Response Received</h3>`;
+                html += `<p>Total startups: ${data.total}</p>`;
+                html += `<p>Returned: ${data.count}</p>`;
+                html += '</div>';
+                
+                data.startups.forEach((startup, i) => {
+                    const hasName = startup.name || startup['Company Name'] || startup.company_name;
+                    const status = hasName ? 'success' : 'error';
+                    const statusIcon = hasName ? '✅' : '❌';
+                    
+                    html += '<div class="card">';
+                    html += `<h3 class="${status}">${statusIcon} Startup ${i + 1}</h3>`;
+                    html += '<div class="field"><strong>company_name:</strong> ' + (startup.company_name || 'MISSING') + '</div>';
+                    html += '<div class="field"><strong>name:</strong> ' + (startup.name || 'MISSING') + '</div>';
+                    html += '<div class="field"><strong>Company Name:</strong> ' + (startup['Company Name'] || 'MISSING') + '</div>';
+                    html += '<div class="field"><strong>primary_industry:</strong> ' + (startup.primary_industry || 'MISSING') + '</div>';
+                    html += '<div class="field"><strong>description:</strong> ' + (startup.description ? startup.description.substring(0, 100) + '...' : 'MISSING') + '</div>';
+                    html += '<div class="field"><strong>logoUrl:</strong> ' + (startup.logoUrl || 'MISSING') + '</div>';
+                    
+                    if (hasName) {
+                        html += '<p class="success">✅ This startup will display correctly!</p>';
+                    } else {
+                        html += '<p class="error">❌ This will show as "Unknown Startup"</p>';
+                    }
+                    
+                    html += '</div>';
+                });
+                
+                results.innerHTML = html;
+                
+            } catch (error) {
+                results.innerHTML = `
+                    <div class="card error">
+                        <h3>❌ Error Loading API</h3>
+                        <p>${error.message}</p>
+                        <p>Check your internet connection or try clearing cache.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', testAPI);
+    </script>
+</body>
+</html>
