@@ -1,8 +1,10 @@
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { resolve } from 'path'
+import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from 'vite-plugin-pwa'
+
+// @ts-ignore
+import react from "@vitejs/plugin-react";
 
 const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname
 

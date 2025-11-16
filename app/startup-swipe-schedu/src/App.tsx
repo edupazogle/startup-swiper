@@ -10,6 +10,7 @@ import { AIAssistantView } from '@/components/AIAssistantView'
 import { AdminView } from '@/components/AdminView'
 import { AddStartupDialog } from '@/components/AddStartupDialog'
 import { AddIdeaDialog } from '@/components/AddIdeaDialog'
+import { PWAUpdatePrompt } from '@/components/PWAUpdatePrompt'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Startup, Vote, CalendarEvent, Idea } from '@/lib/types'
@@ -970,6 +971,7 @@ function App() {
         )}
         
         <Toaster />
+        <PWAUpdatePrompt />
       </div>
     </AuroralBackground>
   );

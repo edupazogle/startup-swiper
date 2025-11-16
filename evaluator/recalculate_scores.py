@@ -15,19 +15,20 @@ reflecting realistic partnership quality, implementation potential, and business
 Only axa_overall_score is updated in the database upon completion.
 
 Usage:
-    python3 evaluator/recalculate_scores.py
-    python3 evaluator/recalculate_scores.py --dry-run  # Preview changes without updating
-    python3 evaluator/recalculate_scores.py --verbose # Detailed LLM reasoning
+    python3 evaluator/recalculate_scores_llm.py
+    python3 evaluator/recalculate_scores_llm.py --dry-run  # Preview without updating
+    python3 evaluator/recalculate_scores_llm.py --verbose # Detailed LLM reasoning
+    python3 evaluator/recalculate_scores_llm.py --limit 10 # Process 10 startups
 """
 
 import sys
 import json
 import argparse
-import os
+import asyncio
 from pathlib import Path
-from typing import Dict, Tuple, Optional
-from dataclasses import dataclass
+from typing import Dict, Tuple, Optional, List
 from enum import Enum
+from datetime import datetime
 
 # Add parent and api directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -39,10 +40,12 @@ import logging
 
 # LLM Integration
 try:
-    from llm_config import get_llm_client
-    HAS_LLM = True
+    from llm_config import llm_completion_sync, is_nvidia_nim_configured
+    HAS_LLM = is_nvidia_nim_configured()
 except ImportError:
     HAS_LLM = False
+    logger_init = logging.getLogger(__name__)
+    logger_init.warning("LLM config not available - using heuristic evaluation")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -53,7 +56,7 @@ logger = logging.getLogger(__name__)
 
 
 class Grade(Enum):
-    """AXA Partnership Grade Scale"""
+    """AXA Partnership Grade Scale (A+ to F)"""
     A_PLUS = "A+"
     A = "A"
     A_MINUS = "A-"
@@ -67,552 +70,674 @@ class Grade(Enum):
     F = "F"
     
     @property
-    def min_score(self) -> float:
-        """Minimum score required for this grade"""
-        scores = {
-            "A+": 95.0,
-            "A": 90.0,
-            "A-": 85.0,
-            "B+": 80.0,
-            "B": 75.0,
-            "B-": 70.0,
-            "C+": 60.0,
-            "C": 50.0,
-            "C-": 40.0,
-            "D": 30.0,
-            "F": 0.0
-        }
-        return scores.get(self.value, 0.0)
-    
-    @property
     def description(self) -> str:
-        """Grade interpretation"""
+        """Grade interpretation for AXA context"""
         descriptions = {
-            "A+": "Exceptional: Scalable platform, strong funding, EU-based, multiple use cases, AI leadership",
-            "A": "Excellent: Proven scaling platform, significant funding, EU presence, 2+ use cases, strong AI",
-            "A-": "Very Good: Good scalability, solid funding, EU-based, multiple use cases, AI capable",
-            "B+": "Good: Scaling/Growth stage, decent funding, EU preferred, 1-2 use cases, AI present",
-            "B": "Acceptable: Growth potential, modest funding, reasonable location, focused use case",
-            "B-": "Marginal: Early scaling, limited funding, questionable location, limited scope",
-            "C+": "Basic: Early growth, minimal funding, outside EU, niche focus",
-            "C": "Limited: Pre-growth, seed funding, poor location, very limited application",
-            "C-": "Weak: Prototype/early, minimal funding, wrong market",
-            "D": "Poor: Very early stage, no significant funding, misaligned with AXA needs",
-            "F": "Not Suitable: Does not meet minimum criteria for AXA partnership"
+            "A+": "Exceptional Partner: Scalable platform, strong funding (>$50M), EU-based, 3+ use cases, AI leadership. Ready for deep strategic partnership.",
+            "A": "Excellent Partner: Proven scaling platform, significant funding ($20M+), EU presence, 2+ use cases, strong AI. High confidence deployment.",
+            "A-": "Very Good: Good scalability, solid funding ($10M+), EU-based, 2+ use cases, AI capable. Strong partnership potential.",
+            "B+": "Good: Scaling/Growth stage, decent funding ($5M+), EU preferred, 1-2 use cases, AI present. Viable partnership with planning.",
+            "B": "Acceptable: Growth potential, modest funding, reasonable location, focused use case. Workable if actively managed.",
+            "B-": "Marginal: Early scaling, limited funding (<$5M), questionable location, limited scope. High execution risk.",
+            "C+": "Basic: Early growth, minimal funding, outside EU, niche focus. Significant gaps require mitigation.",
+            "C": "Limited: Pre-growth, seed funding, poor location, very limited application. Not recommended.",
+            "C-": "Weak: Prototype/early, minimal funding, wrong market. Does not meet partnership threshold.",
+            "D": "Poor: Very early stage, no significant funding, misaligned with AXA needs. Not suitable.",
+            "F": "Not Suitable: Critical gaps in scalability, funding, location, or AI capability. Not recommended for partnership."
         }
         return descriptions.get(self.value, "Unknown")
 
 
-@dataclass
-class EvaluationScore:
-    """Comprehensive evaluation component scores"""
-    # Core capability scores (0-25 each)
-    market_fit: float = 0        # Proof of market demand, customer traction
-    scalability: float = 0       # Platform architecture, multi-tenant, growth trajectory
-    innovation: float = 0        # AI/agentic capabilities, proprietary tech, IP
-    financial_health: float = 0  # Funding, burn rate, path to profitability
+def extract_startup_profile(startup: Startup) -> Dict:
+    """Extract comprehensive startup profile for evaluation - using ALL available database fields"""
     
-    # Partnership readiness (0-20 each)
-    corporate_experience: float = 0  # B2B/enterprise deals, implementation track record
-    use_case_breadth: float = 0  # Multiple domain applications, flexibility
-    geographic_fit: float = 0    # EU presence, data sovereignty compliance
-    
-    # Risk factors (penalties, 0-15 max reduction)
-    team_risk: float = 0
-    execution_risk: float = 0
-    market_risk: float = 0
-    
-    def total(self) -> float:
-        """Total weighted score"""
-        base = (
-            self.market_fit +
-            self.scalability +
-            self.innovation +
-            self.financial_health +
-            self.corporate_experience +
-            self.use_case_breadth +
-            self.geographic_fit
-        )
-        penalties = self.team_risk + self.execution_risk + self.market_risk
-        return max(0, base - penalties)
-    
-    def max_possible(self) -> float:
-        """Maximum possible score"""
-        return 25 + 25 + 25 + 25 + 20 + 20 + 20  # 160 points
-
-# Topic to Innovation Domain Mapping
-TOPIC_INNOVATION_AREAS = {
-    "Topic 1": "Agentic Platforms",      # AI - Agentic
-    "Topic 2": "Software Development",   # AI - Software Development
-    "Topic 3": "Claims Processing",      # AI - Claims
-    "Topic 4": "Underwriting",           # AI - Underwriting
-    "Topic 5": "Contact Centers",        # AI - Contact Centers
-    "Topic 6": "Health",
-    "Topic 7": "Growth",
-    "Topic 8": "Responsibility",
-    "Topic 9": "Insurance Disruptor",
-    "Topic 10": "DeepTech",
-    "Topic 11": "Other",
-}
-
-# EU Countries for data compliance scoring
-EU_CORE = {'DE', 'FR', 'GB', 'UK', 'ES', 'IT', 'NL', 'BE', 'CH'}  # Core EU + UK + Switzerland
-EU_EXTENDED = {'SE', 'FI', 'DK', 'NO', 'AT', 'PL', 'IE', 'PT', 'GR', 'CZ', 'RO', 'HU', 'LU'}
-EU_ALL = EU_CORE | EU_EXTENDED
-
-
-def extract_metadata(startup: Startup) -> Dict:
-    """Extract key metadata from startup database record"""
-    metadata = {
-        'name': startup.company_name,
-        'country': startup.company_country or '',
-        'maturity': startup.maturity or '',
-        'funding_stage': startup.funding_stage or '',
-        'total_funding': startup.total_funding or 0,
-        'use_cases': [],
-        'topics': [],
-        'is_provider': startup.axa_can_use_as_provider or False,
-        'team_size': getattr(startup, 'team_size', None),
-        'founded_year': getattr(startup, 'founded_year', None),
-    }
-    
-    # Extract use cases
+    # Parse use cases
+    use_cases = []
     if startup.axa_use_cases:
         try:
-            use_cases = json.loads(startup.axa_use_cases) if isinstance(startup.axa_use_cases, str) else startup.axa_use_cases
-            if isinstance(use_cases, list):
-                metadata['use_cases'] = use_cases[:10]  # Top 10
+            uc = json.loads(startup.axa_use_cases) if isinstance(startup.axa_use_cases, str) else startup.axa_use_cases
+            use_cases = uc if isinstance(uc, list) else []
         except:
             pass
     
-    # Extract primary topic
-    if startup.axa_primary_topic:
-        metadata['topics'].append(startup.axa_primary_topic)
+    # Parse technology tags from multiple sources
+    tech_focus = []
+    if startup.tech:
+        try:
+            tf = json.loads(startup.tech) if isinstance(startup.tech, str) else startup.tech
+            tech_focus = tf if isinstance(tf, list) else []
+        except:
+            pass
     
-    # Extract from fit summary
-    if startup.axa_fit_summary:
-        for topic_num in range(1, 12):
-            if f"Topic {topic_num}" in startup.axa_fit_summary:
-                metadata['topics'].append(f"Topic {topic_num}")
+    # Extract enrichment data
+    enrichment_data = {}
+    social_media = {}
+    key_pages = {}
+    if startup.enrichment:
+        try:
+            enrich = json.loads(startup.enrichment) if isinstance(startup.enrichment, str) else startup.enrichment
+            if isinstance(enrich, dict):
+                enrichment_data = enrich
+                if 'tech_stack' in enrich and not tech_focus:
+                    tech_focus = enrich.get('tech_stack', [])
+                social_media = enrich.get('social_media', {})
+                key_pages = enrich.get('key_pages', {})
+        except:
+            pass
     
-    return metadata
+    # Extract founding year
+    founded_year = None
+    if startup.founding_year:
+        founded_year = startup.founding_year
+    elif startup.dateFounded:
+        founded_year = startup.dateFounded.year
+    
+    # Parse employee count as team size
+    team_size = None
+    if startup.employees:
+        try:
+            if '-' in str(startup.employees):
+                parts = str(startup.employees).split('-')
+                team_size = int(parts[0]) if parts else None
+            else:
+                team_size = int(startup.employees)
+        except:
+            team_size = None
+    
+    # Extract industries
+    industries = []
+    if startup.primary_industry:
+        industries.append(startup.primary_industry)
+    if startup.secondary_industry:
+        try:
+            sec = json.loads(startup.secondary_industry) if isinstance(startup.secondary_industry, str) else startup.secondary_industry
+            if isinstance(sec, list):
+                industries.extend(sec)
+        except:
+            pass
+    
+    # Extract business types
+    business_types = []
+    if startup.business_types:
+        try:
+            bt = json.loads(startup.business_types) if isinstance(startup.business_types, str) else startup.business_types
+            business_types = bt if isinstance(bt, list) else []
+        except:
+            pass
+    
+    # Parse topics
+    topics = []
+    if startup.topics:
+        try:
+            t = json.loads(startup.topics) if isinstance(startup.topics, str) else startup.topics
+            topics = t if isinstance(t, list) else []
+        except:
+            pass
+    
+    # Get value proposition data
+    value_prop = {
+        'statement': startup.value_proposition or '',
+        'core_product': startup.core_product or '',
+        'target_customers': startup.target_customers or '',
+        'problem_solved': startup.problem_solved or '',
+        'differentiator': startup.key_differentiator or '',
+        'competitors': startup.vp_competitors or '',
+        'confidence': startup.vp_confidence or 'unknown'
+    }
+    
+    # Extract product and market info
+    extracted_info = {
+        'product': startup.extracted_product or '',
+        'market': startup.extracted_market or '',
+        'technologies': startup.extracted_technologies or '',
+        'competitors': startup.extracted_competitors or ''
+    }
+    
+    # Revenue data
+    revenue_range = None
+    if startup.latest_revenue_min and startup.latest_revenue_max:
+        revenue_range = f"${startup.latest_revenue_min/1_000_000:.1f}M - ${startup.latest_revenue_max/1_000_000:.1f}M"
+    elif startup.latest_revenue_min:
+        revenue_range = f"${startup.latest_revenue_min/1_000_000:.1f}M+"
+    
+    profile = {
+        'name': startup.company_name or 'Unknown',
+        'country': startup.company_country or 'Unknown',
+        'city': startup.company_city or '',
+        'founded_year': founded_year,
+        'company_type': startup.company_type or '',
+        'maturity': startup.maturity or 'Unknown',
+        'maturity_score': startup.maturity_score or 0,
+        'funding_stage': startup.funding_stage or 'Unknown',
+        'total_funding': startup.total_funding or 0,
+        'total_equity_funding': startup.total_equity_funding or 0,
+        'last_funding_date': startup.last_funding_date.strftime('%Y-%m-%d') if startup.last_funding_date else None,
+        'valuation': startup.valuation or 0,
+        'revenue_range': revenue_range,
+        'team_size': team_size,
+        'is_provider': startup.axa_can_use_as_provider or False,
+        'use_cases': use_cases[:10],
+        'use_case_count': len(use_cases),
+        'primary_topic': startup.axa_primary_topic or 'Not specified',
+        'fit_summary': startup.axa_fit_summary or '',
+        'description': startup.company_description or startup.description or startup.shortDescription or '',
+        'technology_focus': tech_focus,
+        'business_model': startup.business_model or '',
+        'pricing_model': startup.pricingModel or '',
+        'tech_readiness': startup.technologyReadiness or '',
+        'industries': industries,
+        'business_types': business_types,
+        'topics': topics,
+        'value_proposition': value_prop,
+        'extracted_info': extracted_info,
+        'website': startup.website or '',
+        'linkedin': startup.company_linked_in or '',
+        'has_enrichment': startup.is_enriched or False,
+        'social_media': social_media,
+        'cb_insights_id': startup.cb_insights_id,
+        'axa_business_leverage': startup.axa_business_leverage or ''
+    }
+    
+    return profile
 
 
-def evaluate_market_fit(startup: Startup, metadata: Dict) -> float:
-    """
-    Assess market proof and customer traction (0-25 points)
+def build_evaluation_prompt(profile: Dict) -> str:
+    """Build comprehensive evaluation prompt for LLM using all available data"""
     
-    High score if:
-    - Clear customer traction/references
-    - Proven business model
-    - Strong revenue growth indicators
-    - Multiple enterprise clients mentioned
-    """
-    score = 0.0
+    years_old = 2025 - (profile['founded_year'] or 2025) if profile['founded_year'] else 'Unknown'
+    funding_millions = profile['total_funding'] / 1_000_000 if profile['total_funding'] else 0
+    equity_millions = profile['total_equity_funding'] / 1_000_000 if profile['total_equity_funding'] else 0
+    valuation_millions = profile['valuation'] / 1_000_000 if profile['valuation'] else 0
     
-    # Funding is proxy for market validation
-    funding = metadata['total_funding']
-    if funding >= 100_000_000:
-        score += 22  # Significant validation
-    elif funding >= 50_000_000:
-        score += 19
+    prompt = f"""
+You are an expert venture evaluator for AXA, a global insurance company evaluating technology startups for partnership potential.
+
+## EVALUATION CRITERIA - AXA Partnership Grade (A+ to F)
+
+Grade based on these critical factors (in priority order):
+
+1. **Scaling Platform** (25% weight): Multi-use case, multi-customer platform capability
+   - 3+ use cases with proven deployment = Excellent (A range)
+   - 2 use cases with corporate traction = Good (B range)
+   - 1 use case or niche = Limited (C-D range)
+   - No clear use cases = Poor (F)
+
+2. **Market Validation & Funding** (25% weight): Financial health and investor confidence
+   - $50M+ / Series C+ / Valuation $200M+ = Exceptional (A+/A)
+   - $20M+ / Series B / Strong revenue = Very Good (A-/B+)
+   - $10M+ / Series A = Good (B)
+   - $5M+ / Seed = Acceptable (B-/C+)
+   - <$5M = Early/Risky (C-/D/F)
+
+3. **Enterprise Deployment Experience** (20% weight): Proven corporate implementation
+   - Currently serving enterprise clients = Essential for A/B grades
+   - No corporate deployment = Maximum B-, likely C range
+
+4. **Use Case Breadth & AXA Fit** (15% weight): Solves multiple AXA problems
+   - Primary topic relevance + multiple use cases = Higher score
+   - Clear business leverage identified = Strong indicator
+
+5. **Geographic & Regulatory Fit** (10% weight): Data compliance
+   - EU/UK = Optimal (GDPR native)
+   - US/CA = Workable (transfer frameworks exist)
+   - Other = Challenging (data residency issues)
+
+6. **AI/Technology Innovation** (5% weight): Modern capabilities
+   - Agentic AI / Advanced ML = Premium
+   - Strong AI capability = Good
+   - Traditional tech = Acceptable
+   - No innovation = Concerning
+
+## STARTUP PROFILE TO EVALUATE
+
+### Core Information
+**Company**: {profile['name']}
+**Location**: {profile['city']}, {profile['country']}
+**Founded**: {profile['founded_year']} ({years_old} years old)
+**Type**: {profile['company_type']} | **Maturity**: {profile['maturity']} (Score: {profile['maturity_score']})
+**Website**: {profile['website']}
+
+### Financial Position & Validation
+**Funding Stage**: {profile['funding_stage']}
+**Total Funding**: ${funding_millions:.1f}M (Equity: ${equity_millions:.1f}M)
+**Last Funding**: {profile['last_funding_date'] or 'Not disclosed'}
+**Valuation**: ${valuation_millions:.1f}M
+**Revenue**: {profile['revenue_range'] or 'Not disclosed'}
+**Team Size**: {profile['team_size'] or 'Not disclosed'}
+
+### AXA Fit Assessment
+**Provider Status**: {'✓ YES - Deployed with corporate/enterprise clients' if profile['is_provider'] else '✗ NO - No corporate deployments yet'}
+**Primary Topic**: {profile['primary_topic']}
+**Identified Use Cases** ({profile['use_case_count']}): {', '.join(profile['use_cases'][:5])}{'...' if len(profile['use_cases']) > 5 else ''}
+**Business Leverage**: {profile['axa_business_leverage'] or 'Not specified'}
+**Fit Summary**: {profile['fit_summary']}
+
+### Business Model & Market
+**Industries**: {', '.join(profile['industries']) if profile['industries'] else 'Not specified'}
+**Business Types**: {', '.join(profile['business_types']) if profile['business_types'] else 'Not specified'}
+**Business Model**: {profile['business_model'] or 'Not specified'}
+**Pricing Model**: {profile['pricing_model'] or 'Not specified'}
+**Technology Readiness**: {profile['tech_readiness'] or 'Not specified'}
+
+### Value Proposition
+{f"**Statement**: {profile['value_proposition']['statement']}" if profile['value_proposition']['statement'] else ''}
+**Core Product**: {profile['value_proposition']['core_product'] or profile['extracted_info']['product'] or 'Not specified'}
+**Target Customers**: {profile['value_proposition']['target_customers'] or profile['extracted_info']['market'] or 'Not specified'}
+**Problem Solved**: {profile['value_proposition']['problem_solved'] or 'Not specified'}
+**Key Differentiator**: {profile['value_proposition']['differentiator'] or 'Not specified'}
+**Competitors**: {profile['value_proposition']['competitors'] or profile['extracted_info']['competitors'] or 'Not specified'}
+
+### Technology & Innovation
+**Technology Focus**: {', '.join(profile['technology_focus']) if profile['technology_focus'] else profile['extracted_info']['technologies'] or 'Not specified'}
+**Topics**: {', '.join(profile['topics'][:5]) if profile['topics'] else 'Not specified'}
+
+### Company Description
+{profile['description'][:500] + '...' if len(profile['description']) > 500 else profile['description']}
+
+### Data Quality
+**Enrichment Status**: {'✓ Enriched' if profile['has_enrichment'] else '✗ Not enriched'}
+**CB Insights**: {'✓ Available' if profile['cb_insights_id'] else '✗ Not available'}
+
+## YOUR TASK
+
+Provide a realistic, critical grade (A+ to F) reflecting actual partnership viability for AXA.
+
+**Be pragmatic and demanding:**
+- A+/A grades require EXCEPTIONAL proof: $50M+, 3+ use cases, enterprise clients, EU location
+- Most startups should receive B-C grades (realistic assessment)
+- Early stage (<$5M) or no corporate deployment = C or below
+- Missing critical data = Lower confidence, grade accordingly
+- No use cases or poor AXA fit = D/F
+
+**Consider implementation reality:**
+- Can they handle AXA's scale and compliance requirements?
+- Do they have the team/funding to deliver?
+- What could realistically go wrong?
+- Is the technology production-ready?
+
+**Output ONLY a JSON object with this exact structure:**
+{{
+    "grade": "B+",
+    "score": 82,
+    "reasoning": "2-3 sentence critical assessment explaining the grade based on concrete evidence",
+    "strengths": ["Specific strength 1", "Specific strength 2"],
+    "concerns": ["Specific concern 1", "Specific concern 2"],
+    "recommendation": "Clear actionable recommendation (e.g., 'Schedule POC with risk mitigation' or 'Monitor until Series B')"
+}}
+
+**Grade Scale (be realistic - most startups are B/C range):**
+- A+ (95-100): Exceptional strategic priority - Series C+, $50M+, 3+ use cases, EU, enterprise proven
+- A (90-94): Excellent high-confidence - Series B+, $20M+, 2+ use cases, strong traction
+- A- (85-89): Very good potential - Series B, $15M+, proven use cases
+- B+ (80-84): Good viable option - Series A+, $10M+, 1-2 use cases, planning needed
+- B (75-79): Acceptable with risks - Series A, $5-10M, manageable execution risk
+- B- (70-74): Marginal fit - Early Series A, limited funding/cases, high execution risk
+- C+ (60-69): Basic/gaps - Seed stage, <$5M, significant limitations
+- C (50-59): Limited viability - Early seed, minimal validation, not recommended
+- C- (40-49): Weak - Pre-seed, major gaps, below partnership threshold
+- D (30-39): Poor - Very early, insufficient capabilities
+- F (<30): Not suitable - Critical failures in funding, location, capability, or fit
+
+Be critical. Real partnerships require proven capability, not just potential.
+"""
+    
+    return prompt
+
+
+def evaluate_with_llm(profile: Dict, verbose: bool = False) -> Tuple[Grade, float, str]:
+    """Use LLM to evaluate startup and assign grade with enhanced error handling"""
+    
+    if not HAS_LLM:
+        logger.debug(f"LLM not available for {profile['name']}, using heuristic")
+        return evaluate_heuristic(profile)
+    
+    try:
+        prompt = build_evaluation_prompt(profile)
+        
+        if verbose:
+            logger.debug(f"\n{'='*80}")
+            logger.debug(f"LLM Evaluation Request: {profile['name']}")
+            logger.debug(f"{'='*80}")
+        
+        # Call LLM using the configured NVIDIA NIM model
+        messages = [
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+        
+        response = llm_completion_sync(
+            messages=messages,
+            temperature=0.3,
+            max_tokens=800,
+            metadata={"startup_name": profile['name'], "evaluation_type": "grading"}
+        )
+        
+        response_text = response.strip()
+        
+        if verbose:
+            logger.debug(f"LLM Response:\n{response_text}\n")
+        
+        # Extract JSON from response
+        try:
+            # Try to find JSON in response
+            start_idx = response_text.find('{')
+            end_idx = response_text.rfind('}') + 1
+            if start_idx >= 0 and end_idx > start_idx:
+                json_str = response_text[start_idx:end_idx]
+                eval_result = json.loads(json_str)
+            else:
+                raise ValueError("No JSON found in response")
+        except (json.JSONDecodeError, ValueError) as e:
+            logger.warning(f"Failed to parse LLM response for {profile['name']}: {e}")
+            if verbose:
+                logger.debug(f"Problematic response: {response_text[:200]}")
+            return evaluate_heuristic(profile)
+        
+        # Extract and validate grade and score
+        grade_str = eval_result.get('grade', 'C').upper().strip()
+        score = float(eval_result.get('score', 50))
+        reasoning = eval_result.get('reasoning', 'LLM evaluation completed')
+        strengths = eval_result.get('strengths', [])
+        concerns = eval_result.get('concerns', [])
+        recommendation = eval_result.get('recommendation', '')
+        
+        # Validate score range
+        if not (0 <= score <= 100):
+            logger.warning(f"Invalid score {score} for {profile['name']}, clamping to 0-100")
+            score = max(0, min(100, score))
+        
+        # Convert to Grade enum
+        try:
+            # Handle grade format variations
+            grade_normalized = grade_str.replace('+', '_PLUS').replace('-', '_MINUS')
+            if not grade_normalized.startswith('_'):
+                grade = Grade[grade_normalized]
+            else:
+                raise KeyError(f"Invalid grade format: {grade_str}")
+        except KeyError:
+            logger.warning(f"Invalid grade '{grade_str}' for {profile['name']}, using score-based grade")
+            # Derive grade from score
+            if score >= 95:
+                grade = Grade.A_PLUS
+            elif score >= 90:
+                grade = Grade.A
+            elif score >= 85:
+                grade = Grade.A_MINUS
+            elif score >= 80:
+                grade = Grade.B_PLUS
+            elif score >= 75:
+                grade = Grade.B
+            elif score >= 70:
+                grade = Grade.B_MINUS
+            elif score >= 60:
+                grade = Grade.C_PLUS
+            elif score >= 50:
+                grade = Grade.C
+            elif score >= 40:
+                grade = Grade.C_MINUS
+            elif score >= 30:
+                grade = Grade.D
+            else:
+                grade = Grade.F
+        
+        # Build enhanced reasoning
+        full_reasoning = reasoning
+        if strengths and verbose:
+            full_reasoning += f" | Strengths: {'; '.join(strengths[:2])}"
+        if concerns and verbose:
+            full_reasoning += f" | Concerns: {'; '.join(concerns[:2])}"
+        
+        if verbose:
+            logger.debug(f"Final Grade: {grade.value} ({score:.1f})")
+            logger.debug(f"Reasoning: {reasoning}")
+            if strengths:
+                logger.debug(f"Strengths: {', '.join(strengths)}")
+            if concerns:
+                logger.debug(f"Concerns: {', '.join(concerns)}")
+            if recommendation:
+                logger.debug(f"Recommendation: {recommendation}")
+        
+        return grade, score, full_reasoning if verbose else reasoning
+        
+    except Exception as e:
+        logger.warning(f"LLM evaluation failed for {profile['name']}: {str(e)[:100]}")
+        if verbose:
+            import traceback
+            logger.debug(f"Full error: {traceback.format_exc()}")
+        return evaluate_heuristic(profile)
+
+
+def evaluate_heuristic(profile: Dict) -> Tuple[Grade, float, str]:
+    """Enhanced heuristic-based evaluation leveraging all available data"""
+    
+    score = 50  # Base score
+    name = profile['name']
+    insights = []
+    
+    # 1. Scaling platform assessment (20 points max)
+    if profile['use_case_count'] >= 5:
+        score += 20
+        insights.append("Comprehensive platform (5+ use cases)")
+    elif profile['use_case_count'] >= 3:
+        score += 16
+        insights.append(f"Multi-use case platform ({profile['use_case_count']} use cases)")
+    elif profile['use_case_count'] >= 2:
+        score += 11
+        insights.append(f"Dual-purpose solution ({profile['use_case_count']} use cases)")
+    elif profile['use_case_count'] == 1:
+        score += 5
+        insights.append("Single use case")
+    else:
+        score -= 5
+        insights.append("No clear use cases")
+    
+    # 2. Funding & market validation (25 points max)
+    funding = profile['total_funding']
+    valuation = profile['valuation']
+    
+    if funding >= 50_000_000:
+        score += 25
+        insights.append(f"Exceptional funding (${funding/1_000_000:.0f}M - highly validated)")
     elif funding >= 20_000_000:
-        score += 15
+        score += 20
+        insights.append(f"Strong funding (${funding/1_000_000:.0f}M)")
     elif funding >= 10_000_000:
-        score += 12
+        score += 15
+        insights.append(f"Good funding (${funding/1_000_000:.0f}M)")
     elif funding >= 5_000_000:
-        score += 8
+        score += 10
+        insights.append(f"Acceptable funding (${funding/1_000_000:.0f}M)")
     elif funding >= 1_000_000:
         score += 4
+        insights.append(f"Early funding (${funding/1_000_000:.1f}M)")
     else:
-        score += 0
+        score -= 10
+        insights.append("Minimal/no disclosed funding - very high risk")
     
-    # Maturity level indicates traction
-    maturity = metadata['maturity'].lower()
-    if 'scaleup' in maturity or 'scaling' in maturity:
-        score += 3
-    elif 'deploying' in maturity or 'growth' in maturity:
-        score += 2
-    elif 'validating' in maturity:
-        score += 1
-    
-    return min(25.0, score)
-
-
-def evaluate_scalability(startup: Startup, metadata: Dict) -> float:
-    """
-    Assess technical scalability and platform architecture (0-25 points)
-    
-    High score if:
-    - Multi-tenant/multi-customer platform (not point solution)
-    - API-driven architecture
-    - Already deployed at scale
-    - Expansion to new use cases evident
-    """
-    score = 0.0
-    
-    # Maturity level
-    maturity = metadata['maturity'].lower()
-    if 'scaleup' in maturity or 'scaling' in maturity:
-        score += 20  # Proven scaling
-    elif 'deploying' in maturity or 'growth' in maturity:
-        score += 15  # Actively scaling
-    elif 'validating' in maturity:
-        score += 8   # Proof of concept scale
-    else:
-        score += 2
-    
-    # Multiple use cases suggest platform architecture
-    if len(metadata['use_cases']) >= 4:
+    # Valuation boost
+    if valuation >= 200_000_000:
         score += 5
-    elif len(metadata['use_cases']) >= 2:
+        insights.append(f"High valuation (${valuation/1_000_000:.0f}M)")
+    elif valuation >= 100_000_000:
         score += 3
     
-    return min(25.0, score)
-
-
-def evaluate_innovation(startup: Startup, metadata: Dict) -> float:
-    """
-    Assess AI/agentic capabilities and innovation potential (0-25 points)
-    
-    High score if:
-    - Topic 1 (Agentic) alignment - most innovative
-    - AI-first product (Topics 1-5)
-    - Proprietary ML/AI models mentioned
-    - New class of problem solving
-    """
-    score = 0.0
-    
-    # Primary innovation area weighting
-    fit_summary = (startup.axa_fit_summary or '').lower()
-    
-    # Agentic is highest AI capability
-    if 'topic 1' in fit_summary or 'agentic' in fit_summary:
-        score = 24  # Highest innovation
-    elif any(f'topic {i}' in fit_summary for i in [2, 3, 4, 5]):
-        score = 20  # Strong AI focus
-    elif any(f'topic {i}' in fit_summary for i in [6, 7, 8, 9]):
-        score = 12  # Some AI/specialty
+    # 3. Enterprise deployment experience (15 points max) - CRITICAL
+    if profile['is_provider']:
+        score += 15
+        insights.append("✓ Enterprise deployment proven")
     else:
-        score = 5
+        score -= 8
+        insights.append("✗ No corporate deployment experience")
     
-    # Additional points for use case breadth (shows reusable innovation)
-    if len(metadata['use_cases']) >= 3:
+    # 4. Maturity & stage assessment (10 points max)
+    maturity_lower = profile['maturity'].lower()
+    maturity_score = profile['maturity_score']
+    
+    if maturity_score >= 80 or 'scaleup' in maturity_lower:
+        score += 10
+        insights.append("Scaling stage (proven)")
+    elif maturity_score >= 60 or 'growth' in maturity_lower or 'deploying' in maturity_lower:
+        score += 7
+        insights.append("Growth stage")
+    elif maturity_score >= 40 or 'validating' in maturity_lower:
+        score += 4
+        insights.append("Validation phase")
+    elif maturity_score >= 20:
         score += 1
-    
-    return min(25.0, score)
-
-
-def evaluate_financial_health(startup: Startup, metadata: Dict) -> float:
-    """
-    Assess financial stability and sustainability (0-25 points)
-    
-    High score if:
-    - Late stage funding (Series C+)
-    - High total funding relative to age
-    - Profitability or clear path to it
-    - Strong burn rate control
-    """
-    score = 0.0
-    
-    # Funding stage
-    stage = (metadata['funding_stage'] or '').lower()
-    if any(x in stage for x in ['series d', 'series e', 'series f', 'ipo', 'late stage']):
-        score += 22
-    elif 'series c' in stage:
-        score += 18
-    elif 'series b' in stage:
-        score += 13
-    elif 'series a' in stage:
-        score += 8
-    elif 'seed' in stage or 'pre-seed' in stage:
-        score += 2
+        insights.append("Early stage")
     else:
-        score += 0
+        score -= 5
+        insights.append("Prototype/idea stage")
     
-    # Total funding size (sustainability indicator)
-    funding = metadata['total_funding']
-    if funding >= 100_000_000:
-        score += 3
-    elif funding >= 50_000_000:
-        score += 2
+    # 5. Geographic & regulatory fit (10 points max)
+    country = (profile['country'] or '').upper()
+    eu_core = {'DE', 'FR', 'GB', 'UK', 'ES', 'IT', 'NL', 'BE', 'CH'}
+    eu_extended = {'SE', 'FI', 'DK', 'NO', 'AT', 'PL', 'IE', 'PT', 'GR', 'CZ', 'RO', 'HU', 'LU'}
     
-    return min(25.0, score)
-
-
-def evaluate_corporate_experience(startup: Startup, metadata: Dict) -> float:
-    """
-    Assess B2B/enterprise experience and implementation track record (0-20 points)
-    
-    High score if:
-    - Multiple corporate clients deployed
-    - References from major enterprises
-    - Long-term contract implementations
-    - B2B revenue dominance
-    """
-    score = 0.0
-    
-    # Is already being used as provider by enterprises
-    if metadata['is_provider']:
-        score += 18
-    else:
-        score += 0
-    
-    # Funding stage also indicates enterprise readiness
-    stage = (metadata['funding_stage'] or '').lower()
-    if 'series c' in stage or 'series d' in stage or 'late' in stage:
-        score += 2
-    
-    return min(20.0, score)
-
-
-def evaluate_use_case_breadth(startup: Startup, metadata: Dict) -> float:
-    """
-    Assess ability to address multiple AXA use cases (0-20 points)
-    
-    High score if:
-    - Proven across 3+ distinct use cases
-    - Flexible architecture supporting different domains
-    - Both operational and customer-facing applications
-    """
-    score = 0.0
-    use_case_count = len(metadata['use_cases'])
-    
-    if use_case_count >= 5:
-        score = 20  # Comprehensive platform
-    elif use_case_count >= 4:
-        score = 17  # Very flexible
-    elif use_case_count >= 3:
-        score = 14  # Good flexibility
-    elif use_case_count == 2:
-        score = 8   # Limited flexibility
-    elif use_case_count == 1:
-        score = 3   # Specialized
-    else:
-        score = 0
-    
-    return score
-
-
-def evaluate_geographic_fit(startup: Startup, metadata: Dict) -> float:
-    """
-    Assess EU presence and data compliance fit (0-20 points)
-    
-    High score if:
-    - Based in EU core (Germany, France, Spain, etc.)
-    - EU data centers
-    - GDPR compliance infrastructure
-    - Multiple EU offices
-    """
-    score = 0.0
-    country = (metadata['country'] or '').upper()
-    
-    # Geographic presence scoring
-    if country in EU_CORE:
-        score = 20  # Full EU advantage
-    elif country in EU_EXTENDED:
-        score = 17  # EU but periphery
-    elif country == 'CH':
-        score = 19  # Switzerland - strong data protections
+    if country in eu_core:
+        score += 10
+        insights.append(f"EU core ({country}) - optimal compliance")
+    elif country in eu_extended:
+        score += 7
+        insights.append(f"EU extended ({country})")
     elif country in ['US', 'CA']:
-        score = 8   # North America acceptable
-    elif country in ['SG', 'AU', 'NZ', 'JP', 'KR']:
-        score = 5   # Asia-Pacific, challenging data transfer
-    elif country == 'IL':
-        score = 6   # Israel - strong tech but data concerns
+        score += 3
+        insights.append(f"North America ({country})")
+    elif country in ['AU', 'NZ', 'SG', 'JP', 'KR']:
+        score += 2
+        insights.append(f"Developed market ({country})")
     else:
-        score = 0
+        score -= 8
+        insights.append(f"Challenging location ({country}) - data transfer issues")
     
-    return score
-
-
-def apply_risk_penalties(startup: Startup, metadata: Dict) -> float:
-    """
-    Evaluate risk factors that reduce partnership suitability (0-15 reduction)
+    # 6. AI/Innovation assessment (10 points max)
+    fit_lower = (profile['fit_summary'] or '').lower()
+    tech_lower = ' '.join(profile['technology_focus']).lower() if profile['technology_focus'] else ''
+    primary_topic = (profile['primary_topic'] or '').lower()
     
-    Penalties for:
-    - Founder/team turnover
-    - Execution delays or failed pivots
-    - Market saturation in domain
-    - Regulatory concerns
-    """
-    penalties = 0.0
+    if 'agentic' in fit_lower or 'agentic' in tech_lower or 'agentic ai' in primary_topic:
+        score += 10
+        insights.append("Agentic AI leadership")
+    elif 'topic 1' in fit_lower or 'ai' in primary_topic or 'machine learning' in tech_lower:
+        score += 7
+        insights.append("Strong AI capabilities")
+    elif any(ai_term in tech_lower for ai_term in ['ml', 'nlp', 'computer vision', 'deep learning']):
+        score += 5
+        insights.append("AI/ML capability")
+    elif 'automation' in primary_topic or 'workflow' in primary_topic:
+        score += 3
+        insights.append("Automation focus")
     
-    # Very early stage (pre-seed) adds execution risk
-    maturity = metadata['maturity'].lower()
-    if 'prototype' in maturity or 'idea' in maturity:
-        penalties += 5
-    elif 'validating' in maturity:
-        penalties += 2
+    # 7. Team size indicator (5 points max)
+    if profile['team_size']:
+        if profile['team_size'] >= 200:
+            score += 5
+            insights.append(f"Large team ({profile['team_size']}+)")
+        elif profile['team_size'] >= 100:
+            score += 4
+            insights.append(f"Substantial team ({profile['team_size']})")
+        elif profile['team_size'] >= 50:
+            score += 3
+            insights.append(f"Growing team ({profile['team_size']})")
+        elif profile['team_size'] >= 20:
+            score += 2
+        elif profile['team_size'] < 10:
+            score -= 3
+            insights.append("Very small team")
     
-    # No funding is high risk
-    if metadata['total_funding'] == 0:
-        penalties += 8
+    # 8. Revenue indicator (5 points max)
+    if profile['revenue_range']:
+        score += 5
+        insights.append(f"Revenue: {profile['revenue_range']}")
     
-    # Outside EU increases data compliance risk
-    country = (metadata['country'] or '').upper()
-    if country not in EU_ALL and country not in ['US', 'CA', 'CH']:
-        penalties += 3
+    # 9. Value proposition clarity (bonus)
+    if profile['value_proposition']['statement'] and profile['value_proposition']['confidence'] == 'high':
+        score += 3
+        insights.append("Clear value proposition")
     
-    return min(15.0, penalties)
-
-
-def assign_grade(raw_score: float, max_score: float) -> Grade:
-    """Convert raw score to letter grade"""
-    # Normalize to 0-100 scale
-    normalized = (raw_score / max_score) * 100
+    # 10. Data enrichment quality
+    if profile['has_enrichment'] and profile['cb_insights_id']:
+        score += 2
+    elif not profile['has_enrichment'] and not profile['cb_insights_id']:
+        score -= 3
+        insights.append("Limited data availability")
     
-    # Clamp to reasonable bounds (F-A+)
-    if normalized >= 95:
-        return Grade.A_PLUS
-    elif normalized >= 90:
-        return Grade.A
-    elif normalized >= 85:
-        return Grade.A_MINUS
-    elif normalized >= 80:
-        return Grade.B_PLUS
-    elif normalized >= 75:
-        return Grade.B
-    elif normalized >= 70:
-        return Grade.B_MINUS
-    elif normalized >= 60:
-        return Grade.C_PLUS
-    elif normalized >= 50:
-        return Grade.C
-    elif normalized >= 40:
-        return Grade.C_MINUS
-    elif normalized >= 30:
-        return Grade.D
+    # 11. Business leverage clarity
+    if profile['axa_business_leverage'] and len(profile['axa_business_leverage']) > 50:
+        score += 2
+    
+    # Clamp score to 0-100
+    score = max(0, min(100, score))
+    
+    # Assign grade based on score with realistic distribution
+    if score >= 95:
+        grade = Grade.A_PLUS
+    elif score >= 90:
+        grade = Grade.A
+    elif score >= 85:
+        grade = Grade.A_MINUS
+    elif score >= 80:
+        grade = Grade.B_PLUS
+    elif score >= 75:
+        grade = Grade.B
+    elif score >= 70:
+        grade = Grade.B_MINUS
+    elif score >= 60:
+        grade = Grade.C_PLUS
+    elif score >= 50:
+        grade = Grade.C
+    elif score >= 40:
+        grade = Grade.C_MINUS
+    elif score >= 30:
+        grade = Grade.D
     else:
-        return Grade.F
+        grade = Grade.F
+    
+    # Build reasoning from top insights
+    reasoning = f"{grade.value} - " + "; ".join(insights[:4])
+    
+    return grade, score, reasoning
 
 
-def calculate_startup_grade(startup: Startup, verbose: bool = False) -> Tuple[Grade, float, str, EvaluationScore]:
-    """
-    Calculate comprehensive startup grade (A+ to F) based on AXA partnership criteria.
+def calculate_startup_grade(startup: Startup, verbose: bool = False) -> Tuple[Grade, float, str]:
+    """Calculate comprehensive startup grade using LLM analysis"""
     
-    Uses LLM-informed evaluation considering:
-    1. Market Fit - proof of demand and customer traction
-    2. Scalability - technical and organizational scaling capability  
-    3. Innovation - AI/agentic capabilities and tech leadership
-    4. Financial Health - funding, stage, sustainability
-    5. Corporate Experience - B2B/enterprise readiness
-    6. Use Case Breadth - ability to address multiple AXA needs
-    7. Geographic Fit - EU presence and data compliance
-    8. Risk Factors - execution and market risks
-    
-    Returns: (grade, numeric_score, reasoning, detailed_scores)
-    """
-    
-    # Extract metadata from database
-    metadata = extract_metadata(startup)
-    
-    # Evaluate each component
-    scores = EvaluationScore()
-    scores.market_fit = evaluate_market_fit(startup, metadata)
-    scores.scalability = evaluate_scalability(startup, metadata)
-    scores.innovation = evaluate_innovation(startup, metadata)
-    scores.financial_health = evaluate_financial_health(startup, metadata)
-    scores.corporate_experience = evaluate_corporate_experience(startup, metadata)
-    scores.use_case_breadth = evaluate_use_case_breadth(startup, metadata)
-    scores.geographic_fit = evaluate_geographic_fit(startup, metadata)
-    
-    # Apply risk penalties
-    total_penalty = apply_risk_penalties(startup, metadata)
-    
-    # Calculate raw and normalized scores
-    raw_score = scores.total()
-    max_possible = scores.max_possible()
-    normalized_score = (raw_score / max_possible) * 100
-    
-    # Assign letter grade
-    grade = assign_grade(raw_score, max_possible)
-    
-    # Generate reasoning
-    reasoning = generate_reasoning(startup, metadata, scores, total_penalty, grade)
+    profile = extract_startup_profile(startup)
+    grade, score, reasoning = evaluate_with_llm(profile, verbose=verbose)
     
     if verbose:
-        logger.info(f"\n{'='*70}")
-        logger.info(f"Evaluation: {metadata['name']} ({metadata['country']})")
-        logger.info(f"{'='*70}")
-        logger.info(f"Market Fit:           {scores.market_fit:.1f}/25")
-        logger.info(f"Scalability:          {scores.scalability:.1f}/25")
-        logger.info(f"Innovation:           {scores.innovation:.1f}/25")
-        logger.info(f"Financial Health:     {scores.financial_health:.1f}/25")
-        logger.info(f"Corporate Experience: {scores.corporate_experience:.1f}/20")
-        logger.info(f"Use Case Breadth:     {scores.use_case_breadth:.1f}/20")
-        logger.info(f"Geographic Fit:       {scores.geographic_fit:.1f}/20")
-        logger.info(f"Risk Penalties:       -{total_penalty:.1f}")
-        logger.info(f"{'─'*70}")
-        logger.info(f"Raw Score:            {raw_score:.1f}/{max_possible:.0f}")
-        logger.info(f"Normalized Score:     {normalized_score:.1f}/100")
-        logger.info(f"Grade:                {grade.value} - {grade.description}")
-        logger.info(f"Reasoning:            {reasoning}")
+        logger.info(f"\n{'='*80}")
+        logger.info(f"Final Evaluation: {profile['name']} ({profile['country']})")
+        logger.info(f"{'='*80}")
+        logger.info(f"Grade: {grade.value} | Score: {score:.1f}/100")
+        logger.info(f"Reasoning: {reasoning}")
+        logger.info(f"\nKey Metrics:")
+        logger.info(f"  • Use Cases: {profile['use_case_count']}")
+        logger.info(f"  • Funding: ${profile['total_funding']/1_000_000:.1f}M ({profile['funding_stage']})")
+        logger.info(f"  • Valuation: ${profile['valuation']/1_000_000:.1f}M" if profile['valuation'] else "  • Valuation: Not disclosed")
+        logger.info(f"  • Provider Status: {'✓ YES' if profile['is_provider'] else '✗ NO'}")
+        logger.info(f"  • Maturity: {profile['maturity']} (score: {profile['maturity_score']})")
+        logger.info(f"  • Team Size: {profile['team_size'] or 'Not disclosed'}")
+        logger.info(f"  • Location: {profile['city']}, {profile['country']}")
+        logger.info(f"{'='*80}\n")
     
-    return grade, normalized_score, reasoning, scores
+    return grade, score, reasoning
 
 
-def generate_reasoning(startup: Startup, metadata: Dict, scores: EvaluationScore, 
-                       penalties: float, grade: Grade) -> str:
-    """Generate human-readable evaluation reasoning"""
-    
-    strengths = []
-    concerns = []
-    
-    # Identify strengths
-    if scores.market_fit >= 18:
-        strengths.append(f"Strong market validation (${metadata['total_funding']/1_000_000:.0f}M funded)")
-    if scores.scalability >= 18:
-        strengths.append("Proven scaling platform with enterprise deployment")
-    if scores.innovation >= 20:
-        strengths.append("Leading AI/agentic capabilities")
-    if scores.financial_health >= 18:
-        strengths.append(f"Strong financial position (Series {metadata['funding_stage']})")
-    if scores.corporate_experience >= 15:
-        strengths.append("Extensive enterprise client experience")
-    if scores.use_case_breadth >= 14:
-        strengths.append(f"Multi-use case platform ({len(metadata['use_cases'])} use cases identified)")
-    if scores.geographic_fit >= 18:
-        strengths.append("EU-based with data compliance advantage")
-    
-    # Identify concerns
-    if scores.market_fit < 8:
-        concerns.append("Limited market validation or customer traction")
-    if scores.scalability < 8:
-        concerns.append("Early stage or point solution")
-    if scores.innovation < 10:
-        concerns.append("Limited AI/innovation differentiation")
-    if scores.financial_health < 8:
-        concerns.append("Early funding stage or weak financial position")
-    if scores.corporate_experience < 5:
-        concerns.append("Limited enterprise implementation experience")
-    if scores.use_case_breadth < 5:
-        concerns.append("Focused on single use case, limited flexibility")
-    if scores.geographic_fit < 8:
-        concerns.append("Non-EU location creates data transfer challenges")
-    if penalties >= 5:
-        concerns.append("Significant execution or market risks")
-    
-    # Build reasoning
-    reasoning = grade.description
-    if strengths:
-        reasoning += f" Key strengths: {'; '.join(strengths[:2])}."
-    if concerns:
-        reasoning += f" Concerns: {'; '.join(concerns[:2])}."
-    
-    return reasoning
 def main():
-    """
-    Main execution: Grade all evaluated startups A+ to F based on AXA partnership criteria.
-    """
+    """Main execution: Grade all evaluated startups A+ to F"""
+    
     parser = argparse.ArgumentParser(
-        description='Grade AXA startups (A+ to F) based on partnership potential',
+        description='Grade AXA startups (A+ to F) using LLM-enhanced evaluation',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python3 recalculate_scores.py --dry-run
-  python3 recalculate_scores.py --verbose
-  python3 recalculate_scores.py
+  python3 recalculate_scores_llm.py              # Grade all startups
+  python3 recalculate_scores_llm.py --dry-run    # Preview without saving
+  python3 recalculate_scores_llm.py --verbose    # Show detailed reasoning
+  python3 recalculate_scores_llm.py --limit 5    # Test with 5 startups
         """
     )
     parser.add_argument('--dry-run', action='store_true', 
@@ -625,27 +750,24 @@ Examples:
     
     # Banner
     logger.info("=" * 90)
-    logger.info("AXA STARTUP GRADING SYSTEM (A+ to F)")
+    logger.info("AXA STARTUP GRADING SYSTEM (A+ to F) - LLM-ENHANCED")
     logger.info("=" * 90)
-    logger.info("\nEvaluation Criteria (160 total points):")
-    logger.info("  ┌─ Core Capability (100 points)")
-    logger.info("  │  • Market Fit (0-25):           Proof of demand, customer traction, funding validation")
-    logger.info("  │  • Scalability (0-25):          Platform architecture, multi-customer, growth stage")
-    logger.info("  │  • Innovation (0-25):           AI/agentic capabilities, proprietary tech, IP value")
-    logger.info("  │  • Financial Health (0-25):     Funding stage, amount, profitability path")
-    logger.info("  ├─ Partnership Readiness (60 points)")
-    logger.info("  │  • Corporate Experience (0-20): B2B/enterprise deals, implementation track record")
-    logger.info("  │  • Use Case Breadth (0-20):     Multiple domain applications, platform flexibility")
-    logger.info("  │  • Geographic Fit (0-20):       EU presence, GDPR/data sovereignty compliance")
-    logger.info("  └─ Risk Assessment (penalties up to -15)")
-    logger.info("     • Team/execution/market risks reduce final grade")
+    logger.info(f"\nEvaluation Mode: {'LLM' if HAS_LLM else 'HEURISTIC'}")
+    logger.info("\nCriteria:")
+    logger.info("  • Scaling Platform: Multi-use case, multi-customer architecture")
+    logger.info("  • Funding & Market: Strong validation ($5M+), proven customer traction")
+    logger.info("  • Corporate Experience: Ability to deploy in enterprise environment")
+    logger.info("  • Use Case Breadth: Multiple AXA business problems solved")
+    logger.info("  • EU Presence: GDPR compliance and data residency")
+    logger.info("  • AI Innovation: Especially agentic capabilities")
     logger.info("\nGrade Scale:")
-    for grade in Grade:
-        logger.info(f"  {grade.value:3} → {grade.description}")
+    for grade in [Grade.A_PLUS, Grade.A, Grade.A_MINUS, Grade.B_PLUS, Grade.B, 
+                  Grade.B_MINUS, Grade.C_PLUS, Grade.C, Grade.C_MINUS, Grade.D, Grade.F]:
+        logger.info(f"  {grade.value:3} - {grade.description[:70]}...")
     logger.info("=" * 90 + "\n")
     
     if args.dry_run:
-        logger.info("🔍 DRY RUN MODE - Changes previewed but NOT saved to database\n")
+        logger.info("🔍 DRY RUN MODE - No changes will be saved to database\n")
     
     db = SessionLocal()
     
@@ -659,123 +781,72 @@ Examples:
         
         logger.info(f"Processing {len(startups)} evaluated startups\n")
         
-        # Track statistics
-        stats = {
-            'total': len(startups),
-            'by_grade': {},
-            'by_old_tier': {},
-            'by_new_tier': {},
-            'improved': 0,
-            'degraded': 0,
-            'unchanged': 0,
-            'details': []
-        }
+        # Grade statistics
+        grade_counts = {g.value: 0 for g in Grade}
+        score_details = []
         
-        # Initialize grade counts
-        for grade in Grade:
-            stats['by_grade'][grade.value] = 0
-        
-        # Grade each startup
+        # Evaluate each startup
         for idx, startup in enumerate(startups, 1):
-            grade, score, reasoning, eval_scores = calculate_startup_grade(
-                startup, 
-                verbose=args.verbose
-            )
-            
-            # Store previous tier for comparison
-            old_tier = startup.axa_priority_tier or "Tier 4: Low Priority"
-            
-            # Determine new tier based on grade
-            if grade in [Grade.A_PLUS, Grade.A, Grade.A_MINUS]:
-                new_tier = "Tier 1: Critical Priority"
-            elif grade in [Grade.B_PLUS, Grade.B]:
-                new_tier = "Tier 2: High Priority"
-            elif grade in [Grade.B_MINUS, Grade.C_PLUS]:
-                new_tier = "Tier 3: Medium Priority"
-            else:
-                new_tier = "Tier 4: Low Priority"
-            
-            # Track grade distribution
-            stats['by_grade'][grade.value] = stats['by_grade'].get(grade.value, 0) + 1
-            
-            # Track tier movement
-            old_num = 4 if 'Tier 4' in old_tier else (3 if 'Tier 3' in old_tier else (2 if 'Tier 2' in old_tier else 1))
-            new_num = 4 if 'Tier 4' in new_tier else (3 if 'Tier 3' in new_tier else (2 if 'Tier 2' in new_tier else 1))
-            
-            if new_num < old_num:
-                stats['improved'] += 1
-            elif new_num > old_num:
-                stats['degraded'] += 1
-            else:
-                stats['unchanged'] += 1
-            
-            # Update database if not dry run
-            if not args.dry_run:
-                startup.axa_overall_score = score
-                startup.axa_priority_tier = new_tier
-                startup.axa_fit_summary = f"Grade: {grade.value} | {reasoning}"
-            
-            # Collect details for significant changes
-            old_score = startup.axa_overall_score or 0
-            if abs(score - old_score) >= 10 or old_num != new_num:
-                stats['details'].append({
+            try:
+                grade, score, reasoning = calculate_startup_grade(startup, verbose=args.verbose)
+                
+                grade_counts[grade.value] += 1
+                
+                # Update database only if not dry-run
+                if not args.dry_run:
+                    startup.axa_overall_score = score
+                
+                score_details.append({
                     'name': startup.company_name,
                     'country': startup.company_country,
                     'grade': grade.value,
-                    'score': round(score, 1),
-                    'old_score': round(old_score, 1),
-                    'old_tier': old_tier,
-                    'new_tier': new_tier,
-                    'reasoning': reasoning[:100] + "..." if len(reasoning) > 100 else reasoning
+                    'score': score,
+                    'reasoning': reasoning[:80] + "..." if len(reasoning) > 80 else reasoning
                 })
-            
-            # Progress indicator
-            if idx % 10 == 0:
-                logger.info(f"  ✓ Processed {idx}/{len(startups)} startups")
+                
+                # Progress
+                if idx % max(1, len(startups) // 20) == 0:
+                    logger.info(f"  ✓ Processed {idx}/{len(startups)} startups")
+                    
+            except Exception as e:
+                logger.error(f"Error evaluating {startup.company_name}: {e}")
+                import traceback
+                traceback.print_exc()
         
-        # Commit changes
+        # Commit changes ONLY if not dry-run
         if not args.dry_run:
             db.commit()
-            logger.info(f"\n✅ Database updated with new grades\n")
+            logger.info(f"\n✅ Database updated - axa_overall_score saved\n")
         else:
-            logger.info(f"\n(Dry run - no changes saved)\n")
+            db.rollback()
+            logger.info(f"\n(Dry run - no changes committed)\n")
         
-        # Print summary statistics
+        # Summary
         logger.info("=" * 90)
         logger.info("GRADING SUMMARY")
         logger.info("=" * 90)
         
         logger.info(f"\nGrade Distribution ({len(startups)} startups):")
-        grade_order = [Grade.A_PLUS, Grade.A, Grade.A_MINUS, Grade.B_PLUS, Grade.B, Grade.B_MINUS, 
-                      Grade.C_PLUS, Grade.C, Grade.C_MINUS, Grade.D, Grade.F]
-        for grade in grade_order:
-            count = stats['by_grade'].get(grade.value, 0)
+        for grade in [Grade.A_PLUS, Grade.A, Grade.A_MINUS, Grade.B_PLUS, Grade.B, 
+                      Grade.B_MINUS, Grade.C_PLUS, Grade.C, Grade.C_MINUS, Grade.D, Grade.F]:
+            count = grade_counts[grade.value]
             pct = (count / len(startups) * 100) if len(startups) > 0 else 0
-            bar = "█" * int(pct / 2) + "░" * (50 - int(pct / 2))
-            logger.info(f"  {grade.value:3} [{bar}] {count:3} ({pct:5.1f}%)")
+            bar = "█" * int(pct / 3) + "░" * (30 - int(pct / 3))
+            logger.info(f"  {grade.value:3} [{bar}] {count:4} startups  {grade.description[:50]}")
         
-        logger.info(f"\nTier Movement:")
-        logger.info(f"  ↑ Improved:  {stats['improved']:3} startups moved to higher tier")
-        logger.info(f"  → Unchanged: {stats['unchanged']:3} startups stayed same tier")
-        logger.info(f"  ↓ Degraded:  {stats['degraded']:3} startups moved to lower tier")
         
-        # Show notable changes
-        if stats['details']:
-            logger.info(f"\nMost Significant Changes (top 15):")
-            for detail in sorted(stats['details'], 
-                                key=lambda x: abs(x['score'] - x['old_score']), 
-                                reverse=True)[:15]:
-                score_delta = detail['score'] - detail['old_score']
-                delta_str = f"(+{score_delta:.1f})" if score_delta > 0 else f"({score_delta:.1f})"
-                logger.info(f"  {detail['name']:40} {detail['grade']:2} "
-                           f"{detail['score']:5.1f} {delta_str:9} | {detail['old_tier']} → {detail['new_tier']}")
+        # Show top performers
+        if score_details:
+            logger.info(f"\nTop 10 Performers:")
+            for detail in sorted(score_details, key=lambda x: x['score'], reverse=True)[:10]:
+                logger.info(f"  {detail['grade']:3} {detail['name']:40} ({detail['country']})")
         
         logger.info("\n" + "=" * 90)
         logger.info("✨ Grading complete!")
         logger.info("=" * 90)
         
     except Exception as e:
-        logger.error(f"Error during grading: {e}")
+        logger.error(f"Fatal error during grading: {e}")
         import traceback
         traceback.print_exc()
     finally:
