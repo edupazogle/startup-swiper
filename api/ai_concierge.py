@@ -470,62 +470,66 @@ Please provide a helpful and comprehensive answer based on the available informa
         Returns:
             Response with clarifying questions incorporating database context
         """
+        import db_queries
+        
         # Extract potential startup/company names from the question
         startup_context = ""
         mentioned_startups = []
         
         # Try to find startups mentioned in the question
         words = question.split()
-        keywords_to_skip = {"write", "post", "linkedin", "help", "me", "a", "about", "on", "for", "the", "to", "create", "generate", "can", "you", "i", "want", "would", "like", "please"}
+        keywords_to_skip = {"write", "post", "linkedin", "help", "me", "a", "about", "on", "for", "the", "to", "create", "generate", "can", "you", "i", "want", "would", "like", "please", "post"}
         
         potential_company_names = [word.strip('.,!?') for word in words if word.lower() not in keywords_to_skip and len(word) > 2]
         
-        # Search database for mentioned startups
+        # Search database for mentioned startups - use actual database queries
         for company_name in potential_company_names:
-            results = self.startup_loader.search_startups(company_name, limit=3)
+            # Search the actual database
+            results = db_queries.search_startups(self.db, query_text=company_name, limit=3)
             if results:
                 for result in results:
-                    startup_name = result.get('name', 'Unknown')
-                    industry = result.get('categories', [])
-                    if industry and isinstance(industry, list) and len(industry) > 0:
-                        industry_str = industry[0].get('name') if isinstance(industry[0], dict) else str(industry[0])
-                    else:
-                        industry_str = "N/A"
-                    mentioned_startups.append({
-                        'name': startup_name,
-                        'industry': industry_str,
-                        'original_query': company_name
-                    })
+                    if result:  # Make sure result is not None
+                        startup_name = result.get('company_name', 'Unknown')
+                        industry = result.get('primary_industry', 'N/A').upper()
+                        country = result.get('company_country', '')
+                        city = result.get('company_city', '')
+                        location = f"{city}, {country}" if city and country else (country or city or "Global")
+                        description = result.get('company_description', '')[:90]
+                        
+                        mentioned_startups.append({
+                            'name': startup_name,
+                            'industry': industry,
+                            'location': location,
+                            'description': description,
+                            'original_query': company_name
+                        })
         
         # Build context about found startups
         if mentioned_startups:
-            startup_context = "\n\nI found these relevant startups in our database:\n"
-            for startup in mentioned_startups:
-                startup_context += f"- **{startup['name']}** ({startup['industry']})\n"
-            startup_context += "\nWould any of these be relevant to mention?"
+            startup_context = "\n\n🔍 **Found in Slush Database**: I discovered relevant startups:\n"
+            for startup in mentioned_startups[:3]:  # Limit to top 3
+                startup_context += f"• **{startup['name']}** | {startup['industry']} | {startup['location']}\n"
+                if startup['description']:
+                    startup_context += f"  {startup['description']}...\n"
         
-        system_message = """You are a helpful LinkedIn content strategist and startup expert. 
-When a user asks to write a LinkedIn post, you should ask clarifying questions to understand:
+        system_message = """You are a friendly and knowledgeable LinkedIn content strategist for Slush 2025. 
+You have access to real startup data and can help write amazing posts.
+
+When a user asks to write a LinkedIn post, ask clarifying questions to understand:
 1. What specific topic or subject they want to write about
-2. Whether it's about a specific startup, event, or announcement
+2. Whether it's about a specific startup, event, or announcement  
 3. The key message or goal of the post
 4. Any specific companies, people, or events to mention
 
-Ask these questions in a conversational, friendly manner. Be specific and helpful.
-If relevant startups have been identified in the database, mention them naturally in your questions.
-Format your response as a series of clear, actionable questions."""
+Ask questions in a conversational, friendly manner. If relevant startups have been found, 
+naturally mention them and suggest how they could be included. Make it feel like a helpful expert conversation.
+Ask 3-4 key questions, not overwhelming."""
         
-        user_prompt = f"""The user has asked: "{question}"
+        user_prompt = f"""The user asked: "{question}"
 {startup_context}
 
-Please ask me clarifying questions to help write a great LinkedIn post. 
-I want to understand:
-- What they want to focus on (startup announcement, thought leadership, event recap, etc.)
-- Any specific startups, companies, or people to mention (use the found startups if relevant)
-- Key points or messages to include
-- The tone and target audience
-
-Make the questions conversational and not overwhelming - ask 3-4 key questions."""
+Generate 3-4 conversational, specific clarifying questions to help them write the perfect LinkedIn post. 
+Make it feel natural and expert-like, as if you're collaborating with them."""
         
         messages = [
             {"role": "system", "content": system_message},
@@ -550,24 +554,23 @@ Make the questions conversational and not overwhelming - ask 3-4 key questions."
         except Exception as e:
             logger.error(f"Error in LinkedIn clarification: {e}")
             # Fallback response with manual questions
-            fallback = """Great! I'd love to help you write a compelling LinkedIn post. 
-To create the perfect post, please tell me:
+            fallback = """I'd love to help you write a compelling LinkedIn post! Here are a few questions to get started:
 
-1️⃣ **Topic/Focus**: What's the main topic or subject? (e.g., "AI in insurance", "Our Series A announcement", "Takeaways from Slush 2025")
+1️⃣ **What's the focus?** Are you writing about a specific startup announcement, industry trend, event insight, or thought leadership?
 
-2️⃣ **Companies/Startups**: Is this about a specific startup, company, or industry? Any key companies or people to mention?
+2️⃣ **Key companies or people?** Should we mention any specific startups, companies, or individuals?
 
-3️⃣ **Key Points**: What are 2-3 key points or messages you want to get across?
+3️⃣ **Main message?** What's the 1-2 key things you want readers to remember or learn?
 
-4️⃣ **Tone**: What's your preferred tone - casual and engaging, or professional and data-driven?
+4️⃣ **Your tone?** Professional and data-driven, or more casual and energetic?
 
-Once you provide these details, I'll generate a professional LinkedIn post with your VC partner perspective! 🚀"""
+Let me know and I'll craft an amazing post! 🚀"""
             
             if mentioned_startups:
-                fallback += f"\n\nBy the way, I found these relevant startups in our database:\n"
-                for startup in mentioned_startups:
-                    fallback += f"- **{startup['name']}** ({startup['industry']})\n"
-                fallback += "Feel free to mention any of these in your post!"
+                fallback += f"\n\n**Heads up:** I found some relevant startups in our Slush database:\n"
+                for startup in mentioned_startups[:3]:
+                    fallback += f"✓ **{startup['name']}** - {startup['industry']} ({startup['location']})\n"
+                fallback += "\nWe can definitely feature any of these!"
             
             return fallback
     

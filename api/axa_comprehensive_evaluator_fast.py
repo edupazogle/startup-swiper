@@ -153,8 +153,8 @@ class FastStartupEvaluator:
     
     def _pre_filter_categories(self, startup: Startup) -> List[CategoryType]:
         """
-        Smart pre-filtering: Only evaluate relevant categories based on keywords
-        This dramatically speeds up evaluation
+        Smart pre-filtering: Select relevant categories based on industry and keywords
+        Ensures comprehensive evaluation while staying efficient
         """
         text = f"{startup.company_description or ''} {startup.shortDescription or ''} {startup.primary_industry or ''} {startup.secondary_industry or ''}".lower()
         
@@ -167,19 +167,60 @@ class FastStartupEvaluator:
                     relevant_categories.append(cat_type)
                     break
         
-        # Always include insurance if "insurance" in any field
-        if "insurance" in text or "insurtech" in text:
-            if CategoryType.INSURANCE_GENERAL not in relevant_categories:
-                relevant_categories.append(CategoryType.INSURANCE_GENERAL)
+        # Industry-based additions (ensure we don't miss relevant categories)
+        industry = (startup.primary_industry or '').lower()
         
-        # If no matches found, evaluate top 4 most likely categories
+        # AI industry - should check most agentic and automation categories
+        if 'ai' in industry or 'ai' in text[:200]:
+            for cat in [CategoryType.AGENTIC_PLATFORM, CategoryType.AGENTIC_SOLUTIONS, 
+                        CategoryType.WORKFLOW_AUTOMATION, CategoryType.LLM_OBSERVABILITY, 
+                        CategoryType.AI_EVALS]:
+                if cat not in relevant_categories:
+                    relevant_categories.append(cat)
+        
+        # Enterprise software - could be workflow or contact center
+        if 'enterprise' in industry or 'software' in industry:
+            for cat in [CategoryType.WORKFLOW_AUTOMATION, CategoryType.CONTACT_CENTER]:
+                if cat not in relevant_categories:
+                    relevant_categories.append(cat)
+        
+        # Health/medtech - always check health category
+        if any(x in industry for x in ['health', 'medtech', 'pharma', 'lifesciences']):
+            if CategoryType.HEALTH_WELLNESS not in relevant_categories:
+                relevant_categories.append(CategoryType.HEALTH_WELLNESS)
+        
+        # Insurance/fintech - check insurance categories
+        if any(x in text for x in ['insurance', 'insurtech', 'underwriting', 'claims', 'policy']):
+            for cat in [CategoryType.INSURANCE_GENERAL, CategoryType.UNDERWRITING_TRIAGE, 
+                        CategoryType.CLAIMS_RECOVERY]:
+                if cat not in relevant_categories:
+                    relevant_categories.append(cat)
+        
+        # Developer/tech tools - check coding category
+        if any(x in text for x in ['developer', 'coding', 'code', 'devops', 'ci/cd', 'software development']):
+            if CategoryType.CODING_AUTOMATION not in relevant_categories:
+                relevant_categories.append(CategoryType.CODING_AUTOMATION)
+        
+        # Sales/marketing - check sales training
+        if any(x in text for x in ['sales', 'marketing', 'crm', 'salesforce']):
+            if CategoryType.SALES_TRAINING not in relevant_categories:
+                relevant_categories.append(CategoryType.SALES_TRAINING)
+        
+        # Customer service - check contact center
+        if any(x in text for x in ['customer service', 'customer support', 'call center', 'contact center']):
+            if CategoryType.CONTACT_CENTER not in relevant_categories:
+                relevant_categories.append(CategoryType.CONTACT_CENTER)
+        
+        # If still no matches found, evaluate broader set of categories (not just 4)
         if not relevant_categories:
-            # Default to checking these versatile categories
+            # For unknown/generic startups, check these 6 versatile categories
             relevant_categories = [
                 CategoryType.AGENTIC_SOLUTIONS,
                 CategoryType.WORKFLOW_AUTOMATION,
                 CategoryType.INSURANCE_GENERAL,
-                CategoryType.HEALTH_WELLNESS
+                CategoryType.HEALTH_WELLNESS,
+                CategoryType.CODING_AUTOMATION,
+                CategoryType.CONTACT_CENTER
             ]
         
         return relevant_categories
