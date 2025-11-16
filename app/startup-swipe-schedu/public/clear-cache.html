@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Cache - Startup Rise</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 2px solid #bee5eb;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        .steps {
+            text-align: left;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .steps li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Clear App Cache</h1>
+        <p>If you're seeing "Unknown Startup" or old data, clear the cache:</p>
+        
+        <div id="status"></div>
+        
+        <button onclick="clearAllCaches()">🗑️ Clear Cache Now</button>
+        <button onclick="goToApp()">🚀 Go to App</button>
+        
+        <div class="steps">
+            <h3>What this does:</h3>
+            <ol>
+                <li>Clears all service worker caches</li>
+                <li>Removes old startup data</li>
+                <li>Forces fresh data from server</li>
+                <li>Reloads the app</li>
+            </ol>
+        </div>
+        
+        <p style="color: #666; font-size: 14px; margin-top: 20px;">
+            For iOS: You may need to close Safari completely and reopen after clearing cache.
+        </p>
+    </div>
+
+    <script>
+        async function clearAllCaches() {
+            const status = document.getElementById('status');
+            
+            try {
+                status.className = 'status info';
+                status.innerHTML = '🔄 Clearing caches...';
+                
+                // Clear all caches
+                const cacheNames = await caches.keys();
+                await Promise.all(
+                    cacheNames.map(cacheName => caches.delete(cacheName))
+                );
+                
+                // Unregister service workers
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    await Promise.all(
+                        registrations.map(registration => registration.unregister())
+                    );
+                }
+                
+                // Clear localStorage
+                localStorage.clear();
+                
+                // Clear sessionStorage
+                sessionStorage.clear();
+                
+                status.className = 'status success';
+                status.innerHTML = `
+                    ✅ Cache cleared successfully!<br>
+                    Cleared ${cacheNames.length} caches<br>
+                    <small>Redirecting to app in 2 seconds...</small>
+                `;
+                
+                // Redirect to main app
+                setTimeout(() => {
+                    window.location.href = '/?nocache=' + Date.now();
+                }, 2000);
+                
+            } catch (error) {
+                status.className = 'status info';
+                status.innerHTML = `
+                    ⚠️ Cache cleared (with errors)<br>
+                    <small>${error.message}</small><br>
+                    <small>You can still continue to the app</small>
+                `;
+            }
+        }
+        
+        function goToApp() {
+            window.location.href = '/?nocache=' + Date.now();
+        }
+        
+        // Auto-clear on iOS if coming from certain conditions
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('auto') === 'true') {
+            clearAllCaches();
+        }
+    </script>
+</body>
+</html>
