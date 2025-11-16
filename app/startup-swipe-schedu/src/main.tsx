@@ -10,15 +10,21 @@ import "./main.css"
 import "./styles/theme.css"
 import "./index.css"
 
-// Register PWA service worker
+// Register PWA service worker with aggressive update checking
 const updateSW = registerSW({
+  immediate: true, // Register immediately
   onNeedRefresh() {
-    if (confirm('New content available. Reload?')) {
-      updateSW(true)
-    }
+    console.log('🔄 New version available, reloading...')
+    updateSW(true) // Auto-reload without asking
   },
   onOfflineReady() {
     console.log('App ready to work offline')
+  },
+  onRegisteredSW(swUrl, r) {
+    // Check for updates every 60 seconds
+    r && setInterval(() => {
+      r.update()
+    }, 60000)
   },
 })
 

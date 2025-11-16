@@ -12,6 +12,12 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      injectRegister: 'auto',
+      workbox: {
+        cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
+      },
       manifest: {
         name: 'Startup Rise - Slush 2025',
         short_name: 'Startup Rise',
@@ -21,7 +27,7 @@ export default defineConfig({
         display: 'standalone',
         orientation: 'portrait',
         scope: '/',
-        start_url: '/?v=3',
+        start_url: '/?v=4',
         icons: [
           {
             src: '/pwa-192x192.png',
