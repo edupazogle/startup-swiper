@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Browser Storage</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .info {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+            display: none;
+        }
+        .items {
+            list-style: none;
+            padding: 0;
+        }
+        .items li {
+            padding: 8px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .items li::before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Clear Browser Storage</h1>
+        
+        <div class="info">
+            <strong>What will be cleared:</strong>
+            <ul class="items">
+                <li>LocalStorage (votes, ratings, messages)</li>
+                <li>SessionStorage (temporary data)</li>
+                <li>IndexedDB (offline data)</li>
+                <li>Service Worker cache</li>
+                <li>Cookies</li>
+            </ul>
+        </div>
+
+        <button onclick="clearEverything()">🗑️ Clear All Storage</button>
+        <button onclick="clearLocalStorageOnly()">📦 Clear LocalStorage Only</button>
+        <button onclick="location.reload()">🔄 Refresh Page</button>
+
+        <div class="success" id="successMessage">
+            ✅ Storage cleared successfully! You can now test with a clean slate.
+        </div>
+
+        <div class="info" style="margin-top: 30px;">
+            <strong>Current Storage:</strong>
+            <div id="storageInfo" style="margin-top: 10px; font-family: monospace; font-size: 12px;"></div>
+        </div>
+    </div>
+
+    <script>
+        function showSuccess() {
+            document.getElementById('successMessage').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 3000);
+        }
+
+        function displayStorageInfo() {
+            const info = [];
+            info.push(`LocalStorage items: ${localStorage.length}`);
+            info.push(`SessionStorage items: ${sessionStorage.length}`);
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                info.push(`  - ${key}: ${value ? value.substring(0, 50) + '...' : 'empty'}`);
+            }
+            
+            document.getElementById('storageInfo').innerHTML = info.join('<br>');
+        }
+
+        async function clearEverything() {
+            if (!confirm('This will clear ALL browser storage. Continue?')) {
+                return;
+            }
+
+            // Clear localStorage
+            localStorage.clear();
+            
+            // Clear sessionStorage
+            sessionStorage.clear();
+            
+            // Clear cookies
+            document.cookie.split(";").forEach(function(c) { 
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+            });
+            
+            // Clear IndexedDB
+            if (window.indexedDB) {
+                const dbs = await window.indexedDB.databases();
+                dbs.forEach(db => {
+                    if (db.name) {
+                        window.indexedDB.deleteDatabase(db.name);
+                    }
+                });
+            }
+            
+            // Unregister service workers
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (let registration of registrations) {
+                    await registration.unregister();
+                }
+            }
+            
+            // Clear cache storage
+            if ('caches' in window) {
+                const cacheNames = await caches.keys();
+                await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
+            }
+            
+            showSuccess();
+            displayStorageInfo();
+            console.log('All storage cleared!');
+        }
+
+        function clearLocalStorageOnly() {
+            if (!confirm('Clear localStorage only?')) {
+                return;
+            }
+            
+            localStorage.clear();
+            showSuccess();
+            displayStorageInfo();
+            console.log('LocalStorage cleared!');
+        }
+
+        // Display current storage on load
+        displayStorageInfo();
+        
+        // Auto-refresh storage info every 2 seconds
+        setInterval(displayStorageInfo, 2000);
+    </script>
+</body>
+</html>
