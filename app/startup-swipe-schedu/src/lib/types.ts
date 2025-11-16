@@ -44,6 +44,10 @@ export interface Startup {
   axaOverallScore?: number
   axa_priority_tier?: string
   axaPriorityTier?: string
+  axa_grade?: string
+  axaGrade?: string
+  axa_grade_explanation?: string
+  axaGradeExplanation?: string
   axa_can_use_as_provider?: boolean
   axaCanUseAsProvider?: boolean
   axa_business_leverage?: string

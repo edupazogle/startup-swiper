@@ -88,6 +88,54 @@ class Grade(Enum):
         return descriptions.get(self.value, "Unknown")
 
 
+def get_grade_explanation(grade: Grade, profile: Dict) -> str:
+    """Generate creative, context-aware grade explanation"""
+    
+    # Base explanations
+    explanations = {
+        'A+': "Enterprise powerhouse",
+        'A': "Solid growth trajectory",
+        'A-': "Proven market player",
+        'B+': "Good potential fit",
+        'B': "Workable solution",
+        'B-': "Viable with support",
+        'C+': "Early stage challenges",
+        'C': "Limited scope",
+        'C-': "Significant gaps",
+        'D': "Poor fit",
+        'F': "Not viable"
+    }
+    
+    explanation = explanations.get(grade.value, "Assessment pending")
+    
+    # Add context-aware modifiers
+    modifiers = []
+    
+    # Funding context
+    if profile.get('total_funding', 0) < 5_000_000:
+        modifiers.append("underfunded")
+    
+    # B2B/Enterprise experience
+    if not profile.get('is_provider', False):
+        modifiers.append("no B2B yet")
+    
+    # Use case breadth
+    if profile.get('use_case_count', 0) < 2:
+        modifiers.append("narrow")
+    
+    # Geographic risk
+    country = profile.get('country', '').upper()
+    non_eu = country not in {'DE', 'FR', 'GB', 'UK', 'ES', 'IT', 'NL', 'BE', 'CH', 'SE', 'FI', 'DK', 'NO', 'AT', 'PL', 'IE', 'PT', 'GR', 'CZ', 'RO', 'HU', 'LU'}
+    if non_eu and country:
+        modifiers.append("geo risk")
+    
+    # Combine with modifiers
+    if modifiers:
+        explanation += f" ({', '.join(modifiers)})"
+    
+    return explanation
+
+
 def extract_startup_profile(startup: Startup) -> Dict:
     """Extract comprehensive startup profile for evaluation - using ALL available database fields"""
     
@@ -489,9 +537,13 @@ def evaluate_with_llm(profile: Dict, verbose: bool = False) -> Tuple[Grade, floa
         if concerns and verbose:
             full_reasoning += f" | Concerns: {'; '.join(concerns[:2])}"
         
+        # Generate grade explanation
+        explanation = get_grade_explanation(grade, profile)
+        
         if verbose:
             logger.debug(f"Final Grade: {grade.value} ({score:.1f})")
             logger.debug(f"Reasoning: {reasoning}")
+            logger.debug(f"Explanation: {explanation}")
             if strengths:
                 logger.debug(f"Strengths: {', '.join(strengths)}")
             if concerns:
@@ -499,14 +551,16 @@ def evaluate_with_llm(profile: Dict, verbose: bool = False) -> Tuple[Grade, floa
             if recommendation:
                 logger.debug(f"Recommendation: {recommendation}")
         
-        return grade, score, full_reasoning if verbose else reasoning
+        return grade, score, full_reasoning if verbose else reasoning, explanation
         
     except Exception as e:
         logger.warning(f"LLM evaluation failed for {profile['name']}: {str(e)[:100]}")
         if verbose:
             import traceback
             logger.debug(f"Full error: {traceback.format_exc()}")
-        return evaluate_heuristic(profile)
+        grade, score, reasoning = evaluate_heuristic(profile)
+        explanation = get_grade_explanation(grade, profile)
+        return grade, score, reasoning, explanation
 
 
 def evaluate_heuristic(profile: Dict) -> Tuple[Grade, float, str]:
@@ -698,14 +752,17 @@ def evaluate_heuristic(profile: Dict) -> Tuple[Grade, float, str]:
     # Build reasoning from top insights
     reasoning = f"{grade.value} - " + "; ".join(insights[:4])
     
-    return grade, score, reasoning
+    # Generate grade explanation
+    explanation = get_grade_explanation(grade, profile)
+    
+    return grade, score, reasoning, explanation
 
 
-def calculate_startup_grade(startup: Startup, verbose: bool = False) -> Tuple[Grade, float, str]:
+def calculate_startup_grade(startup: Startup, verbose: bool = False) -> Tuple[Grade, float, str, str]:
     """Calculate comprehensive startup grade using LLM analysis"""
     
     profile = extract_startup_profile(startup)
-    grade, score, reasoning = evaluate_with_llm(profile, verbose=verbose)
+    grade, score, reasoning, explanation = evaluate_with_llm(profile, verbose=verbose)
     
     if verbose:
         logger.info(f"\n{'='*80}")
@@ -713,6 +770,7 @@ def calculate_startup_grade(startup: Startup, verbose: bool = False) -> Tuple[Gr
         logger.info(f"{'='*80}")
         logger.info(f"Grade: {grade.value} | Score: {score:.1f}/100")
         logger.info(f"Reasoning: {reasoning}")
+        logger.info(f"Explanation: {explanation}")
         logger.info(f"\nKey Metrics:")
         logger.info(f"  • Use Cases: {profile['use_case_count']}")
         logger.info(f"  • Funding: ${profile['total_funding']/1_000_000:.1f}M ({profile['funding_stage']})")
@@ -723,7 +781,7 @@ def calculate_startup_grade(startup: Startup, verbose: bool = False) -> Tuple[Gr
         logger.info(f"  • Location: {profile['city']}, {profile['country']}")
         logger.info(f"{'='*80}\n")
     
-    return grade, score, reasoning
+    return grade, score, reasoning, explanation
 
 
 def main():
@@ -788,13 +846,15 @@ Examples:
         # Evaluate each startup
         for idx, startup in enumerate(startups, 1):
             try:
-                grade, score, reasoning = calculate_startup_grade(startup, verbose=args.verbose)
+                grade, score, reasoning, grade_explanation = calculate_startup_grade(startup, verbose=args.verbose)
                 
                 grade_counts[grade.value] += 1
                 
                 # Update database only if not dry-run
                 if not args.dry_run:
                     startup.axa_overall_score = score
+                    startup.axa_grade = grade.value
+                    startup.axa_grade_explanation = grade_explanation
                 
                 score_details.append({
                     'name': startup.company_name,
@@ -816,7 +876,7 @@ Examples:
         # Commit changes ONLY if not dry-run
         if not args.dry_run:
             db.commit()
-            logger.info(f"\n✅ Database updated - axa_overall_score saved\n")
+            logger.info(f"\n✅ Database updated - axa_overall_score, axa_grade, and axa_grade_explanation saved\n")
         else:
             db.rollback()
             logger.info(f"\n(Dry run - no changes committed)\n")

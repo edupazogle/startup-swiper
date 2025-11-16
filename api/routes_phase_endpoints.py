@@ -87,6 +87,8 @@ def startup_to_dict(startup: Startup) -> dict:
         'axa_evaluation_date': startup.axa_evaluation_date,
         'axa_overall_score': startup.axa_overall_score,
         'axa_priority_tier': startup.axa_priority_tier,
+        'axa_grade': startup.axa_grade,
+        'axa_grade_explanation': startup.axa_grade_explanation,
         'axa_can_use_as_provider': startup.axa_can_use_as_provider,
         'axa_business_leverage': startup.axa_business_leverage,
         'axa_primary_topic': startup.axa_primary_topic,

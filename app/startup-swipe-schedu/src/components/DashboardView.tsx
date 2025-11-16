@@ -461,27 +461,30 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                       <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">Rise Score</p>
                       <div className="flex items-end gap-2">
                         <span className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
-                          {(startup.axa_overall_score || startup.axaOverallScore)?.toFixed(0)}%
+                          {(startup.axa_overall_score || startup.axaOverallScore)?.toFixed(0)}
                         </span>
                       </div>
                     </div>
 
-                    {/* Provider Status */}
-                    {(startup.axa_can_use_as_provider !== undefined || startup.axaCanUseAsProvider !== undefined) && (
-                      <div className="flex items-center gap-2">
-                        <CheckCircle 
+                    {/* Grade Explanation */}
+                    {(startup.axa_grade !== undefined || startup.axaGrade !== undefined) && (
+                      <div className="flex items-start gap-2">
+                        <Sparkle 
                           size={14} 
                           weight="fill"
                           className={cn(
-                            (startup.axa_can_use_as_provider || startup.axaCanUseAsProvider) 
-                              ? 'text-green-600 dark:text-green-400' 
-                              : 'text-slate-400 dark:text-slate-600'
+                            'flex-shrink-0 mt-0.5',
+                            startup.axa_grade === 'A+' || startup.axaGrade === 'A+' ? 'text-yellow-500 dark:text-yellow-400' :
+                            startup.axa_grade === 'A' || startup.axaGrade === 'A' ? 'text-emerald-600 dark:text-emerald-400' :
+                            startup.axa_grade === 'B+' || startup.axaGrade === 'B+' ? 'text-cyan-600 dark:text-cyan-400' :
+                            startup.axa_grade === 'B' || startup.axaGrade === 'B' ? 'text-blue-600 dark:text-blue-400' :
+                            startup.axa_grade === 'C+' || startup.axaGrade === 'C+' ? 'text-amber-600 dark:text-amber-400' :
+                            startup.axa_grade === 'C' || startup.axaGrade === 'C' ? 'text-orange-600 dark:text-orange-400' :
+                            'text-slate-400 dark:text-slate-600'
                           )} 
                         />
-                        <span className="text-xs text-muted-foreground">
-                          {(startup.axa_can_use_as_provider || startup.axaCanUseAsProvider) 
-                            ? 'Can be used as provider'
-                            : 'Research opportunity'}
+                        <span className="text-xs text-muted-foreground leading-snug">
+                          {startup.axa_grade_explanation || startup.axaGradeExplanation || 'Assessment pending'}
                         </span>
                       </div>
                     )}

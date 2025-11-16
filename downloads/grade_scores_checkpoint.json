@@ -1,0 +1,826 @@
+{
+  "evaluated_ids": [
+    2,
+    3,
+    4,
+    6,
+    7,
+    8,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    38,
+    39,
+    40,
+    41,
+    42,
+    45,
+    46,
+    47,
+    48,
+    49,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    108,
+    109,
+    110,
+    111,
+    113,
+    114,
+    115
+  ],
+  "results": [
+    {
+      "startup_id": 2,
+      "startup_name": "Cognita",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:45:10.542724"
+    },
+    {
+      "startup_id": 3,
+      "startup_name": "Hyphorest",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:45:23.812055"
+    },
+    {
+      "startup_id": 4,
+      "startup_name": "DATATOENERGY",
+      "grade": "D",
+      "grade_explanation": "Very early concept",
+      "evaluation_date": "2025-11-16T20:45:30.066970"
+    },
+    {
+      "startup_id": 6,
+      "startup_name": "varmo",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:45:43.489241"
+    },
+    {
+      "startup_id": 7,
+      "startup_name": "Matillion",
+      "grade": "A-",
+      "grade_explanation": "Good partnership fit",
+      "evaluation_date": "2025-11-16T20:46:01.753107"
+    },
+    {
+      "startup_id": 8,
+      "startup_name": "Get-ranked.ai",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:46:03.723244"
+    },
+    {
+      "startup_id": 10,
+      "startup_name": "M-Files",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:46:06.994788"
+    },
+    {
+      "startup_id": 11,
+      "startup_name": "Sateliot",
+      "grade": "A-",
+      "grade_explanation": "Good partnership fit (narrow)",
+      "evaluation_date": "2025-11-16T20:46:09.494033"
+    },
+    {
+      "startup_id": 12,
+      "startup_name": "Manus AI",
+      "grade": "A-",
+      "grade_explanation": "Good partnership fit",
+      "evaluation_date": "2025-11-16T20:46:13.207601"
+    },
+    {
+      "startup_id": 13,
+      "startup_name": "Media Stream AI",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:46:15.874612"
+    },
+    {
+      "startup_id": 14,
+      "startup_name": "Superscript",
+      "grade": "A",
+      "grade_explanation": "Solid growth trajectory",
+      "evaluation_date": "2025-11-16T20:46:19.585069"
+    },
+    {
+      "startup_id": 15,
+      "startup_name": "Canopy Cloud",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:46:21.989029"
+    },
+    {
+      "startup_id": 16,
+      "startup_name": "RespireLabs",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:46:24.684954"
+    },
+    {
+      "startup_id": 17,
+      "startup_name": "Hedera Dx",
+      "grade": "A-",
+      "grade_explanation": "Good partnership fit",
+      "evaluation_date": "2025-11-16T20:46:38.741654"
+    },
+    {
+      "startup_id": 18,
+      "startup_name": "Black Crow AI",
+      "grade": "B+",
+      "grade_explanation": "Viable but developing (underfunded)",
+      "evaluation_date": "2025-11-16T20:47:07.725218"
+    },
+    {
+      "startup_id": 19,
+      "startup_name": "Genie AI",
+      "grade": "B+",
+      "grade_explanation": "Viable but developing (underfunded)",
+      "evaluation_date": "2025-11-16T20:47:27.366042"
+    },
+    {
+      "startup_id": 20,
+      "startup_name": "Prewave",
+      "grade": "A-",
+      "grade_explanation": "Good partnership fit (narrow)",
+      "evaluation_date": "2025-11-16T20:47:38.900744"
+    },
+    {
+      "startup_id": 21,
+      "startup_name": "Velory",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:47:41.478127"
+    },
+    {
+      "startup_id": 22,
+      "startup_name": "Qare",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:47:45.034893"
+    },
+    {
+      "startup_id": 23,
+      "startup_name": "Yazen",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:47:47.289978"
+    },
+    {
+      "startup_id": 24,
+      "startup_name": "Synera",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:47:50.779024"
+    },
+    {
+      "startup_id": 25,
+      "startup_name": "properti",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:47:52.722783"
+    },
+    {
+      "startup_id": 27,
+      "startup_name": "Nalvin",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:47:55.835795"
+    },
+    {
+      "startup_id": 28,
+      "startup_name": "simpleclub",
+      "grade": "C",
+      "grade_explanation": "Pre-growth limitations",
+      "evaluation_date": "2025-11-16T20:48:08.672382"
+    },
+    {
+      "startup_id": 29,
+      "startup_name": "AdsGency AI",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:48:29.005588"
+    },
+    {
+      "startup_id": 30,
+      "startup_name": "Abtrace",
+      "grade": "B+",
+      "grade_explanation": "Viable but developing (underfunded)",
+      "evaluation_date": "2025-11-16T20:48:43.173040"
+    },
+    {
+      "startup_id": 31,
+      "startup_name": "Huniverse Global",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:48:50.680911"
+    },
+    {
+      "startup_id": 32,
+      "startup_name": "PromoRepublic",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:48:54.671903"
+    },
+    {
+      "startup_id": 33,
+      "startup_name": "TimeFlow",
+      "grade": "C",
+      "grade_explanation": "Pre-growth limitations",
+      "evaluation_date": "2025-11-16T20:48:57.892922"
+    },
+    {
+      "startup_id": 34,
+      "startup_name": "Epiminds",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:49:07.323932"
+    },
+    {
+      "startup_id": 35,
+      "startup_name": "Sisua Digital",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:49:10.973421"
+    },
+    {
+      "startup_id": 36,
+      "startup_name": "Deeploy",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:49:13.583127"
+    },
+    {
+      "startup_id": 38,
+      "startup_name": "DeepLife",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:49:16.489622"
+    },
+    {
+      "startup_id": 39,
+      "startup_name": "Starcart",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:49:18.608505"
+    },
+    {
+      "startup_id": 40,
+      "startup_name": "Anansi",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:49:21.250116"
+    },
+    {
+      "startup_id": 41,
+      "startup_name": "Inicio AI",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:49:24.661281"
+    },
+    {
+      "startup_id": 42,
+      "startup_name": "Noteless AI",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:49:27.868574"
+    },
+    {
+      "startup_id": 45,
+      "startup_name": "Engrate",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:49:29.895647"
+    },
+    {
+      "startup_id": 46,
+      "startup_name": "Valo.ai",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:49:43.918852"
+    },
+    {
+      "startup_id": 47,
+      "startup_name": "Oraion",
+      "grade": "B+",
+      "grade_explanation": "Viable but developing (underfunded)",
+      "evaluation_date": "2025-11-16T20:50:01.346736"
+    },
+    {
+      "startup_id": 48,
+      "startup_name": "TELMA AI",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:50:26.163197"
+    },
+    {
+      "startup_id": 49,
+      "startup_name": "NaviSavi",
+      "grade": "D",
+      "grade_explanation": "Very early concept",
+      "evaluation_date": "2025-11-16T20:50:28.446461"
+    },
+    {
+      "startup_id": 52,
+      "startup_name": "Sentisystems",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:50:31.488051"
+    },
+    {
+      "startup_id": 53,
+      "startup_name": "KINETK",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:50:34.710927"
+    },
+    {
+      "startup_id": 54,
+      "startup_name": "Claimlane",
+      "grade": "B+",
+      "grade_explanation": "Viable but developing (underfunded)",
+      "evaluation_date": "2025-11-16T20:50:37.343240"
+    },
+    {
+      "startup_id": 55,
+      "startup_name": "GoAudience",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:50:40.027620"
+    },
+    {
+      "startup_id": 56,
+      "startup_name": "Tendios",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:50:49.242995"
+    },
+    {
+      "startup_id": 57,
+      "startup_name": "Tinker",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:50:52.511208"
+    },
+    {
+      "startup_id": 58,
+      "startup_name": "CaseMark",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:50:55.034423"
+    },
+    {
+      "startup_id": 59,
+      "startup_name": "Mapo Tapo",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:50:57.707626"
+    },
+    {
+      "startup_id": 60,
+      "startup_name": "ConfidentialMind",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:51:07.190586"
+    },
+    {
+      "startup_id": 61,
+      "startup_name": "Nomain",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:51:13.030977"
+    },
+    {
+      "startup_id": 62,
+      "startup_name": "EvidenceHunt",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:51:15.709557"
+    },
+    {
+      "startup_id": 63,
+      "startup_name": "Pandatron",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:51:19.078475"
+    },
+    {
+      "startup_id": 65,
+      "startup_name": "Lightpost One",
+      "grade": "D",
+      "grade_explanation": "Very early concept",
+      "evaluation_date": "2025-11-16T20:51:21.131294"
+    },
+    {
+      "startup_id": 66,
+      "startup_name": "Peaka",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:51:23.938477"
+    },
+    {
+      "startup_id": 67,
+      "startup_name": "Grapevine",
+      "grade": "B+",
+      "grade_explanation": "Viable but developing (underfunded)",
+      "evaluation_date": "2025-11-16T20:51:37.367031"
+    },
+    {
+      "startup_id": 68,
+      "startup_name": "LAYONARDO",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:51:52.354570"
+    },
+    {
+      "startup_id": 69,
+      "startup_name": "Normain",
+      "grade": "B+",
+      "grade_explanation": "Viable but developing (underfunded)",
+      "evaluation_date": "2025-11-16T20:51:55.679677"
+    },
+    {
+      "startup_id": 70,
+      "startup_name": "MCP-Builder.ai",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:51:58.012170"
+    },
+    {
+      "startup_id": 71,
+      "startup_name": "ETERNY",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:52:01.101007"
+    },
+    {
+      "startup_id": 72,
+      "startup_name": "Simplifai",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:52:03.822965"
+    },
+    {
+      "startup_id": 73,
+      "startup_name": "Klaaryo",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:52:06.326958"
+    },
+    {
+      "startup_id": 74,
+      "startup_name": "Ikon AI",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:52:08.346784"
+    },
+    {
+      "startup_id": 75,
+      "startup_name": "Introist",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:52:10.191566"
+    },
+    {
+      "startup_id": 78,
+      "startup_name": "Nolana AI",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:52:12.436458"
+    },
+    {
+      "startup_id": 79,
+      "startup_name": "isLucid",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:52:15.128195"
+    },
+    {
+      "startup_id": 80,
+      "startup_name": "SOCLY.io",
+      "grade": "C",
+      "grade_explanation": "Pre-growth limitations",
+      "evaluation_date": "2025-11-16T20:52:17.505098"
+    },
+    {
+      "startup_id": 81,
+      "startup_name": "AGAi",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:52:20.387349"
+    },
+    {
+      "startup_id": 82,
+      "startup_name": "Ottia",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:52:34.473758"
+    },
+    {
+      "startup_id": 83,
+      "startup_name": "Amaizing",
+      "grade": "C",
+      "grade_explanation": "Pre-growth limitations",
+      "evaluation_date": "2025-11-16T20:52:46.353765"
+    },
+    {
+      "startup_id": 85,
+      "startup_name": "Jinnify.ai",
+      "grade": "F",
+      "grade_explanation": "Not a viable partner",
+      "evaluation_date": "2025-11-16T20:52:50.413244"
+    },
+    {
+      "startup_id": 86,
+      "startup_name": "TikBox",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:53:03.064811"
+    },
+    {
+      "startup_id": 87,
+      "startup_name": "Cloudgeni",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:53:08.483773"
+    },
+    {
+      "startup_id": 88,
+      "startup_name": "PharosBio",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:53:11.153562"
+    },
+    {
+      "startup_id": 89,
+      "startup_name": "manteo.ai",
+      "grade": "D",
+      "grade_explanation": "Very early concept",
+      "evaluation_date": "2025-11-16T20:53:13.483578"
+    },
+    {
+      "startup_id": 90,
+      "startup_name": "GitHits",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:53:22.066890"
+    },
+    {
+      "startup_id": 91,
+      "startup_name": "Maira Labs",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:53:25.497331"
+    },
+    {
+      "startup_id": 92,
+      "startup_name": "Deepentix",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:53:28.858372"
+    },
+    {
+      "startup_id": 93,
+      "startup_name": "Solace Care",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:53:31.150016"
+    },
+    {
+      "startup_id": 94,
+      "startup_name": "Intelswift",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:53:33.088688"
+    },
+    {
+      "startup_id": 95,
+      "startup_name": "Datawhisper LTD",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:53:35.585956"
+    },
+    {
+      "startup_id": 96,
+      "startup_name": "Compose Software",
+      "grade": "A-",
+      "grade_explanation": "Good partnership fit",
+      "evaluation_date": "2025-11-16T20:53:38.142486"
+    },
+    {
+      "startup_id": 97,
+      "startup_name": "Mindflow",
+      "grade": "A-",
+      "grade_explanation": "Good partnership fit",
+      "evaluation_date": "2025-11-16T20:53:40.542916"
+    },
+    {
+      "startup_id": 98,
+      "startup_name": "WorkyBe",
+      "grade": "D",
+      "grade_explanation": "Very early concept",
+      "evaluation_date": "2025-11-16T20:53:42.680126"
+    },
+    {
+      "startup_id": 99,
+      "startup_name": "G-Gravity",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:53:44.835911"
+    },
+    {
+      "startup_id": 100,
+      "startup_name": "HippocrAItes",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:53:47.283728"
+    },
+    {
+      "startup_id": 101,
+      "startup_name": "DemocracyHub",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:53:49.402804"
+    },
+    {
+      "startup_id": 102,
+      "startup_name": "Obriy AI",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:53:51.379743"
+    },
+    {
+      "startup_id": 103,
+      "startup_name": "Avora",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:54:05.372783"
+    },
+    {
+      "startup_id": 104,
+      "startup_name": "distil labs",
+      "grade": "C",
+      "grade_explanation": "Pre-growth limitations",
+      "evaluation_date": "2025-11-16T20:54:23.172900"
+    },
+    {
+      "startup_id": 105,
+      "startup_name": "RS42.ai",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:54:32.271842"
+    },
+    {
+      "startup_id": 106,
+      "startup_name": "Pitch Gap",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:54:39.747642"
+    },
+    {
+      "startup_id": 108,
+      "startup_name": "Onky.AI LTD",
+      "grade": "B+",
+      "grade_explanation": "Viable but developing (underfunded)",
+      "evaluation_date": "2025-11-16T20:54:43.508508"
+    },
+    {
+      "startup_id": 109,
+      "startup_name": "HealthSageAI",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:54:45.624683"
+    },
+    {
+      "startup_id": 110,
+      "startup_name": "Merge.dev",
+      "grade": "B-",
+      "grade_explanation": "Early scaling risk",
+      "evaluation_date": "2025-11-16T20:54:48.547403"
+    },
+    {
+      "startup_id": 111,
+      "startup_name": "Hookle",
+      "grade": "C",
+      "grade_explanation": "Pre-growth limitations",
+      "evaluation_date": "2025-11-16T20:54:50.414897"
+    },
+    {
+      "startup_id": 113,
+      "startup_name": "Me Protocol",
+      "grade": "C-",
+      "grade_explanation": "Prototype-stage focus",
+      "evaluation_date": "2025-11-16T20:54:53.211782"
+    },
+    {
+      "startup_id": 114,
+      "startup_name": "Chapter.works",
+      "grade": "B",
+      "grade_explanation": "Workable solution (underfunded)",
+      "evaluation_date": "2025-11-16T20:54:55.401134"
+    },
+    {
+      "startup_id": 115,
+      "startup_name": "Cheqd",
+      "grade": "C+",
+      "grade_explanation": "Early stage challenges",
+      "evaluation_date": "2025-11-16T20:54:57.687826"
+    }
+  ],
+  "last_updated": "2025-11-16T20:54:57.689851",
+  "total_evaluated": 100,
+  "config": {
+    "workers": 3,
+    "batch_size": 2,
+    "checkpoint_interval": 10
+  },
+  "stats": {
+    "grade_a_plus": 0,
+    "grade_a": 1,
+    "grade_a_minus": 7,
+    "grade_b_plus": 8,
+    "grade_b": 16,
+    "grade_b_minus": 15,
+    "grade_c_plus": 23,
+    "grade_c": 6,
+    "grade_c_minus": 18,
+    "grade_d": 5,
+    "grade_f": 1
+  }
+}

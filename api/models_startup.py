@@ -111,6 +111,8 @@ class Startup(Base):
     # AXA Evaluation Data
     axa_evaluation_date = Column(DateTime)  # When AXA evaluation was performed
     axa_overall_score = Column(Float)  # Overall AXA fit score (0-100)
+    axa_grade = Column(String, index=True)  # AXA Partnership Grade (A+, A, A-, B+, B, B-, C+, C, C-, D, F)
+    axa_grade_explanation = Column(Text)  # Creative short phrase explaining the grade
     axa_priority_tier = Column(String, index=True)  # Tier 1: Critical, Tier 2: High, Tier 3: Monitor, Tier 4: Low
     axa_can_use_as_provider = Column(Boolean)  # Whether startup can be used as provider
     axa_business_leverage = Column(Text)  # How AXA can leverage this startup (use case description)
