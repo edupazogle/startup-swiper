@@ -229,3 +229,4 @@ Built with ❤️ for the startup investment community.
 
 Deploy now: [DEPLOYMENT.md](./DEPLOYMENT.md)
 # Deployment Test - 2025-11-16 22:20:52 UTC
+
