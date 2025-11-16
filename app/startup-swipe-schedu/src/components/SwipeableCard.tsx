@@ -183,8 +183,10 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
       dragElastic={0.2}
+      dragDirectionLock={true}
+      dragMomentum={false}
       onDragEnd={handleDragEnd}
-      className="absolute rounded-lg"
+      className="absolute rounded-lg touch-pan-x"
     >
       <Card style={{ borderRadius: '0.75rem' }} className="w-full h-full max-h-[calc(100vh-180px)] sm:max-h-[calc(100vh-200px)] md:max-h-none min-h-[350px] xs:min-h-[400px] sm:min-h-[450px] md:h-[clamp(500px,70vh,640px)] p-0 relative shadow-2xl flex flex-col overflow-hidden">
         {/* Action Buttons - Top Right */}
@@ -330,12 +332,21 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                     <div className="grid grid-cols-2 gap-3 bg-blue-500/5 p-3 rounded-lg border border-blue-200 dark:border-blue-900/30">
                       {/* Left Column: Score & Provider Status */}
                       <div className="space-y-3">
-                        {/* Score Section */}
+                        {/* Grade Section */}
                         <div>
-                          <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">Rise Score</p>
+                          <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">AXA Grade</p>
                           <div className="flex items-end gap-2">
-                            <span className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
-                              {(startup.axa_overall_score || startup.axaOverallScore)?.toFixed(0)}
+                            <span className={cn(
+                              'text-2xl md:text-3xl font-bold',
+                              startup.axa_grade === 'A+' || startup.axaGrade === 'A+' ? 'text-yellow-500 dark:text-yellow-400' :
+                              startup.axa_grade === 'A' || startup.axaGrade === 'A' ? 'text-emerald-600 dark:text-emerald-400' :
+                              startup.axa_grade === 'B+' || startup.axaGrade === 'B+' ? 'text-cyan-600 dark:text-cyan-400' :
+                              startup.axa_grade === 'B' || startup.axaGrade === 'B' ? 'text-blue-600 dark:text-blue-400' :
+                              startup.axa_grade === 'C+' || startup.axaGrade === 'C+' ? 'text-amber-600 dark:text-amber-400' :
+                              startup.axa_grade === 'C' || startup.axaGrade === 'C' ? 'text-orange-600 dark:text-orange-400' :
+                              'text-slate-400 dark:text-slate-600'
+                            )}>
+                              {startup.axa_grade || startup.axaGrade || 'N/A'}
                             </span>
                           </div>
                         </div>

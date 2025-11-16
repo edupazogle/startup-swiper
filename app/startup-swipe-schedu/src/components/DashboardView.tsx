@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AITimeSlotSuggester } from '@/components/AITimeSlotSuggester'
 import { FeedbackChatModal } from '@/components/FeedbackChatModal'
 import { MeetingAIModal } from '@/components/MeetingAIModal'
+import { StartupFiltersPanel } from '@/components/StartupFiltersPanel'
 import { Startup, Vote, CalendarEvent } from '@/lib/types'
 import { Users, Heart, CalendarBlank, Check, Rocket, MapPin, CurrencyDollar, GlobeHemisphereWest, Calendar, TrendUp, MagnifyingGlass, X, Target, CheckCircle, Star, Sparkle, Briefcase } from '@phosphor-icons/react'
 import { toast } from 'sonner'
@@ -54,11 +55,12 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
   const [showInsightsAI, setShowInsightsAI] = useState(false)
   const [showMeetingAI, setShowMeetingAI] = useState(false)
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [sortBy, setSortBy] = useState<'votes' | 'funding'>('votes')
+  const [sortBy, setSortBy] = useState<'votes' | 'funding' | 'grade'>('votes')
   const [selectedStages, setSelectedStages] = useState<Set<string>>(new Set())
   const [selectedTopics, setSelectedTopics] = useState<Set<string>>(new Set())
   const [selectedTechs, setSelectedTechs] = useState<Set<string>>(new Set())
   const [selectedUseCases, setSelectedUseCases] = useState<Set<string>>(new Set())
+  const [selectedGrades, setSelectedGrades] = useState<Set<string>>(new Set())
   const [topicHierarchy, setTopicHierarchy] = useState<TopicHierarchy[]>([])
   const [localVotes, setLocalVotes] = useState<Vote[]>(votes)
   const [formData, setFormData] = useState({
@@ -176,6 +178,14 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
       })
     }
 
+    // Apply grade filter
+    if (selectedGrades.size > 0) {
+      filtered = filtered.filter(s => {
+        const grade = s.axa_grade || s.axaGrade
+        return grade && selectedGrades.has(grade)
+      })
+    }
+
     const result: StartupWithVotes[] = filtered.map(startup => {
       const scheduledEvent = (events || []).find(e => e.startupId === startup.id && e.confirmed)
       const ratings = startupRatings?.[startup.id] || {}
@@ -201,6 +211,13 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
         const fundingA = parseFunding(a.totalFunding || a["Funding"])
         const fundingB = parseFunding(b.totalFunding || b["Funding"])
         return fundingB - fundingA // Descending order
+      })
+    } else if (sortBy === 'grade') {
+      const gradeOrder = { 'A+': 7, 'A': 6, 'B+': 5, 'B': 4, 'C+': 3, 'C': 2, 'F': 1 }
+      sorted = result.sort((a, b) => {
+        const gradeA = gradeOrder[(a.axa_grade || a.axaGrade) as keyof typeof gradeOrder] || 0
+        const gradeB = gradeOrder[(b.axa_grade || b.axaGrade) as keyof typeof gradeOrder] || 0
+        return gradeB - gradeA // Descending order (A+ first)
       })
     } else {
       // Sort by interested votes
@@ -456,12 +473,21 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                 <div className="grid grid-cols-2 gap-3 bg-blue-500/5 p-3 rounded-lg border border-blue-200 dark:border-blue-900/30">
                   {/* Left Column: Score & Provider Status */}
                   <div className="space-y-3">
-                    {/* Score Section */}
+                    {/* Grade Section */}
                     <div>
-                      <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">Rise Score</p>
+                      <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">AXA Grade</p>
                       <div className="flex items-end gap-2">
-                        <span className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
-                          {(startup.axa_overall_score || startup.axaOverallScore)?.toFixed(0)}
+                        <span className={cn(
+                          'text-2xl md:text-3xl font-bold',
+                          startup.axa_grade === 'A+' || startup.axaGrade === 'A+' ? 'text-yellow-500 dark:text-yellow-400' :
+                          startup.axa_grade === 'A' || startup.axaGrade === 'A' ? 'text-emerald-600 dark:text-emerald-400' :
+                          startup.axa_grade === 'B+' || startup.axaGrade === 'B+' ? 'text-cyan-600 dark:text-cyan-400' :
+                          startup.axa_grade === 'B' || startup.axaGrade === 'B' ? 'text-blue-600 dark:text-blue-400' :
+                          startup.axa_grade === 'C+' || startup.axaGrade === 'C+' ? 'text-amber-600 dark:text-amber-400' :
+                          startup.axa_grade === 'C' || startup.axaGrade === 'C' ? 'text-orange-600 dark:text-orange-400' :
+                          'text-slate-400 dark:text-slate-600'
+                        )}>
+                          {startup.axa_grade || startup.axaGrade || 'N/A'}
                         </span>
                       </div>
                     </div>
@@ -658,174 +684,53 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
   return (
     <>
       <div className="h-full">
-        <div className="max-w-4xl mx-auto p-3 md:p-6 space-y-4 md:space-y-6">
-          {/* Search and Filters - Single Row */}
-          <div className="flex flex-wrap gap-2 md:gap-3 items-end p-3 md:p-4 rounded-md bg-secondary/30">
-              {/* Search Input */}
-              <div className="flex items-center gap-2 flex-1 min-w-[150px] sm:min-w-[200px]">
-                <MagnifyingGlass size={16} weight="duotone" className="text-foreground flex-shrink-0" />
-                <Input
-                  type="text"
-                  placeholder="Search by name..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="text-xs md:text-sm h-8 md:h-9"
-                />
-              </div>
-
-              {/* Sort By Dropdown */}
-              <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
-                <label className="text-[10px] md:text-xs font-bold text-foreground mb-1 block">Sort</label>
-                <Select value={sortBy} onValueChange={(value) => setSortBy(value as 'votes' | 'funding')}>
-                  <SelectTrigger className="w-full text-[11px] md:text-xs h-8 md:h-9">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-[150px] md:max-h-[200px]">
-                    <SelectItem value="votes">Votes</SelectItem>
-                    <SelectItem value="funding">Funding</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Maturity Filter Dropdown */}
-              {uniqueStages.length > 0 && (
-                <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="text-[10px] md:text-xs font-bold text-foreground">Maturity</label>
-                    {selectedStages.size > 0 && (
-                      <button
-                        onClick={() => setSelectedStages(new Set())}
-                        className="text-[9px] md:text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5"
-                      >
-                        <X size={10} />
-                      </button>
-                    )}
-                  </div>
-                  <Select
-                    value={selectedStages.size === 0 ? '__all__' : Array.from(selectedStages)[0]}
-                    onValueChange={(value) => {
-                      if (value === '__all__') {
-                        setSelectedStages(new Set())
-                      } else {
-                        setSelectedStages(new Set([value]))
-                      }
-                    }}
-                  >
-                    <SelectTrigger className="w-full text-[11px] md:text-xs h-8 md:h-9">
-                      <SelectValue placeholder="Select maturity...">
-                        {selectedStages.size > 0 
-                          ? Array.from(selectedStages)[0]
-                          : 'All'
-                        }
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="max-h-[150px] md:max-h-[300px]">
-                      <SelectItem value="__all__">All Maturity</SelectItem>
-                      {uniqueStages.filter(s => s && s.trim()).map(stage => (
-                        <SelectItem key={stage} value={stage}>
-                          {stage}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-
-              {/* Topics Filter Dropdown */}
-              {uniqueTopics.length > 0 && (
-                <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="text-[10px] md:text-xs font-bold text-foreground">Topics</label>
-                    {selectedTopics.size > 0 && (
-                      <button
-                        onClick={() => setSelectedTopics(new Set())}
-                        className="text-[9px] md:text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5"
-                      >
-                        <X size={10} />
-                      </button>
-                    )}
-                  </div>
-                  <Select
-                    value={selectedTopics.size === 0 ? '__all__' : Array.from(selectedTopics)[0]}
-                    onValueChange={(value) => {
-                      if (value === '__all__') {
-                        setSelectedTopics(new Set())
-                      } else {
-                        setSelectedTopics(new Set([value]))
-                      }
-                    }}
-                  >
-                    <SelectTrigger className="w-full text-[11px] md:text-xs h-8 md:h-9">
-                      <SelectValue placeholder="Select topic...">
-                        {selectedTopics.size > 0 
-                          ? Array.from(selectedTopics)[0]
-                          : 'All'
-                        }
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="max-h-[150px] md:max-h-[300px]">
-                      <SelectItem value="__all__">All Topics</SelectItem>
-                      {uniqueTopics.filter(t => t && t.trim()).map(topic => (
-                        <SelectItem key={topic} value={topic}>
-                          {topic}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-
-              {/* Use Cases Filter Dropdown - Only enabled if topic is selected */}
-              {selectedTopics.size > 0 && topicHierarchy.length > 0 && (() => {
-                const selectedTopic = Array.from(selectedTopics)[0]
-                const topicData = topicHierarchy.find(t => t.name === selectedTopic)
-                const useCases = (topicData?.use_cases || []).filter(uc => uc && uc.name && uc.name.trim() !== '')
-                
-                return useCases.length > 0 ? (
-                  <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
-                    <div className="flex items-center justify-between mb-1">
-                      <label className="text-[10px] md:text-xs font-bold text-foreground">Use Cases</label>
-                      {selectedUseCases.size > 0 && (
-                        <button
-                          onClick={() => setSelectedUseCases(new Set())}
-                          className="text-[9px] md:text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5"
-                        >
-                          <X size={10} />
-                        </button>
-                      )}
-                    </div>
-                    <Select
-                      value={selectedUseCases.size === 0 ? '__all__' : Array.from(selectedUseCases)[0]}
-                      onValueChange={(value) => {
-                        if (value === '__all__') {
-                          setSelectedUseCases(new Set())
-                        } else {
-                          setSelectedUseCases(new Set([value]))
-                        }
-                      }}
-                    >
-                      <SelectTrigger className="w-full text-[11px] md:text-xs h-8 md:h-9">
-                        <SelectValue placeholder="Select use case...">
-                          {selectedUseCases.size > 0 
-                            ? Array.from(selectedUseCases)[0]
-                            : 'All'
-                          }
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent className="max-h-[150px] md:max-h-[300px]">
-                        <SelectItem value="__all__">All Use Cases</SelectItem>
-                        {useCases.map(useCase => (
-                          <SelectItem key={useCase.id} value={useCase.name}>
-                            {useCase.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                ) : null
-              })()}
-
-            </div>
+        <div className="max-w-7xl mx-auto p-3 md:p-6 space-y-4 md:space-y-6">
+          {/* New Responsive Filters Panel */}
+          <StartupFiltersPanel
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            sortBy={sortBy}
+            onSortChange={(value) => setSortBy(value as 'votes' | 'funding' | 'grade')}
+            selectedStages={selectedStages}
+            onStageChange={(stage, selected) => {
+              const newStages = new Set(selectedStages)
+              if (selected) newStages.add(stage)
+              else newStages.delete(stage)
+              setSelectedStages(newStages)
+            }}
+            selectedTopics={selectedTopics}
+            onTopicChange={(topic, selected) => {
+              const newTopics = new Set(selectedTopics)
+              if (selected) newTopics.add(topic)
+              else newTopics.delete(topic)
+              setSelectedTopics(newTopics)
+            }}
+            selectedTechs={selectedTechs}
+            onTechChange={(tech, selected) => {
+              const newTechs = new Set(selectedTechs)
+              if (selected) newTechs.add(tech)
+              else newTechs.delete(tech)
+              setSelectedTechs(newTechs)
+            }}
+            selectedUseCases={selectedUseCases}
+            onUseCaseChange={(useCase, selected) => {
+              const newUseCases = new Set(selectedUseCases)
+              if (selected) newUseCases.add(useCase)
+              else newUseCases.delete(useCase)
+              setSelectedUseCases(newUseCases)
+            }}
+            selectedGrades={selectedGrades}
+            onGradeChange={(grade, selected) => {
+              const newGrades = new Set(selectedGrades)
+              if (selected) newGrades.add(grade)
+              else newGrades.delete(grade)
+              setSelectedGrades(newGrades)
+            }}
+            availableStages={uniqueStages}
+            availableTopics={uniqueTopics}
+            availableTechs={uniqueTechs}
+            availableUseCases={topicHierarchy.find(t => t.name === Array.from(selectedTopics)[0])?.use_cases.map(uc => uc.name) || []}
+          />
           {highPriority.length > 0 && (
             <div>
               <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">

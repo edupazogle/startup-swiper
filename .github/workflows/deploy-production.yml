@@ -1,0 +1,179 @@
+name: Deploy to Production (DigitalOcean)
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.gitignore'
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🔍 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: app/startup-swipe-schedu/package-lock.json
+      
+      - name: 📦 Install frontend dependencies
+        working-directory: app/startup-swipe-schedu
+        run: npm ci
+      
+      - name: 🏗️ Build frontend for production
+        working-directory: app/startup-swipe-schedu
+        run: npm run build
+        env:
+          # Production build will use runtime hostname detection
+          # This ensures production always uses tilyn.ai/api
+          VITE_ENV: production
+      
+      - name: 📋 Verify build output
+        run: |
+          echo "✅ Build artifacts:"
+          ls -lh app/startup-swipe-schedu/dist/ | head -10
+          echo ""
+          echo "📊 Build size:"
+          du -sh app/startup-swipe-schedu/dist/
+      
+      - name: 🔐 Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DO_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
+      
+      - name: 🚀 Deploy frontend to DigitalOcean
+        run: |
+          echo "📦 Deploying frontend to production..."
+          rsync -avz --delete \
+            --exclude='*.map' \
+            app/startup-swipe-schedu/dist/ \
+            ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }}:/home/appuser/startup-swiper/frontend/
+          
+          echo "✅ Frontend deployed successfully"
+      
+      - name: 🔧 Fix permissions on server
+        run: |
+          ssh ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
+            chown -R appuser:appuser /home/appuser/startup-swiper/frontend
+            chmod -R 755 /home/appuser/startup-swiper/frontend
+            echo "✅ Permissions fixed"
+          EOF
+      
+      - name: 🔄 Update API code (without database)
+        run: |
+          echo "📦 Updating API code..."
+          rsync -avz --delete \
+            --exclude='venv' \
+            --exclude='.venv' \
+            --exclude='__pycache__' \
+            --exclude='*.pyc' \
+            --exclude='*.db' \
+            --exclude='*.db-journal' \
+            --exclude='logs/' \
+            api/ \
+            ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }}:/home/appuser/startup-swiper/api/
+          
+          echo "✅ API code updated"
+      
+      - name: 📚 Install/Update API dependencies
+        run: |
+          ssh ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
+            cd /home/appuser/startup-swiper/api
+            
+            # Create venv if it doesn't exist
+            if [ ! -d "../.venv" ]; then
+              python3 -m venv ../.venv
+            fi
+            
+            # Install/update dependencies
+            ../.venv/bin/pip install -r requirements.txt --quiet
+            
+            echo "✅ API dependencies updated"
+          EOF
+      
+      - name: 🔄 Restart API service
+        run: |
+          ssh ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
+            echo "🔄 Restarting API..."
+            
+            # Stop existing API process
+            pkill -f 'uvicorn.*8000' || true
+            sleep 2
+            
+            # Start API in background
+            cd /home/appuser/startup-swiper/api
+            nohup /home/appuser/startup-swiper/.venv/bin/uvicorn main:app \
+              --host 0.0.0.0 \
+              --port 8000 \
+              > /home/appuser/startup-swiper/logs/api.log 2>&1 &
+            
+            sleep 3
+            
+            # Verify API is running
+            if curl -sf http://localhost:8000/health > /dev/null; then
+              echo "✅ API is running"
+            else
+              echo "❌ API failed to start"
+              exit 1
+            fi
+          EOF
+      
+      - name: ✅ Verify deployment
+        run: |
+          echo "🧪 Testing production endpoints..."
+          
+          # Test API health
+          API_HEALTH=$(curl -sf https://tilyn.ai/api/health || echo "failed")
+          if [[ "$API_HEALTH" == "failed" ]]; then
+            echo "❌ API health check failed"
+            exit 1
+          fi
+          echo "✅ API is healthy"
+          
+          # Test frontend
+          FRONTEND_STATUS=$(curl -sf -o /dev/null -w "%{http_code}" https://tilyn.ai/ || echo "000")
+          if [[ "$FRONTEND_STATUS" != "200" ]]; then
+            echo "❌ Frontend not responding (status: $FRONTEND_STATUS)"
+            exit 1
+          fi
+          echo "✅ Frontend is responding"
+          
+          echo ""
+          echo "🎉 Deployment completed successfully!"
+          echo "   Frontend: https://tilyn.ai"
+          echo "   API: https://tilyn.ai/api"
+      
+      - name: 📊 Deployment Summary
+        if: always()
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Deployed Components:" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Frontend (React + Vite)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ API (FastAPI)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Not Deployed (Protected):" >> $GITHUB_STEP_SUMMARY
+          echo "- 🛡️ Production Database" >> $GITHUB_STEP_SUMMARY
+          echo "- 🛡️ .env files" >> $GITHUB_STEP_SUMMARY
+          echo "- 🛡️ User data" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 [View App](https://tilyn.ai)" >> $GITHUB_STEP_SUMMARY

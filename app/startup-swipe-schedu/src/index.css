@@ -12,6 +12,17 @@
     font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   }
   
+  /* iOS Safari scroll improvements */
+  .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+  
+  /* Allow horizontal swipe but enable vertical scroll */
+  .touch-pan-x {
+    touch-action: pan-x;
+  }
+  
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }

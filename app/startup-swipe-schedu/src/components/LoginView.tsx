@@ -6,6 +6,11 @@ import { toast } from 'sonner'
 import logoVC from '@/assets/images/logo_vc.png'
 import logoMain from '@/assets/images/f8cba53d-0d66-4aab-b97c-8fa66871fa8b.png'
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+  (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai' 
+    ? 'https://tilyn.ai/api' 
+    : 'http://localhost:8000')
+
 interface LoginViewProps {
   onLogin: (email: string, name: string) => void
 }
@@ -20,8 +25,8 @@ export function LoginView({ onLogin }: LoginViewProps) {
     setIsLoading(true)
 
     try {
-      // Call the actual API
-      const response = await fetch('/api/auth/login', {
+      // Call the actual API with full URL
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

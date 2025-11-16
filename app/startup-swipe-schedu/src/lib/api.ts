@@ -3,7 +3,10 @@
  * Centralized API calls to backend database
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+  (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai' 
+    ? 'https://tilyn.ai/api' 
+    : 'http://localhost:8000')
 
 // Type definitions
 export interface ApiStartup {

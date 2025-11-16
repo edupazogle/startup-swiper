@@ -21,15 +21,14 @@ class CalendarEvent(Base):
     
     id = Column(String, primary_key=True, index=True)
     title = Column(String, nullable=False)
-    start_time = Column(DateTime, nullable=False)  # Changed from startTime
-    end_time = Column(DateTime, nullable=False)    # Changed from endTime
+    start_time = Column(DateTime, nullable=False)
+    end_time = Column(DateTime, nullable=False)
     type = Column(String, nullable=False)
-    attendees = Column(JSON)
-    is_saved = Column(Boolean, default=False)       # Changed from isSaved
-    link = Column(String)
     stage = Column(String)
     category = Column(String)
-    highlight = Column(String)
+    link = Column(String)
+    is_fixed = Column(Boolean, default=True)
+    highlight = Column(Boolean)
 
 class LinkedInChatMessage(Base):
     __tablename__ = "linkedin_chat_messages"
