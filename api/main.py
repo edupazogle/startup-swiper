@@ -701,15 +701,36 @@ class PrioritizedStartupsRequest(BaseModel):
 @app.get("/startups/all")
 def get_all_startups(skip: int = 0, limit: int = 10000, db: Session = Depends(get_db)):
     """
-    Get all startups from database
+    Get all startups from database with frontend-compatible field names
     """
     startups = db_queries.get_all_startups(db, skip=skip, limit=limit)
     total = db_queries.count_startups(db)
     
+    # Add aliases for frontend compatibility
+    enhanced_startups = []
+    for startup in startups:
+        startup_dict = startup if isinstance(startup, dict) else startup.__dict__
+        
+        # Add frontend-expected field aliases
+        if 'company_name' in startup_dict:
+            startup_dict['name'] = startup_dict['company_name']
+            startup_dict['Company Name'] = startup_dict['company_name']
+        
+        if 'company_description' in startup_dict:
+            startup_dict['Company Description'] = startup_dict['company_description']
+        
+        if 'website' in startup_dict:
+            startup_dict['URL'] = startup_dict['website']
+        
+        if 'shortDescription' in startup_dict:
+            startup_dict['USP'] = startup_dict['shortDescription']
+        
+        enhanced_startups.append(startup_dict)
+    
     return {
         "total": total,
-        "count": len(startups),
-        "startups": startups
+        "count": len(enhanced_startups),
+        "startups": enhanced_startups
     }
 
 @app.get("/startups/prioritized")
