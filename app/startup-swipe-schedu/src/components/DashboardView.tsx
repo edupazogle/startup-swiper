@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AITimeSlotSuggester } from '@/components/AITimeSlotSuggester'
 import { AdvancedFilterDropdown } from '@/components/AdvancedFilterDropdown'
 import { Startup, Vote, CalendarEvent } from '@/lib/types'
-import { UsersGroup, Heart, Check, Rocket, MapPin, Dollar, Globe, CalendarMonth, ChartLineUp, Search, Close, CirclePlus, CheckCircle, Star, WandMagicSparkles, Briefcase } from 'flowbite-react-icons/outline'
+import { UsersGroup, Heart, Check, Rocket, MapPin, Dollar, Globe, CalendarMonth, ChartLineUp, Search, Close, CirclePlus, CheckCircle, Star, WandMagicSparkles, Briefcase, Award, Users, Building } from 'flowbite-react-icons/outline'
 import { toast } from 'sonner'
 // Removed @github/spark dependency
 import { getTopicColor, getTechColor, getMaturityColor, getLocationColor } from '@/lib/badgeColors'
@@ -659,7 +659,7 @@ function DashboardViewComponent({ startups, votes, events, currentUserId, onSche
                   className="gap-2 w-full md:w-auto font-bold bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-white border-0 shadow-md hover:shadow-xl transition-all px-4 py-3 text-sm touch-manipulation"
                   style={{ touchAction: 'manipulation' }}
                 >
-                  <WandMagicSparkles className="text-white w-5 h-5"  />
+                  <Star className="text-white w-5 h-5"  />
                   <span className="hidden sm:inline">Insights AI</span>
                   <span className="sm:hidden">Insights</span>
                 </Button>
@@ -669,7 +669,7 @@ function DashboardViewComponent({ startups, votes, events, currentUserId, onSche
                   className="gap-2 w-full md:w-auto font-bold bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white border-0 shadow-md hover:shadow-xl transition-all px-4 py-3 text-sm touch-manipulation"
                   style={{ touchAction: 'manipulation' }}
                 >
-                  <Briefcase className="text-white w-5 h-5"  />
+                  <CalendarMonth className="text-white w-5 h-5"  />
                   <span className="hidden sm:inline">Meeting AI</span>
                   <span className="sm:hidden">Meeting</span>
                 </Button>
@@ -681,7 +681,7 @@ function DashboardViewComponent({ startups, votes, events, currentUserId, onSche
               <div className="mb-6">
                 <Separator className="mb-5" />
                 <div className="flex items-center gap-2 mb-3">
-                  <CirclePlus className="text-blue-600 dark:text-blue-400 w-5 h-5"   />
+                  <Award className="text-blue-600 dark:text-blue-400 w-5 h-5"   />
                   <h3 className="text-xs md:text-sm font-extrabold text-blue-700 dark:text-blue-300 uppercase tracking-wider">Venture Clienting Analysis</h3>
                 </div>
                 
@@ -709,9 +709,9 @@ function DashboardViewComponent({ startups, votes, events, currentUserId, onSche
                         {(startup.axa_grade !== undefined || startup.axaGrade !== undefined) && (
                           <div className="flex-1 bg-white dark:bg-gray-800 p-3 md:p-4 rounded-xl shadow-lg border-2 border-blue-200/50 dark:border-blue-800/50">
                             <div className="flex items-start gap-2">
-                              <WandMagicSparkles
+                              <CheckCircle
                                 className={cn(
-                                  'flex-shrink-0 mt-0.5',
+                                  'flex-shrink-0 mt-0.5 w-4 h-4',
                               startup.axa_grade === 'A+' || startup.axaGrade === 'A+' ? 'text-yellow-500 dark:text-yellow-400' :
                               startup.axa_grade === 'A' || startup.axaGrade === 'A' ? 'text-emerald-600 dark:text-emerald-400' :
                               startup.axa_grade === 'B+' || startup.axaGrade === 'B+' ? 'text-cyan-600 dark:text-cyan-400' :
@@ -782,7 +782,7 @@ function DashboardViewComponent({ startups, votes, events, currentUserId, onSche
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
               <div className="flex items-start gap-2.5">
-                <MapPin size={16} className="text-blue-600 dark:text-blue-400 mt-1 flex-shrink-0"  />
+                <Building size={16} className="text-blue-600 dark:text-blue-400 mt-1 flex-shrink-0"  />
                 <div className="min-w-0 flex-1">
                   <p className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-2">Location</p>
                   <Badge 
@@ -795,7 +795,7 @@ function DashboardViewComponent({ startups, votes, events, currentUserId, onSche
               </div>
               
               <div className="flex items-start gap-2.5">
-                <UsersGroup className="text-purple-600 dark:text-purple-400 mt-1 flex-shrink-0 w-4 h-4"   />
+                <Users className="text-purple-600 dark:text-purple-400 mt-1 flex-shrink-0 w-4 h-4"   />
                 <div>
                   <p className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-2">Team Size</p>
                   <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100 font-bold">{displayEmployees}</p>

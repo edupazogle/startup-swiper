@@ -270,7 +270,7 @@ export function SwipeView({ startups, votes, currentUserId, currentUserName, onV
   }
 
   return (
-    <div className="w-full h-full flex flex-col lg:flex-row gap-4 p-2 sm:p-4 pb-8 max-w-[1800px] mx-auto">
+    <div className="w-full h-full flex flex-col lg:flex-row gap-4 p-2 sm:p-4 pb-2 max-w-[1800px] mx-auto">
       {/* Left Column - Progress, Stats & Info - Fixed Height */}
       <div className="hidden lg:flex flex-col gap-4 w-[320px] xl:w-[360px] flex-shrink-0 h-[calc(100vh-100px)] max-h-[1000px]">
         <div className="flex-1 flex flex-col gap-4 overflow-y-auto pr-2">

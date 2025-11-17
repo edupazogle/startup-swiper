@@ -785,7 +785,7 @@ function App() {
                   {/* Mobile Logo - Same as Desktop */}
                   {isMobile && (
                     <div className="flex items-center gap-2">
-                      <img src={logoMain} alt="Startup Rise" className="h-8 rounded-lg shadow-sm" />
+                      <img src={logoMain} alt="Startup Rise" className="h-6 rounded-lg shadow-sm" />
                       <div className="flex flex-col">
                         <span className="text-lg font-semibold leading-tight text-gray-900 dark:text-white">
                           Startup Rise
@@ -797,7 +797,7 @@ function App() {
                   {/* Desktop Logo - Full */}
                   {!isMobile && (
                     <>
-                      <img src={logoMain} alt="Startup Rise" className="mr-3 h-7 sm:h-9 rounded-lg shadow-sm" />
+                      <img src={logoMain} alt="Startup Rise" className="mr-3 h-5.5 sm:h-7 rounded-lg shadow-sm" />
                       <div className="flex items-center gap-3">
                         <span className="self-center whitespace-nowrap text-xl sm:text-2xl font-semibold dark:text-white">
                           Startup Rise
@@ -815,37 +815,37 @@ function App() {
                       <TabsList className="bg-transparent border-none h-auto p-0 gap-2">
                         <TabsTrigger 
                           value="swipe" 
-                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
+                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-lg font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
                         >
-                          <Heart className="w-7 h-7" />
+                          <Heart className="w-8.5 h-8.5" />
                           Swipe
                         </TabsTrigger>
                         <TabsTrigger 
                           value="dashboard" 
-                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
+                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-lg font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
                         >
-                          <Rocket className="w-7 h-7" />
+                          <Rocket className="w-8.5 h-8.5" />
                           Startups
                         </TabsTrigger>
                         <TabsTrigger 
                           value="insights" 
-                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
+                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-lg font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
                         >
-                          <Lightbulb className="w-7 h-7" />
+                          <Lightbulb className="w-8.5 h-8.5" />
                           Insights
                         </TabsTrigger>
                         <TabsTrigger 
                           value="calendar" 
-                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
+                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-lg font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
                         >
-                          <CalendarMonth className="w-7 h-7" />
+                          <CalendarMonth className="w-8.5 h-8.5" />
                           Calendar
                         </TabsTrigger>
                         <TabsTrigger 
                           value="ai" 
-                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
+                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-lg font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
                         >
-                          <Brain className="w-7 h-7" />
+                          <Brain className="w-8.5 h-8.5" />
                           Concierge
                         </TabsTrigger>
                       </TabsList>
@@ -1015,8 +1015,8 @@ function App() {
                         : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <Heart className="h-6 w-6" />
-                    <span className="text-[10px] font-medium">Swipe</span>
+                    <Heart className="h-7 w-7" />
+                    <span className="text-xs font-medium">Swipe</span>
                   </button>
                   
                   <button
@@ -1027,8 +1027,8 @@ function App() {
                         : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <Rocket className="h-6 w-6" />
-                    <span className="text-[10px] font-medium">Startups</span>
+                    <Rocket className="h-7 w-7" />
+                    <span className="text-xs font-medium">Startups</span>
                   </button>
                   
                   <button
@@ -1039,8 +1039,8 @@ function App() {
                         : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <Lightbulb className="h-6 w-6" />
-                    <span className="text-[10px] font-medium">Insights</span>
+                    <Lightbulb className="h-7 w-7" />
+                    <span className="text-xs font-medium">Insights</span>
                   </button>
                   
                   <button
@@ -1051,8 +1051,8 @@ function App() {
                         : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <CalendarMonth className="h-6 w-6" />
-                    <span className="text-[10px] font-medium">Calendar</span>
+                    <CalendarMonth className="h-7 w-7" />
+                    <span className="text-xs font-medium">Calendar</span>
                   </button>
                   
                   <button
@@ -1063,8 +1063,8 @@ function App() {
                         : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <Brain className="h-6 w-6" />
-                    <span className="text-[10px] font-medium">AI</span>
+                    <Brain className="h-7 w-7" />
+                    <span className="text-xs font-medium">AI</span>
                   </button>
               </div>
             </nav>

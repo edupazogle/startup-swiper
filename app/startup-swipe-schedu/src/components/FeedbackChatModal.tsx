@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { WandMagicSparkles, PaperPlane, Star, User, Close, Lightbulb } from 'flowbite-react-icons/outline'
+import { WandMagicSparkles, PaperPlane, Star, User, Close } from 'flowbite-react-icons/outline'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -312,13 +312,13 @@ export function FeedbackChatModal({
   }
 
   return (
-    <TailwindModal isOpen={isOpen} onClose={onClose} size="xl" className="p-0 flex flex-col h-[90vh] max-h-[90vh]">
+    <TailwindModal isOpen={isOpen} onClose={onClose} size="xl" className="p-0 flex flex-col max-md:h-full md:h-[90vh] md:max-h-[90vh]">
       {/* Header */}
-      <div className="flex-shrink-0 border-b border-gray-700 dark:border-gray-700 bg-gray-800 dark:bg-gray-800 px-6 py-4">
+      <div className="flex-shrink-0 border-b border-gray-700 dark:border-gray-700 bg-gray-800 dark:bg-gray-800 px-4 py-3 md:px-6 md:py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 shadow-md">
-              <Lightbulb className="text-white w-5 h-5"  />
+              <Star className="text-white w-5 h-5"  />
             </div>
             <div className="flex-1 min-w-0">
               <h2 className="text-lg font-bold text-white">
@@ -361,7 +361,7 @@ export function FeedbackChatModal({
                 <div className="h-full flex items-center justify-center">
                   <div className="max-w-md text-center space-y-6">
                     <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
-                      <Lightbulb className="w-8 h-8 text-white" />
+                      <Star className="w-8 h-8 text-white" />
                     </div>
                     <div className="space-y-2">
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white">
@@ -386,7 +386,7 @@ export function FeedbackChatModal({
                       className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-3 rounded-lg shadow-md transition-all"
                       size="lg"
                     >
-                      <Lightbulb className="w-5 h-5 mr-2" />
+                      <Star className="w-5 h-5 mr-2" />
                       Start Debrief Session
                     </Button>
                   </div>

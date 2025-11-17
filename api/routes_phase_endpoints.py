@@ -96,6 +96,22 @@ def startup_to_dict(startup: Startup) -> dict:
     }
 
 
+def grade_to_score(grade: str) -> float:
+    """
+    Convert AXA letter grade to numeric score
+    A+ = 100, A = 90, B+ = 80, B = 70, C+ = 60, C = 50, None/Other = 0
+    """
+    grade_map = {
+        'A+': 100,
+        'A': 90,
+        'B+': 80,
+        'B': 70,
+        'C+': 60,
+        'C': 50
+    }
+    return grade_map.get(grade, 0)
+
+
 def calculate_recommendation_score(
     candidate: Startup,
     preference_topics: Set[str],
@@ -106,16 +122,18 @@ def calculate_recommendation_score(
     Score a startup candidate based on quality and user preferences
     
     Scoring hierarchy (in order of importance):
-    1. AXA Overall Score: Foundation quality (0-100 scale)
+    1. AXA Grade: Foundation quality (letter grade converted to 0-100 scale)
+       A+ = 100, A = 90, B+ = 80, B = 70, C+ = 60, C = 50
     2. Topic match: +20 per match
     3. Use case match: +10 per match
     4. Maturity match: +5
     
-    Final score = axa_overall_score * 100 + preference_bonus
+    Final score = grade_score * 100 + preference_bonus
     This ensures highest quality startups always ranked first
     """
-    # Foundation: AXA overall score (most important)
-    base_score = (candidate.axa_overall_score or 0) * 100
+    # Foundation: AXA grade (most important)
+    grade_score = grade_to_score(candidate.axa_grade)
+    base_score = grade_score * 100
     
     # Preference bonuses (secondary factors)
     preference_bonus = 0
@@ -186,17 +204,17 @@ def get_phase1_startups(
         else:
             other_startups.append(startup)
     
-    # Get top 10 Agentic by axa_overall_score (highest first)
+    # Get top 10 Agentic by axa_grade (highest first: A+ > A > B+ > B > C+ > C)
     agentic_sorted = sorted(
         agentic_startups,
-        key=lambda s: s.axa_overall_score or 0,
+        key=lambda s: grade_to_score(s.axa_grade),
         reverse=True
     )[:10]
     
-    # Get 10 other topics, sorted by axa_overall_score (highest first)
+    # Get 10 other topics, sorted by axa_grade (highest first: A+ > A > B+ > B > C+ > C)
     other_sorted = sorted(
         other_startups,
-        key=lambda s: s.axa_overall_score or 0,
+        key=lambda s: grade_to_score(s.axa_grade),
         reverse=True
     )[:10]
     
@@ -367,8 +385,8 @@ def get_phase2_startups(
             # Sort each topic group by score, take top 1 from each
             for topic in sorted(topics_seen.keys()):
                 group = topics_seen[topic]
-                # Sort by axa_overall_score (highest first)
-                group.sort(key=lambda s: s.axa_overall_score or 0, reverse=True)
+                # Sort by axa_grade (highest first: A+ > A > B+ > B > C+ > C)
+                group.sort(key=lambda s: grade_to_score(s.axa_grade), reverse=True)
                 if group and group[0] not in diverse_pool:
                     diverse_pool.append(group[0])
             
@@ -385,7 +403,7 @@ def get_phase2_startups(
             # Sort each use case group by score, take top 1 from each
             for uc in sorted(use_cases_seen.keys()):
                 group = use_cases_seen[uc]
-                group.sort(key=lambda s: s.axa_overall_score or 0, reverse=True)
+                group.sort(key=lambda s: grade_to_score(s.axa_grade), reverse=True)
                 if group and group[0] not in diverse_pool and len(diverse_pool) < pref_count:
                     diverse_pool.append(group[0])
             
@@ -400,22 +418,22 @@ def get_phase2_startups(
             # Sort each maturity group by score, take top 1 from each
             for maturity in sorted(maturity_seen.keys()):
                 group = maturity_seen[maturity]
-                group.sort(key=lambda s: s.axa_overall_score or 0, reverse=True)
+                group.sort(key=lambda s: grade_to_score(s.axa_grade), reverse=True)
                 if group and group[0] not in diverse_pool and len(diverse_pool) < pref_count:
                     diverse_pool.append(group[0])
             
-            # If still need more, just add remaining high-scored startups
+            # If still need more, just add remaining high-graded startups
             if len(diverse_pool) < pref_count:
                 remaining_sorted = [s for s in remaining if s not in diverse_pool]
-                remaining_sorted.sort(key=lambda s: s.axa_overall_score or 0, reverse=True)
+                remaining_sorted.sort(key=lambda s: grade_to_score(s.axa_grade), reverse=True)
                 diverse_pool.extend(remaining_sorted[:pref_count - len(diverse_pool)])
             
             diverse = diverse_pool[:pref_count]
         else:
             diverse = []
     else:
-        # No preferences yet, return balanced mix: 50% highest scored, 50% variety
-        unseen_sorted = sorted(unseen_startups, key=lambda s: s.axa_overall_score or 0, reverse=True)
+        # No preferences yet, return balanced mix: 50% highest graded, 50% variety
+        unseen_sorted = sorted(unseen_startups, key=lambda s: grade_to_score(s.axa_grade), reverse=True)
         pref_count = max(1, int(limit * 0.5))
         preference_based = unseen_sorted[:pref_count]
         
@@ -432,7 +450,7 @@ def get_phase2_startups(
         
         for topic in sorted(topics_seen.keys()):
             group = topics_seen[topic]
-            group.sort(key=lambda s: s.axa_overall_score or 0, reverse=True)
+            group.sort(key=lambda s: grade_to_score(s.axa_grade), reverse=True)
             if group and group[0] not in diverse_pool and len(diverse_pool) < pref_count:
                 diverse_pool.append(group[0])
         

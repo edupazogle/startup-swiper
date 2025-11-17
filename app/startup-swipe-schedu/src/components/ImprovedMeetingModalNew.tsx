@@ -340,9 +340,9 @@ export function ImprovedMeetingModalNew({
   }
 
   return (
-    <TailwindModal isOpen={isOpen} onClose={onClose} size="xl" className="p-0 flex flex-col h-[90vh] max-h-[90vh]">
+    <TailwindModal isOpen={isOpen} onClose={onClose} size="xl" className="p-0 flex flex-col max-md:h-full md:h-[90vh] md:max-h-[90vh]">
       {/* Header */}
-      <div className="flex-shrink-0 border-b border-gray-700 dark:border-gray-700 bg-gray-800 dark:bg-gray-800 px-6 py-4">
+      <div className="flex-shrink-0 border-b border-gray-700 dark:border-gray-700 bg-gray-800 dark:bg-gray-800 px-4 py-3 md:px-6 md:py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md">

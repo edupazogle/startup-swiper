@@ -54,11 +54,11 @@ export function TailwindModal({
   }
 
   const sizeClasses = {
-    sm: 'max-w-sm',
-    md: 'max-w-md',
-    lg: 'max-w-2xl',
-    xl: 'max-w-4xl',
-    full: 'max-w-[95vw] h-[95vh]'
+    sm: 'md:max-w-sm',
+    md: 'md:max-w-md',
+    lg: 'md:max-w-2xl',
+    xl: 'md:max-w-4xl',
+    full: 'md:max-w-[95vw] md:h-[95vh]'
   }
 
   if (!isOpen) return null
@@ -66,7 +66,7 @@ export function TailwindModal({
   return (
     <div
       ref={modalRef}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 transition-opacity duration-150"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm max-md:p-0 md:p-4 transition-opacity duration-150"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
@@ -74,9 +74,10 @@ export function TailwindModal({
       <div
         ref={contentRef}
         className={cn(
-          'relative w-full bg-white dark:bg-gray-800 rounded-xl shadow-2xl',
-          'max-h-[90vh] overflow-y-auto',
+          'relative w-full bg-white dark:bg-gray-800 shadow-2xl',
           'transition-all duration-150 scale-100 opacity-100',
+          'max-md:h-full max-md:rounded-none max-md:max-h-none',
+          'md:rounded-xl md:max-h-[90vh] md:overflow-y-auto',
           sizeClasses[size],
           className
         )}
@@ -96,7 +97,7 @@ export function TailwindModalHeader({
   className?: string 
 }) {
   return (
-    <div className={cn('px-6 pt-6 pb-4', className)}>
+    <div className={cn('px-4 pt-4 pb-3 md:px-6 md:pt-6 md:pb-4', className)}>
       {children}
     </div>
   )
@@ -110,7 +111,7 @@ export function TailwindModalBody({
   className?: string 
 }) {
   return (
-    <div className={cn('px-6 py-4', className)}>
+    <div className={cn('px-4 py-3 md:px-6 md:py-4', className)}>
       {children}
     </div>
   )
@@ -124,7 +125,7 @@ export function TailwindModalFooter({
   className?: string 
 }) {
   return (
-    <div className={cn('px-6 pb-6 pt-4 flex items-center justify-end gap-3', className)}>
+    <div className={cn('px-4 pb-4 pt-3 md:px-6 md:pb-6 md:pt-4 flex items-center justify-end gap-3', className)}>
       {children}
     </div>
   )

@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
 import { Startup } from '@/lib/types'
-import { MapPin, UsersGroup, Dollar, WandMagicSparkles, Globe, CalendarMonth, ChartLineUp, CheckCircle, CirclePlus, Briefcase, Check, Close, ArrowUpRightFromSquare } from 'flowbite-react-icons/outline'
+import { MapPin, UsersGroup, Dollar, WandMagicSparkles, Globe, CalendarMonth, ChartLineUp, CheckCircle, CirclePlus, Briefcase, Check, Close, ArrowUpRightFromSquare, Award, Building, Star, Fire, Shield, Users } from 'flowbite-react-icons/outline'
 import { getTopicColor, getTechColor, getMaturityColor, getLocationColor } from '@/lib/badgeColors'
 import { cn } from '@/lib/utils'
 
@@ -50,11 +50,20 @@ interface SwipeableCardProps {
 }
 
 export function SwipeableCard({ startup, onSwipe, isProcessing = false }: SwipeableCardProps) {
-  const [hasVoted, setHasVoted] = useState(false)
-  const [isDragging, setIsDragging] = useState(false)
+  const [exitDirection, setExitDirection] = useState<'left' | 'right' | null>(null)
   const x = useMotionValue(0)
-  const rotate = useTransform(x, [-300, 0, 300], [-30, 0, 30])
-  const opacity = useTransform(x, [-300, 0, 300], [0.7, 1, 0.7])
+  const y = useMotionValue(0)
+  
+  // Transform hooks for smooth animations
+  const rotate = useTransform(x, [-200, 0, 200], [-25, 0, 25])
+  const opacity = useTransform(x, [-200, -100, 0, 100, 200], [0, 1, 1, 1, 0])
+  
+  // Overlay opacities based on drag distance
+  const leftOverlayOpacity = useTransform(x, [-150, -50, 0], [1, 0.5, 0])
+  const rightOverlayOpacity = useTransform(x, [0, 50, 150], [0, 0.5, 1])
+  
+  // Scale for visual feedback
+  const scale = useTransform(x, [-200, 0, 200], [1.05, 1, 1.05])
 
   // Helper to safely parse array fields (topics, tech, etc.)
   const parseArray = (value: any): string[] => {
@@ -100,23 +109,35 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
   }
 
   const handleDragEnd = (_: any, info: PanInfo) => {
-    if (hasVoted) return
-    setIsDragging(false)
+    if (isProcessing || exitDirection) return
     
-    // Increased threshold for better mobile experience
-    const threshold = 150
-    const velocity = Math.abs(info.velocity.x)
-    const distance = Math.abs(info.offset.x)
+    const swipeThreshold = 100 // Distance threshold
+    const velocityThreshold = 300 // Velocity threshold (px/s)
     
-    // Swipe if either threshold or velocity is met
-    if (distance > threshold || velocity > 500) {
-      setHasVoted(true)
-      onSwipe(info.offset.x > 0)
+    const swipeDistance = info.offset.x
+    const swipeVelocity = info.velocity.x
+    
+    // Determine if swipe should complete based on distance OR velocity
+    const shouldSwipeRight = swipeDistance > swipeThreshold || swipeVelocity > velocityThreshold
+    const shouldSwipeLeft = swipeDistance < -swipeThreshold || swipeVelocity < -velocityThreshold
+    
+    if (shouldSwipeRight) {
+      // Swipe right - Interested
+      setExitDirection('right')
+      onSwipe(true)
+    } else if (shouldSwipeLeft) {
+      // Swipe left - Pass
+      setExitDirection('left')
+      onSwipe(false)
     }
+    // If neither threshold met, card will spring back to center automatically
   }
-
-  const leftOverlayOpacity = useTransform(x, [-300, 0], [1, 0])
-  const rightOverlayOpacity = useTransform(x, [0, 300], [0, 1])
+  
+  const handleButtonClick = (interested: boolean) => {
+    if (isProcessing || exitDirection) return
+    setExitDirection(interested ? 'right' : 'left')
+    onSwipe(interested)
+  }
 
   const displayName = startup.name || startup["Company Name"] || 'Unknown Startup'
   const displayDescription = startup.description || startup["Company Description"] || startup.shortDescription || 'No description available'
@@ -148,89 +169,110 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
 
   return (
     <motion.div
-      style={{ x, rotate, opacity }}
-      drag="x"
-      dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.7}
-      dragDirectionLock={true}
-      dragMomentum={false}
-      dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
-      onDragStart={() => setIsDragging(true)}
+      style={{ 
+        x, 
+        y,
+        rotate, 
+        opacity,
+        scale
+      }}
+      drag={exitDirection ? false : true}
+      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+      dragElastic={1}
       onDragEnd={handleDragEnd}
-      whileTap={{ cursor: 'grabbing' }}
-      className="absolute rounded-lg touch-none select-none"
+      animate={exitDirection ? {
+        x: exitDirection === 'right' ? 500 : -500,
+        y: exitDirection === 'right' ? -50 : 50,
+        rotate: exitDirection === 'right' ? 30 : -30,
+        opacity: 0,
+        transition: {
+          duration: 0.5,
+          ease: [0.4, 0, 0.2, 1] // Smooth easing
+        }
+      } : {
+        x: 0,
+        y: 0,
+        rotate: 0,
+        opacity: 1
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 30
+      }}
+      className="absolute inset-0 w-full h-full touch-none select-none will-change-transform"
       role="article"
       aria-label={`Startup card: ${displayName}. Swipe or use buttons to pass or show interest.`}
     >
-      <Card className="w-full h-full max-h-[calc(100vh-180px)] sm:max-h-[calc(100vh-200px)] md:max-h-none min-h-[350px] xs:min-h-[400px] sm:min-h-[450px] md:h-full p-0 relative shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-row overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <Card className="w-full h-full max-h-[calc(100vh-180px)] sm:max-h-[calc(100vh-200px)] md:max-h-none min-h-[350px] xs:min-h-[400px] sm:min-h-[450px] md:h-full p-0 relative shadow-xl transition-shadow duration-300 flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl">
         {/* Action Buttons - Top Right */}
         <div className="absolute top-4 right-4 z-30 flex gap-2" role="group" aria-label="Voting actions">
           <motion.button
             onClick={(e) => {
               e.stopPropagation()
-              setHasVoted(true)
-              onSwipe(false)
+              handleButtonClick(false)
             }}
-            disabled={isProcessing}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-12 h-12 rounded-full bg-white dark:bg-gray-800 border-2 border-red-500 hover:border-red-600 hover:bg-red-50 dark:hover:bg-red-950 text-red-600 hover:text-red-700 dark:text-red-500 shadow-xl hover:shadow-2xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            disabled={isProcessing || !!exitDirection}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="w-11 h-11 rounded-full bg-white dark:bg-gray-800 border-2 border-red-500 hover:border-red-600 hover:bg-red-50 dark:hover:bg-red-950 text-red-600 hover:text-red-700 dark:text-red-500 shadow-xl hover:shadow-2xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             aria-label={`Pass on ${displayName}`}
             title="Pass"
           >
-            <Close className="w-6 h-6" aria-hidden="true"  />
+            <Close className="w-5.5 h-5.5" aria-hidden="true"  />
           </motion.button>
           
           <motion.button
             onClick={(e) => {
               e.stopPropagation()
-              setHasVoted(true)
-              onSwipe(true)
+              handleButtonClick(true)
             }}
-            disabled={isProcessing}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-xl hover:shadow-2xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            disabled={isProcessing || !!exitDirection}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="w-11 h-11 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-xl hover:shadow-2xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             aria-label={`Show interest in ${displayName}`}
             title="Interested"
           >
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg className="w-5.5 h-5.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
           </motion.button>
         </div>
 
+        {/* Left Swipe Overlay - Pass */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-red-500/30 to-red-600/30 flex items-center justify-center backdrop-blur-md z-20 pointer-events-none rounded-lg"
+          className="absolute inset-0 bg-gradient-to-br from-red-500/40 to-red-600/40 flex items-center justify-center backdrop-blur-[2px] z-20 pointer-events-none rounded-2xl"
           style={{ opacity: leftOverlayOpacity }}
           initial={false}
           aria-hidden="true"
         >
-          <div className="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-6 border-2 border-red-500">
-            <div className="text-5xl md:text-7xl font-black text-red-500 rotate-[-25deg] drop-shadow-2xl">
-              ✕ PASS
+          <div className="flex flex-col items-center bg-red-500/20 backdrop-blur-md rounded-3xl px-8 py-5 border-4 border-red-500 shadow-2xl">
+            <div className="text-6xl md:text-8xl font-black text-red-500 rotate-[-20deg] drop-shadow-2xl tracking-wider">
+              PASS
             </div>
-            <div className="text-base md:text-lg text-red-600 dark:text-red-400 font-bold mt-3">Not a fit</div>
+            <div className="text-lg md:text-xl text-red-100 font-bold mt-4 drop-shadow-lg">Not a fit</div>
           </div>
         </motion.div>
 
+        {/* Right Swipe Overlay - Interested */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-green-500/30 to-emerald-600/30 flex items-center justify-center backdrop-blur-md z-20 pointer-events-none rounded-lg"
+          className="absolute inset-0 bg-gradient-to-br from-green-500/40 to-emerald-600/40 flex items-center justify-center backdrop-blur-[2px] z-20 pointer-events-none rounded-2xl"
           style={{ opacity: rightOverlayOpacity }}
           initial={false}
           aria-hidden="true"
         >
-          <div className="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-6 border-2 border-green-500">
-            <div className="text-5xl md:text-7xl font-black text-green-500 rotate-[25deg] drop-shadow-2xl">
-              ♥ INTERESTED
+          <div className="flex flex-col items-center bg-green-500/20 backdrop-blur-md rounded-3xl px-8 py-5 border-4 border-green-500 shadow-2xl">
+            <div className="text-6xl md:text-8xl font-black text-green-500 rotate-[20deg] drop-shadow-2xl tracking-wider">
+              ♥ LIKE
             </div>
-            <div className="text-base md:text-lg text-green-600 dark:text-green-400 font-bold mt-3">Want to learn more</div>
+            <div className="text-lg md:text-xl text-green-100 font-bold mt-4 drop-shadow-lg">Want to learn more</div>
           </div>
         </motion.div>
 
-        <div className="relative z-10 h-full flex flex-col w-full">
+        <div className="flex-1 flex flex-col min-h-0 w-full overflow-hidden">
           {/* Sticky Header */}
-          <header className="sticky top-0 z-20 p-3 sm:p-4 md:p-5 pb-3 md:pb-4 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 border-b-2 border-gray-200 dark:border-gray-700 shadow-sm">
+          <header className="flex-shrink-0 z-20 p-3 sm:p-4 md:p-5 pb-3 md:pb-4 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 border-b-2 border-gray-200 dark:border-gray-700 shadow-sm">
             <div className="flex gap-3 sm:gap-4 items-start">
               {displayLogo && (
                 <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center overflow-hidden flex-shrink-0 border-2 border-gray-200 dark:border-gray-700 shadow-md" role="img" aria-label="Company logo">
@@ -274,6 +316,23 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                       </div>
                     </div>
                   )}
+                  {displayWebsite && (
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[9px] md:text-[10px] text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold">Website</span>
+                      <div className="flex flex-wrap gap-1 md:gap-1.5">
+                        <a 
+                          href={displayWebsite.startsWith('http') ? displayWebsite : `https://${displayWebsite}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-[10px] md:text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:underline transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                          aria-label={`Visit ${displayName} website (opens in new tab)`}
+                        >
+                          {displayWebsite.replace(/^https?:\/\//, '').replace(/^www\./, '')}
+                        </a>
+                      </div>
+                    </div>
+                  )}
                   {techArray && techArray.length > 0 && (
                     <div className="flex flex-col gap-1">
                       <span className="text-[9px] md:text-[10px] text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold">Tech</span>
@@ -308,12 +367,12 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
             {/* Scrollable Columns */}
             <div className="flex flex-col lg:flex-row lg:overflow-hidden lg:flex-1 min-h-0">
               {/* Column 1: VC Analysis & Core Product */}
-              <div className="w-full lg:w-1/3 lg:h-full border-r-0 lg:border-r-2 border-gray-200 dark:border-gray-700 lg:overflow-y-auto px-3 md:px-4 py-3 md:py-4 space-y-3 md:space-y-4 flex-shrink-0">
+              <div className="w-full lg:w-1/3 lg:h-full border-r-0 lg:border-r-2 border-gray-200 dark:border-gray-700 lg:overflow-y-auto px-3 md:px-4 py-3 lg:py-2 space-y-3 lg:space-y-2.5 flex-shrink-0">
               {/* Venture Clienting Analysis - TOP SECTION */}
               {(startup.axa_overall_score !== undefined || startup.axaOverallScore !== undefined) && (
                 <section aria-labelledby="vc-analysis-heading" className="mb-3">
                   <div className="flex items-center gap-2 mb-3">
-                    <CirclePlus className="text-blue-600 dark:text-blue-400 w-5 h-5" aria-hidden="true"   />
+                    <Award className="text-blue-600 dark:text-blue-400 w-5 h-5" aria-hidden="true"   />
                     <h3 id="vc-analysis-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Venture Clienting Analysis</h3>
                   </div>
                   
@@ -338,9 +397,9 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                         {/* Grade Explanation - Right of Grade */}
                         {(startup.axa_grade !== undefined || startup.axaGrade !== undefined) && (
                           <div className="flex-1 flex items-start gap-2 bg-white dark:bg-gray-800/50 p-3 rounded-lg shadow-sm border border-blue-100 dark:border-blue-900">
-                            <WandMagicSparkles
+                            <CheckCircle
                               className={cn(
-                                'flex-shrink-0 mt-0.5',
+                                'flex-shrink-0 mt-0.5 w-4 h-4',
                             startup.axa_grade === 'A+' || startup.axaGrade === 'A+' ? 'text-yellow-500 dark:text-yellow-400' :
                             startup.axa_grade === 'A' || startup.axaGrade === 'A' ? 'text-emerald-600 dark:text-emerald-400' :
                             startup.axa_grade === 'B+' || startup.axaGrade === 'B+' ? 'text-cyan-600 dark:text-cyan-400' :
@@ -395,90 +454,7 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                 </section>
               )}
 
-              {/* Product Information */}
-              {(startup.core_product || startup.extracted_product) && (
-                <section aria-labelledby="product-heading">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Briefcase className="text-blue-600 dark:text-blue-400 w-5 h-5" aria-hidden="true"   />
-                    <h3 id="product-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Core Product</h3>
-                  </div>
-                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 p-3 md:p-4 rounded-lg border-2 border-blue-200 dark:border-blue-800/50 shadow-md">
-                    <p>{startup.core_product || startup.extracted_product}</p>
-                  </div>
-                </section>
-              )}
-              </div>
-              
-              {/* Column 2: Value Proposition, Market & Tech */}
-              <div className="w-full lg:w-1/3 lg:h-full border-t lg:border-t-0 lg:border-r-2 border-gray-200 dark:border-gray-700 lg:overflow-y-auto px-3 md:px-4 py-3 md:py-4 space-y-3 md:space-y-4 flex-shrink-0">
-              {/* Value Proposition - Always show in consistent box format */}
-              {(startup.value_proposition || startup.shortDescription) && (
-                <section aria-labelledby="value-prop-heading">
-                  <div className="flex items-center gap-2 mb-3">
-                    <WandMagicSparkles size={18} className="text-pink-600 dark:text-pink-400" aria-hidden="true"  />
-                    <h3 id="value-prop-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Value Proposition</h3>
-                  </div>
-                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-pink-50 via-rose-50 to-pink-50 dark:from-pink-950/30 dark:via-rose-950/30 dark:to-pink-950/30 p-3 md:p-4 rounded-lg border-2 border-pink-200 dark:border-pink-800/50 shadow-md">
-                    <p>{startup.value_proposition || startup.shortDescription}</p>
-                  </div>
-                </section>
-              )}
-
-              {/* Market Information */}
-              {(startup.target_customers || startup.extracted_market) && (
-                <section aria-labelledby="market-heading">
-                  <div className="flex items-center gap-2 mb-3">
-                    <CirclePlus className="text-purple-600 dark:text-purple-400 w-5 h-5" aria-hidden="true"   />
-                    <h3 id="market-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">CirclePlus Market</h3>
-                  </div>
-                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/30 dark:to-violet-950/30 p-3 md:p-4 rounded-lg border-2 border-purple-200 dark:border-purple-800/50 shadow-md">
-                    <p>{startup.target_customers || startup.extracted_market}</p>
-                  </div>
-                </section>
-              )}
-
-              {/* Problem Solved */}
-              {startup.problem_solved && (
-                <section aria-labelledby="problem-heading">
-                  <div className="flex items-center gap-2 mb-3">
-                    <CirclePlus className="text-orange-600 dark:text-orange-400 w-5 h-5" aria-hidden="true"   />
-                    <h3 id="problem-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Problem Solved</h3>
-                  </div>
-                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 p-3 md:p-4 rounded-lg border-2 border-orange-200 dark:border-orange-800/50 shadow-md">
-                    <p>{startup.problem_solved}</p>
-                  </div>
-                </section>
-              )}
-
-              {/* Competitors Section */}
-              {startup.vp_competitors && (
-                <section aria-labelledby="competitors-heading">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Briefcase className="text-slate-600 dark:text-slate-400 w-5 h-5" aria-hidden="true"   />
-                    <h3 id="competitors-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Competitive Landscape</h3>
-                  </div>
-                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-950/30 dark:to-gray-900/30 p-3 md:p-4 rounded-lg border-2 border-slate-200 dark:border-slate-800/50 shadow-md">
-                    <p>{startup.vp_competitors}</p>
-                  </div>
-                </section>
-              )}
-              </div>
-              
-              {/* Column 3: Business Opportunity & Company Info */}
-              <div className="w-full lg:w-1/3 lg:h-full border-t lg:border-t-0 border-gray-200 dark:border-gray-700 lg:overflow-y-auto px-3 md:px-4 py-3 md:py-4 space-y-3 md:space-y-4 flex-shrink-0">
-              {/* Business Opportunity */}
-              {(startup.axa_business_leverage || startup.axaBusinessLeverage) && (
-                <section aria-labelledby="opportunity-heading" className="mb-3">
-                  <div className="flex items-center gap-2 mb-3">
-                    <WandMagicSparkles size={18} className="text-blue-600 dark:text-blue-400" aria-hidden="true"  />
-                    <h3 id="opportunity-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Business Opportunity for AXA</h3>
-                  </div>
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700 p-3 md:p-4 flex-shrink-0">
-                    <p className="text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{startup.axa_business_leverage || startup.axaBusinessLeverage}</p>
-                  </div>
-                </section>
-              )}
-
+              {/* Company Details - Moved under VC Analysis */}
               <section aria-label="Company statistics">
                 <h3 className="sr-only">Key Metrics</h3>
                 <dl className="grid grid-cols-2 gap-3 md:gap-4">
@@ -532,47 +508,92 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                       </div>
                     </div>
                   )}
-
-                  {startup.maturity && (
-                    <div className="flex items-start gap-3">
-                      <ChartLineUp size={18} className="text-gray-500 dark:text-gray-400 mt-1 flex-shrink-0" aria-hidden="true"  />
-                      <div>
-                        <dt className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-1.5">Maturity Level</dt>
-                        <dd>
-                          <Badge 
-                            variant="outline"
-                            className={cn("text-[10px] md:text-xs font-bold border-2 mt-1 px-3 py-1", getMaturityColor(startup.maturity).bg, getMaturityColor(startup.maturity).text, getMaturityColor(startup.maturity).border)}
-                          >
-                            {startup.maturity}
-                          </Badge>
-                        </dd>
-                      </div>
-                    </div>
-                  )}
-
-                  {displayWebsite && (
-                    <div className="col-span-2 flex items-start gap-3">
-                      <Globe size={18} className="text-gray-500 dark:text-gray-400 mt-1 flex-shrink-0" aria-hidden="true"  />
-                      <div className="min-w-0 flex-1">
-                        <dt className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-1.5">Website</dt>
-                        <dd>
-                          <a 
-                            href={displayWebsite.startsWith('http') ? displayWebsite : `https://${displayWebsite}`} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-xs md:text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:underline break-all inline-flex items-center gap-1.5 transition-colors"
-                            onClick={(e) => e.stopPropagation()}
-                            aria-label={`Visit ${displayName} website (opens in new tab)`}
-                          >
-                            {displayWebsite.replace(/^https?:\/\//, '').replace(/^www\./, '')}
-                            <ArrowUpRightFromSquare className="w-4 h-4" aria-hidden="true"  />
-                          </a>
-                        </dd>
-                      </div>
-                    </div>
-                  )}
                 </dl>
               </section>
+              </div>
+
+              {/* Column 2: Core Product, Market & Tech */}
+              <div className="w-full lg:w-1/3 lg:h-full border-t lg:border-t-0 lg:border-r-2 border-gray-200 dark:border-gray-700 lg:overflow-y-auto px-3 md:px-4 py-3 lg:py-2 space-y-3 lg:space-y-2.5 flex-shrink-0">
+              {/* Core Product */}
+              {(startup.core_product || startup.extracted_product) && (
+                <section aria-labelledby="product-heading">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Building className="text-blue-600 dark:text-blue-400 w-5 h-5" aria-hidden="true"   />
+                    <h3 id="product-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Core Product</h3>
+                  </div>
+                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 p-3 md:p-4 rounded-lg border-2 border-blue-200 dark:border-blue-800/50 shadow-md">
+                    <p>{startup.core_product || startup.extracted_product}</p>
+                  </div>
+                </section>
+              )}
+
+              {/* Market Information */}
+              {(startup.target_customers || startup.extracted_market) && (
+                <section aria-labelledby="market-heading">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Users className="text-purple-600 dark:text-purple-400 w-5 h-5" aria-hidden="true"   />
+                    <h3 id="market-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Target Market</h3>
+                  </div>
+                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/30 dark:to-violet-950/30 p-3 md:p-4 rounded-lg border-2 border-purple-200 dark:border-purple-800/50 shadow-md">
+                    <p>{startup.target_customers || startup.extracted_market}</p>
+                  </div>
+                </section>
+              )}
+
+              {/* Problem Solved */}
+              {startup.problem_solved && (
+                <section aria-labelledby="problem-heading">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Fire className="text-orange-600 dark:text-orange-400 w-5 h-5" aria-hidden="true"   />
+                    <h3 id="problem-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Problem Solved</h3>
+                  </div>
+                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 p-3 md:p-4 rounded-lg border-2 border-orange-200 dark:border-orange-800/50 shadow-md">
+                    <p>{startup.problem_solved}</p>
+                  </div>
+                </section>
+              )}
+
+              {/* Competitors Section */}
+              {startup.vp_competitors && (
+                <section aria-labelledby="competitors-heading">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Shield className="text-slate-600 dark:text-slate-400 w-5 h-5" aria-hidden="true"   />
+                    <h3 id="competitors-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Competitive Landscape</h3>
+                  </div>
+                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-950/30 dark:to-gray-900/30 p-3 md:p-4 rounded-lg border-2 border-slate-200 dark:border-slate-800/50 shadow-md">
+                    <p>{startup.vp_competitors}</p>
+                  </div>
+                </section>
+              )}
+              </div>
+
+              {/* Column 3: Value Proposition & Business Opportunity */}
+              <div className="w-full lg:w-1/3 lg:h-full border-t lg:border-t-0 border-gray-200 dark:border-gray-700 lg:overflow-y-auto px-3 md:px-4 py-3 lg:py-2 space-y-3 lg:space-y-2.5 flex-shrink-0">
+              {/* Value Proposition */}
+              {(startup.value_proposition || startup.shortDescription) && (
+                <section aria-labelledby="value-prop-heading">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Star size={18} className="text-pink-600 dark:text-pink-400" aria-hidden="true"  />
+                    <h3 id="value-prop-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Value Proposition</h3>
+                  </div>
+                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-pink-50 via-rose-50 to-pink-50 dark:from-pink-950/30 dark:via-rose-950/30 dark:to-pink-950/30 p-3 md:p-4 rounded-lg border-2 border-pink-200 dark:border-pink-800/50 shadow-md">
+                    <p>{startup.value_proposition || startup.shortDescription}</p>
+                  </div>
+                </section>
+              )}
+
+              {/* Business Opportunity */}
+              {(startup.axa_business_leverage || startup.axaBusinessLeverage) && (
+                <section aria-labelledby="opportunity-heading" className="mb-3">
+                  <div className="flex items-center gap-2 mb-3">
+                    <ChartLineUp size={18} className="text-blue-600 dark:text-blue-400" aria-hidden="true"  />
+                    <h3 id="opportunity-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Business Opportunity for AXA</h3>
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700 p-3 md:p-4 flex-shrink-0">
+                    <p className="text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{startup.axa_business_leverage || startup.axaBusinessLeverage}</p>
+                  </div>
+                </section>
+              )}
               </div>
             </div>
           </div>
