@@ -199,12 +199,12 @@ export function LoginView({ onLogin }: LoginViewProps) {
             {/* Mobile Cache Clear Link */}
             <div className="text-center">
               <a
-                href="/clear-mobile-cache.html"
+                href="/force-update.html"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 underline"
               >
-                📱 Having login issues on mobile? Clear cache here
+                📱 Seeing old version? Force update here
               </a>
             </div>
 

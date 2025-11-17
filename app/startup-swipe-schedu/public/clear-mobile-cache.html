@@ -176,13 +176,17 @@
                 }
             }
 
-            // 4. Unregister service workers
+            // 4. Unregister service workers (CRITICAL for cache issues)
             if ('serviceWorker' in navigator) {
                 try {
                     const registrations = await navigator.serviceWorker.getRegistrations();
-                    await Promise.all(
-                        registrations.map(registration => registration.unregister())
-                    );
+                    for (const registration of registrations) {
+                        await registration.unregister();
+                        // Force immediate update
+                        if (registration.waiting) {
+                            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                        }
+                    }
                     addDetail(`✅ Unregistered ${registrations.length} service worker(s)`);
                     itemsCleared++;
                 } catch (e) {
