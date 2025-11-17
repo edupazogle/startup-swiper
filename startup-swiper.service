@@ -1,22 +1,41 @@
 [Unit]
-Description=Startup Swiper Platform
+Description=Startup Swiper FastAPI Application
+Documentation=https://github.com/edupazogle/startup-swiper
 After=network.target
+Wants=network-online.target
 
 [Service]
 Type=simple
-User=www-data
-WorkingDirectory=/var/www/startup-swiper
-ExecStart=/var/www/startup-swiper/launch-resilient.sh start
-ExecStop=/var/www/startup-swiper/launch-resilient.sh stop
+User=appuser
+Group=appuser
+WorkingDirectory=/home/appuser/startup-swiper/api
+Environment="PATH=/home/appuser/startup-swiper/.venv/bin:/usr/local/bin:/usr/bin:/bin"
+EnvironmentFile=-/home/appuser/startup-swiper/api/.env
+
+# Start command
+ExecStart=/home/appuser/startup-swiper/.venv/bin/uvicorn main:app \
+    --host 0.0.0.0 \
+    --port 8000 \
+    --workers 2 \
+    --log-level info
+
+# Restart policy
 Restart=always
 RestartSec=10
-StandardOutput=append:/var/log/startup-swiper/service.log
-StandardError=append:/var/log/startup-swiper/service-error.log
+StartLimitInterval=0
 
-# Environment
-Environment="PATH=/var/www/startup-swiper/.venv/bin:/usr/local/bin:/usr/bin:/bin"
-Environment="API_PORT=8000"
-Environment="FRONTEND_PORT=5000"
+# Resource limits
+LimitNOFILE=65536
+
+# Logging
+StandardOutput=append:/home/appuser/startup-swiper/logs/api.log
+StandardError=append:/home/appuser/startup-swiper/logs/api-error.log
+SyslogIdentifier=startup-swiper
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target
+
