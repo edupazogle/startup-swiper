@@ -3,7 +3,7 @@ import { useKV } from '@/lib/useKV'
 import { ChatMessage as ChatMessageType } from '@/lib/types'
 import { Startup } from '@/lib/types'
 import { 
-  Sparkles, 
+  Sparkle, 
   PaperPlaneTilt, 
   Robot, 
   User,
@@ -149,7 +149,7 @@ Stage: ${startup.maturity || 'N/A'}
       <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-4 md:px-6">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 shadow-md">
-            <Sparkles size={20} weight="fill" className="text-white" />
+            <Sparkle size={20} weight="fill" className="text-white" />
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white truncate">
