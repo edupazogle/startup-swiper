@@ -59,10 +59,27 @@ jobs:
       - name: 🚀 Deploy frontend to DigitalOcean
         run: |
           echo "📦 Deploying frontend to production..."
+          
+          # Clear existing frontend directory and deploy fresh
+          ssh ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
+            # Backup old frontend
+            if [ -d /home/appuser/startup-swiper/frontend ]; then
+              mv /home/appuser/startup-swiper/frontend /home/appuser/startup-swiper/frontend.backup.$(date +%Y%m%d_%H%M%S)
+            fi
+            mkdir -p /home/appuser/startup-swiper/frontend
+          EOF
+          
           rsync -avz --delete \
             --exclude='*.map' \
             app/startup-swipe-schedu/dist/ \
             ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }}:/home/appuser/startup-swiper/frontend/
+          
+          # Clear browser caches by updating cache-control headers in NGINX
+          ssh ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
+            echo "🔄 Clearing caches..."
+            # Add timestamp to force cache invalidation
+            echo "<!-- Deployed: $(date -u +%Y%m%dT%H%M%SZ) -->" >> /home/appuser/startup-swiper/frontend/index.html
+          EOF
           
           echo "✅ Frontend deployed successfully"
       
@@ -147,55 +164,42 @@ jobs:
             # Create logs directory if it doesn't exist
             mkdir -p /home/appuser/startup-swiper/logs
             
-            # Check if systemd service exists
-            if systemctl list-unit-files | grep -q startup-swiper.service; then
-              echo "Using systemd service..."
-              sudo systemctl restart startup-swiper
-              sleep 3
-              
-              # Check service status
-              if sudo systemctl is-active --quiet startup-swiper; then
-                echo "✅ API service is running (systemd)"
-              else
-                echo "❌ Systemd service failed, falling back to manual start..."
-                sudo systemctl status startup-swiper --no-pager || true
-                
-                # Fallback to manual start
-                pkill -f 'uvicorn.*8000' || true
-                sleep 2
-                cd /home/appuser/startup-swiper/api
-                nohup /home/appuser/startup-swiper/.venv/bin/uvicorn main:app \
-                  --host 0.0.0.0 \
-                  --port 8000 \
-                  > /home/appuser/startup-swiper/logs/api.log 2>&1 &
-                sleep 5
-              fi
-            else
-              echo "Systemd service not installed, using manual start..."
-              # Stop existing API process
-              pkill -f 'uvicorn.*8000' || true
-              sleep 2
-              
-              # Start API in background
-              cd /home/appuser/startup-swiper/api
-              nohup /home/appuser/startup-swiper/.venv/bin/uvicorn main:app \
-                --host 0.0.0.0 \
-                --port 8000 \
-                > /home/appuser/startup-swiper/logs/api.log 2>&1 &
-              
-              sleep 5
-            fi
+            # Always use manual start (systemd service has issues with .env file)
+            echo "Stopping existing API processes..."
+            pkill -f 'uvicorn.*8000' || true
+            sleep 3
             
-            # Verify API is running
-            if curl -sf http://localhost:8000/health > /dev/null; then
-              echo "✅ API is running and healthy"
-            else
-              echo "❌ API failed to start. Last 30 lines of log:"
-              tail -30 /home/appuser/startup-swiper/logs/api.log || echo "No log file found"
-              echo "Checking if API process exists:"
-              ps aux | grep uvicorn | grep -v grep || echo "No uvicorn process found"
-              exit 1
-            fi
+            # Start API in background
+            cd /home/appuser/startup-swiper/api
+            nohup /home/appuser/startup-swiper/.venv/bin/uvicorn main:app \
+              --host 0.0.0.0 \
+              --port 8000 \
+              --log-level info \
+              > /home/appuser/startup-swiper/logs/api.log 2>&1 &
+            
+            echo "Waiting for API to start..."
+            sleep 10
+            
+            # Verify API is running with retries
+            for i in {1..5}; do
+              if curl -sf http://localhost:8000/health > /dev/null; then
+                echo "✅ API is running and healthy"
+                exit 0
+              fi
+              echo "Attempt $i: API not ready yet, waiting..."
+              sleep 3
+            done
+            
+            # If we get here, API didn't start properly
+            echo "❌ API failed to start. Last 50 lines of log:"
+            tail -50 /home/appuser/startup-swiper/logs/api.log || echo "No log file found"
+            echo ""
+            echo "Checking if API process exists:"
+            ps aux | grep uvicorn | grep -v grep || echo "No uvicorn process found"
+            echo ""
+            echo "⚠️  API may still be starting - check manually with:"
+            echo "   ssh to server and run: tail -f /home/appuser/startup-swiper/logs/api.log"
+            exit 1
           EOF
       
       - name: ✅ Verify deployment
