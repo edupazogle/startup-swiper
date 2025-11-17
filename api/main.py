@@ -39,9 +39,14 @@ from llm_config import simple_llm_call_async, llm_completion
 from auth import (
     authenticate_user,
     create_access_token,
+    create_refresh_token,
+    verify_refresh_token,
+    revoke_refresh_token,
+    revoke_all_user_tokens,
     get_current_user,
     get_current_active_user,
-    ACCESS_TOKEN_EXPIRE_MINUTES
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    REFRESH_TOKEN_EXPIRE_DAYS
 )
 from qwen_agentic_concierge import create_qwen_concierge  # Legacy Qwen Agentic
 from qwen_enhanced_concierge import create_enhanced_qwen_concierge  # Enhanced with proper function calling
@@ -253,7 +258,7 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
 @app.post("/auth/login", response_model=schemas.Token)
 def login(user_credentials: schemas.UserLogin, db: Session = Depends(get_db)):
     """
-    Login with email and password to get access token
+    Login with email and password to get access and refresh tokens
     """
     user = authenticate_user(db, user_credentials.email, user_credentials.password)
     if not user:
@@ -266,13 +271,73 @@ def login(user_credentials: schemas.UserLogin, db: Session = Depends(get_db)):
     if not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
 
-    # Create access token
+    # Create access token (30 minutes)
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
+    
+    # Create refresh token (7 days)
+    refresh_token = create_refresh_token(db, user.id)
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+        "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60  # seconds
+    }
+
+@app.post("/auth/refresh", response_model=schemas.Token)
+def refresh_token(token_data: schemas.TokenRefresh, db: Session = Depends(get_db)):
+    """
+    Refresh access token using refresh token
+    """
+    user = verify_refresh_token(db, token_data.refresh_token)
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or expired refresh token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    if not user.is_active:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    
+    # Revoke old refresh token
+    revoke_refresh_token(db, token_data.refresh_token)
+    
+    # Create new tokens
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.email}, expires_delta=access_token_expires
+    )
+    refresh_token = create_refresh_token(db, user.id)
+    
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+        "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60
+    }
+
+@app.post("/auth/logout")
+def logout(token_data: schemas.TokenRefresh, db: Session = Depends(get_db)):
+    """
+    Logout by revoking refresh token
+    """
+    revoke_refresh_token(db, token_data.refresh_token)
+    return {"message": "Successfully logged out"}
+
+@app.post("/auth/logout-all")
+async def logout_all(
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Logout from all devices by revoking all refresh tokens
+    """
+    revoke_all_user_tokens(db, current_user.id)
+    return {"message": "Successfully logged out from all devices"}
 
 @app.get("/auth/me", response_model=schemas.User)
 async def get_me(current_user: models.User = Depends(get_current_active_user)):

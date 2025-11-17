@@ -344,7 +344,7 @@ export function FeedbackChatModal({
                   onClick={sendMessage}
                   disabled={!currentMessage.trim() || isLoading}
                   size="sm"
-                  className="flex-shrink-0 self-end h-[60px] md:h-[70px] w-10 md:w-12"
+                  className="flex-shrink-0 self-end"
                 >
                   <PaperPlaneRight size={16} />
                 </Button>
@@ -356,7 +356,7 @@ export function FeedbackChatModal({
                   disabled={isLoading}
                   variant="outline"
                   size="sm"
-                  className="w-full text-xs"
+                  className="w-full"
                 >
                   Continue to Questions
                 </Button>
@@ -400,14 +400,13 @@ export function FeedbackChatModal({
                 onClick={() => setModalState('conversation')}
                 variant="outline"
                 size="sm"
-                className="text-xs"
               >
                 Back
               </Button>
               <Button
                 onClick={moveToFeedback}
                 size="sm"
-                className="flex-1 text-xs"
+                className="flex-1"
               >
                 Continue
               </Button>
@@ -451,7 +450,6 @@ export function FeedbackChatModal({
                 onClick={() => setModalState('questions')}
                 variant="outline"
                 size="sm"
-                className="text-xs"
               >
                 Back
               </Button>
@@ -459,7 +457,7 @@ export function FeedbackChatModal({
                 onClick={submitFeedback}
                 disabled={isLoading}
                 size="sm"
-                className="flex-1 text-xs"
+                className="flex-1"
               >
                 {isLoading ? 'Saving...' : 'Save & Close'}
               </Button>

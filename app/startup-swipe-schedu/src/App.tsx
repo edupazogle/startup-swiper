@@ -18,6 +18,7 @@ import { Startup, Vote, CalendarEvent, Idea } from '@/lib/types'
 import { initialStartups } from '@/lib/initialStartups'
 import { InsightsAPI } from '@/lib/notificationManager'
 import { api } from '@/lib/api'
+import { authService } from '@/lib/authService'
 import { Swatches, Rocket, Lightbulb, CalendarBlank, UserGear, Plus, Robot, Bell, BellSlash, SignOut } from '@phosphor-icons/react'
 import { Toaster } from '@/components/ui/sonner'
 import { toast } from 'sonner'
@@ -75,9 +76,23 @@ function App() {
   useEffect(() => {
     const initializeUser = async () => {
       try {
-        // First, check if user is already stored in localStorage (persistent session)
-        // NOTE: localStorage is per-browser/device, so each user on their own computer
-        // will have their own separate session stored. No cross-user conflicts.
+        // Check if user is authenticated with JWT
+        if (authService.isAuthenticated()) {
+          try {
+            const user = await authService.getCurrentUser()
+            setCurrentUserId(user.email)
+            setCurrentUserName(user.full_name || user.email.split('@')[0])
+            setIsAuthenticated(true)
+            console.log('✓ Authenticated user:', user.email)
+            return
+          } catch (error) {
+            console.error('Failed to get current user:', error)
+            // Token might be expired, clear it
+            await authService.logout()
+          }
+        }
+
+        // Fallback: check localStorage for legacy session
         const savedSession = localStorage.getItem('startup_swiper_session')
         if (savedSession) {
           try {
@@ -86,7 +101,7 @@ function App() {
               setCurrentUserId(session.userId)
               setCurrentUserName(session.userName)
               setIsAuthenticated(true)
-              console.log('✓ Restored session from localStorage:', session.userId)
+              console.log('✓ Restored legacy session from localStorage:', session.userId)
               return
             }
           } catch (e) {
@@ -95,7 +110,7 @@ function App() {
           }
         }
 
-        // If a hosted SSO/Spark provider is available, use it to sign users in.
+        // If a hosted SSO/Spark provider is available, use it
         if (typeof window !== 'undefined' && (window as any).spark && typeof (window as any).spark.user === 'function') {
           const user = await (window as any).spark.user()
           if (user && user.id) {
@@ -696,99 +711,133 @@ function App() {
     <AuroralBackground>
       <div className="flex flex-col h-dvh overflow-hidden" style={{ paddingTop: 'var(--safe-top)' }}>
         {(currentView !== 'ai' || !isMobile) && (
-          <header className={`border-b border-white/20 bg-white/20 backdrop-blur-md flex-shrink-0 py-2 sm:py-3 md:py-4 px-3 sm:px-4`}>
-          <div className="container mx-auto px-4 py-3 md:py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-start gap-2 md:gap-3 flex-shrink-0" style={{ width: isMobile ? 'auto' : '200px' }}>
-                <img src={logoMain} alt="Logo" className="h-[1.2rem] md:h-[2rem] w-auto mt-1.5 md:mt-2" />
-                <div className="flex flex-col">
-                  <h1 className="font-black text-white text-2xl md:text-4xl whitespace-nowrap">Startup Rise</h1>
-                  <span className="text-xs md:text-sm text-white mt-1 font-light">@Slush2025</span>
-                </div>
-              </div>
-              
-              {!isMobile && (
-                <div className="flex-shrink-0">
-                  <Tabs value={currentView} onValueChange={(v) => setCurrentView(v as any)}>
-                    <TabsList className="bg-transparent border-none flex-wrap h-auto p-1.5">
-                      <TabsTrigger value="swipe" className="data-[state=active]:bg-white/70 !text-gray-900 h-14 px-8 text-xl font-bold [&_svg]:!text-gray-900">
-                        <Swatches className="mr-3" size={32} weight="bold" />
-                        Swipe
-                      </TabsTrigger>
-                      <TabsTrigger value="dashboard" className="data-[state=active]:bg-white/70 !text-gray-900 h-14 px-8 text-xl font-bold [&_svg]:!text-gray-900">
-                        <Rocket className="mr-3" size={32} weight="bold" />
-                        Startups
-                      </TabsTrigger>
-                      <TabsTrigger value="insights" className="data-[state=active]:bg-white/70 !text-gray-900 h-14 px-8 text-xl font-bold [&_svg]:!text-gray-900">
-                        <Lightbulb className="mr-3" size={32} weight="bold" />
-                        Insights
-                      </TabsTrigger>
-                      <TabsTrigger value="calendar" className="data-[state=active]:bg-white/70 !text-gray-900 h-14 px-8 text-xl font-bold [&_svg]:!text-gray-900">
-                        <CalendarBlank className="mr-3" size={32} weight="bold" />
-                        Calendar
-                      </TabsTrigger>
-                      <TabsTrigger value="ai" className="data-[state=active]:bg-white/70 !text-gray-900 h-14 px-8 text-xl font-bold [&_svg]:!text-gray-900">
-                        <Robot className="mr-3" size={32} weight="bold" />
-                        Concierge
-                      </TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                </div>
-              )}
-              
-              <div className="flex-shrink-0" style={{ width: isMobile ? 'auto' : '200px', display: 'flex', justifyContent: 'flex-end' }}>
-                <div className="flex gap-2">
-                  {notificationManager && (
-                    <Button
-                      onClick={handleEnableNotifications}
-                      variant="ghost"
-                      size={isMobile ? 'sm' : 'default'}
-                      className={`h-10 sm:h-12 md:h-14 ${
-                        notificationsEnabled
-                          ? 'text-green-400 hover:text-green-300'
-                          : 'text-white/60 hover:text-white'
-                      }`}
-                      title={notificationsEnabled ? 'Notifications enabled' : 'Enable notifications'}
-                    >
-                      {notificationsEnabled ? (
-                        <Bell size={isMobile ? 20 : 24} weight="fill" />
-                      ) : (
-                        <BellSlash size={isMobile ? 20 : 24} />
-                      )}
-                    </Button>
+          <header className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+            <div className="w-full p-5 lg:px-8 lg:pl-5">
+              <div className="flex items-center justify-center relative">
+                {/* Logo Section - Absolute positioned left */}
+                <div className="absolute left-0 flex items-center">
+                  {/* Mobile Logo - Compact */}
+                  {isMobile && (
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600">
+                        <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M13 2L3 14h8l-2 8 10-12h-8l2-8z"/>
+                        </svg>
+                      </div>
+                      <span className="text-xl font-semibold text-gray-900 dark:text-white">
+                        Startup Edge
+                      </span>
+                    </div>
                   )}
-                  <Button
-                    onClick={() => setCurrentView('admin')}
-                    variant="ghost"
-                    className={`${
-                      currentView === 'admin' 
-                        ? 'bg-white/90 text-gray-900' 
-                        : 'text-white hover:bg-white/30 hover:text-white'
-                    } h-10 sm:h-12 md:h-14 ${isMobile ? 'px-3' : 'px-6'} font-bold text-lg sm:text-xl`}
-                  >
-                    <UserGear size={28} className={isMobile ? '' : 'mr-3'} weight="bold" />
-                    {!isMobile && 'Admin'}
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setIsAuthenticated(false)
-                      setCurrentUserId('')
-                      setCurrentUserName('')
-                      // Clear session from localStorage
-                      localStorage.removeItem('startup_swiper_session')
-                      toast('Signed out')
-                    }}
-                    variant="ghost"
-                    className={`text-white hover:bg-white/10 h-10 sm:h-12 md:h-14 ${isMobile ? 'px-3' : 'px-6'} font-bold text-base sm:text-lg`}
-                  >
-                    <SignOut size={24} className={isMobile ? '' : 'mr-2'} />
-                    {!isMobile && 'Sign out'}
-                  </Button>
+                  
+                  {/* Desktop Logo - Full */}
+                  {!isMobile && (
+                    <>
+                      <img src={logoMain} alt="Startup Rise" className="mr-3 h-7 sm:h-9 rounded-lg shadow-sm" />
+                      <div className="flex items-center gap-3">
+                        <span className="self-center whitespace-nowrap text-xl sm:text-2xl font-semibold dark:text-white">
+                          Startup Rise
+                        </span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">@Slush2025</span>
+                      </div>
+                    </>
+                  )}
+                </div>
+                
+                {/* Desktop Navigation - Centered */}
+                {!isMobile && (
+                  <nav className="flex justify-center">
+                    <Tabs value={currentView} onValueChange={(v) => setCurrentView(v as any)}>
+                      <TabsList className="bg-transparent border-none h-auto p-0 gap-2">
+                        <TabsTrigger 
+                          value="swipe" 
+                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
+                        >
+                          <Swatches size={27} weight="bold" />
+                          Swipe
+                        </TabsTrigger>
+                        <TabsTrigger 
+                          value="dashboard" 
+                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
+                        >
+                          <Rocket size={27} weight="bold" />
+                          Startups
+                        </TabsTrigger>
+                        <TabsTrigger 
+                          value="insights" 
+                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
+                        >
+                          <Lightbulb size={27} weight="bold" />
+                          Insights
+                        </TabsTrigger>
+                        <TabsTrigger 
+                          value="calendar" 
+                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
+                        >
+                          <CalendarBlank size={27} weight="bold" />
+                          Calendar
+                        </TabsTrigger>
+                        <TabsTrigger 
+                          value="ai" 
+                          className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
+                        >
+                          <Robot size={27} weight="bold" />
+                          Concierge
+                        </TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  </nav>
+                )}
+                
+                {/* Action Buttons - Absolute positioned right */}
+                <div className="absolute right-8 flex items-center lg:gap-4">
+                  <div className="flex items-center">
+                    {notificationManager && (
+                      <button
+                        onClick={handleEnableNotifications}
+                        className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        title={notificationsEnabled ? 'Notifications enabled' : 'Enable notifications'}
+                      >
+                        <span className="sr-only">Notifications</span>
+                        {notificationsEnabled ? (
+                          <Bell className="text-2xl text-green-600 hover:text-green-700 dark:text-green-400" size={24} weight="fill" />
+                        ) : (
+                          <BellSlash className="text-2xl text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" size={24} />
+                        )}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setCurrentView('admin')}
+                      className={`rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                        currentView === 'admin' ? 'bg-gray-100 dark:bg-gray-700' : ''
+                      }`}
+                    >
+                      <UserGear className="text-2xl text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" size={24} weight="bold" />
+                    </button>
+                    <button
+                      onClick={async () => {
+                        try {
+                          await authService.logout()
+                          setIsAuthenticated(false)
+                          setCurrentUserId('')
+                          setCurrentUserName('')
+                          localStorage.removeItem('startup_swiper_session')
+                          toast('Signed out successfully')
+                        } catch (error) {
+                          console.error('Logout error:', error)
+                          toast.error('Logout failed')
+                        }
+                      }}
+                      className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      title="Sign out"
+                    >
+                      <SignOut className="text-2xl text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" size={24} />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </header>
+          </header>
         )}
 
         {/* Notification Setup Prompt */}
@@ -884,66 +933,66 @@ function App() {
 
         {isMobile && (
           <>
-            <nav className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md border-t border-white/10 z-[51]" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-              <div className="flex items-center justify-around px-2 py-1 sm:py-2">
+            <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 dark:bg-gray-800 dark:border-gray-700 z-[51]" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+              <div className="grid grid-cols-5 gap-1 px-2 py-2">
                   <button
                     onClick={() => setCurrentView('swipe')}
-                    className={`flex flex-col items-center justify-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1.5 sm:py-2 min-h-[48px] text-[10px] xs:text-[11px] sm:text-xs md:text-sm rounded-md transition-colors ${
+                    className={`flex flex-col items-center justify-center gap-1 px-2 py-2 rounded-lg transition-colors ${
                       currentView === 'swipe' 
-                        ? 'bg-white/20 text-white' 
-                        : 'text-white'
+                        ? 'bg-gray-100 text-blue-600 dark:bg-gray-700 dark:text-blue-500' 
+                        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <Swatches size={24} weight={currentView === 'swipe' ? 'fill' : 'bold'} />
-                    <span className="text-center font-bold">Swipe</span>
+                    <Swatches className="h-6 w-6" weight={currentView === 'swipe' ? 'fill' : 'bold'} />
+                    <span className="text-[10px] font-medium">Swipe</span>
                   </button>
                   
                   <button
                     onClick={() => setCurrentView('dashboard')}
-                    className={`flex flex-col items-center justify-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1.5 sm:py-2 min-h-[48px] text-[10px] xs:text-[11px] sm:text-xs md:text-sm rounded-md transition-colors ${
+                    className={`flex flex-col items-center justify-center gap-1 px-2 py-2 rounded-lg transition-colors ${
                       currentView === 'dashboard' 
-                        ? 'bg-white/20 text-white' 
-                        : 'text-white'
+                        ? 'bg-gray-100 text-blue-600 dark:bg-gray-700 dark:text-blue-500' 
+                        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <Rocket size={24} weight={currentView === 'dashboard' ? 'fill' : 'bold'} />
-                    <span className="text-center font-bold">Startups</span>
+                    <Rocket className="h-6 w-6" weight={currentView === 'dashboard' ? 'fill' : 'bold'} />
+                    <span className="text-[10px] font-medium">Startups</span>
                   </button>
                   
                   <button
                     onClick={() => setCurrentView('insights')}
-                    className={`flex flex-col items-center justify-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1.5 sm:py-2 min-h-[48px] text-[10px] xs:text-[11px] sm:text-xs md:text-sm rounded-md transition-colors ${
+                    className={`flex flex-col items-center justify-center gap-1 px-2 py-2 rounded-lg transition-colors ${
                       currentView === 'insights' 
-                        ? 'bg-white/20 text-white' 
-                        : 'text-white'
+                        ? 'bg-gray-100 text-blue-600 dark:bg-gray-700 dark:text-blue-500' 
+                        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <Lightbulb size={24} weight={currentView === 'insights' ? 'fill' : 'bold'} />
-                    <span className="text-center font-bold">Insights</span>
+                    <Lightbulb className="h-6 w-6" weight={currentView === 'insights' ? 'fill' : 'bold'} />
+                    <span className="text-[10px] font-medium">Insights</span>
                   </button>
                   
                   <button
                     onClick={() => setCurrentView('calendar')}
-                    className={`flex flex-col items-center justify-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1.5 sm:py-2 min-h-[48px] text-[10px] xs:text-[11px] sm:text-xs md:text-sm rounded-md transition-colors ${
+                    className={`flex flex-col items-center justify-center gap-1 px-2 py-2 rounded-lg transition-colors ${
                       currentView === 'calendar' 
-                        ? 'bg-white/20 text-white' 
-                        : 'text-white'
+                        ? 'bg-gray-100 text-blue-600 dark:bg-gray-700 dark:text-blue-500' 
+                        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <CalendarBlank size={24} weight={currentView === 'calendar' ? 'fill' : 'bold'} />
-                    <span className="text-center font-bold">Calendar</span>
+                    <CalendarBlank className="h-6 w-6" weight={currentView === 'calendar' ? 'fill' : 'bold'} />
+                    <span className="text-[10px] font-medium">Calendar</span>
                   </button>
                   
                   <button
                     onClick={() => setCurrentView('ai')}
-                    className={`flex flex-col items-center justify-center gap-0.5 sm:gap-1 px-2 sm:px-3 py-1.5 sm:py-2 min-h-[48px] text-[10px] xs:text-[11px] sm:text-xs md:text-sm rounded-md transition-colors ${
+                    className={`flex flex-col items-center justify-center gap-1 px-2 py-2 rounded-lg transition-colors ${
                       currentView === 'ai' 
-                        ? 'bg-white/20 text-white' 
-                        : 'text-white'
+                        ? 'bg-gray-100 text-blue-600 dark:bg-gray-700 dark:text-blue-500' 
+                        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <Robot size={24} weight={currentView === 'ai' ? 'fill' : 'bold'} />
-                    <span className="text-center font-bold">Concierge</span>
+                    <Robot className="h-6 w-6" weight={currentView === 'ai' ? 'fill' : 'bold'} />
+                    <span className="text-[10px] font-medium">AI</span>
                   </button>
               </div>
             </nav>
@@ -963,10 +1012,28 @@ function App() {
         />
         
         {!isMobile && (
-          <footer className="border-t border-white/10 bg-black/50 backdrop-blur-sm py-2 flex-shrink-0">
-            <div className="container mx-auto px-4 flex items-center justify-between">
-              <img src={logoVC} alt="Venture Clienting" className="h-4 opacity-90" />
-              <p className="text-white/80 text-xs">AXA Venture Clienting ©</p>
+          <footer className="bg-white border-t border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+            <div className="w-full mx-auto p-2 md:py-3">
+              <div className="sm:flex sm:items-center sm:justify-between">
+                <div className="flex items-center gap-2 mb-2 sm:mb-0">
+                  <img src={logoVC} alt="Venture Clienting" className="h-3" />
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Powered by AXA Venture Clienting</span>
+                </div>
+                <ul className="flex flex-wrap items-center text-xs font-medium text-gray-500 dark:text-gray-400">
+                  <li className="me-3 md:me-4">
+                    <a href="#" className="hover:underline">About</a>
+                  </li>
+                  <li className="me-3 md:me-4">
+                    <a href="#" className="hover:underline">Privacy</a>
+                  </li>
+                  <li className="me-3 md:me-4">
+                    <a href="#" className="hover:underline">Contact</a>
+                  </li>
+                  <li>
+                    <span className="text-[10px]">© 2025 Slush</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </footer>
         )}

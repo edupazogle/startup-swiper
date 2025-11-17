@@ -10,9 +10,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AITimeSlotSuggester } from '@/components/AITimeSlotSuggester'
-import { FeedbackChatModal } from '@/components/FeedbackChatModal'
-import { MeetingAIModal } from '@/components/MeetingAIModal'
-import { StartupFiltersPanel } from '@/components/StartupFiltersPanel'
+import { ImprovedInsightsModal } from '@/components/ImprovedInsightsModal'
+import { ImprovedMeetingModal } from '@/components/ImprovedMeetingModal'
+import { AdvancedFilterDropdown } from '@/components/AdvancedFilterDropdown'
 import { Startup, Vote, CalendarEvent } from '@/lib/types'
 import { Users, Heart, CalendarBlank, Check, Rocket, MapPin, CurrencyDollar, GlobeHemisphereWest, Calendar, TrendUp, MagnifyingGlass, X, Target, CheckCircle, Star, Sparkle, Briefcase } from '@phosphor-icons/react'
 import { toast } from 'sonner'
@@ -56,6 +56,7 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
   const [showMeetingAI, setShowMeetingAI] = useState(false)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [sortBy, setSortBy] = useState<'votes' | 'funding' | 'grade'>('votes')
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false)
   const [selectedStages, setSelectedStages] = useState<Set<string>>(new Set())
   const [selectedTopics, setSelectedTopics] = useState<Set<string>>(new Set())
   const [selectedTechs, setSelectedTechs] = useState<Set<string>>(new Set())
@@ -126,6 +127,185 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
     })
     return Array.from(techs).sort()
   }, [startups])
+
+  // Get unique use cases - filtered by selected topics if any
+  const uniqueUseCases = useMemo(() => {
+    const useCases = new Set<string>()
+    const relevantStartups = selectedTopics.size > 0
+      ? startups.filter(s => {
+          const topicArray = parseArray(s.topics)
+          return topicArray.some(t => selectedTopics.has(t))
+        })
+      : startups
+
+    relevantStartups.forEach(s => {
+      const useCaseArray = parseArray(s.axa_use_cases || s.axaUseCases)
+      if (Array.isArray(useCaseArray)) {
+        useCaseArray.forEach(uc => {
+          if (uc && String(uc).trim()) useCases.add(String(uc).trim())
+        })
+      }
+    })
+    return Array.from(useCases).sort()
+  }, [startups, selectedTopics])
+
+  // Count startups for each filter option
+  const filterCounts = useMemo(() => {
+    const grades = new Map<string, number>()
+    const stages = new Map<string, number>()
+    const topics = new Map<string, number>()
+    const techs = new Map<string, number>()
+    const useCases = new Map<string, number>()
+
+    startups.forEach(startup => {
+      // Count grades
+      const grade = startup.axa_grade || startup.axaGrade
+      if (grade) grades.set(grade, (grades.get(grade) || 0) + 1)
+
+      // Count stages
+      const stage = startup.Stage || startup.currentInvestmentStage || startup.maturity
+      if (stage) stages.set(String(stage), (stages.get(String(stage)) || 0) + 1)
+
+      // Count topics
+      const topicArray = parseArray(startup.topics)
+      topicArray.forEach(topic => {
+        if (topic) topics.set(topic, (topics.get(topic) || 0) + 1)
+      })
+
+      // Count technologies
+      const techArray = parseArray(startup.tech)
+      techArray.forEach(tech => {
+        if (tech) techs.set(tech, (techs.get(tech) || 0) + 1)
+      })
+
+      // Count use cases
+      const useCaseArray = parseArray(startup.axa_use_cases || startup.axaUseCases)
+      useCaseArray.forEach(useCase => {
+        if (useCase) useCases.set(useCase, (useCases.get(useCase) || 0) + 1)
+      })
+    })
+
+    return { grades, stages, topics, techs, useCases }
+  }, [startups])
+
+  // Build filter sections for AdvancedFilterDropdown - Topics separate
+  const topicsFilterSections = useMemo(() => [
+    {
+      id: 'topics',
+      title: 'Topics',
+      options: uniqueTopics.map(topic => ({
+        id: topic,
+        label: topic,
+        count: filterCounts.topics.get(topic) || 0,
+        checked: selectedTopics.has(topic)
+      }))
+    }
+  ], [filterCounts.topics, selectedTopics, uniqueTopics])
+
+  // Use Cases filter - only when topics are selected
+  const useCasesFilterSections = useMemo(() => [
+    {
+      id: 'useCases',
+      title: 'Use Cases',
+      options: uniqueUseCases.map(useCase => ({
+        id: useCase,
+        label: useCase,
+        count: filterCounts.useCases.get(useCase) || 0,
+        checked: selectedUseCases.has(useCase)
+      }))
+    }
+  ], [filterCounts.useCases, selectedUseCases, uniqueUseCases])
+
+  const otherFilterSections = useMemo(() => [
+    {
+      id: 'grades',
+      title: 'Grade',
+      options: ['A+', 'A', 'B+', 'B', 'C+', 'C', 'F'].map(grade => ({
+        id: grade,
+        label: grade,
+        count: filterCounts.grades.get(grade) || 0,
+        checked: selectedGrades.has(grade)
+      }))
+    },
+    {
+      id: 'stages',
+      title: 'Stage',
+      options: uniqueStages.map(stage => ({
+        id: stage,
+        label: stage,
+        count: filterCounts.stages.get(stage) || 0,
+        checked: selectedStages.has(stage)
+      }))
+    },
+    {
+      id: 'technologies',
+      title: 'Technologies',
+      options: uniqueTechs.map(tech => ({
+        id: tech,
+        label: tech,
+        count: filterCounts.techs.get(tech) || 0,
+        checked: selectedTechs.has(tech)
+      }))
+    }
+  ], [filterCounts, selectedGrades, selectedStages, selectedTechs, uniqueStages, uniqueTechs])
+
+  // Handle filter changes
+  const handleFilterChange = (sectionId: string, optionId: string, checked: boolean) => {
+    switch (sectionId) {
+      case 'grades':
+        setSelectedGrades(prev => {
+          const newSet = new Set(prev)
+          checked ? newSet.add(optionId) : newSet.delete(optionId)
+          return newSet
+        })
+        break
+      case 'stages':
+        setSelectedStages(prev => {
+          const newSet = new Set(prev)
+          checked ? newSet.add(optionId) : newSet.delete(optionId)
+          return newSet
+        })
+        break
+      case 'topics':
+        setSelectedTopics(prev => {
+          const newSet = new Set(prev)
+          checked ? newSet.add(optionId) : newSet.delete(optionId)
+          // Clear use cases when topics change
+          if (!checked) {
+            setSelectedUseCases(new Set())
+          }
+          return newSet
+        })
+        break
+      case 'technologies':
+        setSelectedTechs(prev => {
+          const newSet = new Set(prev)
+          checked ? newSet.add(optionId) : newSet.delete(optionId)
+          return newSet
+        })
+        break
+      case 'useCases':
+        setSelectedUseCases(prev => {
+          const newSet = new Set(prev)
+          checked ? newSet.add(optionId) : newSet.delete(optionId)
+          return newSet
+        })
+        break
+    }
+  }
+
+  // Clear all filters
+  const handleClearAllFilters = () => {
+    setSelectedGrades(new Set())
+    setSelectedStages(new Set())
+    setSelectedTopics(new Set())
+    setSelectedTechs(new Set())
+    setSelectedUseCases(new Set())
+    setSearchQuery('')
+  }
+
+  // Calculate active filter count
+  const activeFilterCount = selectedGrades.size + selectedStages.size + selectedTopics.size + selectedTechs.size + selectedUseCases.size
 
   const parseFunding = (funding: string | number | undefined): number => {
     if (!funding) return 0
@@ -370,34 +550,34 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
     const displayStage = startup.Stage || startup.currentInvestmentStage || startup.maturity || 'Unknown'
     
     return (
-      <Card key={startup.id} className="p-4 md:p-6 hover:shadow-md transition-shadow">
-        <div className="flex flex-col sm:flex-row items-start gap-3 md:gap-4">
+      <Card key={startup.id} className="group p-4 md:p-6 hover:shadow-lg transition-all duration-300 border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md">
+        <div className="flex flex-col sm:flex-row items-start gap-4 md:gap-5">
           {displayLogo && (
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-background flex items-center justify-center overflow-hidden flex-shrink-0 border border-border/50 shadow-sm">
-              <img src={displayLogo} alt={displayName} className="w-full h-full object-contain p-1" />
+            <div className="w-20 h-20 md:w-24 md:h-24 rounded-xl bg-gray-50 dark:bg-gray-900 flex items-center justify-center overflow-hidden flex-shrink-0 border-2 border-gray-200 dark:border-gray-700 shadow-md group-hover:shadow-lg transition-shadow">
+              <img src={displayLogo} alt={displayName} className="w-full h-full object-contain p-2" />
             </div>
           )}
           
           <div className="flex-1 min-w-0 w-full">
-            <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-2 sm:gap-3 md:gap-4 mb-2">
+            <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 sm:gap-4 mb-3">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <h3 className="text-lg md:text-xl font-semibold leading-tight tracking-tight">{displayName}</h3>
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="text-xl md:text-2xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">{displayName}</h3>
                 </div>
-                <div className="flex flex-wrap gap-x-2 md:gap-x-3 gap-y-1.5 md:gap-y-2 mb-2">
+                <div className="flex flex-wrap gap-x-3 md:gap-x-4 gap-y-2 mb-3">
                   {(() => {
                     const topicArray = parseArray(startup.topics)
                     return Array.isArray(topicArray) && topicArray.length > 0 && (
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Topics</span>
-                        <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold">Topics</span>
+                        <div className="flex flex-wrap gap-1.5">
                           {topicArray.slice(0, 2).map((topic, i) => {
                             const colors = getTopicColor(topic)
                             return (
                               <Badge 
                                 key={i} 
                                 variant="outline" 
-                                className={cn("text-[10px] md:text-xs font-medium border", colors.bg, colors.text, colors.border)}
+                                className={cn("text-xs font-semibold border-2", colors.bg, colors.text, colors.border)}
                               >
                                 {topic}
                               </Badge>
@@ -408,14 +588,14 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                     )
                   })()}
                   {startup.maturity && (
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Maturity</span>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold">Maturity</span>
                       {(() => {
                         const colors = getMaturityColor(startup.maturity)
                         return (
                           <Badge 
                             variant="outline" 
-                            className={cn("text-[10px] md:text-xs font-medium border", colors.bg, colors.text, colors.border)}
+                            className={cn("text-xs font-semibold border-2 px-2.5 py-0.5", colors.bg, colors.text, colors.border)}
                           >
                             {startup.maturity}
                           </Badge>
@@ -425,10 +605,10 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                   )}
 
                   {startup.scheduledEvent && (
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-[9px] md:text-[10px] text-transparent uppercase tracking-wider font-medium select-none">_</span>
-                      <Badge variant="default" className="text-[10px] md:text-xs gap-0.5 md:gap-1">
-                        <Check size={10} className="md:w-3 md:h-3" weight="bold" />
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] md:text-xs text-transparent uppercase tracking-wider font-medium select-none">_</span>
+                      <Badge variant="default" className="text-xs font-semibold gap-1 bg-gradient-to-r from-green-500 to-emerald-600 border-none shadow-sm">
+                        <Check size={12} weight="bold" />
                         Scheduled
                       </Badge>
                     </div>
@@ -436,49 +616,49 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                 </div>
               </div>
               
-              <div className="flex flex-wrap items-center gap-2 flex-shrink-0">
+              <div className="flex flex-wrap items-center gap-2 md:gap-3 flex-shrink-0">
                 <Button
                   size="sm"
-                  variant="outline"
                   onClick={() => {
                     setSelectedStartup(startup)
                     setShowInsightsAI(true)
                   }}
-                  className="text-xs"
+                  className="gap-2 font-bold bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-white border-0 shadow-md hover:shadow-lg transition-all px-4 py-2.5"
                 >
-                  💡 Insights AI
+                  <Sparkle size={16} weight="fill" className="text-white" />
+                  Insights AI
                 </Button>
                 <Button
                   size="sm"
-                  variant="outline"
                   onClick={() => {
                     setSelectedStartup(startup)
                     setShowMeetingAI(true)
                   }}
-                  className="text-xs"
+                  className="gap-2 font-bold bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white border-0 shadow-md hover:shadow-lg transition-all px-4 py-2.5"
                 >
-                  💼 Meeting AI
+                  <Briefcase size={16} weight="fill" className="text-white" />
+                  Meeting AI
                 </Button>
               </div>
             </div>
 
             {/* Venture Clienting Analysis */}
             {(startup.axa_overall_score !== undefined || startup.axaOverallScore !== undefined) && (
-              <div className="mb-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Target size={16} className="text-blue-600 dark:text-blue-400" weight="duotone" />
-                  <h3 className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Venture Clienting Analysis</h3>
+              <div className="mb-5">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <Target size={20} className="text-blue-600 dark:text-blue-400" weight="duotone" />
+                  <h3 className="text-base font-extrabold text-blue-700 dark:text-blue-300 uppercase tracking-wider">Venture Clienting Analysis</h3>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-3 bg-blue-500/5 p-3 rounded-lg border border-blue-200 dark:border-blue-900/30">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-50 dark:from-blue-950/40 dark:via-indigo-950/40 dark:to-blue-950/40 p-5 rounded-xl border-2 border-blue-300/60 dark:border-blue-700/60 shadow-lg">
                   {/* Left Column: Score & Provider Status */}
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {/* Grade Section */}
                     <div>
-                      <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">AXA Grade</p>
-                      <div className="flex items-end gap-2">
+                      <p className="text-xs text-blue-700 dark:text-blue-300 uppercase tracking-wider font-extrabold mb-3">Rise Score</p>
+                      <div className="flex items-start gap-4">
                         <span className={cn(
-                          'text-2xl md:text-3xl font-bold',
+                          'text-5xl md:text-6xl font-black tabular-nums drop-shadow-sm leading-none',
                           startup.axa_grade === 'A+' || startup.axaGrade === 'A+' ? 'text-yellow-500 dark:text-yellow-400' :
                           startup.axa_grade === 'A' || startup.axaGrade === 'A' ? 'text-emerald-600 dark:text-emerald-400' :
                           startup.axa_grade === 'B+' || startup.axaGrade === 'B+' ? 'text-cyan-600 dark:text-cyan-400' :
@@ -489,31 +669,33 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                         )}>
                           {startup.axa_grade || startup.axaGrade || 'N/A'}
                         </span>
+                        
+                        {/* Grade Explanation - Right of Grade */}
+                        {(startup.axa_grade !== undefined || startup.axaGrade !== undefined) && (
+                          <div className="flex-1 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-2 border-blue-200/50 dark:border-blue-800/50">
+                            <div className="flex items-start gap-3">
+                              <Sparkle 
+                                size={18} 
+                                weight="fill"
+                                className={cn(
+                                  'flex-shrink-0 mt-0.5',
+                              startup.axa_grade === 'A+' || startup.axaGrade === 'A+' ? 'text-yellow-500 dark:text-yellow-400' :
+                              startup.axa_grade === 'A' || startup.axaGrade === 'A' ? 'text-emerald-600 dark:text-emerald-400' :
+                              startup.axa_grade === 'B+' || startup.axaGrade === 'B+' ? 'text-cyan-600 dark:text-cyan-400' :
+                              startup.axa_grade === 'B' || startup.axaGrade === 'B' ? 'text-blue-600 dark:text-blue-400' :
+                              startup.axa_grade === 'C+' || startup.axaGrade === 'C+' ? 'text-amber-600 dark:text-amber-400' :
+                              startup.axa_grade === 'C' || startup.axaGrade === 'C' ? 'text-orange-600 dark:text-orange-400' :
+                              'text-slate-400 dark:text-slate-600'
+                            )} 
+                          />
+                          <span className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed font-semibold">
+                            {startup.axa_grade_explanation || startup.axaGradeExplanation || 'Assessment pending'}
+                          </span>
+                        </div>
+                      </div>
+                        )}
                       </div>
                     </div>
-
-                    {/* Grade Explanation */}
-                    {(startup.axa_grade !== undefined || startup.axaGrade !== undefined) && (
-                      <div className="flex items-start gap-2">
-                        <Sparkle 
-                          size={14} 
-                          weight="fill"
-                          className={cn(
-                            'flex-shrink-0 mt-0.5',
-                            startup.axa_grade === 'A+' || startup.axaGrade === 'A+' ? 'text-yellow-500 dark:text-yellow-400' :
-                            startup.axa_grade === 'A' || startup.axaGrade === 'A' ? 'text-emerald-600 dark:text-emerald-400' :
-                            startup.axa_grade === 'B+' || startup.axaGrade === 'B+' ? 'text-cyan-600 dark:text-cyan-400' :
-                            startup.axa_grade === 'B' || startup.axaGrade === 'B' ? 'text-blue-600 dark:text-blue-400' :
-                            startup.axa_grade === 'C+' || startup.axaGrade === 'C+' ? 'text-amber-600 dark:text-amber-400' :
-                            startup.axa_grade === 'C' || startup.axaGrade === 'C' ? 'text-orange-600 dark:text-orange-400' :
-                            'text-slate-400 dark:text-slate-600'
-                          )} 
-                        />
-                        <span className="text-xs text-muted-foreground leading-snug">
-                          {startup.axa_grade_explanation || startup.axaGradeExplanation || 'Assessment pending'}
-                        </span>
-                      </div>
-                    )}
                   </div>
 
                   {/* Right Column: Use Cases */}
@@ -522,13 +704,13 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                     const useCaseArray = parseArray(useCases)
 
                     return useCaseArray.length > 0 && (
-                      <div className="pt-2">
-                        <p className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-wide font-medium mb-1">Use Cases</p>
-                        <div className="flex flex-wrap gap-1">
+                      <div className="space-y-2">
+                        <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold">Use Cases</p>
+                        <div className="flex flex-wrap gap-2">
                           {useCaseArray.map((useCase: string, idx: number) => (
-                            <div key={idx} className="flex items-center gap-1 bg-green-500/90 px-1.5 py-0.5 rounded border border-green-600/80">
-                              <CheckCircle size={9} weight="bold" className="text-white flex-shrink-0" />
-                              <span className="text-[9px] md:text-[10px] text-white font-medium">
+                            <div key={idx} className="flex items-center gap-1.5 bg-gradient-to-r from-green-500 to-emerald-600 px-2.5 py-1.5 rounded-lg border border-green-600/80 shadow-sm">
+                              <CheckCircle size={12} weight="bold" className="text-white flex-shrink-0" />
+                              <span className="text-xs text-white font-semibold">
                                 {useCase}
                               </span>
                             </div>
@@ -544,12 +726,22 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
             {/* Value Proposition */}
             {(startup.value_proposition || startup.shortDescription) && (
               <div className="mb-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Star size={16} className="text-pink-600 dark:text-pink-400" weight="duotone" />
-                  <h3 className="text-xs text-pink-700 dark:text-pink-300 uppercase tracking-wide font-medium">Value Proposition</h3>
-                </div>
-                <div className="text-sm leading-relaxed text-foreground bg-pink-500/5 p-3 rounded-lg border border-pink-200 dark:border-pink-900/30">
-                  <p>{startup.value_proposition || startup.shortDescription}</p>
+                <div className="bg-gradient-to-br from-pink-50 via-rose-50 to-pink-50 dark:from-pink-950/30 dark:via-rose-950/30 dark:to-pink-950/30 p-4 rounded-xl border-2 border-pink-200/60 dark:border-pink-800/50 shadow-md">
+                  <div className="flex items-start gap-2.5">
+                    <Star 
+                      size={18} 
+                      weight="duotone" 
+                      className="text-pink-600 dark:text-pink-400 flex-shrink-0 mt-0.5" 
+                    />
+                    <div className="min-w-0">
+                      <p className="text-xs text-pink-800 dark:text-pink-300 uppercase tracking-wider font-bold mb-2">
+                        Value Proposition
+                      </p>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
+                        {startup.value_proposition || startup.shortDescription}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -560,64 +752,64 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
               </>
             )}
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 mb-3 md:mb-4">
-              <div className="flex items-start gap-1.5 md:gap-2">
-                <MapPin size={14} className="text-muted-foreground mt-0.5 flex-shrink-0 md:w-4 md:h-4" weight="duotone" />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4">
+              <div className="flex items-start gap-2">
+                <MapPin size={16} className="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" weight="duotone" />
                 <div className="min-w-0 flex-1">
-                  <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Location</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-1.5">Location</p>
                   <Badge 
                     variant="outline" 
-                    className={cn("text-[10px] md:text-xs font-medium border h-auto py-0.5", getLocationColor(displayLocation).bg, getLocationColor(displayLocation).text, getLocationColor(displayLocation).border)}
+                    className={cn("text-xs font-semibold border-2 h-auto py-1 px-2.5", getLocationColor(displayLocation).bg, getLocationColor(displayLocation).text, getLocationColor(displayLocation).border)}
                   >
                     {displayLocation}
                   </Badge>
                 </div>
               </div>
               
-              <div className="flex items-start gap-1.5 md:gap-2">
-                <Users size={14} className="text-muted-foreground mt-0.5 flex-shrink-0 md:w-4 md:h-4" weight="duotone" />
+              <div className="flex items-start gap-2">
+                <Users size={16} className="text-purple-600 dark:text-purple-400 mt-0.5 flex-shrink-0" weight="duotone" />
                 <div>
-                  <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Team Size</p>
-                  <p className="text-xs md:text-sm font-medium">{displayEmployees}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-1">Team Size</p>
+                  <p className="text-sm text-gray-900 dark:text-gray-100 font-semibold">{displayEmployees}</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-1.5 md:gap-2">
-                <CurrencyDollar size={14} className="text-muted-foreground mt-0.5 flex-shrink-0 md:w-4 md:h-4" weight="duotone" />
+              <div className="flex items-start gap-2">
+                <CurrencyDollar size={16} className="text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" weight="duotone" />
                 <div>
-                  <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Funding</p>
-                  <p className="text-xs md:text-sm font-medium">{displayFunding}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-1">Funding</p>
+                  <p className="text-sm text-gray-900 dark:text-gray-100 font-semibold">{displayFunding}</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-1.5 md:gap-2">
-                <TrendUp size={14} className="text-muted-foreground mt-0.5 flex-shrink-0 md:w-4 md:h-4" weight="duotone" />
+              <div className="flex items-start gap-2">
+                <TrendUp size={16} className="text-orange-600 dark:text-orange-400 mt-0.5 flex-shrink-0" weight="duotone" />
                 <div>
-                  <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Stage</p>
-                  <p className="text-xs md:text-sm font-medium">{displayStage}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-1">Stage</p>
+                  <p className="text-sm text-gray-900 dark:text-gray-100 font-semibold">{displayStage}</p>
                 </div>
               </div>
 
               {startup.dateFounded && (
-                <div className="flex items-start gap-1.5 md:gap-2">
-                  <Calendar size={14} className="text-muted-foreground mt-0.5 flex-shrink-0 md:w-4 md:h-4" weight="duotone" />
+                <div className="flex items-start gap-2">
+                  <Calendar size={16} className="text-cyan-600 dark:text-cyan-400 mt-0.5 flex-shrink-0" weight="duotone" />
                   <div>
-                    <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Founded</p>
-                    <p className="text-xs md:text-sm font-medium">{new Date(startup.dateFounded).getFullYear()}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-1">Founded</p>
+                    <p className="text-sm text-gray-900 dark:text-gray-100 font-semibold">{new Date(startup.dateFounded).getFullYear()}</p>
                   </div>
                 </div>
               )}
 
               {displayWebsite && (
-                <div className="flex items-start gap-1.5 md:gap-2 md:col-span-3">
-                  <GlobeHemisphereWest size={14} className="text-muted-foreground mt-0.5 flex-shrink-0 md:w-4 md:h-4" weight="duotone" />
+                <div className="flex items-start gap-2 md:col-span-3">
+                  <GlobeHemisphereWest size={16} className="text-indigo-600 dark:text-indigo-400 mt-0.5 flex-shrink-0" weight="duotone" />
                   <div className="min-w-0 flex-1">
-                    <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide mb-0.5">Website</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-1">Website</p>
                     <a 
                       href={displayWebsite.startsWith('http') ? displayWebsite : `https://${displayWebsite}`} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-xs md:text-sm font-medium text-accent hover:underline break-all"
+                      className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline break-all font-semibold transition-colors"
                       onClick={(e) => e.stopPropagation()}
                     >
                       {displayWebsite.replace(/^https?:\/\//, '').replace(/^www\./, '')}
@@ -628,42 +820,42 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
             </div>
 
             {startup.interestedVotes.length > 0 && (
-              <div className="flex items-center gap-1.5 md:gap-2">
-                <Users size={14} className="text-muted-foreground md:w-4 md:h-4" />
-                <div className="flex -space-x-1.5 md:-space-x-2">
+              <div className="flex items-center gap-2 py-3 px-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 rounded-lg border-2 border-purple-200/60 dark:border-purple-800/50 shadow-sm">
+                <Users size={16} className="text-purple-600 dark:text-purple-400 flex-shrink-0" weight="duotone" />
+                <div className="flex -space-x-2">
                   {startup.interestedVotes.map((vote, idx) => (
-                    <Avatar key={idx} className="w-6 h-6 md:w-8 md:h-8 border-2 border-background">
-                      <AvatarFallback className="bg-primary text-primary-foreground text-[10px] md:text-xs">
+                    <Avatar key={idx} className="w-8 h-8 border-2 border-white dark:border-gray-800 shadow-sm">
+                      <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white text-xs font-bold">
                         {getInitials(vote.userName)}
                       </AvatarFallback>
                     </Avatar>
                   ))}
                 </div>
-                <span className="text-[10px] md:text-xs text-muted-foreground ml-0.5 md:ml-1 hidden md:inline">
+                <span className="text-xs text-gray-700 dark:text-gray-300 font-semibold ml-1 hidden md:inline">
                   {startup.interestedVotes.map(v => v.userName).join(', ')}
                 </span>
               </div>
             )}
 
             {/* Bottom Action Bar with Heart and Rocket */}
-            <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t">
+            <div className="flex items-center justify-end gap-3 mt-4 pt-4 border-t-2 border-gray-200 dark:border-gray-700">
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   handleHeartToggle(startup)
                 }}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200 group hover:scale-105 active:scale-95 flex-shrink-0"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-br from-white to-pink-50/30 dark:from-gray-800 dark:to-pink-950/30 shadow-md hover:shadow-lg transition-all duration-200 group hover:scale-105 active:scale-95 flex-shrink-0 border-2 border-pink-200/50 dark:border-pink-800/50"
                 title={localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? 'Unlike this startup' : 'Like this startup'}
               >
                 <Heart 
-                  size={16} 
+                  size={18} 
                   weight={localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? "fill" : "regular"}
                   className={cn(
                     "transition-all duration-200",
                     localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? "text-pink-500" : "text-gray-400 group-hover:text-pink-400"
                   )}
                 />
-                <span className="font-semibold text-sm">
+                <span className="font-bold text-sm text-gray-700 dark:text-gray-300">
                   {localVotes.filter(v => String(v.startupId) === String(startup.id) && v.interested).length}
                 </span>
               </button>
@@ -685,52 +877,178 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
     <>
       <div className="h-full">
         <div className="max-w-7xl mx-auto p-3 md:p-6 space-y-4 md:space-y-6">
-          {/* New Responsive Filters Panel */}
-          <StartupFiltersPanel
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            sortBy={sortBy}
-            onSortChange={(value) => setSortBy(value as 'votes' | 'funding' | 'grade')}
-            selectedStages={selectedStages}
-            onStageChange={(stage, selected) => {
-              const newStages = new Set(selectedStages)
-              if (selected) newStages.add(stage)
-              else newStages.delete(stage)
-              setSelectedStages(newStages)
-            }}
-            selectedTopics={selectedTopics}
-            onTopicChange={(topic, selected) => {
-              const newTopics = new Set(selectedTopics)
-              if (selected) newTopics.add(topic)
-              else newTopics.delete(topic)
-              setSelectedTopics(newTopics)
-            }}
-            selectedTechs={selectedTechs}
-            onTechChange={(tech, selected) => {
-              const newTechs = new Set(selectedTechs)
-              if (selected) newTechs.add(tech)
-              else newTechs.delete(tech)
-              setSelectedTechs(newTechs)
-            }}
-            selectedUseCases={selectedUseCases}
-            onUseCaseChange={(useCase, selected) => {
-              const newUseCases = new Set(selectedUseCases)
-              if (selected) newUseCases.add(useCase)
-              else newUseCases.delete(useCase)
-              setSelectedUseCases(newUseCases)
-            }}
-            selectedGrades={selectedGrades}
-            onGradeChange={(grade, selected) => {
-              const newGrades = new Set(selectedGrades)
-              if (selected) newGrades.add(grade)
-              else newGrades.delete(grade)
-              setSelectedGrades(newGrades)
-            }}
-            availableStages={uniqueStages}
-            availableTopics={uniqueTopics}
-            availableTechs={uniqueTechs}
-            availableUseCases={topicHierarchy.find(t => t.name === Array.from(selectedTopics)[0])?.use_cases.map(uc => uc.name) || []}
-          />
+          {/* Faceted Search (Topbar) - Redesigned Single Row */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 shadow-lg p-4">
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Search Bar */}
+              <div className="flex-1 min-w-[250px]">
+                <label htmlFor="simple-search" className="sr-only">Search</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                    <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                  </div>
+                  <input 
+                    type="search"
+                    id="simple-search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="bg-gray-50 dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full ps-11 p-2.5 placeholder:text-gray-500 dark:placeholder:text-gray-400 font-medium transition-all"
+                    placeholder="Search startups by name, description..."
+                  />
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="hidden sm:block w-px h-10 bg-gray-300 dark:bg-gray-600" />
+
+              {/* Sort By Dropdown */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
+                  className="inline-flex items-center gap-2 text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 focus:ring-2 focus:outline-none focus:ring-blue-500 font-semibold rounded-lg text-sm px-4 py-2.5 transition-all"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                  </svg>
+                  <span className="whitespace-nowrap">
+                    {sortBy === 'votes' ? 'Most Voted' : sortBy === 'funding' ? 'Funding' : 'Grade'}
+                  </span>
+                  <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4"/>
+                  </svg>
+                </button>
+                
+                {isSortDropdownOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setIsSortDropdownOpen(false)} />
+                    <div className="absolute z-50 mt-2 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg shadow-xl w-44 overflow-hidden">
+                      <ul className="py-1 text-sm">
+                        <li>
+                          <button
+                            type="button"
+                            onClick={() => { setSortBy('votes'); setIsSortDropdownOpen(false) }}
+                            className={cn(
+                              "block w-full text-left px-4 py-2.5 font-semibold transition-colors",
+                              sortBy === 'votes' 
+                                ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" 
+                                : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            )}
+                          >
+                            Most Voted
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            onClick={() => { setSortBy('funding'); setIsSortDropdownOpen(false) }}
+                            className={cn(
+                              "block w-full text-left px-4 py-2.5 font-semibold transition-colors",
+                              sortBy === 'funding' 
+                                ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" 
+                                : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            )}
+                          >
+                            Funding
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            onClick={() => { setSortBy('grade'); setIsSortDropdownOpen(false) }}
+                            className={cn(
+                              "block w-full text-left px-4 py-2.5 font-semibold transition-colors",
+                              sortBy === 'grade' 
+                                ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" 
+                                : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            )}
+                          >
+                            Grade
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Topics Filter - Separate */}
+              <AdvancedFilterDropdown
+                sections={topicsFilterSections}
+                onFilterChange={handleFilterChange}
+                onClearAll={() => {
+                  setSelectedTopics(new Set())
+                  setSelectedUseCases(new Set())
+                }}
+                activeCount={selectedTopics.size}
+                buttonLabel="Topics"
+              />
+
+              {/* Use Cases Filter - Only visible when topics are selected */}
+              {selectedTopics.size > 0 && uniqueUseCases.length > 0 && (
+                <AdvancedFilterDropdown
+                  sections={useCasesFilterSections}
+                  onFilterChange={handleFilterChange}
+                  onClearAll={() => setSelectedUseCases(new Set())}
+                  activeCount={selectedUseCases.size}
+                  buttonLabel="Use Cases"
+                />
+              )}
+
+              {/* Other Filters Dropdown */}
+              <AdvancedFilterDropdown
+                sections={otherFilterSections}
+                onFilterChange={handleFilterChange}
+                onClearAll={() => {
+                  setSelectedGrades(new Set())
+                  setSelectedStages(new Set())
+                  setSelectedTechs(new Set())
+                }}
+                activeCount={selectedGrades.size + selectedStages.size + selectedTechs.size}
+                buttonLabel="More Filters"
+              />
+
+              {/* Active Filter Count Badge & Results */}
+              {activeFilterCount > 0 && (
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 bg-blue-100 dark:bg-blue-900/30 border-2 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300 px-3 py-2 rounded-lg font-bold text-sm">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
+                    </svg>
+                    <span>{activeFilterCount}</span>
+                  </div>
+                  <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">
+                    {startupsWithVotes.length} results
+                  </span>
+                </div>
+              )}
+
+              {/* Clear All Filters */}
+              {activeFilterCount > 0 && (
+                <button
+                  onClick={handleClearAllFilters}
+                  className="inline-flex items-center gap-1.5 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-semibold text-sm transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  Clear all
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Results Count - Only show when filters active */}
+          {(activeFilterCount > 0 || searchQuery) && startupsWithVotes.length === 0 && (
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-xl p-4 text-center">
+              <p className="text-sm font-semibold text-yellow-800 dark:text-yellow-200">
+                No startups match your search criteria. Try adjusting your filters.
+              </p>
+            </div>
+          )}
+
           {highPriority.length > 0 && (
             <div>
               <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
@@ -891,7 +1209,7 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
       {/* Insights AI Modal */}
       {selectedStartup && (
         <>
-          <FeedbackChatModal
+          <ImprovedInsightsModal
             isOpen={showInsightsAI}
             onClose={() => setShowInsightsAI(false)}
             startupId={selectedStartup?.id}
@@ -900,7 +1218,7 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
             userId={currentUserId}
           />
 
-          <MeetingAIModal
+          <ImprovedMeetingModal
             isOpen={showMeetingAI}
             onClose={() => setShowMeetingAI(false)}
             startup={selectedStartup}

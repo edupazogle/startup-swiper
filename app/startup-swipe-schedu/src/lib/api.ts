@@ -3,6 +3,8 @@
  * Centralized API calls to backend database
  */
 
+import { authService } from './authService'
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || 
   (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai' 
     ? 'https://tilyn.ai/api' 
@@ -79,13 +81,41 @@ class ApiService {
   }
 
   private async fetchJson<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers,
-      },
-    })
+    // Check if endpoint requires authentication (skip for public endpoints)
+    const publicEndpoints = ['/health', '/auth/login', '/auth/register']
+    const isPublic = publicEndpoints.some(path => endpoint.startsWith(path))
+
+    let response: Response
+
+    if (isPublic) {
+      // Public endpoint - no authentication
+      response = await fetch(`${this.baseUrl}${endpoint}`, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options?.headers,
+        },
+      })
+    } else {
+      // Authenticated endpoint - use authService
+      try {
+        response = await authService.authenticatedFetch(endpoint, {
+          ...options,
+          headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+          },
+        })
+      } catch (error) {
+        // If authentication fails, redirect to login
+        if (error instanceof Error && error.message.includes('Authentication')) {
+          console.error('Authentication required, redirecting to login')
+          window.location.href = '/login'
+          throw new Error('Authentication required')
+        }
+        throw error
+      }
+    }
 
     if (!response.ok) {
       throw new Error(`API Error: ${response.status} ${response.statusText}`)

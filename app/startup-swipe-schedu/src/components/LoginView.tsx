@@ -3,13 +3,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { toast } from 'sonner'
+import { authService } from '@/lib/authService'
 import logoVC from '@/assets/images/logo_vc.png'
 import logoMain from '@/assets/images/f8cba53d-0d66-4aab-b97c-8fa66871fa8b.png'
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 
-  (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai' 
-    ? 'https://tilyn.ai/api' 
-    : 'http://localhost:8000')
 
 interface LoginViewProps {
   onLogin: (email: string, name: string) => void
@@ -25,36 +21,18 @@ export function LoginView({ onLogin }: LoginViewProps) {
     setIsLoading(true)
 
     try {
-      // Call the actual API with full URL
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      })
-
-      if (!response.ok) {
-        const error = await response.json()
-        toast.error(error.detail || 'Invalid credentials')
-        setIsLoading(false)
-        return
-      }
-
-      const data = await response.json()
+      const user = await authService.login(email, password)
       
-      // Store token
-      localStorage.setItem('access_token', data.access_token)
-
-      // Extract name from email
-      const name = email.split('@')[0].split('.').map(part => 
+      // Extract name from user data or email
+      const name = user.full_name || email.split('@')[0].split('.').map(part => 
         part.charAt(0).toUpperCase() + part.slice(1)
       ).join(' ')
 
       toast.success(`Welcome, ${name}!`)
       onLogin(email, name)
     } catch (error) {
-      toast.error('Login failed. Please try again.')
+      toast.error('Login failed. Please check your credentials.')
+      console.error('Login error:', error)
     } finally {
       setIsLoading(false)
     }
@@ -77,7 +55,7 @@ export function LoginView({ onLogin }: LoginViewProps) {
 
           {/* Title */}
           <h1 className="text-2xl font-bold text-white text-center mb-2">
-            Startup Swiper
+            Startup Rise
           </h1>
           <p className="text-white/60 text-center mb-8">
             Discover and connect with innovative startups
@@ -124,14 +102,6 @@ export function LoginView({ onLogin }: LoginViewProps) {
               {isLoading ? 'Logging in...' : 'Login'}
             </Button>
           </form>
-
-          {/* Test Credentials Info */}
-          <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-lg">
-            <p className="text-xs text-white/60 mb-2 font-semibold">Available Credentials:</p>
-            <div className="space-y-1 text-xs text-white/50 font-mono">
-              <p>eduardo.paz@axa.com / 123</p>
-            </div>
-          </div>
 
           {/* Footer */}
           <div className="mt-8 text-center">

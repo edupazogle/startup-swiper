@@ -44,13 +44,10 @@ const CATEGORY_COLORS: Record<EventCategory, string> = {
 }
 
 export function CalendarView({ events, currentUserName, onToggleAttendance, onDeleteEvent }: CalendarViewProps) {
-  const [currentDayIndex, setCurrentDayIndex] = useState(0)
   const [selectedLocations, setSelectedLocations] = useState<Set<string>>(new Set())
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set())
   const [showFilters, setShowFilters] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
-
-  const currentDate = SLUSH_DATES[currentDayIndex].date
 
   // Filter events for current day
   const getEventsForDay = (date: Date) => {
@@ -62,9 +59,9 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
     })
   }
 
-  // Apply filters
-  const getFilteredEvents = () => {
-    let filtered = getEventsForDay(currentDate)
+  // Apply filters to events for a specific day
+  const getFilteredEventsForDay = (date: Date) => {
+    let filtered = getEventsForDay(date)
     
     if (selectedLocations.size > 0) {
       filtered = filtered.filter(e => e.location && selectedLocations.has(e.location))
@@ -82,7 +79,6 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
     })
   }
 
-  const filteredEvents = getFilteredEvents()
   const uniqueLocations = Array.from(new Set(events.map(e => e.location).filter(Boolean))) as string[]
   const uniqueCategories = Array.from(new Set(events.map(e => e.category).filter(Boolean))) as string[]
 
@@ -132,22 +128,8 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
     <div className="h-full w-full overflow-hidden flex flex-col bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
       <div className="flex-shrink-0 border-b bg-white/80 backdrop-blur-sm shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold text-slate-900 mb-4">Event Schedule</h1>
-          
-          {/* Day Tabs */}
-          <div className="flex gap-2 mb-4">
-            {SLUSH_DATES.map((dateInfo, index) => (
-              <Button
-                key={index}
-                onClick={() => setCurrentDayIndex(index)}
-                variant={currentDayIndex === index ? 'default' : 'outline'}
-                className="flex-1 sm:flex-none"
-              >
-                {dateInfo.label}
-              </Button>
-            ))}
-          </div>
+        <div className="max-w-full mx-auto px-4 py-4">
+          <h1 className="text-2xl font-bold text-slate-900 mb-4">Event Schedule - Nov 19-20, 2025</h1>
 
           {/* Filter Bar */}
           <div className="flex items-center gap-2 flex-wrap">
@@ -226,97 +208,111 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
         </div>
       </div>
 
-      {/* Event List */}
+      {/* Two-Day Event Grid */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          {filteredEvents.length === 0 ? (
-            <Card>
-              <CardContent className="py-12 text-center">
-                <p className="text-slate-500">
-                  {selectedLocations.size + selectedCategories.size > 0 
-                    ? 'No events match your filters'
-                    : 'No events scheduled for this day'}
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="space-y-3">
-              {filteredEvents.map(event => {
-                const colors = getLocationColor(event.location)
-                const isAttending = event.attendees?.includes(currentUserName)
-                
-                return (
-                  <Card 
-                    key={event.id}
-                    className="hover:shadow-md transition-shadow cursor-pointer"
-                    onClick={() => setSelectedEvent(event)}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-4">
-                        {/* Time */}
-                        <div className="flex-shrink-0 w-20">
-                          <div className="flex items-center gap-1 text-sm font-semibold text-slate-900">
-                            <Clock size={14} className="text-slate-500" />
-                            {formatTime(event.startTime)}
-                          </div>
-                          <div className="text-xs text-slate-500 mt-0.5">
-                            {(() => {
-                              const start = event.startTime instanceof Date ? event.startTime : new Date(event.startTime)
-                              const end = event.endTime instanceof Date ? event.endTime : new Date(event.endTime)
-                              const duration = Math.round((end.getTime() - start.getTime()) / 60000)
-                              return `${duration} min`
-                            })()}
-                          </div>
-                        </div>
+        <div className="max-w-full mx-auto px-4 py-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {SLUSH_DATES.map((dateInfo, dayIndex) => {
+              const dayEvents = getFilteredEventsForDay(dateInfo.date)
+              
+              return (
+                <div key={dayIndex} className="flex flex-col">
+                  {/* Day Header */}
+                  <div className="sticky top-0 z-10 bg-white rounded-t-lg border border-b-2 border-slate-200 px-6 py-4 mb-3 shadow-sm">
+                    <h2 className="text-xl font-bold text-slate-900">{dateInfo.label}</h2>
+                    <p className="text-sm text-slate-600">{dayEvents.length} events</p>
+                  </div>
+                  
+                  {/* Day Events */}
+                  <div className="space-y-3 flex-1">
+                    {dayEvents.length === 0 ? (
+                      <Card>
+                        <CardContent className="py-12 text-center">
+                          <p className="text-slate-500">
+                            {selectedLocations.size + selectedCategories.size > 0 
+                              ? 'No events match your filters'
+                              : 'No events scheduled'}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      dayEvents.map(event => {
+                        const colors = getLocationColor(event.location)
+                        const isAttending = event.attendees?.includes(currentUserName)
+                        
+                        return (
+                          <Card 
+                            key={event.id}
+                            className="hover:shadow-md transition-shadow cursor-pointer"
+                            onClick={() => setSelectedEvent(event)}
+                          >
+                            <CardContent className="p-4">
+                              <div className="flex items-start gap-3">
+                                {/* Time */}
+                                <div className="flex-shrink-0 w-16">
+                                  <div className="flex items-center gap-1 text-sm font-semibold text-slate-900">
+                                    <Clock size={14} className="text-slate-500" />
+                                    {formatTime(event.startTime)}
+                                  </div>
+                                  <div className="text-xs text-slate-500 mt-0.5">
+                                    {(() => {
+                                      const start = event.startTime instanceof Date ? event.startTime : new Date(event.startTime)
+                                      const end = event.endTime instanceof Date ? event.endTime : new Date(event.endTime)
+                                      const duration = Math.round((end.getTime() - start.getTime()) / 60000)
+                                      return `${duration} min`
+                                    })()}
+                                  </div>
+                                </div>
 
-                        {/* Stage Indicator */}
-                        <div className="flex-shrink-0">
-                          <div className={`w-1 h-16 rounded-full ${colors.dot}`} />
-                        </div>
+                                {/* Stage Indicator */}
+                                <div className="flex-shrink-0">
+                                  <div className={`w-1 h-14 rounded-full ${colors.dot}`} />
+                                </div>
 
-                        {/* Content */}
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-slate-900 leading-tight mb-1">
-                            {event.title}
-                          </h3>
-                          
-                          <div className="flex items-center gap-3 flex-wrap text-sm text-slate-600 mb-2">
-                            {event.location && (
-                              <div className="flex items-center gap-1">
-                                <MapPin size={14} className="text-slate-400" />
-                                <span>{event.location}</span>
+                                {/* Content */}
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="font-semibold text-slate-900 leading-tight mb-1 text-sm">
+                                    {event.title}
+                                  </h3>
+                                  
+                                  <div className="flex items-center gap-2 flex-wrap text-xs text-slate-600 mb-1">
+                                    {event.location && (
+                                      <div className="flex items-center gap-1">
+                                        <MapPin size={12} className="text-slate-400" />
+                                        <span className="truncate">{event.location}</span>
+                                      </div>
+                                    )}
+                                    
+                                    {event.category && (
+                                      <Badge variant="outline" className={`text-xs ${CATEGORY_COLORS[event.category]}`}>
+                                        {event.category}
+                                      </Badge>
+                                    )}
+                                  </div>
+
+                                  {event.description && (
+                                    <p className="text-xs text-slate-600 line-clamp-1">
+                                      {event.description}
+                                    </p>
+                                  )}
+                                  
+                                  {isAttending && (
+                                    <Badge variant="default" className="mt-2 text-xs">
+                                      Attending
+                                    </Badge>
+                                  )}
+                                </div>
                               </div>
-                            )}
-                            
-                            {event.category && (
-                              <Badge variant="outline" className={`text-xs ${CATEGORY_COLORS[event.category]}`}>
-                                {event.category}
-                              </Badge>
-                            )}
-                          </div>
-
-                          {event.description && (
-                            <p className="text-sm text-slate-600 line-clamp-2">
-                              {event.description}
-                            </p>
-                          )}
-                        </div>
-
-                        {/* Actions */}
-                        <div className="flex-shrink-0 flex flex-col gap-2">
-                          {isAttending && (
-                            <Badge variant="default" className="whitespace-nowrap">
-                              Attending
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )
-              })}
-            </div>
-          )}
+                            </CardContent>
+                          </Card>
+                        )
+                      })
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
       </div>
 

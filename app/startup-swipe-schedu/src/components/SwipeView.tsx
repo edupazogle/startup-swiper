@@ -6,7 +6,7 @@ import { AIRecommendations } from './AIRecommendations'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
-import { X, Heart, Users } from '@phosphor-icons/react'
+import { X, Heart, Users, Rocket, Sparkle } from '@phosphor-icons/react'
 import { Startup, Vote } from '@/lib/types'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -270,41 +270,112 @@ export function SwipeView({ startups, votes, currentUserId, currentUserName, onV
   }
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center gap-8 p-4 pb-8 max-w-[1600px] mx-auto">
-      <div className="w-full max-w-md px-2">
-        <AIRecommendations
-          startups={limitedStartups}
-          votes={votes}
-          currentUserId={currentUserId}
-          onStartupClick={(id) => {
-            const idx = unseenStartups.findIndex(s => s.id === id)
-            if (idx >= 0) setCurrentIndex(idx)
-          }}
-        />
+    <div className="w-full h-full flex flex-col lg:flex-row gap-4 p-2 sm:p-4 pb-8 max-w-[1800px] mx-auto">
+      {/* Left Column - Progress, Stats & Info - Fixed Height */}
+      <div className="hidden lg:flex flex-col gap-4 w-[320px] xl:w-[360px] flex-shrink-0 h-[calc(100vh-100px)] max-h-[1000px]">
+        <div className="flex-1 flex flex-col gap-4 overflow-y-auto pr-2">
+        {currentStartup && (
+          <>
+            {/* Progress Tracker */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-4 xl:p-6 flex-shrink-0">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-base xl:text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                  <Rocket size={20} weight="duotone" className="text-blue-600 dark:text-blue-500" />
+                  Your Progress
+                </h3>
+                <Badge variant="secondary" className="text-sm font-medium">
+                  {swipeCount} reviewed
+                </Badge>
+              </div>
+              <Progress value={progress} className="h-2 mb-3" />
+              <div className="flex justify-between text-xs xl:text-sm">
+                <span className="text-gray-600 dark:text-gray-400">
+                  {limitedStartups.length - unseenStartups.length} of {limitedStartups.length}
+                </span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  {unseenStartups.length} left
+                </span>
+              </div>
+            </div>
+
+            {/* Team Insights */}
+            {safeFinnishedUsers.length > 0 && (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-4 xl:p-6 flex-shrink-0">
+                <h3 className="text-base xl:text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <Users size={20} weight="duotone" className="text-blue-600 dark:text-blue-500" />
+                  Team Status
+                </h3>
+                <div className="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center">
+                    <Users size={24} weight="fill" className="text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      {safeFinnishedUsers.length} {safeFinnishedUsers.length === 1 ? 'team member' : 'team members'}
+                    </p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                      completed all reviews
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Swipe Phase Info */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-4 xl:p-6 flex-shrink-0">
+              <h3 className="text-base xl:text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                <Sparkle size={20} weight="duotone" className="text-blue-600 dark:text-blue-500" />
+                {swipeCount < 20 ? 'Phase 1: Discovery' : 'Phase 2: Personalized'}
+              </h3>
+              <p className="text-xs xl:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                {swipeCount < 20 
+                  ? `You're in the discovery phase. Review ${20 - swipeCount} more startups to unlock AI-powered personalized recommendations based on your interests.`
+                  : 'You\'re now seeing AI-personalized recommendations! About 70% match your interests, with 30% diverse options to broaden your discovery.'}
+              </p>
+            </div>
+          </>
+        )}
+        </div>
       </div>
 
-      <div className="relative w-[440px] h-[640px]">
-        <AnimatePresence>
-          {currentStartup && (
-            <motion.div
-              key={currentStartup.id}
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{
-                x: direction === 'right' ? 500 : direction === 'left' ? -500 : 0,
-                opacity: 0,
-                rotate: direction === 'right' ? 25 : direction === 'left' ? -25 : 0,
-                transition: { duration: 0.3 }
-              }}
-            >
-              <SwipeableCard
-                startup={currentStartup}
-                onSwipe={handleSwipe}
-                isProcessing={isProcessingSwipe}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+      {/* Main Content - Swipe Card - Matching Height */}
+      <div className="flex-1 flex flex-col gap-4 xl:gap-6 min-w-0 h-[calc(100vh-100px)] max-h-[1000px]">
+        <div className="w-full flex-shrink-0">
+          <AIRecommendations
+            startups={limitedStartups}
+            votes={votes}
+            currentUserId={currentUserId}
+            onStartupClick={(id) => {
+              const idx = unseenStartups.findIndex(s => s.id === id)
+              if (idx >= 0) setCurrentIndex(idx)
+            }}
+          />
+        </div>
+
+        <div className="relative flex-1 w-full flex items-center justify-center px-2 sm:px-4 min-h-0">
+          <AnimatePresence>
+            {currentStartup && (
+              <motion.div
+                key={currentStartup.id}
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{
+                  x: direction === 'right' ? 500 : direction === 'left' ? -500 : 0,
+                  opacity: 0,
+                  rotate: direction === 'right' ? 25 : direction === 'left' ? -25 : 0,
+                  transition: { duration: 0.3 }
+                }}
+                className="w-full h-full"
+              >
+                <SwipeableCard
+                  startup={currentStartup}
+                  onSwipe={handleSwipe}
+                  isProcessing={isProcessingSwipe}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   )

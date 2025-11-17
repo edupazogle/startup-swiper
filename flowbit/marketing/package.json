@@ -1,0 +1,26 @@
+{
+  "name": "marketing-ui-blocks",
+  "version": "1.0.0",
+  "description": "Source code for the block sections for the Marketing UI category for Flowbite Pro.",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/themesberg/marketing-ui-blocks.git"
+  },
+  "author": "Flowbite",
+  "license": "https://flowbite.com/license/",
+  "bugs": {
+    "url": "https://github.com/themesberg/marketing-ui-blocks/issues"
+  },
+  "homepage": "https://github.com/themesberg/marketing-ui-blocks#readme",
+  "devDependencies": {
+    "flowbite-typography": "^1.0.1",
+    "tailwindcss": "^3.0.24"
+  },
+  "dependencies": {
+    "flowbite": "^1.5.3"
+  }
+}

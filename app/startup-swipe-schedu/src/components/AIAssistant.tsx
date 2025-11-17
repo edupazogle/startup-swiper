@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ChatMessage } from '@/lib/types'
 import { PaperPlaneRight, Robot, User, Sparkle } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -109,9 +110,11 @@ Provide helpful, concise responses about startups, events, or general advice. Be
       <div className="bg-gradient-to-r from-primary/20 to-accent/20 p-4 md:p-6 border-b border-border/50">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-              <Robot size={24} weight="duotone" className="text-primary" />
-            </div>
+            <Avatar className="w-12 h-12 bg-primary/10">
+              <AvatarFallback>
+                <Robot size={24} weight="duotone" className="text-primary" />
+              </AvatarFallback>
+            </Avatar>
             <div>
               <h2 className="text-xl md:text-2xl font-semibold">AI Assistant</h2>
               <p className="text-sm text-muted-foreground">Ask me anything about startups and events</p>
@@ -134,7 +137,8 @@ Provide helpful, concise responses about startups, events, or general advice. Be
                   <Button
                     key={idx}
                     variant="outline"
-                    className="justify-start text-left h-auto py-3 px-4"
+                    size="sm"
+                    className="justify-start text-left w-full"
                     onClick={() => handleSuggestion(question)}
                   >
                     <Sparkle size={16} weight="fill" className="mr-2 flex-shrink-0 text-primary" />
@@ -157,9 +161,11 @@ Provide helpful, concise responses about startups, events, or general advice. Be
                 }`}
               >
                 {message.role === 'assistant' && (
-                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                    <Robot size={18} weight="duotone" className="text-primary" />
-                  </div>
+                  <Avatar className="w-8 h-8 bg-primary/10">
+                    <AvatarFallback>
+                      <Robot size={18} weight="duotone" className="text-primary" />
+                    </AvatarFallback>
+                  </Avatar>
                 )}
                 <Card
                   className={`p-3 md:p-4 max-w-[80%] ${
@@ -174,9 +180,11 @@ Provide helpful, concise responses about startups, events, or general advice. Be
                   </span>
                 </Card>
                 {message.role === 'user' && (
-                  <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
-                    <User size={18} weight="duotone" className="text-accent" />
-                  </div>
+                  <Avatar className="w-8 h-8 bg-accent/10">
+                    <AvatarFallback>
+                      <User size={18} weight="duotone" className="text-accent" />
+                    </AvatarFallback>
+                  </Avatar>
                 )}
               </motion.div>
             ))}
@@ -188,9 +196,11 @@ Provide helpful, concise responses about startups, events, or general advice. Be
               animate={{ opacity: 1, y: 0 }}
               className="flex gap-3 mb-4"
             >
-              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                <Robot size={18} weight="duotone" className="text-primary" />
-              </div>
+              <Avatar className="w-8 h-8 bg-primary/10">
+                <AvatarFallback>
+                  <Robot size={18} weight="duotone" className="text-primary" />
+                </AvatarFallback>
+              </Avatar>
               <Card className="p-3 md:p-4 bg-card">
                 <div className="flex gap-1">
                   <span className="w-2 h-2 bg-primary/50 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />

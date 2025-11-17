@@ -246,11 +246,12 @@ export function AddStartupDialog({ open: externalOpen, onOpenChange: externalOnO
                 type="button"
                 variant="outline"
                 onClick={() => setOpen(false)}
+                size="default"
                 className="flex-1"
               >
                 Cancel
               </Button>
-              <Button type="submit" className="flex-1">
+              <Button type="submit" size="default" className="flex-1">
                 Add Startup
               </Button>
             </div>

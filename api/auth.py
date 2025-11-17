@@ -6,13 +6,15 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 import os
+import secrets
 from database import get_db
 import models
 
 # Security configuration
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-this-in-production")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
+ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 30 minutes for access token
+REFRESH_TOKEN_EXPIRE_DAYS = 7  # 7 days for refresh token
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -35,9 +37,58 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
         expire = datetime.utcnow() + expires_delta
     else:
         expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire, "type": "access"})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+def create_refresh_token(db: Session, user_id: int) -> str:
+    """Create a refresh token and store it in database"""
+    token = secrets.token_urlsafe(32)
+    expires_at = datetime.utcnow() + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+    
+    db_token = models.RefreshToken(
+        user_id=user_id,
+        token=token,
+        expires_at=expires_at
+    )
+    db.add(db_token)
+    db.commit()
+    
+    return token
+
+def verify_refresh_token(db: Session, token: str) -> Optional[models.User]:
+    """Verify refresh token and return associated user"""
+    db_token = db.query(models.RefreshToken).filter(
+        models.RefreshToken.token == token,
+        models.RefreshToken.revoked == False,
+        models.RefreshToken.expires_at > datetime.utcnow()
+    ).first()
+    
+    if not db_token:
+        return None
+    
+    user = db.query(models.User).filter(models.User.id == db_token.user_id).first()
+    return user
+
+def revoke_refresh_token(db: Session, token: str) -> bool:
+    """Revoke a refresh token"""
+    db_token = db.query(models.RefreshToken).filter(
+        models.RefreshToken.token == token
+    ).first()
+    
+    if db_token:
+        db_token.revoked = True
+        db.commit()
+        return True
+    return False
+
+def revoke_all_user_tokens(db: Session, user_id: int) -> None:
+    """Revoke all refresh tokens for a user"""
+    db.query(models.RefreshToken).filter(
+        models.RefreshToken.user_id == user_id,
+        models.RefreshToken.revoked == False
+    ).update({"revoked": True})
+    db.commit()
 
 def decode_access_token(token: str) -> Optional[dict]:
     """Decode and validate a JWT token"""

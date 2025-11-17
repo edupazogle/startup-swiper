@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Card } from '@/components/ui/card'
+import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 
@@ -144,13 +145,19 @@ export function StartupFiltersPanel({
                 <button
                   onClick={() => onChange(item, !selectedSet.has(item))}
                   className={cn(
-                    'px-3 py-2 rounded-md text-sm font-medium transition-all duration-200',
-                    selectedSet.has(item)
-                      ? `${getGradeColor(item)} shadow-md scale-105`
-                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                    'rounded-md transition-all duration-200',
+                    selectedSet.has(item) ? 'scale-105' : ''
                   )}
                 >
-                  {item}
+                  <Badge
+                    variant={selectedSet.has(item) ? 'default' : 'outline'}
+                    className={cn(
+                      'px-3 py-1 text-sm font-medium',
+                      selectedSet.has(item) ? getGradeColor(item) : 'bg-muted text-muted-foreground'
+                    )}
+                  >
+                    {item}
+                  </Badge>
                 </button>
               ) : (
                 <label className="flex items-center gap-2.5 cursor-pointer group">
@@ -190,6 +197,9 @@ export function StartupFiltersPanel({
             className="pl-9 h-10"
           />
         </div>
+
+        {/* Theme Switcher (collapsed view) */}
+        <ThemeSwitcher />
 
         {/* Compact Filter Button */}
         <Button
@@ -233,23 +243,26 @@ export function StartupFiltersPanel({
   return (
     <Card className="border">
       {/* Header */}
-      <div className="p-4 md:p-6 border-b bg-card sticky top-0 z-10">
-        <div className="flex items-center justify-between mb-4">
+      <div className="p-4 md:p-6 border-b bg-card sticky top-0 z-10 space-y-3">
+        <div className="flex items-center justify-between">
           <h3 className="flex items-center gap-2 text-sm md:text-base font-bold text-foreground">
             <FunnelSimple size={18} weight="duotone" />
             Filters & Search
           </h3>
-          {activeFilterCount > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearAllFilters}
-              className="text-xs text-muted-foreground hover:text-foreground"
-            >
-              <X size={14} className="mr-1" />
-              Clear All
-            </Button>
-          )}
+          <div className="flex items-center gap-3">
+            <ThemeSwitcher />
+            {activeFilterCount > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearAllFilters}
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                <X size={14} className="mr-1" />
+                Clear All
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Search Bar */}

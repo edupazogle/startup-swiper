@@ -224,11 +224,12 @@ export function AddIdeaDialog({ open, onOpenChange, onAdd }: AddIdeaDialogProps)
                 type="button"
                 variant="outline"
                 onClick={handleClose}
+                size="default"
                 className="flex-1"
               >
                 Cancel
               </Button>
-              <Button type="submit" className="flex-1">
+              <Button type="submit" size="default" className="flex-1">
                 Submit Idea
               </Button>
             </div>

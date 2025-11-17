@@ -192,10 +192,10 @@ export function MeetingInsightDialog({
 
         {/* Actions */}
         <div className="flex justify-end gap-3">
-          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
+          <Button variant="outline" onClick={onClose} disabled={isSubmitting} size="default">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={isSubmitting || !insight.trim()}>
+          <Button onClick={handleSubmit} disabled={isSubmitting || !insight.trim()} size="default">
             {isSubmitting ? 'Saving...' : 'Save Insight'}
           </Button>
         </div>

@@ -35,33 +35,36 @@ export function PWAUpdatePrompt() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50 max-w-sm animate-in slide-in-from-bottom-5">
-      <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg shadow-2xl p-4 text-white">
+      <div className="bg-card border rounded-lg shadow-lg p-4">
         <div className="flex items-start gap-3">
-          <ArrowsClockwise size={24} weight="bold" className="flex-shrink-0 mt-0.5" />
+          <div className="rounded-md bg-primary/10 p-2 flex-shrink-0">
+            <ArrowsClockwise size={20} weight="bold" className="text-primary" />
+          </div>
           <div className="flex-1">
-            <h3 className="font-bold text-sm mb-1">
+            <h3 className="font-semibold text-sm mb-1 text-foreground">
               {needRefresh ? 'New Version Available' : 'App Ready Offline'}
             </h3>
-            <p className="text-xs text-white/90 mb-3">
-              {needRefresh 
-                ? 'A new version of the app is available. Reload to update.'
-                : 'The app is ready to work offline.'}
+            <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
+              {needRefresh
+                ? 'A new version is available. Reload to update.'
+                : 'The app is cached and ready to work offline.'}
             </p>
             <div className="flex gap-2">
               {needRefresh && (
                 <Button
                   size="sm"
                   onClick={() => updateServiceWorker(true)}
-                  className="bg-white text-purple-600 hover:bg-gray-100 h-8"
+                  variant="default"
+                  className="h-8"
                 >
                   Reload
                 </Button>
               )}
               <Button
                 size="sm"
-                variant="ghost"
+                variant="outline"
                 onClick={close}
-                className="text-white hover:bg-white/20 h-8"
+                className="h-8"
               >
                 {needRefresh ? 'Later' : 'OK'}
               </Button>
@@ -69,10 +72,10 @@ export function PWAUpdatePrompt() {
           </div>
           <button
             onClick={close}
-            className="text-white/80 hover:text-white transition-colors flex-shrink-0"
+            className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
             aria-label="Close"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
       </div>
