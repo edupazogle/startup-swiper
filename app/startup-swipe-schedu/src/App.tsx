@@ -876,7 +876,7 @@ function App() {
           </div>
         )}
 
-        <main className={`flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col ${isMobile ? 'pb-[calc(var(--nav-height-mobile)+env(safe-area-inset-bottom)+8px)]' : ''}`}>
+        <main className={`flex-1 min-h-0 flex flex-col ${isMobile ? 'pb-[calc(var(--nav-height-mobile)+env(safe-area-inset-bottom)+8px)]' : ''} ${currentView === 'ai' ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden'}`}>
           {currentView === 'swipe' && (
             <SwipeView
               startups={startups}
@@ -918,9 +918,7 @@ function App() {
           )}
           
           {currentView === 'ai' && (
-            <div className="h-full w-full overflow-hidden">
-              <AIAssistantView />
-            </div>
+            <AIAssistantView />
           )}
           
           {currentView === 'admin' && (

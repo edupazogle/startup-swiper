@@ -312,7 +312,7 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                 <section aria-labelledby="vc-analysis-heading" className="mb-4">
                   <div className="flex items-center gap-2 mb-3">
                     <Target size={20} className="text-blue-600 dark:text-blue-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="vc-analysis-heading" className="text-sm font-extrabold text-blue-700 dark:text-blue-300 uppercase tracking-wider">Venture Clienting Analysis</h3>
+                    <h3 id="vc-analysis-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Venture Clienting Analysis</h3>
                   </div>
                   
                   <div className="bg-gradient-to-br from-blue-50 via-blue-50 to-indigo-50 dark:from-blue-950/30 dark:via-blue-900/30 dark:to-indigo-950/30 p-4 rounded-xl border-2 border-blue-200 dark:border-blue-800/50 shadow-sm space-y-3">
@@ -400,7 +400,7 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                 <section aria-labelledby="product-heading">
                   <div className="flex items-center gap-2 mb-3">
                     <Briefcase size={20} className="text-blue-600 dark:text-blue-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="product-heading" className="text-sm font-extrabold text-blue-700 dark:text-blue-300 uppercase tracking-wider">Core Product</h3>
+                    <h3 id="product-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Core Product</h3>
                   </div>
                   <div className="text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 p-4 rounded-xl border-2 border-blue-200 dark:border-blue-800/50 shadow-sm">
                     <p>{startup.core_product || startup.extracted_product}</p>
@@ -416,7 +416,7 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                 <section aria-labelledby="value-prop-heading">
                   <div className="flex items-center gap-2 mb-3">
                     <Sparkle size={20} className="text-pink-600 dark:text-pink-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="value-prop-heading" className="text-sm font-extrabold text-pink-700 dark:text-pink-300 uppercase tracking-wider">Value Proposition</h3>
+                    <h3 id="value-prop-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Value Proposition</h3>
                   </div>
                   <div className="text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-pink-50 via-rose-50 to-pink-50 dark:from-pink-950/30 dark:via-rose-950/30 dark:to-pink-950/30 p-4 rounded-xl border-2 border-pink-200 dark:border-pink-800/50 shadow-sm">
                     <p>{startup.value_proposition || startup.shortDescription}</p>
@@ -429,7 +429,7 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                 <section aria-labelledby="market-heading">
                   <div className="flex items-center gap-2 mb-3">
                     <Target size={20} className="text-purple-600 dark:text-purple-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="market-heading" className="text-sm font-extrabold text-purple-700 dark:text-purple-300 uppercase tracking-wider">Target Market</h3>
+                    <h3 id="market-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Target Market</h3>
                   </div>
                   <div className="text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/30 dark:to-violet-950/30 p-4 rounded-xl border-2 border-purple-200 dark:border-purple-800/50 shadow-sm">
                     <p>{startup.target_customers || startup.extracted_market}</p>
@@ -442,7 +442,7 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                 <section aria-labelledby="problem-heading">
                   <div className="flex items-center gap-2 mb-3">
                     <Target size={20} className="text-orange-600 dark:text-orange-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="problem-heading" className="text-sm font-extrabold text-orange-700 dark:text-orange-300 uppercase tracking-wider">Problem Solved</h3>
+                    <h3 id="problem-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Problem Solved</h3>
                   </div>
                   <div className="text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 p-4 rounded-xl border-2 border-orange-200 dark:border-orange-800/50 shadow-sm">
                     <p>{startup.problem_solved}</p>
@@ -455,7 +455,7 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                 <section aria-labelledby="competitors-heading">
                   <div className="flex items-center gap-2 mb-3">
                     <Briefcase size={20} className="text-slate-600 dark:text-slate-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="competitors-heading" className="text-sm font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Competitive Landscape</h3>
+                    <h3 id="competitors-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Competitive Landscape</h3>
                   </div>
                   <div className="text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-950/30 dark:to-gray-900/30 p-4 rounded-xl border-2 border-slate-200 dark:border-slate-800/50 shadow-sm">
                     <p>{startup.vp_competitors}</p>
@@ -468,13 +468,13 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
               <div className="w-full lg:w-1/3 lg:h-full border-t lg:border-t-0 border-gray-200 dark:border-gray-700 lg:overflow-y-auto px-3 md:px-4 py-3 md:py-4 space-y-3 md:space-y-4 flex-shrink-0">
               {/* Business Opportunity */}
               {(startup.axa_business_leverage || startup.axaBusinessLeverage) && (
-                <section aria-labelledby="opportunity-heading">
+                <section aria-labelledby="opportunity-heading" className="mb-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <Briefcase size={20} className="text-blue-600 dark:text-blue-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="opportunity-heading" className="text-sm font-extrabold text-blue-700 dark:text-blue-300 uppercase tracking-wider">Business Opportunity for AXA</h3>
+                    <Sparkle size={20} className="text-blue-600 dark:text-blue-400" weight="duotone" aria-hidden="true" />
+                    <h3 id="opportunity-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Business Opportunity for AXA</h3>
                   </div>
-                  <div className="text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 p-4 rounded-xl border-2 border-blue-200 dark:border-blue-800/50 shadow-sm">
-                    <p>{startup.axa_business_leverage || startup.axaBusinessLeverage}</p>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-4 xl:p-6 flex-shrink-0">
+                    <p className="text-xs xl:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{startup.axa_business_leverage || startup.axaBusinessLeverage}</p>
                   </div>
                 </section>
               )}

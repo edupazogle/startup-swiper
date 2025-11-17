@@ -144,9 +144,9 @@ Stage: ${startup.maturity || 'N/A'}
   ]
 
   return (
-    <div className="h-full w-full flex flex-col bg-gray-50 dark:bg-gray-900">
+    <div className="h-full w-full flex flex-col bg-gray-50 dark:bg-gray-900 overflow-hidden">
       {/* Header */}
-      <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-4 md:px-6">
+      <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-4 md:px-6">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 shadow-md">
             <Sparkle size={20} weight="fill" className="text-white" />
@@ -168,7 +168,7 @@ Stage: ${startup.maturity || 'N/A'}
 
       {/* Quick Actions */}
       {messages.length <= 1 && (
-        <div className="px-4 py-3 md:px-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex-shrink-0 px-4 py-3 md:px-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
           <div className="flex flex-wrap gap-2">
             {quickActions.map((action) => (
               <Button
@@ -187,7 +187,7 @@ Stage: ${startup.maturity || 'N/A'}
       )}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 md:px-6 space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 py-4 md:px-6 space-y-4 min-h-0">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -255,7 +255,7 @@ Stage: ${startup.maturity || 'N/A'}
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-4 md:px-6">
+      <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-4 md:px-6">
         <div className="flex gap-2 md:gap-3 items-end">
           <Textarea
             ref={textareaRef}
