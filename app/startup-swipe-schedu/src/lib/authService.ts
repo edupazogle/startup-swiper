@@ -40,7 +40,13 @@ class AuthService {
       })
 
       if (!response.ok) {
-        throw new Error('Invalid credentials')
+        if (response.status === 401) {
+          throw new Error('Invalid credentials')
+        } else if (response.status === 500) {
+          throw new Error('Server error. Please try again later.')
+        } else {
+          throw new Error('Login failed. Please try again.')
+        }
       }
 
       const data: LoginResponse = await response.json()
@@ -49,6 +55,7 @@ class AuthService {
 
       // Fetch user data
       const user = await this.getCurrentUser()
+      console.log('✓ Login successful:', user.email)
       return user
     } catch (error) {
       console.error('Login failed:', error)
@@ -279,10 +286,18 @@ class AuthService {
    * Get API base URL
    */
   private getApiUrl(): string {
-    return import.meta.env.VITE_API_URL || 
-      (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai' 
-        ? 'https://tilyn.ai/api' 
-        : 'http://localhost:8000')
+    // Check environment variable first
+    if (import.meta.env.VITE_API_URL) {
+      return import.meta.env.VITE_API_URL
+    }
+    
+    // For production deployment on tilyn.ai
+    if (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai') {
+      return 'https://tilyn.ai/api'
+    }
+    
+    // Local development fallback
+    return 'http://localhost:8000'
   }
 
   /**

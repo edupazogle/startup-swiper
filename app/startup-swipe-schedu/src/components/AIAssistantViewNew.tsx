@@ -3,7 +3,7 @@ import { useKV } from '@/lib/useKV'
 import { ChatMessage as ChatMessageType } from '@/lib/types'
 import { Startup } from '@/lib/types'
 import { 
-  Sparkle, 
+  Sparkle as SparkleIcon, 
   PaperPlaneTilt, 
   Robot, 
   User,
@@ -24,41 +24,49 @@ interface AIAssistantViewNewProps {
 }
 
 export function AIAssistantViewNew({ startup }: AIAssistantViewNewProps) {
-  const [messages, setMessages] = useKV<ChatMessageType[]>('ai-assistant-messages', [])
+  // Initialize with welcome message immediately (not in useEffect)
+  const welcomeMessage = startup
+    ? `👋 Hi! I'm your AI assistant for **${startup.name || startup["Company Name"] || 'Unknown Startup'}**.\n\nI can help you with:\n• Competitive intelligence & market insights\n• Team & leadership analysis\n• Strategic recommendations\n• Investment potential evaluation\n\nWhat would you like to know?`
+    : `👋 Welcome to Slush 2025!\n\nI'm your intelligent companion. I can help you:\n• Discover amazing startups\n• Navigate the event schedule\n• Connect with the right people\n• Stay on top of what's happening\n\nHow can I assist you today?`;
+
+  const initialMessages: ChatMessageType[] = [{
+    id: '1',
+    role: 'assistant',
+    content: welcomeMessage,
+    timestamp: Date.now()
+  }]
+
+  const [messages, setMessages] = useKV<ChatMessageType[]>('ai-assistant-messages', initialMessages)
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const displayName = startup ? (startup.name || startup["Company Name"] || 'Unknown Startup') : 'Slush 2025'
   const subtitle = startup ? `Ask about ${displayName}` : 'Your Slush 2025 AI Companion'
 
-  // Initialize with welcome message
+  // Scroll to bottom on mount and new messages (no animation on mount)
+  const isInitialMount = useRef(true)
   useEffect(() => {
-    if (!messages || messages.length === 0) {
-      const welcomeMessage = startup
-        ? `👋 Hi! I'm your AI assistant for **${displayName}**.\n\nI can help you with:\n• Competitive intelligence & market insights\n• Team & leadership analysis\n• Strategic recommendations\n• Investment potential evaluation\n\nWhat would you like to know?`
-        : `👋 Welcome to Slush 2025!\n\nI'm your intelligent companion. I can help you:\n• Discover amazing startups\n• Navigate the event schedule\n• Connect with the right people\n• Stay on top of what's happening\n\nHow can I assist you today?`;
-
-      setMessages([{
-        id: '1',
-        role: 'assistant',
-        content: welcomeMessage,
-        timestamp: Date.now()
-      }])
+    // Use direct scrollTop instead of scrollIntoView to avoid layout issues
+    if (messagesContainerRef.current) {
+      if (isInitialMount.current) {
+        // Instant scroll on mount
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+        isInitialMount.current = false
+      } else {
+        // Smooth scroll for new messages
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+      }
     }
-  }, [])
-
-  // Auto-scroll to bottom
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // Auto-resize textarea
+  // Auto-resize textarea with stable initial height
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`
+      const newHeight = Math.min(textareaRef.current.scrollHeight, 120)
+      textareaRef.current.style.height = `${newHeight}px`
     }
   }, [input])
 
@@ -144,12 +152,12 @@ Stage: ${startup.maturity || 'N/A'}
   ]
 
   return (
-    <div className="h-full w-full flex flex-col bg-gray-50 dark:bg-gray-900 overflow-hidden">
+    <div className="h-full w-full flex flex-col bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-4 md:px-6">
+      <div className="flex-shrink-0 border-b border-gray-700/50 bg-gray-800/80 backdrop-blur-sm px-4 py-4 md:px-6">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 shadow-md">
-            <Sparkle size={20} weight="fill" className="text-white" />
+            <SparkleIcon size={20} weight="fill" className="text-white" />
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white truncate">
@@ -168,7 +176,7 @@ Stage: ${startup.maturity || 'N/A'}
 
       {/* Quick Actions */}
       {messages.length <= 1 && (
-        <div className="flex-shrink-0 px-4 py-3 md:px-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex-shrink-0 px-4 py-3 md:px-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
           <div className="flex flex-wrap gap-2">
             {quickActions.map((action) => (
               <Button
@@ -187,7 +195,10 @@ Stage: ${startup.maturity || 'N/A'}
       )}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 md:px-6 space-y-4 min-h-0">
+      <div 
+        ref={messagesContainerRef}
+        className="flex-1 min-h-0 overflow-y-auto px-4 py-4 md:px-6 space-y-4"
+      >
         {messages.map((message) => (
           <div
             key={message.id}
@@ -264,8 +275,9 @@ Stage: ${startup.maturity || 'N/A'}
             onKeyDown={handleKeyDown}
             placeholder="Type your message..."
             disabled={isLoading}
-            className="flex-1 min-h-[44px] max-h-[120px] resize-none rounded-xl border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-900"
+            className="flex-1 min-h-[44px] max-h-[120px] resize-none rounded-xl border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
             rows={1}
+            style={{ height: '44px' }}
           />
           <Button
             onClick={handleSend}

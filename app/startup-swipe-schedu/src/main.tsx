@@ -8,6 +8,7 @@ import { ErrorFallback } from './ErrorFallback.tsx'
 import "./styles/tokens.css"
 import "./main.css"
 import "./styles/theme.css"
+import "./styles/auroral.css"
 import "./index.css"
 
 // Register PWA service worker with aggressive update checking

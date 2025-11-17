@@ -40,29 +40,22 @@
   }
 }
 
-* {
-  box-sizing: border-box;
-}
-
 .auroral-container {
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: #000e3c;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.auroral-layer {
+.auroral-agrabah {
   position: absolute;
   left: -50%;
   top: -50%;
   width: 200%;
   height: 200%;
-  will-change: transform;
-}
-
-.auroral-agrabah {
   animation-name: aura;
   animation-duration: 12s;
   animation-timing-function: linear;
@@ -73,6 +66,11 @@
 }
 
 .auroral-northern {
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
   animation-name: northern;
   animation-duration: 10s;
   animation-timing-function: linear;
@@ -83,6 +81,11 @@
 }
 
 .auroral-northern-intense {
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
   animation-name: aura;
   animation-duration: 10s;
   animation-timing-function: linear;
@@ -92,6 +95,11 @@
 }
 
 .auroral-northern-dimmed {
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
   animation-name: northern;
   animation-duration: 10s;
   animation-timing-function: linear;
@@ -102,6 +110,11 @@
 }
 
 .auroral-northern-dusk {
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
   animation-name: northern;
   animation-duration: 15s;
   animation-timing-function: linear;
@@ -112,6 +125,11 @@
 }
 
 .auroral-northern-warm {
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
   animation-name: aura;
   animation-duration: 10s;
   animation-timing-function: linear;

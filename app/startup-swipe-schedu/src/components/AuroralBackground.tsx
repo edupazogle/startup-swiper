@@ -1,22 +1,9 @@
-import { ReactNode } from 'react'
 import '../styles/auroral.css'
 
-interface AuroralBackgroundProps {
-  children?: ReactNode
-}
-
-export function AuroralBackground({ children }: AuroralBackgroundProps) {
+export function AuroralBackground() {
   return (
     <div className="auroral-container">
-      <div
-        className="auroral-layer auroral-northern-dusk"
-      />
-
-      {children && (
-        <div className="relative z-10">
-          {children}
-        </div>
-      )}
+      <div className="auroral-northern-dusk" />
     </div>
   )
 }

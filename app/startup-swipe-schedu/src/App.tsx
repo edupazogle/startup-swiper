@@ -22,6 +22,7 @@ import { authService } from '@/lib/authService'
 import { Swatches, Rocket, Lightbulb, CalendarBlank, UserGear, Plus, Robot, Bell, BellSlash, SignOut } from '@phosphor-icons/react'
 import { Toaster } from '@/components/ui/sonner'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 import logoVC from '@/assets/images/logo_vc.png'
 import logoMain from '@/assets/images/f8cba53d-0d66-4aab-b97c-8fa66871fa8b.png'
 
@@ -35,12 +36,14 @@ function App() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false)
   const [showNotificationSetup, setShowNotificationSetup] = useState(false)
   
-  // Load calendar events from API
+  // Load calendar events from API (only when authenticated)
   const [fixedEvents, setFixedEvents] = useState<CalendarEvent[]>([])
-  const [isLoadingEvents, setIsLoadingEvents] = useState(true)
+  const [isLoadingEvents, setIsLoadingEvents] = useState(false)
 
   useEffect(() => {
     const fetchEvents = async () => {
+      if (!isAuthenticated) return
+      
       try {
         setIsLoadingEvents(true)
         const events = await api.getCalendarEvents(0, 200)
@@ -62,8 +65,7 @@ function App() {
         setFixedEvents(transformedEvents)
         console.log(`✓ Loaded ${transformedEvents.length} events from API`)
       } catch (error) {
-        console.error('Failed to fetch events from API:', error)
-        // Fallback to empty
+        console.warn('Could not fetch events:', error)
         setFixedEvents([])
       } finally {
         setIsLoadingEvents(false)
@@ -71,7 +73,7 @@ function App() {
     }
     
     fetchEvents()
-  }, [])
+  }, [isAuthenticated])
   
   useEffect(() => {
     const initializeUser = async () => {
@@ -155,8 +157,10 @@ function App() {
   // We require an authenticated user; `safeUserId` is the authenticated id.
   const safeUserId = currentUserId
 
-  // Fetch votes from API on app load and refresh them
+  // Fetch votes from API (only when authenticated)
   useEffect(() => {
+    if (!isAuthenticated) return
+    
     const fetchVotes = async () => {
       try {
         const apiVotes = await api.getVotes(0, 10000)
@@ -175,19 +179,21 @@ function App() {
           console.log(`✓ Loaded ${convertedVotes.length} votes from API`)
         }
       } catch (error) {
-        console.error('Failed to fetch votes from API:', error)
+        console.warn('Could not fetch votes:', error)
         setVotes([])
       }
     }
     
     fetchVotes()
-    // Refresh votes every 5 seconds to stay in sync with API
-    const interval = setInterval(fetchVotes, 5000)
+    // Refresh votes every 10 seconds to stay in sync with API
+    const interval = setInterval(fetchVotes, 10000)
     return () => clearInterval(interval)
-  }, [])
+  }, [isAuthenticated])
 
   useEffect(() => {
     const fetchStartups = async () => {
+      if (!safeUserId || !isAuthenticated) return
+      
       try {
         setIsLoadingStartups(true)
         
@@ -321,7 +327,7 @@ function App() {
             console.log('Sample startup topics/tech:', transformedAllStartups[0]?.topics, transformedAllStartups[0]?.tech)
           }
         } catch (error) {
-          console.warn('Failed to load all startups for dashboard:', error)
+          console.warn('Could not load all startups for dashboard:', error)
           // Fallback: use swiper startups for dashboard too
           setAllStartups(startups)
         }
@@ -336,10 +342,13 @@ function App() {
       }
     }
 
-    if (safeUserId) {
+    if (safeUserId && isAuthenticated) {
       fetchStartups()
+    } else if (isAuthenticated) {
+      // Just in case safeUserId hasn't been set yet
+      setIsLoadingStartups(false)
     }
-  }, [safeUserId])
+  }, [safeUserId, isAuthenticated])
   
   // Load Phase 2 startups when user completes Phase 1 (20+ swipes)
   const [phase2Loaded, setPhase2Loaded] = useState(false)
@@ -677,56 +686,71 @@ function App() {
   // Show login view if not authenticated (before loading startups)
   if (!isAuthenticated) {
     return (
-      <LoginView
-        onLogin={(email, name) => {
-          setCurrentUserId(email)
-          setCurrentUserName(name)
-          setIsAuthenticated(true)
-          // Save session to localStorage for persistence
-          localStorage.setItem('startup_swiper_session', JSON.stringify({
-            userId: email,
-            userName: name
-          }))
-          toast.success(`Welcome, ${name}!`)
-        }}
-      />
+      <>
+        <AuroralBackground />
+        <LoginView
+          onLogin={(email, name) => {
+            setCurrentUserId(email)
+            setCurrentUserName(name)
+            setIsAuthenticated(true)
+            
+            // Save session to localStorage for persistence (only for real users)
+            if (!email.includes('guest_')) {
+              localStorage.setItem('startup_swiper_session', JSON.stringify({
+                userId: email,
+                userName: name
+              }))
+            }
+            
+            console.log('✓ User logged in:', email)
+          }}
+        />
+      </>
     )
   }
 
   // Show loading state while fetching startups (only after authentication)
   if (isLoadingStartups) {
     return (
-      <AuroralBackground>
+      <>
+        <AuroralBackground />
         <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Loading prioritized startups...</p>
+          <div className="text-center space-y-4">
+            <div className="relative">
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-white/10 border-t-white/80 mx-auto"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 animate-pulse"></div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <p className="text-white font-medium text-lg">Loading Slush 2025 Startups</p>
+              <p className="text-white/60 text-sm">Preparing personalized recommendations...</p>
+            </div>
           </div>
         </div>
-      </AuroralBackground>
+      </>
     )
   }
 
   return (
-    <AuroralBackground>
-      <div className="flex flex-col h-dvh overflow-hidden" style={{ paddingTop: 'var(--safe-top)' }}>
+    <>
+      {currentView !== 'ai' && <AuroralBackground />}
+      <div className="relative flex flex-col h-dvh overflow-hidden" style={{ paddingTop: 'var(--safe-top)' }}>
         {(currentView !== 'ai' || !isMobile) && (
           <header className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
-            <div className="w-full p-5 lg:px-8 lg:pl-5">
-              <div className="flex items-center justify-center relative">
-                {/* Logo Section - Absolute positioned left */}
-                <div className="absolute left-0 flex items-center">
-                  {/* Mobile Logo - Compact */}
+            <div className="w-full px-4 py-3 lg:px-8 lg:py-5">
+              <div className="flex items-center justify-between lg:justify-center lg:relative">
+                {/* Logo Section - Left aligned on mobile, absolute on desktop */}
+                <div className="flex items-center lg:absolute lg:left-0">
+                  {/* Mobile Logo - Same as Desktop */}
                   {isMobile && (
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600">
-                        <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M13 2L3 14h8l-2 8 10-12h-8l2-8z"/>
-                        </svg>
+                    <div className="flex items-center gap-2">
+                      <img src={logoMain} alt="Startup Rise" className="h-8 rounded-lg shadow-sm" />
+                      <div className="flex flex-col">
+                        <span className="text-lg font-semibold leading-tight text-gray-900 dark:text-white">
+                          Startup Rise
+                        </span>
                       </div>
-                      <span className="text-xl font-semibold text-gray-900 dark:text-white">
-                        Startup Edge
-                      </span>
                     </div>
                   )}
                   
@@ -789,51 +813,51 @@ function App() {
                   </nav>
                 )}
                 
-                {/* Action Buttons - Absolute positioned right */}
-                <div className="absolute right-8 flex items-center lg:gap-4">
-                  <div className="flex items-center">
-                    {notificationManager && (
-                      <button
-                        onClick={handleEnableNotifications}
-                        className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        title={notificationsEnabled ? 'Notifications enabled' : 'Enable notifications'}
-                      >
-                        <span className="sr-only">Notifications</span>
-                        {notificationsEnabled ? (
-                          <Bell className="text-2xl text-green-600 hover:text-green-700 dark:text-green-400" size={24} weight="fill" />
-                        ) : (
-                          <BellSlash className="text-2xl text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" size={24} />
-                        )}
-                      </button>
+                {/* Action Buttons - Right aligned on mobile, absolute on desktop */}
+                <div className="flex items-center gap-1 lg:absolute lg:right-0 lg:gap-2">
+                  {notificationManager && (
+                    <button
+                      onClick={handleEnableNotifications}
+                      className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      title={notificationsEnabled ? 'Notifications enabled' : 'Enable notifications'}
+                    >
+                      <span className="sr-only">Notifications</span>
+                      {notificationsEnabled ? (
+                        <Bell size={20} weight="fill" className="text-green-600 hover:text-green-700 dark:text-green-400" />
+                      ) : (
+                        <BellSlash size={20} className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" />
+                      )}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setCurrentView('admin')}
+                    className={cn(
+                      "rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors",
+                      currentView === 'admin' && 'bg-gray-100 dark:bg-gray-700'
                     )}
-                    <button
-                      onClick={() => setCurrentView('admin')}
-                      className={`rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                        currentView === 'admin' ? 'bg-gray-100 dark:bg-gray-700' : ''
-                      }`}
-                    >
-                      <UserGear className="text-2xl text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" size={24} weight="bold" />
-                    </button>
-                    <button
-                      onClick={async () => {
-                        try {
-                          await authService.logout()
-                          setIsAuthenticated(false)
-                          setCurrentUserId('')
-                          setCurrentUserName('')
-                          localStorage.removeItem('startup_swiper_session')
-                          toast('Signed out successfully')
-                        } catch (error) {
-                          console.error('Logout error:', error)
-                          toast.error('Logout failed')
-                        }
-                      }}
-                      className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      title="Sign out"
-                    >
-                      <SignOut className="text-2xl text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" size={24} />
-                    </button>
-                  </div>
+                    title="Admin settings"
+                  >
+                    <UserGear size={20} weight="bold" className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" />
+                  </button>
+                  <button
+                    onClick={async () => {
+                      try {
+                        await authService.logout()
+                        setIsAuthenticated(false)
+                        setCurrentUserId('')
+                        setCurrentUserName('')
+                        localStorage.removeItem('startup_swiper_session')
+                        toast('Signed out successfully')
+                      } catch (error) {
+                        console.error('Logout error:', error)
+                        toast.error('Logout failed')
+                      }
+                    }}
+                    className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    title="Sign out"
+                  >
+                    <SignOut size={20} className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -1042,7 +1066,7 @@ function App() {
         <PWAUpdatePrompt />
         <IOSInstallPrompt />
       </div>
-    </AuroralBackground>
+    </>
   );
 }
 

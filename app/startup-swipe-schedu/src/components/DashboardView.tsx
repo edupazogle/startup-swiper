@@ -10,8 +10,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AITimeSlotSuggester } from '@/components/AITimeSlotSuggester'
-import { ImprovedInsightsModal } from '@/components/ImprovedInsightsModal'
-import { ImprovedMeetingModal } from '@/components/ImprovedMeetingModal'
+import { ImprovedInsightsModalNew } from '@/components/ImprovedInsightsModalNew'
+import { ImprovedMeetingModalNew } from '@/components/ImprovedMeetingModalNew'
 import { AdvancedFilterDropdown } from '@/components/AdvancedFilterDropdown'
 import { Startup, Vote, CalendarEvent } from '@/lib/types'
 import { Users, Heart, CalendarBlank, Check, Rocket, MapPin, CurrencyDollar, GlobeHemisphereWest, Calendar, TrendUp, MagnifyingGlass, X, Target, CheckCircle, Star, Sparkle, Briefcase } from '@phosphor-icons/react'
@@ -874,9 +874,9 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
   }
 
   return (
-    <>
-      <div className="h-full">
-        <div className="max-w-7xl mx-auto p-3 md:p-6 space-y-4 md:space-y-6">
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-7xl mx-auto p-3 md:p-6 space-y-4 md:space-y-6 pb-6">
           {/* Faceted Search (Topbar) - Redesigned Single Row */}
           <div className="bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 shadow-lg p-4">
             <div className="flex flex-wrap items-center gap-3">
@@ -1108,11 +1108,12 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
         </div>
       </div>
 
+      {/* Modals - Fixed positioning, won't affect layout */}
       <Dialog open={isScheduleDialogOpen} onOpenChange={setIsScheduleDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px]" aria-describedby="schedule-dialog-description">
           <DialogHeader>
-            <DialogTitle>Schedule Meeting with {selectedStartup?.["Company Name"]}</DialogTitle>
-            <DialogDescription>
+            <DialogTitle id="schedule-dialog-title">Schedule Meeting with {selectedStartup?.["Company Name"]}</DialogTitle>
+            <DialogDescription id="schedule-dialog-description">
               This will create a confirmed meeting and automatically add all interested team members.
             </DialogDescription>
           </DialogHeader>
@@ -1206,10 +1207,10 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
         </DialogContent>
       </Dialog>
 
-      {/* Insights AI Modal */}
+      {/* AI Chat Modals - New Design */}
       {selectedStartup && (
         <>
-          <ImprovedInsightsModal
+          <ImprovedInsightsModalNew
             isOpen={showInsightsAI}
             onClose={() => setShowInsightsAI(false)}
             startupId={selectedStartup?.id}
@@ -1218,7 +1219,7 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
             userId={currentUserId}
           />
 
-          <ImprovedMeetingModal
+          <ImprovedMeetingModalNew
             isOpen={showMeetingAI}
             onClose={() => setShowMeetingAI(false)}
             startup={selectedStartup}
@@ -1226,6 +1227,6 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
           />
         </>
       )}
-    </>
+    </div>
   )
 }
