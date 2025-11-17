@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Mobile Cache - Startup Swiper</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .success {
+            background: rgba(34, 197, 94, 0.3);
+        }
+        .info {
+            background: rgba(59, 130, 246, 0.3);
+        }
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .instructions {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Clear Mobile Cache</h1>
+        
+        <div id="status" class="status info">
+            Ready to clear cache and fix login issues
+        </div>
+
+        <button onclick="clearEverything()" id="clearBtn">
+            🧹 Clear All Cache & Data
+        </button>
+
+        <button onclick="reloadApp()" id="reloadBtn" disabled>
+            🔄 Reload Application
+        </button>
+
+        <div class="instructions">
+            <h3>📱 Additional Steps for Mobile:</h3>
+            
+            <h4>iOS Safari:</h4>
+            <ol>
+                <li>Settings → Safari</li>
+                <li>Clear History and Website Data</li>
+                <li>Confirm</li>
+                <li>Return to Safari and visit <strong>tilyn.ai</strong></li>
+            </ol>
+
+            <h4>Android Chrome:</h4>
+            <ol>
+                <li>Chrome → Menu (⋮)</li>
+                <li>Settings → Privacy</li>
+                <li>Clear browsing data</li>
+                <li>Select "Cached images and files"</li>
+                <li>Clear data</li>
+            </ol>
+
+            <h4>If Still Logging Out:</h4>
+            <ol>
+                <li>Check if "Private Browsing" is OFF</li>
+                <li>Enable cookies in browser settings</li>
+                <li>Try a different browser (Chrome/Firefox)</li>
+            </ol>
+        </div>
+
+        <div id="details" style="font-size: 12px; opacity: 0.8; margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+        const detailsDiv = document.getElementById('details');
+        const clearBtn = document.getElementById('clearBtn');
+        const reloadBtn = document.getElementById('reloadBtn');
+
+        function updateStatus(message, type = 'info') {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function addDetail(message) {
+            detailsDiv.innerHTML += message + '<br>';
+        }
+
+        async function clearEverything() {
+            clearBtn.disabled = true;
+            updateStatus('Clearing cache and storage...', 'info');
+            detailsDiv.innerHTML = '';
+
+            let itemsCleared = 0;
+
+            // 1. Clear localStorage
+            try {
+                const localStorageCount = localStorage.length;
+                localStorage.clear();
+                addDetail(`✅ Cleared ${localStorageCount} localStorage items`);
+                itemsCleared++;
+            } catch (e) {
+                addDetail(`⚠️ localStorage: ${e.message}`);
+            }
+
+            // 2. Clear sessionStorage
+            try {
+                const sessionStorageCount = sessionStorage.length;
+                sessionStorage.clear();
+                addDetail(`✅ Cleared ${sessionStorageCount} sessionStorage items`);
+                itemsCleared++;
+            } catch (e) {
+                addDetail(`⚠️ sessionStorage: ${e.message}`);
+            }
+
+            // 3. Clear all caches
+            if ('caches' in window) {
+                try {
+                    const cacheNames = await caches.keys();
+                    await Promise.all(
+                        cacheNames.map(cacheName => caches.delete(cacheName))
+                    );
+                    addDetail(`✅ Cleared ${cacheNames.length} cache(s): ${cacheNames.join(', ')}`);
+                    itemsCleared++;
+                } catch (e) {
+                    addDetail(`⚠️ Caches: ${e.message}`);
+                }
+            }
+
+            // 4. Unregister service workers
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    await Promise.all(
+                        registrations.map(registration => registration.unregister())
+                    );
+                    addDetail(`✅ Unregistered ${registrations.length} service worker(s)`);
+                    itemsCleared++;
+                } catch (e) {
+                    addDetail(`⚠️ Service Workers: ${e.message}`);
+                }
+            }
+
+            // 5. Clear cookies
+            try {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const eqPos = cookie.indexOf('=');
+                    const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+                }
+                addDetail(`✅ Cleared ${cookies.length} cookie(s)`);
+                itemsCleared++;
+            } catch (e) {
+                addDetail(`⚠️ Cookies: ${e.message}`);
+            }
+
+            // 6. Clear IndexedDB
+            if ('indexedDB' in window) {
+                try {
+                    const dbs = await indexedDB.databases();
+                    await Promise.all(
+                        dbs.map(db => new Promise((resolve, reject) => {
+                            const request = indexedDB.deleteDatabase(db.name);
+                            request.onsuccess = resolve;
+                            request.onerror = reject;
+                        }))
+                    );
+                    addDetail(`✅ Cleared ${dbs.length} IndexedDB database(s)`);
+                    itemsCleared++;
+                } catch (e) {
+                    addDetail(`⚠️ IndexedDB: ${e.message}`);
+                }
+            }
+
+            updateStatus(`✅ Successfully cleared ${itemsCleared} types of data!`, 'success');
+            reloadBtn.disabled = false;
+            
+            addDetail('<br><strong>🎉 Cache cleared! Click "Reload Application" below.</strong>');
+        }
+
+        function reloadApp() {
+            updateStatus('Reloading application...', 'info');
+            // Force reload from server, bypassing cache
+            window.location.href = '/?nocache=' + Date.now();
+        }
+
+        // Show current storage info
+        window.addEventListener('load', () => {
+            let info = [];
+            if (localStorage.length > 0) info.push(`localStorage: ${localStorage.length} items`);
+            if (sessionStorage.length > 0) info.push(`sessionStorage: ${sessionStorage.length} items`);
+            if (info.length > 0) {
+                addDetail('Current storage: ' + info.join(', '));
+            }
+        });
+    </script>
+</body>
+</html>
