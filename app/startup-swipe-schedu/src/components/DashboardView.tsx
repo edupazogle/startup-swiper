@@ -1,4 +1,6 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useRef, useCallback, memo } from 'react'
+import { useVirtualizer } from '@tanstack/react-virtual'
+import { useDebounceValue } from 'usehooks-ts'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -10,13 +12,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AITimeSlotSuggester } from '@/components/AITimeSlotSuggester'
-import { ImprovedInsightsModalNew } from '@/components/ImprovedInsightsModalNew'
-import { ImprovedMeetingModalNew } from '@/components/ImprovedMeetingModalNew'
 import { AdvancedFilterDropdown } from '@/components/AdvancedFilterDropdown'
 import { Startup, Vote, CalendarEvent } from '@/lib/types'
-import { Users, Heart, CalendarBlank, Check, Rocket, MapPin, CurrencyDollar, GlobeHemisphereWest, Calendar, TrendUp, MagnifyingGlass, X, Target, CheckCircle, Star, Sparkle, Briefcase } from '@phosphor-icons/react'
+import { UsersGroup, Heart, Check, Rocket, MapPin, Dollar, Globe, CalendarMonth, ChartLineUp, Search, Close, CirclePlus, CheckCircle, Star, WandMagicSparkles, Briefcase } from 'flowbite-react-icons/outline'
 import { toast } from 'sonner'
-import { useKV } from '@github/spark/hooks'
+// Removed @github/spark dependency
 import { getTopicColor, getTechColor, getMaturityColor, getLocationColor } from '@/lib/badgeColors'
 import { cn, parseArray } from '@/lib/utils'
 import { api } from '@/lib/api'
@@ -28,6 +28,8 @@ interface DashboardViewProps {
   events: CalendarEvent[]
   currentUserId: string
   onScheduleMeeting: (startupId: string, eventData: Omit<CalendarEvent, 'id' | 'attendees' | 'startupId' | 'startupName'>) => void
+  onOpenInsightsModal?: (startup: Startup) => void
+  onOpenMeetingModal?: (startup: Startup) => void
 }
 
 interface StartupWithVotes extends Startup {
@@ -49,15 +51,29 @@ interface UseCase {
   name: string
 }
 
-export function DashboardView({ startups, votes, events, currentUserId, onScheduleMeeting }: DashboardViewProps) {
+function DashboardViewComponent({ startups, votes, events, currentUserId, onScheduleMeeting, onOpenInsightsModal, onOpenMeetingModal }: DashboardViewProps) {
   const [selectedStartup, setSelectedStartup] = useState<StartupWithVotes | null>(null)
   const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false)
-  const [showInsightsAI, setShowInsightsAI] = useState(false)
-  const [showMeetingAI, setShowMeetingAI] = useState(false)
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [debouncedSearch] = useDebounceValue(searchQuery, 300)
   const [sortBy, setSortBy] = useState<'votes' | 'funding' | 'grade'>('votes')
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false)
   const [selectedStages, setSelectedStages] = useState<Set<string>>(new Set())
+
+  // Optimized modal handlers - call parent handlers
+  const handleOpenInsightsAI = useCallback((startup: StartupWithVotes) => {
+    // Immediate feedback - defer actual work
+    requestAnimationFrame(() => {
+      onOpenInsightsModal?.(startup)
+    })
+  }, [onOpenInsightsModal])
+
+  const handleOpenMeetingAI = useCallback((startup: StartupWithVotes) => {
+    // Immediate feedback - defer actual work
+    requestAnimationFrame(() => {
+      onOpenMeetingModal?.(startup)
+    })
+  }, [onOpenMeetingModal])
   const [selectedTopics, setSelectedTopics] = useState<Set<string>>(new Set())
   const [selectedTechs, setSelectedTechs] = useState<Set<string>>(new Set())
   const [selectedUseCases, setSelectedUseCases] = useState<Set<string>>(new Set())
@@ -70,7 +86,27 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
     location: '',
     description: ''
   })
-  const [startupRatings, setStartupRatings] = useKV<Record<string, Record<string, number>>>('startup-ratings', {})
+  // Replace useKV with useState + localStorage
+  const [startupRatings, setStartupRatingsState] = useState<Record<string, Record<string, number>>>(() => {
+    try {
+      const stored = localStorage.getItem('startup-ratings')
+      return stored ? JSON.parse(stored) : {}
+    } catch {
+      return {}
+    }
+  })
+  
+  const setStartupRatings = useCallback((value: Record<string, Record<string, number>> | ((prev: Record<string, Record<string, number>>) => Record<string, Record<string, number>>)) => {
+    setStartupRatingsState(prev => {
+      const newValue = typeof value === 'function' ? value(prev) : value
+      try {
+        localStorage.setItem('startup-ratings', JSON.stringify(newValue))
+      } catch (error) {
+        console.warn('Failed to save ratings to localStorage:', error)
+      }
+      return newValue
+    })
+  }, [])
 
   // Fetch topic hierarchy on mount
   useEffect(() => {
@@ -405,12 +441,12 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
     }
     
     // Limit to 100 startups if no search query
-    if (searchQuery.trim().length < 3 && selectedStages.size === 0 && selectedTopics.size === 0 && selectedTechs.size === 0) {
+    if (debouncedSearch.trim().length < 3 && selectedStages.size === 0 && selectedTopics.size === 0 && selectedTechs.size === 0) {
       return sorted.slice(0, 100)
     }
     
     return sorted
-  }, [startups, localVotes, events, searchQuery, startupRatings, sortBy, selectedStages, selectedTopics, selectedTechs, selectedUseCases])
+  }, [startups, localVotes, events, debouncedSearch, startupRatings, sortBy, selectedStages, selectedTopics, selectedTechs, selectedUseCases, selectedGrades])
 
   const highPriority = startupsWithVotes.filter(s => s.interestedVotes.length >= 3)
   const mediumPriority = startupsWithVotes.filter(s => s.interestedVotes.length > 0 && s.interestedVotes.length < 3)
@@ -459,15 +495,13 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                 className="transition-all hover:scale-110 active:scale-95 cursor-pointer"
                 aria-label={`Rate ${rating} rockets`}
               >
-                <Rocket 
-                  size={18}
-                  weight={isActive ? 'fill' : 'regular'}
+                <Rocket
                   className={`${
                     isActive 
                       ? 'text-primary' 
                       : 'text-muted-foreground/30'
                   } transition-colors md:w-5 md:h-5`}
-                />
+                  />
               </button>
             )
           })}
@@ -534,7 +568,8 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
     }
   }
 
-  const renderStartupCard = (startup: StartupWithVotes) => {
+  // Memoize render function for performance
+  const renderStartupCard = useCallback((startup: StartupWithVotes) => {
     const userRating = startupRatings?.[startup.id]?.[currentUserId] || 0
     const displayName = startup.name || startup["Company Name"] || 'Unknown Startup'
     const displayUSP = startup.shortDescription || startup["USP"] || ''
@@ -550,26 +585,26 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
     const displayStage = startup.Stage || startup.currentInvestmentStage || startup.maturity || 'Unknown'
     
     return (
-      <Card key={startup.id} className="group p-4 md:p-6 hover:shadow-lg transition-all duration-300 border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md">
-        <div className="flex flex-col sm:flex-row items-start gap-4 md:gap-5">
+      <Card key={startup.id} className="group p-3 md:p-5 hover:shadow-xl transition-all duration-300 border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg hover:border-gray-300 dark:hover:border-gray-600">
+        <div className="flex flex-col sm:flex-row items-start gap-5 md:gap-6">
           {displayLogo && (
-            <div className="w-20 h-20 md:w-24 md:h-24 rounded-xl bg-gray-50 dark:bg-gray-900 flex items-center justify-center overflow-hidden flex-shrink-0 border-2 border-gray-200 dark:border-gray-700 shadow-md group-hover:shadow-lg transition-shadow">
-              <img src={displayLogo} alt={displayName} className="w-full h-full object-contain p-2" />
+            <div className="w-20 h-20 md:w-28 md:h-28 rounded-xl bg-gray-50 dark:bg-gray-900 flex items-center justify-center overflow-hidden flex-shrink-0 border-2 border-gray-200 dark:border-gray-700 shadow-lg group-hover:shadow-xl transition-all">
+              <img src={displayLogo} alt={displayName} className="w-full h-full object-contain p-2.5" />
             </div>
           )}
           
           <div className="flex-1 min-w-0 w-full">
-            <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 sm:gap-4 mb-3">
+            <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-4 sm:gap-5 mb-4">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-xl md:text-2xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">{displayName}</h3>
+                <div className="flex items-center gap-2 mb-3">
+                  <h3 className="text-xl md:text-2xl lg:text-3xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">{displayName}</h3>
                 </div>
-                <div className="flex flex-wrap gap-x-3 md:gap-x-4 gap-y-2 mb-3">
+                <div className="flex flex-wrap gap-x-4 md:gap-x-5 gap-y-2.5 mb-4">
                   {(() => {
                     const topicArray = parseArray(startup.topics)
                     return Array.isArray(topicArray) && topicArray.length > 0 && (
-                      <div className="flex flex-col gap-1">
-                        <span className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold">Topics</span>
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-[9px] md:text-[10px] text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold">Topics</span>
                         <div className="flex flex-wrap gap-1.5">
                           {topicArray.slice(0, 2).map((topic, i) => {
                             const colors = getTopicColor(topic)
@@ -577,7 +612,7 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                               <Badge 
                                 key={i} 
                                 variant="outline" 
-                                className={cn("text-xs font-semibold border-2", colors.bg, colors.text, colors.border)}
+                                className={cn("text-[10px] md:text-xs font-semibold border-2 px-2 py-0.5", colors.bg, colors.text, colors.border)}
                               >
                                 {topic}
                               </Badge>
@@ -588,14 +623,14 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                     )
                   })()}
                   {startup.maturity && (
-                    <div className="flex flex-col gap-1">
-                      <span className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold">Maturity</span>
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-[9px] md:text-[10px] text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold">Maturity</span>
                       {(() => {
                         const colors = getMaturityColor(startup.maturity)
                         return (
                           <Badge 
                             variant="outline" 
-                            className={cn("text-xs font-semibold border-2 px-2.5 py-0.5", colors.bg, colors.text, colors.border)}
+                            className={cn("text-[10px] md:text-xs font-semibold border-2 px-2 py-0.5", colors.bg, colors.text, colors.border)}
                           >
                             {startup.maturity}
                           </Badge>
@@ -605,10 +640,10 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                   )}
 
                   {startup.scheduledEvent && (
-                    <div className="flex flex-col gap-1">
-                      <span className="text-[10px] md:text-xs text-transparent uppercase tracking-wider font-medium select-none">_</span>
-                      <Badge variant="default" className="text-xs font-semibold gap-1 bg-gradient-to-r from-green-500 to-emerald-600 border-none shadow-sm">
-                        <Check size={12} weight="bold" />
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-[9px] md:text-[10px] text-transparent uppercase tracking-wider font-medium select-none">_</span>
+                      <Badge variant="default" className="text-[10px] md:text-xs font-bold gap-1 bg-gradient-to-r from-green-500 to-emerald-600 border-none shadow-md px-2 py-0.5">
+                        <Check className="w-4 h-4"  />
                         Scheduled
                       </Badge>
                     </div>
@@ -616,49 +651,49 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                 </div>
               </div>
               
-              <div className="flex flex-wrap items-center gap-2 md:gap-3 flex-shrink-0">
+              {/* AI Actions - Full width on mobile, side by side */}
+              <div className="grid grid-cols-2 gap-2.5 w-full md:flex md:flex-wrap md:gap-3 md:w-auto">
                 <Button
                   size="sm"
-                  onClick={() => {
-                    setSelectedStartup(startup)
-                    setShowInsightsAI(true)
-                  }}
-                  className="gap-2 font-bold bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-white border-0 shadow-md hover:shadow-lg transition-all px-4 py-2.5"
+                  onClick={() => handleOpenInsightsAI(startup)}
+                  className="gap-2 w-full md:w-auto font-bold bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-white border-0 shadow-md hover:shadow-xl transition-all px-4 py-3 text-sm touch-manipulation"
+                  style={{ touchAction: 'manipulation' }}
                 >
-                  <Sparkle size={16} weight="fill" className="text-white" />
-                  Insights AI
+                  <WandMagicSparkles className="text-white w-5 h-5"  />
+                  <span className="hidden sm:inline">Insights AI</span>
+                  <span className="sm:hidden">Insights</span>
                 </Button>
                 <Button
                   size="sm"
-                  onClick={() => {
-                    setSelectedStartup(startup)
-                    setShowMeetingAI(true)
-                  }}
-                  className="gap-2 font-bold bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white border-0 shadow-md hover:shadow-lg transition-all px-4 py-2.5"
+                  onClick={() => handleOpenMeetingAI(startup)}
+                  className="gap-2 w-full md:w-auto font-bold bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white border-0 shadow-md hover:shadow-xl transition-all px-4 py-3 text-sm touch-manipulation"
+                  style={{ touchAction: 'manipulation' }}
                 >
-                  <Briefcase size={16} weight="fill" className="text-white" />
-                  Meeting AI
+                  <Briefcase className="text-white w-5 h-5"  />
+                  <span className="hidden sm:inline">Meeting AI</span>
+                  <span className="sm:hidden">Meeting</span>
                 </Button>
               </div>
             </div>
 
             {/* Venture Clienting Analysis */}
             {(startup.axa_overall_score !== undefined || startup.axaOverallScore !== undefined) && (
-              <div className="mb-5">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <Target size={20} className="text-blue-600 dark:text-blue-400" weight="duotone" />
-                  <h3 className="text-base font-extrabold text-blue-700 dark:text-blue-300 uppercase tracking-wider">Venture Clienting Analysis</h3>
+              <div className="mb-6">
+                <Separator className="mb-5" />
+                <div className="flex items-center gap-2 mb-3">
+                  <CirclePlus className="text-blue-600 dark:text-blue-400 w-5 h-5"   />
+                  <h3 className="text-xs md:text-sm font-extrabold text-blue-700 dark:text-blue-300 uppercase tracking-wider">Venture Clienting Analysis</h3>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-50 dark:from-blue-950/40 dark:via-indigo-950/40 dark:to-blue-950/40 p-5 rounded-xl border-2 border-blue-300/60 dark:border-blue-700/60 shadow-lg">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-50 dark:from-blue-950/40 dark:via-indigo-950/40 dark:to-blue-950/40 p-3 md:p-4 rounded-xl border-2 border-blue-300/60 dark:border-blue-700/60 shadow-lg">
                   {/* Left Column: Score & Provider Status */}
-                  <div className="space-y-4">
+                  <div className="space-y-5">
                     {/* Grade Section */}
                     <div>
-                      <p className="text-xs text-blue-700 dark:text-blue-300 uppercase tracking-wider font-extrabold mb-3">Rise Score</p>
+                      <p className="text-xs md:text-sm text-blue-800 dark:text-blue-200 uppercase tracking-wider font-extrabold mb-3">Rise Score</p>
                       <div className="flex items-start gap-4">
                         <span className={cn(
-                          'text-5xl md:text-6xl font-black tabular-nums drop-shadow-sm leading-none',
+                          'text-4xl md:text-5xl font-black tabular-nums drop-shadow-sm leading-none',
                           startup.axa_grade === 'A+' || startup.axaGrade === 'A+' ? 'text-yellow-500 dark:text-yellow-400' :
                           startup.axa_grade === 'A' || startup.axaGrade === 'A' ? 'text-emerald-600 dark:text-emerald-400' :
                           startup.axa_grade === 'B+' || startup.axaGrade === 'B+' ? 'text-cyan-600 dark:text-cyan-400' :
@@ -672,11 +707,9 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                         
                         {/* Grade Explanation - Right of Grade */}
                         {(startup.axa_grade !== undefined || startup.axaGrade !== undefined) && (
-                          <div className="flex-1 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-2 border-blue-200/50 dark:border-blue-800/50">
-                            <div className="flex items-start gap-3">
-                              <Sparkle 
-                                size={18} 
-                                weight="fill"
+                          <div className="flex-1 bg-white dark:bg-gray-800 p-3 md:p-4 rounded-xl shadow-lg border-2 border-blue-200/50 dark:border-blue-800/50">
+                            <div className="flex items-start gap-2">
+                              <WandMagicSparkles
                                 className={cn(
                                   'flex-shrink-0 mt-0.5',
                               startup.axa_grade === 'A+' || startup.axaGrade === 'A+' ? 'text-yellow-500 dark:text-yellow-400' :
@@ -687,8 +720,8 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                               startup.axa_grade === 'C' || startup.axaGrade === 'C' ? 'text-orange-600 dark:text-orange-400' :
                               'text-slate-400 dark:text-slate-600'
                             )} 
-                          />
-                          <span className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed font-semibold">
+                           />
+                          <span className="text-xs md:text-sm text-gray-800 dark:text-gray-200 leading-relaxed font-semibold">
                             {startup.axa_grade_explanation || startup.axaGradeExplanation || 'Assessment pending'}
                           </span>
                         </div>
@@ -704,13 +737,13 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
                     const useCaseArray = parseArray(useCases)
 
                     return useCaseArray.length > 0 && (
-                      <div className="space-y-2">
-                        <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold">Use Cases</p>
-                        <div className="flex flex-wrap gap-2">
+                      <div className="space-y-3">
+                        <p className="text-xs md:text-sm text-blue-800 dark:text-blue-200 uppercase tracking-wider font-extrabold">Use Cases</p>
+                        <div className="flex flex-wrap gap-1.5">
                           {useCaseArray.map((useCase: string, idx: number) => (
-                            <div key={idx} className="flex items-center gap-1.5 bg-gradient-to-r from-green-500 to-emerald-600 px-2.5 py-1.5 rounded-lg border border-green-600/80 shadow-sm">
-                              <CheckCircle size={12} weight="bold" className="text-white flex-shrink-0" />
-                              <span className="text-xs text-white font-semibold">
+                            <div key={idx} className="flex items-center gap-1.5 bg-gradient-to-r from-green-500 to-emerald-600 px-2.5 py-1 rounded-lg border border-green-600/80 shadow-md">
+                              <CheckCircle className="text-white flex-shrink-0 w-4 h-4"   />
+                              <span className="text-[10px] md:text-xs text-white font-semibold">
                                 {useCase}
                               </span>
                             </div>
@@ -725,19 +758,18 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
 
             {/* Value Proposition */}
             {(startup.value_proposition || startup.shortDescription) && (
-              <div className="mb-4">
-                <div className="bg-gradient-to-br from-pink-50 via-rose-50 to-pink-50 dark:from-pink-950/30 dark:via-rose-950/30 dark:to-pink-950/30 p-4 rounded-xl border-2 border-pink-200/60 dark:border-pink-800/50 shadow-md">
-                  <div className="flex items-start gap-2.5">
+              <div className="mb-5">
+                <Separator className="mb-5" />
+                <div className="bg-gradient-to-br from-pink-50 via-rose-50 to-pink-50 dark:from-pink-950/30 dark:via-rose-950/30 dark:to-pink-950/30 p-3 md:p-4 rounded-lg border-2 border-pink-200/60 dark:border-pink-800/50 shadow-lg">
+                  <div className="flex items-start gap-3">
                     <Star 
-                      size={18} 
-                      weight="duotone" 
-                      className="text-pink-600 dark:text-pink-400 flex-shrink-0 mt-0.5" 
-                    />
+                      className="text-pink-600 dark:text-pink-400 flex-shrink-0 mt-1 w-5 h-5" 
+                     />
                     <div className="min-w-0">
-                      <p className="text-xs text-pink-800 dark:text-pink-300 uppercase tracking-wider font-bold mb-2">
+                      <p className="text-xs md:text-sm text-pink-800 dark:text-pink-300 uppercase tracking-wider font-extrabold mb-3">
                         Value Proposition
                       </p>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
+                      <p className="text-xs md:text-sm text-gray-800 dark:text-gray-200 leading-relaxed font-medium">
                         {startup.value_proposition || startup.shortDescription}
                       </p>
                     </div>
@@ -746,70 +778,66 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
               </div>
             )}
 
-            {displayUSP && (
-              <>
-                <Separator className="mb-3 md:mb-4" />
-              </>
-            )}
+            <Separator className="mb-5" />
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4">
-              <div className="flex items-start gap-2">
-                <MapPin size={16} className="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" weight="duotone" />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+              <div className="flex items-start gap-2.5">
+                <MapPin size={16} className="text-blue-600 dark:text-blue-400 mt-1 flex-shrink-0"  />
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-1.5">Location</p>
+                  <p className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-2">Location</p>
                   <Badge 
                     variant="outline" 
-                    className={cn("text-xs font-semibold border-2 h-auto py-1 px-2.5", getLocationColor(displayLocation).bg, getLocationColor(displayLocation).text, getLocationColor(displayLocation).border)}
+                    className={cn("text-[10px] md:text-xs font-semibold border-2 h-auto py-1 px-3", getLocationColor(displayLocation).bg, getLocationColor(displayLocation).text, getLocationColor(displayLocation).border)}
                   >
                     {displayLocation}
                   </Badge>
                 </div>
               </div>
               
-              <div className="flex items-start gap-2">
-                <Users size={16} className="text-purple-600 dark:text-purple-400 mt-0.5 flex-shrink-0" weight="duotone" />
+              <div className="flex items-start gap-2.5">
+                <UsersGroup className="text-purple-600 dark:text-purple-400 mt-1 flex-shrink-0 w-4 h-4"   />
                 <div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-1">Team Size</p>
-                  <p className="text-sm text-gray-900 dark:text-gray-100 font-semibold">{displayEmployees}</p>
+                  <p className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-2">Team Size</p>
+                  <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100 font-bold">{displayEmployees}</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-2">
-                <CurrencyDollar size={16} className="text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" weight="duotone" />
+              <div className="flex items-start gap-2.5">
+                <Dollar size={16} className="text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"  />
                 <div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-1">Funding</p>
-                  <p className="text-sm text-gray-900 dark:text-gray-100 font-semibold">{displayFunding}</p>
+                  <p className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-2">Funding</p>
+                  <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100 font-bold">{displayFunding}</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-2">
-                <TrendUp size={16} className="text-orange-600 dark:text-orange-400 mt-0.5 flex-shrink-0" weight="duotone" />
+              <div className="flex items-start gap-2.5">
+                <ChartLineUp size={16} className="text-orange-600 dark:text-orange-400 mt-1 flex-shrink-0"  />
                 <div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-1">Stage</p>
-                  <p className="text-sm text-gray-900 dark:text-gray-100 font-semibold">{displayStage}</p>
+                  <p className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-2">Stage</p>
+                  <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100 font-bold">{displayStage}</p>
                 </div>
               </div>
 
               {startup.dateFounded && (
-                <div className="flex items-start gap-2">
-                  <Calendar size={16} className="text-cyan-600 dark:text-cyan-400 mt-0.5 flex-shrink-0" weight="duotone" />
+                <div className="flex items-start gap-2.5">
+                  <CalendarMonth size={16} className="text-cyan-600 dark:text-cyan-400 mt-1 flex-shrink-0"  />
                   <div>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-1">Founded</p>
-                    <p className="text-sm text-gray-900 dark:text-gray-100 font-semibold">{new Date(startup.dateFounded).getFullYear()}</p>
+                    <p className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-2">Founded</p>
+                    <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100 font-bold">{new Date(startup.dateFounded).getFullYear()}</p>
                   </div>
                 </div>
               )}
 
               {displayWebsite && (
-                <div className="flex items-start gap-2 md:col-span-3">
-                  <GlobeHemisphereWest size={16} className="text-indigo-600 dark:text-indigo-400 mt-0.5 flex-shrink-0" weight="duotone" />
+                <div className="flex items-start gap-2.5 md:col-span-3">
+                  <Globe size={16} className="text-indigo-600 dark:text-indigo-400 mt-1 flex-shrink-0"  />
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-1">Website</p>
+                    <p className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-2">Website</p>
                     <a 
                       href={displayWebsite.startsWith('http') ? displayWebsite : `https://${displayWebsite}`} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline break-all font-semibold transition-colors"
+                      className="text-xs md:text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline break-all font-semibold transition-colors"
                       onClick={(e) => e.stopPropagation()}
                     >
                       {displayWebsite.replace(/^https?:\/\//, '').replace(/^www\./, '')}
@@ -820,42 +848,45 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
             </div>
 
             {startup.interestedVotes.length > 0 && (
-              <div className="flex items-center gap-2 py-3 px-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 rounded-lg border-2 border-purple-200/60 dark:border-purple-800/50 shadow-sm">
-                <Users size={16} className="text-purple-600 dark:text-purple-400 flex-shrink-0" weight="duotone" />
-                <div className="flex -space-x-2">
-                  {startup.interestedVotes.map((vote, idx) => (
-                    <Avatar key={idx} className="w-8 h-8 border-2 border-white dark:border-gray-800 shadow-sm">
-                      <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white text-xs font-bold">
-                        {getInitials(vote.userName)}
-                      </AvatarFallback>
-                    </Avatar>
-                  ))}
+              <>
+                <Separator className="mb-4" />
+                <div className="flex items-center gap-3 py-3 px-5 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 rounded-lg border-2 border-purple-200/60 dark:border-purple-800/50 shadow-md mb-5">
+                  <UsersGroup className="text-purple-600 dark:text-purple-400 flex-shrink-0 w-5 h-5"   />
+                  <div className="flex -space-x-2">
+                    {startup.interestedVotes.map((vote, idx) => (
+                      <Avatar key={idx} className="w-9 h-9 border-2 border-white dark:border-gray-800 shadow-sm">
+                        <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white text-xs font-bold">
+                          {getInitials(vote.userName)}
+                        </AvatarFallback>
+                      </Avatar>
+                    ))}
+                  </div>
+                  <span className="text-xs md:text-sm text-gray-700 dark:text-gray-300 font-semibold ml-1 hidden md:inline">
+                    {startup.interestedVotes.map(v => v.userName).join(', ')}
+                  </span>
                 </div>
-                <span className="text-xs text-gray-700 dark:text-gray-300 font-semibold ml-1 hidden md:inline">
-                  {startup.interestedVotes.map(v => v.userName).join(', ')}
-                </span>
-              </div>
+              </>
             )}
 
             {/* Bottom Action Bar with Heart and Rocket */}
-            <div className="flex items-center justify-end gap-3 mt-4 pt-4 border-t-2 border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-end gap-3 pt-5 border-t-2 border-gray-200 dark:border-gray-700">
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   handleHeartToggle(startup)
                 }}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-br from-white to-pink-50/30 dark:from-gray-800 dark:to-pink-950/30 shadow-md hover:shadow-lg transition-all duration-200 group hover:scale-105 active:scale-95 flex-shrink-0 border-2 border-pink-200/50 dark:border-pink-800/50"
+                className="flex items-center gap-2.5 px-5 py-3 rounded-xl bg-gradient-to-br from-white to-pink-50/30 dark:from-gray-800 dark:to-pink-950/30 shadow-md hover:shadow-xl transition-all duration-200 group hover:scale-105 active:scale-95 flex-shrink-0 border-2 border-pink-200/50 dark:border-pink-800/50"
                 title={localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? 'Unlike this startup' : 'Like this startup'}
               >
                 <Heart 
-                  size={18} 
+                  size={20} 
                   weight={localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? "fill" : "regular"}
                   className={cn(
                     "transition-all duration-200",
                     localVotes.some(v => String(v.startupId) === String(startup.id) && v.userId === currentUserId && v.interested) ? "text-pink-500" : "text-gray-400 group-hover:text-pink-400"
                   )}
                 />
-                <span className="font-bold text-sm text-gray-700 dark:text-gray-300">
+                <span className="font-bold text-sm md:text-base text-gray-700 dark:text-gray-300">
                   {localVotes.filter(v => String(v.startupId) === String(startup.id) && v.interested).length}
                 </span>
               </button>
@@ -871,7 +902,7 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
         </div>
       </Card>
     )
-  }
+  }, [localVotes, currentUserId, startupRatings, setSelectedStartup, setIsScheduleDialogOpen])
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -1096,7 +1127,7 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
 
           {startupsWithVotes.length === 0 && (
             <div className="text-center py-12 md:py-16">
-              <Users size={48} className="md:w-16 md:h-16 text-muted-foreground mx-auto mb-3 md:mb-4" />
+              <UsersGroup className="md:w-16 md:h-16 text-muted-foreground mx-auto mb-3 md:mb-4 w-12 h-12"  />
               <h2 className="text-xl md:text-2xl font-semibold mb-2">No Startups Found</h2>
               <p className="text-sm md:text-base text-muted-foreground">
                 {searchQuery.trim().length >= 3
@@ -1207,26 +1238,9 @@ export function DashboardView({ startups, votes, events, currentUserId, onSchedu
         </DialogContent>
       </Dialog>
 
-      {/* AI Chat Modals - New Design */}
-      {selectedStartup && (
-        <>
-          <ImprovedInsightsModalNew
-            isOpen={showInsightsAI}
-            onClose={() => setShowInsightsAI(false)}
-            startupId={selectedStartup?.id}
-            startupName={selectedStartup?.name || selectedStartup?.["Company Name"] || 'Unknown'}
-            startupDescription={selectedStartup?.description || selectedStartup?.shortDescription || ''}
-            userId={currentUserId}
-          />
-
-          <ImprovedMeetingModalNew
-            isOpen={showMeetingAI}
-            onClose={() => setShowMeetingAI(false)}
-            startup={selectedStartup}
-            userId={currentUserId}
-          />
-        </>
-      )}
     </div>
   )
 }
+
+// Memoize to prevent re-renders when votes haven't changed
+export const DashboardView = memo(DashboardViewComponent)

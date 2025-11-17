@@ -275,3 +275,33 @@ def set_data_version(db: Session, version: str):
         db.commit()
         db.refresh(db_version)
     return db_version
+
+# Slush Events CRUD
+def get_slush_event(db: Session, event_id: int):
+    return db.query(models.SlushEvent).filter(models.SlushEvent.id == event_id).first()
+
+def get_slush_events(db: Session, skip: int = 0, limit: int = 1000):
+    return db.query(models.SlushEvent).offset(skip).limit(limit).all()
+
+def get_slush_events_by_organizer(db: Session, organizer: str):
+    return db.query(models.SlushEvent).filter(models.SlushEvent.organizer.like(f"%{organizer}%")).all()
+
+def create_slush_event(db: Session, event: schemas.SlushEventCreate):
+    db_event = models.SlushEvent(**event.model_dump())
+    db.add(db_event)
+    db.commit()
+    db.refresh(db_event)
+    return db_event
+
+def create_slush_events_bulk(db: Session, events: list):
+    """Bulk insert slush events"""
+    db_events = [models.SlushEvent(**event) for event in events]
+    db.add_all(db_events)
+    db.commit()
+    return len(db_events)
+
+def delete_all_slush_events(db: Session):
+    """Delete all slush events (useful for re-importing)"""
+    count = db.query(models.SlushEvent).delete()
+    db.commit()
+    return count

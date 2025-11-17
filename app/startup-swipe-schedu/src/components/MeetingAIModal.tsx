@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card } from '@/components/ui/card'
-import { Sparkle, Share, Copy, Question } from '@phosphor-icons/react'
+import { WandMagicSparkles, ShareAll, Copy, QuestionCircle } from 'flowbite-react-icons/outline'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 
@@ -238,7 +238,7 @@ export function MeetingAIModal({
         <div className="flex-shrink-0 border-b px-4 md:px-6 py-3 md:py-4">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 min-w-0">
-              <Sparkle size={20} weight="duotone" className="text-purple-500 flex-shrink-0" />
+              <WandMagicSparkles className="text-purple-500 flex-shrink-0 w-5 h-5"  />
               <div className="min-w-0">
                 <h2 className="font-semibold text-sm md:text-base truncate" aria-hidden="true">Meeting Prep: {startupName}</h2>
                 <p className="text-xs text-muted-foreground mt-0.5">Talking points & critical questions</p>
@@ -252,7 +252,7 @@ export function MeetingAIModal({
                 title="Copy to clipboard"
                 aria-label="Copy to clipboard"
               >
-                <Copy size={16} />
+                <Copy className="w-4 h-4"  />
               </Button>
               <Button
                 size="sm"
@@ -261,7 +261,7 @@ export function MeetingAIModal({
                 title="Share via email"
                 aria-label="Share via email"
               >
-                <Share size={16} />
+                <ShareAll className="w-4 h-4"  />
               </Button>
             </div>
           </div>
@@ -274,7 +274,7 @@ export function MeetingAIModal({
             <div className="flex-1 flex flex-col overflow-hidden md:border-r">
               <div className="flex-shrink-0 px-4 md:px-6 py-3 border-b">
                 <h3 className="font-semibold text-sm md:text-base flex items-center gap-2">
-                  <Sparkle size={16} weight="duotone" className="text-primary" />
+                  <WandMagicSparkles className="text-primary w-4 h-4"  />
                   <span>Key Talking Points</span>
                 </h3>
               </div>
@@ -303,7 +303,7 @@ export function MeetingAIModal({
             <div className="flex-1 flex flex-col overflow-hidden">
               <div className="flex-shrink-0 px-4 md:px-6 py-3 border-b md:border-b-0">
                 <h3 className="font-semibold text-sm md:text-base flex items-center gap-2">
-                  <Question size={16} weight="duotone" className="text-primary" />
+                  <QuestionCircle className="text-primary w-4 h-4"  />
                   <span>Critical Questions</span>
                 </h3>
               </div>

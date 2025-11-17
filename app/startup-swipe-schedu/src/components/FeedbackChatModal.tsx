@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card } from '@/components/ui/card'
-import { Sparkle, PaperPlaneRight, Star } from '@phosphor-icons/react'
+import { WandMagicSparkles, PaperPlane, Star } from 'flowbite-react-icons/outline'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 
@@ -268,10 +268,8 @@ export function FeedbackChatModal({
             className="transition-all"
           >
             <Star
-              size={24}
-              weight={star <= value ? 'fill' : 'regular'}
               className={star <= value ? 'text-yellow-400' : 'text-gray-300'}
-            />
+              />
           </button>
         ))}
       </div>
@@ -284,7 +282,7 @@ export function FeedbackChatModal({
         {/* Header */}
         <div className="flex-shrink-0 border-b px-4 md:px-6 py-3 md:py-4">
           <div className="flex items-center gap-2 min-w-0">
-            <Sparkle size={20} weight="duotone" className="text-purple-500 flex-shrink-0" />
+            <WandMagicSparkles className="text-purple-500 flex-shrink-0 w-5 h-5"  />
             <div className="min-w-0">
               <h2 className="font-semibold text-sm md:text-base truncate">Insights: {startupName}</h2>
               <p className="text-xs text-muted-foreground mt-0.5">
@@ -346,7 +344,7 @@ export function FeedbackChatModal({
                   size="sm"
                   className="flex-shrink-0 self-end"
                 >
-                  <PaperPlaneRight size={16} />
+                  <PaperPlane className="w-4 h-4"  />
                 </Button>
               </div>
               

@@ -1,4 +1,4 @@
-import { Sparkle, X } from '@phosphor-icons/react'
+import { WandMagicSparkles, Close } from 'flowbite-react-icons/outline'
 
 interface ConciergeChatHeaderProps {
   title: string
@@ -10,7 +10,7 @@ interface ConciergeChatHeaderProps {
 export function ConciergeChatHeader({
   title,
   subtitle,
-  icon = <Sparkle size={20} weight="duotone" className="text-purple-500" />,
+  icon = <WandMagicSparkles className="text-purple-500 w-5 h-5"  />,
   onClose
 }: ConciergeChatHeaderProps) {
   return (
@@ -31,7 +31,7 @@ export function ConciergeChatHeader({
           className="text-muted-foreground hover:text-foreground transition-colors p-1.5 -mr-1.5 flex-shrink-0"
           aria-label="Close chat"
         >
-          <X size={18} />
+          <Close className="w-5 h-5"  />
         </button>
       )}
     </div>

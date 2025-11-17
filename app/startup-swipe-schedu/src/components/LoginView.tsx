@@ -1,13 +1,8 @@
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card } from '@/components/ui/card'
 import { toast } from 'sonner'
 import { authService } from '@/lib/authService'
-import { AuroralBackground } from '@/components/AuroralBackground'
-import { Eye, EyeSlash } from '@phosphor-icons/react'
+import { Eye, EyeSlash } from 'flowbite-react-icons/outline'
 import logoVC from '@/assets/images/logo_vc.png'
-import logoMain from '@/assets/images/f8cba53d-0d66-4aab-b97c-8fa66871fa8b.png'
 
 interface LoginViewProps {
   onLogin: (email: string, name: string) => void
@@ -19,6 +14,7 @@ export function LoginView({ onLogin }: LoginViewProps) {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [rememberMe, setRememberMe] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,75 +49,79 @@ export function LoginView({ onLogin }: LoginViewProps) {
     }
   }
 
-  const handleGuestMode = () => {
-    // Guest mode with limited functionality
-    const guestEmail = `guest_${Date.now()}@slush.local`
-    const guestName = 'Guest User'
-    
-    toast.info('Logged in as guest. Some features may be limited.')
-    onLogin(guestEmail, guestName)
-  }
-
   return (
-    <>
-      <AuroralBackground />
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="w-full max-w-md z-10 bg-black/50 border-white/10 backdrop-blur-sm">
-        <div className="p-8">
-          {/* Logo */}
-          <div className="flex justify-center mb-8">
-            <img src={logoVC} alt="AXA Venture Clienting" className="h-8 opacity-90" />
-          </div>
+    <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-8 bg-gray-50 dark:bg-gray-900">
+      {/* Main Login Card - Centered, no image */}
+      <div className="w-full max-w-md">
+        {/* Logo and Brand */}
+        <div className="flex items-center justify-center gap-2 mb-8">
+          <img src={logoVC} alt="AXA Venture Clienting" className="h-6 object-contain" />
+          <span className="text-xl font-bold text-gray-900 dark:text-white">Startup Rise</span>
+        </div>
 
-          {/* Title */}
-          <h1 className="text-2xl font-bold text-white text-center mb-2">
-            Startup Rise
+        {/* Card */}
+        <div className="bg-white rounded-lg shadow-xl dark:bg-gray-800 p-6 sm:p-8">
+          <h1 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
+            Sign in to platform
           </h1>
-          <p className="text-white/60 text-center mb-8">
-            Discover and connect with innovative startups
+          <p className="mb-6 text-sm text-gray-600 dark:text-gray-400">
+            Discover and connect with innovative startups at Slush 2025
           </p>
 
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+              <p className="text-sm font-medium text-red-600 dark:text-red-400">{error}</p>
+            </div>
+          )}
+
           {/* Login Form */}
-          <form onSubmit={handleLogin} className="space-y-4">
-            {error && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
-                <p className="text-red-400 text-sm">{error}</p>
-              </div>
-            )}
-            
+          <form onSubmit={handleLogin} className="space-y-6">
+            {/* Email Input */}
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
-                Email
+              <label 
+                htmlFor="email" 
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Your email
               </label>
-              <Input
+              <input
                 type="email"
-                placeholder="your.email@company.com"
+                id="email"
+                name="email"
+                placeholder="name@company.com"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value)
                   setError(null)
                 }}
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/40 focus:border-white/40 focus:ring-1 focus:ring-white/20"
+                className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 required
                 disabled={isLoading}
                 autoComplete="email"
               />
             </div>
 
+            {/* Password Input */}
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
-                Password
+              <label 
+                htmlFor="password" 
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Your password
               </label>
               <div className="relative">
-                <Input
+                <input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your password"
+                  id="password"
+                  name="password"
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value)
                     setError(null)
                   }}
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/40 focus:border-white/40 focus:ring-1 focus:ring-white/20 pr-10"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   required
                   disabled={isLoading}
                   autoComplete="current-password"
@@ -129,66 +129,93 @@ export function LoginView({ onLogin }: LoginViewProps) {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                   disabled={isLoading}
+                  aria-label="Toggle password visibility"
                 >
-                  {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
+                  {showPassword ? <EyeSlash className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
 
-            <Button
+            {/* Remember Me & Forgot Password */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-start">
+                <div className="flex items-center h-5">
+                  <input
+                    id="remember"
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                  />
+                </div>
+                <label 
+                  htmlFor="remember" 
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Remember me
+                </label>
+              </div>
+              <a
+                href="#"
+                className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+              >
+                Lost Password?
+              </a>
+            </div>
+
+            {/* Sign In Button */}
+            <button
               type="submit"
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isLoading}
-              style={{ WebkitTapHighlightColor: 'transparent' }}
+              className="w-full px-5 py-2.5 text-sm font-medium text-center text-white bg-primary-600 rounded-lg hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
                   <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    <circle 
+                      className="opacity-25" 
+                      cx="12" 
+                      cy="12" 
+                      r="10" 
+                      stroke="currentColor" 
+                      strokeWidth="4" 
+                      fill="none" 
+                    />
+                    <path 
+                      className="opacity-75" 
+                      fill="currentColor" 
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" 
+                    />
                   </svg>
-                  Logging in...
+                  Signing in...
                 </span>
               ) : (
-                'Sign In'
+                'Login to your account'
               )}
-            </Button>
+            </button>
 
-            {/* Guest Mode */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10"></div>
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-black/50 px-2 text-white/40">Or</span>
-              </div>
-            </div>
-
-            <Button
-              type="button"
-              onClick={handleGuestMode}
-              variant="outline"
-              className="w-full border-white/20 bg-white/5 hover:bg-white/10 text-white font-medium py-3"
-              disabled={isLoading}
-            >
-              Continue as Guest
-            </Button>
+            {/* Sign Up Link */}
+            <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center">
+              Not registered?{' '}
+              <a 
+                href="#" 
+                className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+              >
+                Create account
+              </a>
+            </p>
           </form>
-
-          {/* Footer */}
-          <div className="mt-6 text-center space-y-2">
-            <p className="text-white/60 text-xs">
-              Need an account? Contact your administrator
-            </p>
-            <p className="text-white/40 text-xs">
-              AXA Venture Clienting © 2025
-            </p>
-          </div>
         </div>
-      </Card>
+
+        {/* Footer */}
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            AXA Venture Clienting © 2025
+          </p>
+        </div>
       </div>
-    </>
+    </div>
   )
 }

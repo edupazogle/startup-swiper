@@ -1,0 +1,16 @@
+import { defineConfig } from "vite";
+import { resolve } from 'path'
+
+export default defineConfig({
+  base: '/',
+  server: { 
+    port: 5000, 
+    strictPort: true, 
+    host: true 
+  },
+  resolve: {
+    alias: {
+      '@': resolve(import.meta.dirname || process.cwd(), 'src')
+    }
+  }
+});

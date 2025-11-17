@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
 import { Startup } from '@/lib/types'
-import { MapPin, Users, CurrencyDollar, Sparkle, GlobeHemisphereWest, Calendar, TrendUp, CheckCircle, Target, Briefcase, Check, X, ArrowUpRight } from '@phosphor-icons/react'
+import { MapPin, UsersGroup, Dollar, WandMagicSparkles, Globe, CalendarMonth, ChartLineUp, CheckCircle, CirclePlus, Briefcase, Check, Close, ArrowUpRightFromSquare } from 'flowbite-react-icons/outline'
 import { getTopicColor, getTechColor, getMaturityColor, getLocationColor } from '@/lib/badgeColors'
 import { cn } from '@/lib/utils'
 
@@ -178,7 +178,7 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
             aria-label={`Pass on ${displayName}`}
             title="Pass"
           >
-            <X size={24} weight="bold" aria-hidden="true" />
+            <Close className="w-6 h-6" aria-hidden="true"  />
           </motion.button>
           
           <motion.button
@@ -229,29 +229,30 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
         </motion.div>
 
         <div className="relative z-10 h-full flex flex-col w-full">
-          <header className="p-5 md:p-7 pb-4 md:pb-5 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-700">
-            <div className="flex gap-4 md:gap-5 items-start">
+          {/* Sticky Header */}
+          <header className="sticky top-0 z-20 p-3 sm:p-4 md:p-5 pb-3 md:pb-4 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 border-b-2 border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="flex gap-3 sm:gap-4 items-start">
               {displayLogo && (
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-xl bg-white dark:bg-gray-900 flex items-center justify-center overflow-hidden flex-shrink-0 border-2 border-gray-200 dark:border-gray-700 shadow-md" role="img" aria-label="Company logo">
-                  <img src={displayLogo} alt={`${displayName} logo`} className="w-full h-full object-contain p-2" />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center overflow-hidden flex-shrink-0 border-2 border-gray-200 dark:border-gray-700 shadow-md" role="img" aria-label="Company logo">
+                  <img src={displayLogo} alt={`${displayName} logo`} className="w-full h-full object-contain p-1.5" />
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <h1 className="text-2xl md:text-3xl font-extrabold leading-tight tracking-tight mb-3 text-white">
+                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold leading-tight tracking-tight mb-2 md:mb-3 text-gray-900 dark:text-white">
                   {displayName}
                 </h1>
-                <div className="flex flex-wrap gap-x-4 gap-y-3" role="group" aria-label="Startup categories and attributes">
+                <div className="flex flex-wrap gap-x-2 sm:gap-x-3 gap-y-1.5 md:gap-y-2" role="group" aria-label="Startup categories and attributes">
                   {topicsArray && topicsArray.length > 0 && (
                     <div className="flex flex-col gap-1">
-                      <span className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold" id="topics-label">Topics</span>
-                      <div className="flex flex-wrap gap-1.5" role="list" aria-labelledby="topics-label">
+                      <span className="text-[9px] md:text-[10px] text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold" id="topics-label">Topics</span>
+                      <div className="flex flex-wrap gap-1 md:gap-1.5" role="list" aria-labelledby="topics-label">
                         {topicsArray.slice(0, 2).map((topic, i) => {
                           const colors = getTopicColor(topic)
                           return (
                             <Badge 
                               key={i} 
                               variant="outline" 
-                              className={cn("text-xs font-medium border", colors.bg, colors.text, colors.border)}
+                              className={cn("text-[10px] md:text-xs font-semibold border-2 px-2 py-0.5", colors.bg, colors.text, colors.border)}
                             >
                               {topic}
                             </Badge>
@@ -262,11 +263,11 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                   )}
                   {startup.maturity && (
                     <div className="flex flex-col gap-1">
-                      <span className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold">Maturity</span>
-                      <div className="flex flex-wrap gap-1.5">
+                      <span className="text-[9px] md:text-[10px] text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold">Maturity</span>
+                      <div className="flex flex-wrap gap-1 md:gap-1.5">
                         <Badge 
                           variant="outline" 
-                          className={cn("text-xs font-semibold border-2 px-2.5 py-0.5", getMaturityColor(startup.maturity).bg, getMaturityColor(startup.maturity).text, getMaturityColor(startup.maturity).border)}
+                          className={cn("text-[10px] md:text-xs font-semibold border-2 px-2 py-0.5", getMaturityColor(startup.maturity).bg, getMaturityColor(startup.maturity).text, getMaturityColor(startup.maturity).border)}
                         >
                           {startup.maturity}
                         </Badge>
@@ -275,15 +276,15 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                   )}
                   {techArray && techArray.length > 0 && (
                     <div className="flex flex-col gap-1">
-                      <span className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold">Tech</span>
-                      <div className="flex flex-wrap gap-1.5">
+                      <span className="text-[9px] md:text-[10px] text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold">Tech</span>
+                      <div className="flex flex-wrap gap-1 md:gap-1.5">
                         {techArray.slice(0, 2).map((t, i) => {
                           const colors = getTechColor(t)
                           return (
                             <Badge 
                               key={i} 
                               variant="outline" 
-                              className={cn("text-xs font-medium border", colors.bg, colors.text, colors.border)}
+                              className={cn("text-[10px] md:text-xs font-semibold border-2 px-2 py-0.5", colors.bg, colors.text, colors.border)}
                             >
                               {t}
                             </Badge>
@@ -297,29 +298,32 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
             </div>
           </header>
 
-          {/* Startup Info Section - Full Width */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <div className="bg-gray-100 dark:bg-gray-900 border-b-2 border-gray-200 dark:border-gray-700 h-12 flex items-center px-4 flex-shrink-0">
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Startup Info</h3>
+          {/* Scrollable Content Area */}
+          <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
+            {/* Sticky "Startup Info" Title */}
+            <div className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 border-b-2 border-gray-300 dark:border-gray-600 h-11 flex items-center px-4 flex-shrink-0 shadow-sm">
+              <h3 className="text-xs md:text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide">Startup Info</h3>
             </div>
-            <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden min-h-0">
+            
+            {/* Scrollable Columns */}
+            <div className="flex flex-col lg:flex-row lg:overflow-hidden lg:flex-1 min-h-0">
               {/* Column 1: VC Analysis & Core Product */}
-              <div className="w-full lg:w-1/3 lg:h-full border-r-0 lg:border-r border-gray-200 dark:border-gray-700 lg:overflow-y-auto px-3 md:px-4 py-3 md:py-4 space-y-3 md:space-y-4 flex-shrink-0">
+              <div className="w-full lg:w-1/3 lg:h-full border-r-0 lg:border-r-2 border-gray-200 dark:border-gray-700 lg:overflow-y-auto px-3 md:px-4 py-3 md:py-4 space-y-3 md:space-y-4 flex-shrink-0">
               {/* Venture Clienting Analysis - TOP SECTION */}
               {(startup.axa_overall_score !== undefined || startup.axaOverallScore !== undefined) && (
-                <section aria-labelledby="vc-analysis-heading" className="mb-4">
+                <section aria-labelledby="vc-analysis-heading" className="mb-3">
                   <div className="flex items-center gap-2 mb-3">
-                    <Target size={20} className="text-blue-600 dark:text-blue-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="vc-analysis-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Venture Clienting Analysis</h3>
+                    <CirclePlus className="text-blue-600 dark:text-blue-400 w-5 h-5" aria-hidden="true"   />
+                    <h3 id="vc-analysis-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Venture Clienting Analysis</h3>
                   </div>
                   
-                  <div className="bg-gradient-to-br from-blue-50 via-blue-50 to-indigo-50 dark:from-blue-950/30 dark:via-blue-900/30 dark:to-indigo-950/30 p-4 rounded-xl border-2 border-blue-200 dark:border-blue-800/50 shadow-sm space-y-3">
+                  <div className="bg-gradient-to-br from-blue-50 via-blue-50 to-indigo-50 dark:from-blue-950/30 dark:via-blue-900/30 dark:to-indigo-950/30 p-3 md:p-4 rounded-lg border-2 border-blue-200 dark:border-blue-800/50 shadow-md space-y-3">
                     {/* Grade Display */}
                     <div>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-2" id="axa-grade-label">Rise Score</p>
-                      <div className="flex items-start gap-3" role="group" aria-labelledby="axa-grade-label">
+                      <p className="text-[10px] md:text-xs text-gray-700 dark:text-gray-300 uppercase tracking-wider font-extrabold mb-2" id="axa-grade-label">Rise Score</p>
+                      <div className="flex items-start gap-2.5" role="group" aria-labelledby="axa-grade-label">
                         <span className={cn(
-                          'text-4xl md:text-5xl font-extrabold tabular-nums leading-none',
+                          'text-3xl md:text-4xl font-extrabold tabular-nums leading-none',
                           startup.axa_grade === 'A+' || startup.axaGrade === 'A+' ? 'text-yellow-500 dark:text-yellow-400' :
                           startup.axa_grade === 'A' || startup.axaGrade === 'A' ? 'text-emerald-600 dark:text-emerald-400' :
                           startup.axa_grade === 'B+' || startup.axaGrade === 'B+' ? 'text-cyan-600 dark:text-cyan-400' :
@@ -333,10 +337,8 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                         
                         {/* Grade Explanation - Right of Grade */}
                         {(startup.axa_grade !== undefined || startup.axaGrade !== undefined) && (
-                          <div className="flex-1 flex items-start gap-2 bg-white dark:bg-gray-800/50 p-3 rounded-lg shadow-sm">
-                            <Sparkle 
-                              size={16} 
-                              weight="fill"
+                          <div className="flex-1 flex items-start gap-2 bg-white dark:bg-gray-800/50 p-3 rounded-lg shadow-sm border border-blue-100 dark:border-blue-900">
+                            <WandMagicSparkles
                               className={cn(
                                 'flex-shrink-0 mt-0.5',
                             startup.axa_grade === 'A+' || startup.axaGrade === 'A+' ? 'text-yellow-500 dark:text-yellow-400' :
@@ -347,8 +349,8 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                             startup.axa_grade === 'C' || startup.axaGrade === 'C' ? 'text-orange-600 dark:text-orange-400' :
                             'text-slate-400 dark:text-slate-600'
                           )} 
-                        />
-                        <span className="text-xs text-gray-700 dark:text-gray-300 leading-snug">
+                         />
+                        <span className="text-[10px] md:text-xs text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
                           {startup.axa_grade_explanation || startup.axaGradeExplanation || 'Assessment pending'}
                         </span>
                       </div>
@@ -375,11 +377,11 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
 
                       return useCaseArray.length > 0 && (
                         <div>
-                          <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-bold mb-2">Use Cases</p>
-                          <div className="flex flex-wrap gap-2">
+                          <p className="text-[10px] md:text-xs text-gray-700 dark:text-gray-300 uppercase tracking-wider font-extrabold mb-2">Use Cases</p>
+                          <div className="flex flex-wrap gap-1.5">
                             {useCaseArray.map((useCase: string, idx: number) => (
-                              <div key={idx} className="flex items-center gap-1.5 bg-gradient-to-r from-green-500 to-emerald-600 px-2 py-1 rounded-lg border border-green-600/80 shadow-sm">
-                                <CheckCircle size={12} weight="bold" className="text-white flex-shrink-0" />
+                              <div key={idx} className="flex items-center gap-1.5 bg-gradient-to-r from-green-500 to-emerald-600 px-3 py-1.5 rounded-lg border border-green-600/80 shadow-sm">
+                                <CheckCircle className="text-white flex-shrink-0 w-3 h-3"   />
                                 <span className="text-[10px] md:text-xs text-white font-semibold">
                                   {useCase}
                                 </span>
@@ -397,10 +399,10 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
               {(startup.core_product || startup.extracted_product) && (
                 <section aria-labelledby="product-heading">
                   <div className="flex items-center gap-2 mb-3">
-                    <Briefcase size={20} className="text-blue-600 dark:text-blue-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="product-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Core Product</h3>
+                    <Briefcase className="text-blue-600 dark:text-blue-400 w-5 h-5" aria-hidden="true"   />
+                    <h3 id="product-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Core Product</h3>
                   </div>
-                  <div className="text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 p-4 rounded-xl border-2 border-blue-200 dark:border-blue-800/50 shadow-sm">
+                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 p-3 md:p-4 rounded-lg border-2 border-blue-200 dark:border-blue-800/50 shadow-md">
                     <p>{startup.core_product || startup.extracted_product}</p>
                   </div>
                 </section>
@@ -408,15 +410,15 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
               </div>
               
               {/* Column 2: Value Proposition, Market & Tech */}
-              <div className="w-full lg:w-1/3 lg:h-full border-t lg:border-t-0 lg:border-r border-gray-200 dark:border-gray-700 lg:overflow-y-auto px-3 md:px-4 py-3 md:py-4 space-y-3 md:space-y-4 flex-shrink-0">
+              <div className="w-full lg:w-1/3 lg:h-full border-t lg:border-t-0 lg:border-r-2 border-gray-200 dark:border-gray-700 lg:overflow-y-auto px-3 md:px-4 py-3 md:py-4 space-y-3 md:space-y-4 flex-shrink-0">
               {/* Value Proposition - Always show in consistent box format */}
               {(startup.value_proposition || startup.shortDescription) && (
                 <section aria-labelledby="value-prop-heading">
                   <div className="flex items-center gap-2 mb-3">
-                    <Sparkle size={20} className="text-pink-600 dark:text-pink-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="value-prop-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Value Proposition</h3>
+                    <WandMagicSparkles size={18} className="text-pink-600 dark:text-pink-400" aria-hidden="true"  />
+                    <h3 id="value-prop-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Value Proposition</h3>
                   </div>
-                  <div className="text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-pink-50 via-rose-50 to-pink-50 dark:from-pink-950/30 dark:via-rose-950/30 dark:to-pink-950/30 p-4 rounded-xl border-2 border-pink-200 dark:border-pink-800/50 shadow-sm">
+                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-pink-50 via-rose-50 to-pink-50 dark:from-pink-950/30 dark:via-rose-950/30 dark:to-pink-950/30 p-3 md:p-4 rounded-lg border-2 border-pink-200 dark:border-pink-800/50 shadow-md">
                     <p>{startup.value_proposition || startup.shortDescription}</p>
                   </div>
                 </section>
@@ -426,10 +428,10 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
               {(startup.target_customers || startup.extracted_market) && (
                 <section aria-labelledby="market-heading">
                   <div className="flex items-center gap-2 mb-3">
-                    <Target size={20} className="text-purple-600 dark:text-purple-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="market-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Target Market</h3>
+                    <CirclePlus className="text-purple-600 dark:text-purple-400 w-5 h-5" aria-hidden="true"   />
+                    <h3 id="market-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">CirclePlus Market</h3>
                   </div>
-                  <div className="text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/30 dark:to-violet-950/30 p-4 rounded-xl border-2 border-purple-200 dark:border-purple-800/50 shadow-sm">
+                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/30 dark:to-violet-950/30 p-3 md:p-4 rounded-lg border-2 border-purple-200 dark:border-purple-800/50 shadow-md">
                     <p>{startup.target_customers || startup.extracted_market}</p>
                   </div>
                 </section>
@@ -439,10 +441,10 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
               {startup.problem_solved && (
                 <section aria-labelledby="problem-heading">
                   <div className="flex items-center gap-2 mb-3">
-                    <Target size={20} className="text-orange-600 dark:text-orange-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="problem-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Problem Solved</h3>
+                    <CirclePlus className="text-orange-600 dark:text-orange-400 w-5 h-5" aria-hidden="true"   />
+                    <h3 id="problem-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Problem Solved</h3>
                   </div>
-                  <div className="text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 p-4 rounded-xl border-2 border-orange-200 dark:border-orange-800/50 shadow-sm">
+                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 p-3 md:p-4 rounded-lg border-2 border-orange-200 dark:border-orange-800/50 shadow-md">
                     <p>{startup.problem_solved}</p>
                   </div>
                 </section>
@@ -452,10 +454,10 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
               {startup.vp_competitors && (
                 <section aria-labelledby="competitors-heading">
                   <div className="flex items-center gap-2 mb-3">
-                    <Briefcase size={20} className="text-slate-600 dark:text-slate-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="competitors-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Competitive Landscape</h3>
+                    <Briefcase className="text-slate-600 dark:text-slate-400 w-5 h-5" aria-hidden="true"   />
+                    <h3 id="competitors-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Competitive Landscape</h3>
                   </div>
-                  <div className="text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-950/30 dark:to-gray-900/30 p-4 rounded-xl border-2 border-slate-200 dark:border-slate-800/50 shadow-sm">
+                  <div className="text-xs md:text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-950/30 dark:to-gray-900/30 p-3 md:p-4 rounded-lg border-2 border-slate-200 dark:border-slate-800/50 shadow-md">
                     <p>{startup.vp_competitors}</p>
                   </div>
                 </section>
@@ -466,28 +468,28 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
               <div className="w-full lg:w-1/3 lg:h-full border-t lg:border-t-0 border-gray-200 dark:border-gray-700 lg:overflow-y-auto px-3 md:px-4 py-3 md:py-4 space-y-3 md:space-y-4 flex-shrink-0">
               {/* Business Opportunity */}
               {(startup.axa_business_leverage || startup.axaBusinessLeverage) && (
-                <section aria-labelledby="opportunity-heading" className="mb-4">
+                <section aria-labelledby="opportunity-heading" className="mb-3">
                   <div className="flex items-center gap-2 mb-3">
-                    <Sparkle size={20} className="text-blue-600 dark:text-blue-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="opportunity-heading" className="text-sm font-extrabold text-white uppercase tracking-wider">Business Opportunity for AXA</h3>
+                    <WandMagicSparkles size={18} className="text-blue-600 dark:text-blue-400" aria-hidden="true"  />
+                    <h3 id="opportunity-heading" className="text-xs md:text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">Business Opportunity for AXA</h3>
                   </div>
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-4 xl:p-6 flex-shrink-0">
-                    <p className="text-xs xl:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{startup.axa_business_leverage || startup.axaBusinessLeverage}</p>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700 p-3 md:p-4 flex-shrink-0">
+                    <p className="text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{startup.axa_business_leverage || startup.axaBusinessLeverage}</p>
                   </div>
                 </section>
               )}
 
               <section aria-label="Company statistics">
                 <h3 className="sr-only">Key Metrics</h3>
-                <dl className="grid grid-cols-2 gap-4">
+                <dl className="grid grid-cols-2 gap-3 md:gap-4">
                   <div className="flex items-start gap-3">
-                    <MapPin size={20} className="text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" weight="duotone" aria-hidden="true" />
+                    <MapPin size={18} className="text-gray-500 dark:text-gray-400 mt-1 flex-shrink-0" aria-hidden="true"  />
                     <div className="min-w-0 flex-1">
-                      <dt className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold mb-1">Location</dt>
+                      <dt className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-1.5">Location</dt>
                       <dd>
                         <Badge 
                           variant="outline" 
-                          className={cn("text-xs font-bold border-2 mt-1", getLocationColor(displayLocation).bg, getLocationColor(displayLocation).text, getLocationColor(displayLocation).border)}
+                          className={cn("text-[10px] md:text-xs font-bold border-2 mt-1", getLocationColor(displayLocation).bg, getLocationColor(displayLocation).text, getLocationColor(displayLocation).border)}
                         >
                           {displayLocation}
                         </Badge>
@@ -496,35 +498,35 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                   </div>
                   
                   <div className="flex items-start gap-3">
-                    <Users size={20} className="text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" weight="duotone" aria-hidden="true" />
+                    <UsersGroup className="text-gray-500 dark:text-gray-400 mt-1 flex-shrink-0 w-5 h-5" aria-hidden="true"   />
                     <div>
-                      <dt className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold mb-1">Team Size</dt>
-                      <dd className="text-sm font-bold text-gray-900 dark:text-gray-100">{displayEmployees}</dd>
+                      <dt className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-1.5">Team Size</dt>
+                      <dd className="text-xs md:text-sm font-bold text-gray-900 dark:text-gray-100">{displayEmployees}</dd>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <CurrencyDollar size={20} className="text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" weight="duotone" aria-hidden="true" />
+                    <Dollar size={18} className="text-gray-500 dark:text-gray-400 mt-1 flex-shrink-0" aria-hidden="true"  />
                     <div>
-                      <dt className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold mb-1">Total Funding</dt>
-                      <dd className="text-sm font-bold text-gray-900 dark:text-gray-100">{displayFunding}</dd>
+                      <dt className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-1.5">Total Funding</dt>
+                      <dd className="text-xs md:text-sm font-bold text-gray-900 dark:text-gray-100">{displayFunding}</dd>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <TrendUp size={20} className="text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" weight="duotone" aria-hidden="true" />
+                    <ChartLineUp size={18} className="text-gray-500 dark:text-gray-400 mt-1 flex-shrink-0" aria-hidden="true"  />
                     <div>
-                      <dt className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold mb-1">Funding Stage</dt>
-                      <dd className="text-sm font-bold text-gray-900 dark:text-gray-100">{displayStage}</dd>
+                      <dt className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-1.5">Funding Stage</dt>
+                      <dd className="text-xs md:text-sm font-bold text-gray-900 dark:text-gray-100">{displayStage}</dd>
                     </div>
                   </div>
 
                   {(startup.dateFounded || startup.founding_year) && (
                     <div className="flex items-start gap-3">
-                      <Calendar size={20} className="text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" weight="duotone" aria-hidden="true" />
+                      <CalendarMonth size={18} className="text-gray-500 dark:text-gray-400 mt-1 flex-shrink-0" aria-hidden="true"  />
                       <div>
-                        <dt className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold mb-1">Founded Year</dt>
-                        <dd className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                        <dt className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-1.5">Founded Year</dt>
+                        <dd className="text-xs md:text-sm font-bold text-gray-900 dark:text-gray-100">
                           {startup.founding_year || (startup.dateFounded ? new Date(startup.dateFounded).getFullYear() : 'Unknown')}
                         </dd>
                       </div>
@@ -533,13 +535,13 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
 
                   {startup.maturity && (
                     <div className="flex items-start gap-3">
-                      <TrendUp size={20} className="text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" weight="duotone" aria-hidden="true" />
+                      <ChartLineUp size={18} className="text-gray-500 dark:text-gray-400 mt-1 flex-shrink-0" aria-hidden="true"  />
                       <div>
-                        <dt className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold mb-1">Maturity Level</dt>
+                        <dt className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-1.5">Maturity Level</dt>
                         <dd>
                           <Badge 
                             variant="outline"
-                            className={cn("text-xs font-bold border-2 mt-1 px-2.5 py-0.5", getMaturityColor(startup.maturity).bg, getMaturityColor(startup.maturity).text, getMaturityColor(startup.maturity).border)}
+                            className={cn("text-[10px] md:text-xs font-bold border-2 mt-1 px-3 py-1", getMaturityColor(startup.maturity).bg, getMaturityColor(startup.maturity).text, getMaturityColor(startup.maturity).border)}
                           >
                             {startup.maturity}
                           </Badge>
@@ -550,20 +552,20 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
 
                   {displayWebsite && (
                     <div className="col-span-2 flex items-start gap-3">
-                      <GlobeHemisphereWest size={20} className="text-gray-500 dark:text-gray-400 mt-0.5 flex-shrink-0" weight="duotone" aria-hidden="true" />
+                      <Globe size={18} className="text-gray-500 dark:text-gray-400 mt-1 flex-shrink-0" aria-hidden="true"  />
                       <div className="min-w-0 flex-1">
-                        <dt className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold mb-1">Website</dt>
+                        <dt className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-extrabold mb-1.5">Website</dt>
                         <dd>
                           <a 
                             href={displayWebsite.startsWith('http') ? displayWebsite : `https://${displayWebsite}`} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:underline break-all inline-flex items-center gap-1"
+                            className="text-xs md:text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:underline break-all inline-flex items-center gap-1.5 transition-colors"
                             onClick={(e) => e.stopPropagation()}
                             aria-label={`Visit ${displayName} website (opens in new tab)`}
                           >
                             {displayWebsite.replace(/^https?:\/\//, '').replace(/^www\./, '')}
-                            <ArrowUpRight size={12} weight="bold" aria-hidden="true" />
+                            <ArrowUpRightFromSquare className="w-4 h-4" aria-hidden="true"  />
                           </a>
                         </dd>
                       </div>

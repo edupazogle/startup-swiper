@@ -1,21 +1,14 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { TailwindModal, TailwindModalHeader, TailwindModalBody, TailwindModalTitle, TailwindModalDescription } from '@/components/ui/tailwind-modal'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Briefcase, 
-  PaperPlaneTilt, 
-  Robot, 
-  User, 
-  X,
-  Lightbulb,
-  Question,
-  Target,
-  ArrowClockwise
-} from '@phosphor-icons/react'
+import { Briefcase, PaperPlane, WandMagicSparkles, User, Close, Lightbulb, QuestionCircle, CirclePlus, Refresh } from 'flowbite-react-icons/outline'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { fetchWithCache, apiCache } from '@/lib/apiCache'
+import { OutlineSkeleton } from './ModalSkeleton'
+import { usePerformanceMonitor } from '@/lib/performance'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -49,28 +42,21 @@ export function ImprovedMeetingModalNew({
   const startupName = startup?.name || startup?.['Company Name'] || propStartupName || 'Unknown Startup'
   const startupDescription = startup?.description || startup?.['Company Description'] || propStartupDescription || 'No description provided'
   
-  const welcomeMessage = useMemo(() => 
-    `👋 Let's prepare for your meeting with **${startupName}**!
-
-I'll help you create:
-• Key talking points and discussion topics
-• Critical questions to ask
-• Strategic recommendations
-
-What would you like to focus on? Or I can generate a comprehensive meeting outline for you.`,
-    [startupName]
-  )
-
-  const [messages, setMessages] = useState<Message[]>([{
-    id: '1',
-    role: 'assistant',
-    content: welcomeMessage,
-    timestamp: Date.now()
-  }])
+  // Performance monitoring
+  const { mark, measureAndLog } = usePerformanceMonitor('MeetingModal')
   
+  const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [hasStarted, setHasStarted] = useState(false)
   const [sessionId, setSessionId] = useState<string>('')
+  const [currentOutline, setCurrentOutline] = useState<string>('')
+  const [parsedOutline, setParsedOutline] = useState<{
+    talkingPoints: string[]
+    questions: string[]
+    whitepaperRelevance: string
+  } | null>(null)
   
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
@@ -102,86 +88,188 @@ What would you like to focus on? Or I can generate a comprehensive meeting outli
     }
   }, [input])
 
+  // Parse outline into structured format
+  const parseOutline = (outline: string) => {
+    const talkingPoints: string[] = []
+    const questions: string[] = []
+    let whitepaperRelevance = ''
+    
+    const lines = outline.split('\n')
+    let currentSection = ''
+    
+    for (const line of lines) {
+      const trimmed = line.trim()
+      
+      if (trimmed.includes('KEY TALKING POINTS') || trimmed.includes('TALKING POINTS')) {
+        currentSection = 'talking'
+        continue
+      } else if (trimmed.includes('CRITICAL QUESTIONS') || trimmed.includes('QUESTIONS')) {
+        currentSection = 'questions'
+        continue
+      } else if (trimmed.includes('WHITEPAPER RELEVANCE')) {
+        currentSection = 'whitepaper'
+        continue
+      }
+      
+      // Extract numbered items
+      const match = trimmed.match(/^(\d+\.|\d+\))\s+(.+)/)
+      if (match && match[2]) {
+        if (currentSection === 'talking') {
+          talkingPoints.push(match[2])
+        } else if (currentSection === 'questions') {
+          questions.push(match[2])
+        }
+      } else if (currentSection === 'whitepaper' && trimmed && !trimmed.match(/^[═─]+$/)) {
+        whitepaperRelevance += trimmed + ' '
+      }
+    }
+    
+    return { talkingPoints, questions, whitepaperRelevance: whitepaperRelevance.trim() }
+  }
+
   // Reset on close
   useEffect(() => {
     if (!isOpen) {
-      setMessages([{
-        id: '1',
-        role: 'assistant',
-        content: welcomeMessage,
-        timestamp: Date.now()
-      }])
+      setMessages([])
       setInput('')
       setSessionId('')
+      setCurrentOutline('')
+      setParsedOutline(null)
       setIsLoading(false)
+      setIsGenerating(false)
+      setHasStarted(false)
       isInitialMount.current = true
     }
   }, [isOpen])
 
-  // Generate session ID
+  // Generate session ID on open (don't call API automatically)
   useEffect(() => {
     if (isOpen && !sessionId) {
-      setSessionId(`meeting_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`)
+      const newSessionId = `meeting_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      setSessionId(newSessionId)
     }
   }, [isOpen])
 
-  const generateMeetingOutline = async () => {
-    if (isLoading) return
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: 'Generate a comprehensive meeting outline',
-      timestamp: Date.now()
-    }
-
-    setMessages(prev => [...prev, userMessage])
-    setIsLoading(true)
+  const generateInitialOutline = async (sessionId: string) => {
+    setIsGenerating(true)
+    mark('apiCall')
+    
+    const apiStartTime = performance.now()
 
     try {
-      const response = await fetch(`${API_URL}/meeting-prep/generate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          session_id: sessionId,
-          user_id: userId,
-          startup_id: startupId,
-          startup_name: startupName,
-          startup_description: startupDescription
-        })
+      const params = new URLSearchParams({
+        user_id: userId,
+        startup_id: startupId,
+        startup_name: startupName,
+        startup_description: startupDescription
       })
-
-      if (!response.ok) throw new Error('Failed to generate outline')
       
-      const data = await response.json()
+      const url = `${API_URL}/whitepaper/meeting-prep/start?${params}`
       
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: data.outline || data.response,
-        timestamp: Date.now()
+      // Use cached fetch with 10 second timeout
+      const cacheKey = `meeting_outline_${startupId}`
+      const data = await fetchWithCache(
+        url,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        },
+        cacheKey,
+        1800000, // Cache for 30 minutes
+        10000 // 10 second timeout
+      )
+      
+      const apiDuration = performance.now() - apiStartTime
+      console.log(`✅ API call completed in ${apiDuration.toFixed(2)}ms`)
+      measureAndLog('apiCall', 'API Response Time')
+      
+      if (data.success && data.outline) {
+        console.log('✅ Outline generated successfully, length:', data.outline.length)
+        setCurrentOutline(data.outline)
+        setParsedOutline(parseOutline(data.outline))
+        
+        measureAndLog('contentLoad', 'Content Load Time')
+        
+        // Don't add assistant message, just show toast
+        setMessages([])
+        toast.success('Meeting outline generated!')
+      } else {
+        console.error('❌ API returned non-success:', data)
+        throw new Error(data.error || 'Failed to generate outline')
       }
-
-      setMessages(prev => [...prev, assistantMessage])
-      toast.success('Meeting outline generated!')
     } catch (error) {
-      console.error('Failed to generate outline:', error)
-      toast.error('Failed to generate meeting outline')
+      const apiDuration = performance.now() - apiStartTime
+      console.error(`❌ Failed to generate initial outline after ${apiDuration.toFixed(2)}ms:`, error)
       
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: 'Sorry, I encountered an error generating the outline. Please try again or ask me specific questions.',
-        timestamp: Date.now()
+      if (error instanceof Error) {
+        console.error('Error details:', {
+          name: error.name,
+          message: error.message,
+          stack: error.stack
+        })
+        
+        if (error.message === 'Request timeout') {
+          toast.error('Request timed out. Please try again.')
+        } else {
+          toast.error(`Failed to generate meeting outline: ${error.message}`)
+        }
+      } else {
+        toast.error('Failed to generate meeting outline')
       }
-      setMessages(prev => [...prev, errorMessage])
+      
+      // Don't add error message to chat
+      setMessages([])
     } finally {
-      setIsLoading(false)
+      setIsGenerating(false)
+    }
+  }
+
+  const regenerateOutline = async () => {
+    if (isLoading || isGenerating) return
+
+    setIsGenerating(true)
+
+    try {
+      const params = new URLSearchParams({
+        user_id: userId,
+        startup_id: startupId,
+        startup_name: startupName,
+        startup_description: startupDescription
+      })
+      
+      // Clear cache for this startup to force fresh generation
+      const cacheKey = `meeting_outline_${startupId}`
+      apiCache.delete(cacheKey)
+      
+      // Use cached fetch with timeout
+      const data = await fetchWithCache(
+        `${API_URL}/whitepaper/meeting-prep/start?${params}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        },
+        cacheKey,
+        1800000, // Cache for 30 minutes
+        10000 // 10 second timeout
+      )
+      
+      if (data.success && data.outline) {
+        setCurrentOutline(data.outline)
+        setParsedOutline(parseOutline(data.outline))
+        
+        // Don't add assistant message
+        toast.success('Outline regenerated!')
+      }
+    } catch (error) {
+      console.error('Failed to regenerate outline:', error)
+      toast.error('Failed to regenerate outline')
+    } finally {
+      setIsGenerating(false)
     }
   }
 
   const handleSend = async () => {
-    if (!input.trim() || isLoading) return
+    if (!input.trim() || isLoading || isGenerating) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -195,42 +283,35 @@ What would you like to focus on? Or I can generate a comprehensive meeting outli
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${API_URL}/meeting-prep/message`, {
+      const params = new URLSearchParams({
+        session_id: sessionId,
+        message: userMessage.content,
+        startup_name: startupName,
+        startup_description: startupDescription,
+        previous_outline: currentOutline
+      })
+      
+      const response = await fetch(`${API_URL}/whitepaper/meeting-prep/chat?${params}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          session_id: sessionId,
-          user_id: userId,
-          startup_id: startupId,
-          startup_name: startupName,
-          startup_description: startupDescription,
-          user_message: userMessage.content
-        })
+        headers: { 'Content-Type': 'application/json' }
       })
 
       if (!response.ok) throw new Error('Failed to send message')
       
       const data = await response.json()
       
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: data.response,
-        timestamp: Date.now()
+      if (data.success && data.outline) {
+        setCurrentOutline(data.outline)
+        setParsedOutline(parseOutline(data.outline))
+        
+        // Just update the outline, don't add assistant message
+        toast.success('Outline updated based on your feedback')
+      } else {
+        throw new Error(data.error || 'Failed to process message')
       }
-
-      setMessages(prev => [...prev, assistantMessage])
     } catch (error) {
       console.error('Failed to send message:', error)
       toast.error('Failed to send message')
-      
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
-        timestamp: Date.now()
-      }
-      setMessages(prev => [...prev, errorMessage])
     } finally {
       setIsLoading(false)
     }
@@ -244,140 +325,201 @@ What would you like to focus on? Or I can generate a comprehensive meeting outli
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent 
-        className="max-w-3xl h-[80vh] md:h-[80vh] h-screen md:rounded-lg rounded-none p-0 gap-0 flex flex-col w-full max-w-full md:max-w-3xl"
-        aria-describedby="meeting-description"
-      >
-        {/* Header */}
-        <div className="flex-shrink-0 border-b border-gray-700 dark:border-gray-700 bg-gray-800 dark:bg-gray-800 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md">
-                <Briefcase size={20} weight="fill" className="text-white" />
+    <TailwindModal isOpen={isOpen} onClose={onClose} size="xl" className="p-0 flex flex-col h-[90vh] max-h-[90vh]">
+      {/* Header */}
+      <div className="flex-shrink-0 border-b border-gray-700 dark:border-gray-700 bg-gray-800 dark:bg-gray-800 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md">
+              <Briefcase className="text-white w-5 h-5"  />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-lg font-bold text-white">
+                Meeting Preparation
+              </h2>
+              <p className="text-sm text-gray-300 truncate">
+                {startupName}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="hidden sm:flex items-center gap-1.5 bg-blue-500/10 border-blue-500/30 text-blue-400">
+              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+              AI Assistant
+            </Badge>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="h-8 w-8 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700"
+            >
+              <Close className="w-5 h-5"  />
+            </Button>
+          </div>
+        </div>
+      </div>
+
+        {/* Welcome Screen - Before Generation */}
+        {!hasStarted && !parsedOutline && (
+          <div className="flex-1 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-850 px-6 py-8 overflow-y-auto flex items-center justify-center">
+            <div className="max-w-md text-center space-y-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+                <WandMagicSparkles className="w-8 h-8 text-white" />
               </div>
-              <div className="flex-1 min-w-0">
-                <h2 id="meeting-title" className="text-lg font-bold text-white">
-                  Meeting Preparation
-                </h2>
-                <p id="meeting-description" className="text-sm text-gray-300 truncate">
-                  {startupName}
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                  AI Meeting Preparation
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Generate a personalized meeting outline with key talking points and strategic questions for <span className="font-semibold text-gray-900 dark:text-white">{startupName}</span>.
                 </p>
               </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="hidden sm:flex items-center gap-1.5 bg-blue-500/10 border-blue-500/30 text-blue-400">
-                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-                AI Assistant
-              </Badge>
               <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="h-8 w-8 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700"
+                onClick={() => {
+                  setHasStarted(true)
+                  mark('contentLoad')
+                  generateInitialOutline(sessionId)
+                }}
+                className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-3 rounded-lg shadow-md transition-all"
+                size="lg"
               >
-                <X size={18} />
+                <WandMagicSparkles className="w-5 h-5 mr-2" />
+                Generate Meeting Outline
               </Button>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Messages */}
-        <div 
-          ref={messagesContainerRef}
-          className="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-4 bg-gray-50 dark:bg-gray-900"
-        >
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={cn(
-                "flex gap-3",
-                message.role === 'user' ? 'justify-end' : 'justify-start'
-              )}
-            >
-              {message.role === 'assistant' && (
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
-                  <Robot size={18} weight="fill" className="text-white" />
+        {/* Loading State with Skeleton - Full Screen */}
+        {hasStarted && isGenerating && !parsedOutline && (
+          <div className="flex-1 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-850 px-6 py-4 overflow-y-auto">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide">
+                  Generating Meeting Outline...
+                </h3>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                </div>
+              </div>
+              
+              {/* Talking Points Skeleton */}
+              <OutlineSkeleton />
+              <OutlineSkeleton />
+              
+              {/* Questions Skeleton */}
+              <OutlineSkeleton />
+              <OutlineSkeleton />
+              
+              {/* More skeleton items to fill screen */}
+              <OutlineSkeleton />
+              <OutlineSkeleton />
+            </div>
+          </div>
+        )}
+
+        {/* Static Outline Display - Expanded and Scrollable */}
+        {parsedOutline && (
+          <div className="flex-1 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-850 px-6 py-4 overflow-y-auto">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between sticky top-0 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-850 pb-3 z-10">
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide">
+                  Meeting Outline
+                </h3>
+                <Badge className="bg-blue-500 text-white text-xs">
+                  Generated
+                </Badge>
+              </div>
+              
+              {/* Talking Points */}
+              {parsedOutline.talkingPoints.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Briefcase className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    <h4 className="text-xs font-bold text-blue-900 dark:text-blue-300 uppercase">
+                      Key Talking Points
+                    </h4>
+                  </div>
+                  <div className="space-y-2">
+                    {parsedOutline.talkingPoints.map((point, idx) => (
+                      <div 
+                        key={idx}
+                        className="flex gap-2 items-start bg-white dark:bg-gray-800 rounded-lg px-3 py-2 border border-blue-200 dark:border-blue-800/50"
+                      >
+                        <span className="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-blue-500 text-white text-xs font-bold">
+                          {idx + 1}
+                        </span>
+                        <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                          {point}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
               
-              <div
-                className={cn(
-                  "max-w-[85%] rounded-2xl px-4 py-3 shadow-sm",
-                  message.role === 'user'
-                    ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white'
-                    : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700'
-                )}
-              >
-                <div className="text-sm leading-relaxed whitespace-pre-wrap break-words">
-                  {message.content}
+              {/* Critical Questions */}
+              {parsedOutline.questions.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <QuestionCircle className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                    <h4 className="text-xs font-bold text-indigo-900 dark:text-indigo-300 uppercase">
+                      Critical Questions
+                    </h4>
+                  </div>
+                  <div className="space-y-2">
+                    {parsedOutline.questions.map((question, idx) => (
+                      <div 
+                        key={idx}
+                        className="flex gap-2 items-start bg-white dark:bg-gray-800 rounded-lg px-3 py-2 border border-indigo-200 dark:border-indigo-800/50"
+                      >
+                        <span className="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-indigo-500 text-white text-xs font-bold">
+                          {idx + 1}
+                        </span>
+                        <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                          {question}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className={cn(
-                  "text-xs mt-2",
-                  message.role === 'user' 
-                    ? 'text-blue-100' 
-                    : 'text-gray-500 dark:text-gray-400'
-                )}>
-                  {new Date(message.timestamp).toLocaleTimeString([], { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                  })}
-                </div>
-              </div>
-
-              {message.role === 'user' && (
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                  <User size={18} weight="fill" className="text-gray-600 dark:text-gray-300" />
+              )}
+              
+              {/* Whitepaper Relevance */}
+              {parsedOutline.whitepaperRelevance && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Lightbulb className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                    <h4 className="text-xs font-bold text-purple-900 dark:text-purple-300 uppercase">
+                      Whitepaper Relevance
+                    </h4>
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg px-3 py-2 border border-purple-200 dark:border-purple-800/50">
+                    <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                      {parsedOutline.whitepaperRelevance}
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
-          ))}
-
-          {isLoading && (
-            <div className="flex gap-3 justify-start">
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
-                <Robot size={18} weight="fill" className="text-white" />
-              </div>
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-4 py-3 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Input Area */}
-        <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-4">
-          <div className="flex gap-3 items-end">
-            <Textarea
-              ref={textareaRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask about the meeting or request specific insights..."
-              disabled={isLoading}
-              className="flex-1 min-h-[44px] max-h-[120px] resize-none rounded-xl border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
-              rows={1}
-              style={{ height: '44px' }}
-            />
-            <Button
-              onClick={handleSend}
-              disabled={!input.trim() || isLoading}
-              className="h-11 w-11 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
-            >
-              <PaperPlaneTilt size={20} weight="fill" />
-            </Button>
           </div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-            Press Enter to send, Shift+Enter for new line
-          </p>
-        </div>
-      </DialogContent>
-    </Dialog>
+        )}
+
+      {/* Footer with Regenerate Button */}
+      <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-4">
+        <Button
+          onClick={regenerateOutline}
+          disabled={isLoading || isGenerating || !parsedOutline}
+          variant="outline"
+          size="sm"
+          className="gap-2 w-full"
+        >
+          <Refresh className="w-4 h-4"  />
+          {isGenerating ? 'Regenerating...' : 'Regenerate Outline'}
+        </Button>
+      </div>
+    </TailwindModal>
   )
 }

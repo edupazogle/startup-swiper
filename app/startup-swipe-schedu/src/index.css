@@ -17,12 +17,40 @@
   body {
     position: relative;
     overflow-x: hidden;
+    overscroll-behavior-y: contain;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+  }
+  
+  button, a {
+    touch-action: manipulation;
+  }
+  
+  input, textarea {
+    font-size: 16px; /* Prevent iOS zoom on focus */
   }
   
   /* iOS Safari scroll improvements */
   .overflow-y-auto {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
+  }
+  
+  /* iOS Safe Area Support */
+  @supports (padding: env(safe-area-inset-top)) {
+    .safe-top {
+      padding-top: env(safe-area-inset-top);
+    }
+    .safe-bottom {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .safe-left {
+      padding-left: env(safe-area-inset-left);
+    }
+    .safe-right {
+      padding-right: env(safe-area-inset-right);
+    }
   }
   
   /* Allow horizontal swipe but enable vertical scroll */
@@ -57,6 +85,37 @@
       opacity: 0.5;
     }
   }
+}
+
+/* Loading skeleton shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  background-size: 1000px 100%;
+}
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 :root {

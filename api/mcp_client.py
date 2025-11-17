@@ -245,6 +245,131 @@ class StartupDatabaseMCPTools:
                         }
                     }
                 }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "search_events",
+                    "description": "Search for Slush events by title or organizer name",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "query": {
+                                "type": "string",
+                                "description": "Search query for event title or organizer"
+                            },
+                            "limit": {
+                                "type": "integer",
+                                "description": "Maximum number of results",
+                                "default": 10
+                            }
+                        },
+                        "required": ["query"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "search_events_by_organizer",
+                    "description": "Search for Slush events by organizer/company name",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "organizer": {
+                                "type": "string",
+                                "description": "Organizer/company name to search for"
+                            },
+                            "limit": {
+                                "type": "integer",
+                                "description": "Maximum number of results",
+                                "default": 10
+                            }
+                        },
+                        "required": ["organizer"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "search_events_by_category",
+                    "description": "Search for Slush events by category or topic (e.g., AI, Demo, Networking)",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "category": {
+                                "type": "string",
+                                "description": "Category or topic to search for"
+                            },
+                            "limit": {
+                                "type": "integer",
+                                "description": "Maximum number of results",
+                                "default": 10
+                            }
+                        },
+                        "required": ["category"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "search_events_by_date",
+                    "description": "Search for Slush events by date (e.g., 'Nov 19', 'Nov 20', 'November 19')",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "date_query": {
+                                "type": "string",
+                                "description": "Date string to search for (e.g., 'Nov 19', 'Nov 20')"
+                            },
+                            "limit": {
+                                "type": "integer",
+                                "description": "Maximum number of results",
+                                "default": 10
+                            }
+                        },
+                        "required": ["date_query"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_event_details",
+                    "description": "Get detailed information about a specific Slush event",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "event_id": {
+                                "type": "integer",
+                                "description": "Event database ID"
+                            },
+                            "title": {
+                                "type": "string",
+                                "description": "Event title (use if ID not available)"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_all_event_organizers",
+                    "description": "Get a list of all event organizers/companies hosting events at Slush",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "limit": {
+                                "type": "integer",
+                                "description": "Maximum number of organizers to return",
+                                "default": 20
+                            }
+                        }
+                    }
+                }
             }
         ]
     
@@ -286,6 +411,18 @@ class StartupDatabaseMCPTools:
                 return await self._get_startup_enrichment_data(**kwargs)
             elif tool_name == "get_top_startups_by_funding":
                 return await self._get_top_startups_by_funding(**kwargs)
+            elif tool_name == "search_events":
+                return await self._search_events(**kwargs)
+            elif tool_name == "search_events_by_organizer":
+                return await self._search_events_by_organizer(**kwargs)
+            elif tool_name == "search_events_by_category":
+                return await self._search_events_by_category(**kwargs)
+            elif tool_name == "search_events_by_date":
+                return await self._search_events_by_date(**kwargs)
+            elif tool_name == "get_event_details":
+                return await self._get_event_details(**kwargs)
+            elif tool_name == "get_all_event_organizers":
+                return await self._get_all_event_organizers(**kwargs)
             else:
                 return {
                     "success": False,
@@ -592,6 +729,258 @@ class StartupDatabaseMCPTools:
         
         except Exception as e:
             logger.error(f"Error getting top startups: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    # Event search methods
+    
+    async def _search_events(self, query: str, limit: int = 10) -> Dict[str, Any]:
+        """Search events by title or organizer"""
+        from database import SessionLocal
+        from models import SlushEvent
+        
+        try:
+            db = SessionLocal()
+            events = db.query(SlushEvent).filter(
+                (SlushEvent.title.ilike(f"%{query}%")) |
+                (SlushEvent.organizer.ilike(f"%{query}%"))
+            ).limit(limit).all()
+            
+            results = [
+                {
+                    "id": e.id,
+                    "title": e.title,
+                    "organizer": e.organizer,
+                    "datetime": e.datetime,
+                    "location": e.location,
+                    "categories": e.categories,
+                    "status": e.status
+                }
+                for e in events
+            ]
+            
+            db.close()
+            
+            return {
+                "success": True,
+                "count": len(results),
+                "results": results
+            }
+        
+        except Exception as e:
+            logger.error(f"Error searching events: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    async def _search_events_by_organizer(self, organizer: str, limit: int = 10) -> Dict[str, Any]:
+        """Search events by organizer"""
+        from database import SessionLocal
+        from models import SlushEvent
+        
+        try:
+            db = SessionLocal()
+            events = db.query(SlushEvent)\
+                .filter(SlushEvent.organizer.ilike(f"%{organizer}%"))\
+                .limit(limit)\
+                .all()
+            
+            results = [
+                {
+                    "id": e.id,
+                    "title": e.title,
+                    "organizer": e.organizer,
+                    "datetime": e.datetime,
+                    "location": e.location,
+                    "categories": e.categories,
+                    "status": e.status
+                }
+                for e in events
+            ]
+            
+            db.close()
+            
+            return {
+                "success": True,
+                "count": len(results),
+                "results": results
+            }
+        
+        except Exception as e:
+            logger.error(f"Error searching events by organizer: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    async def _search_events_by_category(self, category: str, limit: int = 10) -> Dict[str, Any]:
+        """Search events by category"""
+        from database import SessionLocal
+        from models import SlushEvent
+        from sqlalchemy import func, cast, String
+        
+        try:
+            db = SessionLocal()
+            # Search in JSON array for category
+            events = db.query(SlushEvent)\
+                .filter(cast(SlushEvent.categories, String).ilike(f"%{category}%"))\
+                .limit(limit)\
+                .all()
+            
+            results = [
+                {
+                    "id": e.id,
+                    "title": e.title,
+                    "organizer": e.organizer,
+                    "datetime": e.datetime,
+                    "location": e.location,
+                    "categories": e.categories,
+                    "status": e.status
+                }
+                for e in events
+            ]
+            
+            db.close()
+            
+            return {
+                "success": True,
+                "count": len(results),
+                "results": results
+            }
+        
+        except Exception as e:
+            logger.error(f"Error searching events by category: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    async def _search_events_by_date(self, date_query: str, limit: int = 10) -> Dict[str, Any]:
+        """Search events by date"""
+        from database import SessionLocal
+        from models import SlushEvent
+        
+        try:
+            db = SessionLocal()
+            events = db.query(SlushEvent)\
+                .filter(SlushEvent.datetime.ilike(f"%{date_query}%"))\
+                .limit(limit)\
+                .all()
+            
+            results = [
+                {
+                    "id": e.id,
+                    "title": e.title,
+                    "organizer": e.organizer,
+                    "datetime": e.datetime,
+                    "location": e.location,
+                    "categories": e.categories,
+                    "status": e.status
+                }
+                for e in events
+            ]
+            
+            db.close()
+            
+            return {
+                "success": True,
+                "count": len(results),
+                "results": results
+            }
+        
+        except Exception as e:
+            logger.error(f"Error searching events by date: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    async def _get_event_details(self, event_id: Optional[int] = None,
+                                 title: Optional[str] = None) -> Dict[str, Any]:
+        """Get detailed event information"""
+        from database import SessionLocal
+        from models import SlushEvent
+        
+        try:
+            db = SessionLocal()
+            event = None
+            
+            if event_id:
+                event = db.query(SlushEvent).filter(SlushEvent.id == event_id).first()
+            elif title:
+                event = db.query(SlushEvent).filter(SlushEvent.title.ilike(f"%{title}%")).first()
+            
+            db.close()
+            
+            if not event:
+                return {
+                    "success": False,
+                    "error": "Event not found"
+                }
+            
+            return {
+                "success": True,
+                "event": {
+                    "id": event.id,
+                    "title": event.title,
+                    "organizer": event.organizer,
+                    "datetime": event.datetime,
+                    "location": event.location,
+                    "categories": event.categories,
+                    "status": event.status,
+                    "scraped_at": event.scraped_at.isoformat() if event.scraped_at else None,
+                    "insight": event.insight,
+                    "tags": event.tags,
+                    "rating": event.rating,
+                    "followUp": event.followUp
+                }
+            }
+        
+        except Exception as e:
+            logger.error(f"Error getting event details: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    async def _get_all_event_organizers(self, limit: int = 20) -> Dict[str, Any]:
+        """Get list of all event organizers"""
+        from database import SessionLocal
+        from models import SlushEvent
+        from sqlalchemy import func
+        
+        try:
+            db = SessionLocal()
+            # Get organizers with event count
+            organizers = db.query(
+                SlushEvent.organizer,
+                func.count(SlushEvent.id).label('event_count')
+            ).group_by(SlushEvent.organizer)\
+             .order_by(func.count(SlushEvent.id).desc())\
+             .limit(limit)\
+             .all()
+            
+            results = [
+                {
+                    "organizer": org[0],
+                    "event_count": org[1]
+                }
+                for org in organizers
+            ]
+            
+            db.close()
+            
+            return {
+                "success": True,
+                "count": len(results),
+                "results": results
+            }
+        
+        except Exception as e:
+            logger.error(f"Error getting organizers: {e}")
             return {
                 "success": False,
                 "error": str(e)

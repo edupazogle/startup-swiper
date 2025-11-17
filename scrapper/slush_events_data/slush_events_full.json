@@ -1,0 +1,4286 @@
+[
+  {
+    "title": "Startups Supercharge: AI for Accelerated Business",
+    "organizer": "Google",
+    "datetime": "Nov 20, 10:00 AM – 12:00 PM",
+    "location": "Partner Side Event Wing, Venue 5 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Signature Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:36:23.467873"
+  },
+  {
+    "title": "Y Science 2025",
+    "organizer": "HiLIFE - University of Helsinki",
+    "datetime": "Nov 19, 10:30 AM – 3:30 PM",
+    "location": "Partner Side Event Wing, Venue 5 and 6 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Signature Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:36:29.707772"
+  },
+  {
+    "title": "Fintech & Impact: European RenAIssance",
+    "organizer": "Mastercard",
+    "datetime": "Nov 19, 4:00 PM – 7:00 PM",
+    "location": "Partner Side Event Wing, Venue 5 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Signature Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:36:34.815709"
+  },
+  {
+    "title": "Rebooting Play",
+    "organizer": "32F Entertainment Oy",
+    "datetime": "Nov 19, 3:00 PM – 5:00 PM",
+    "location": "Partner Side Event Wing, Venue 3 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Signature Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:36:39.953075"
+  },
+  {
+    "title": "Slush Climate Summit",
+    "organizer": "Lightrock x Extantia x World Fund",
+    "datetime": "Nov 20, 1:00 PM – 5:00 PM",
+    "location": "Partner Side Event Wing, Venue 5 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Signature Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:36:45.078779"
+  },
+  {
+    "title": "Deep Tech Unleashed",
+    "organizer": "CERN Venture Connect",
+    "datetime": "Nov 19, 11:00 AM – 1:00 PM",
+    "location": "Partner Side Event Wing, Venue 8 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Signature Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:36:50.215172"
+  },
+  {
+    "title": "Speaker Q&A with Ramp’s VP International, Jacob Wallenberg",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 4:45 PM – 5:15 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:36:55.344890"
+  },
+  {
+    "title": "Offstage Session with Gabriel Hubert, Co-founder & CEO of Dust",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 3:00 PM – 3:45 PM",
+    "location": "Offstage Sessions",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:37:01.587060"
+  },
+  {
+    "title": "Tales of Silicon Valhalla: From a 2x Unicorn Founder to Bold Builders",
+    "organizer": "SSE Ventures & Business Lab",
+    "datetime": "Nov 20, 1:30 PM – 2:45 PM",
+    "location": "Slush Venue / Investor Office Hours 1",
+    "categories": [],
+    "status": [
+      "Startup Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:37:06.722109"
+  },
+  {
+    "title": "Scaleup Office Hours",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 2:00 PM – 6:00 PM",
+    "location": "Helsinki City Center",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:37:11.846664"
+  },
+  {
+    "title": "Offstage Sessions",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 11:00 AM – Nov 20, 4:00 PM",
+    "location": "Offstage Sessions",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:37:16.972170"
+  },
+  {
+    "title": "AI and Resilience",
+    "organizer": "Dawn Capital",
+    "datetime": "Nov 19, 10:45 AM – 12:00 PM",
+    "location": "Slush Venue / Investor Office Hours 2",
+    "categories": [],
+    "status": [
+      "Startup Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:37:22.116314"
+  },
+  {
+    "title": "Slush x Female Founder Office Hours 4",
+    "organizer": "Playfair Capital",
+    "datetime": "Nov 19, 10:30 AM – 11:45 AM",
+    "location": "Slush Venue / Investor Office Hours 1",
+    "categories": [],
+    "status": [
+      "Startup Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:37:27.258296"
+  },
+  {
+    "title": "Fake Board Meeting Practice—Keeping users coming back",
+    "organizer": "PostHog",
+    "datetime": "Nov 18, 8:30 PM – 9:15 PM",
+    "location": "PostHog lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:37:32.383888"
+  },
+  {
+    "title": "First-time Founder Breakfast",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 8:15 AM – 9:45 AM",
+    "location": "Main Event venue",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:37:38.608616"
+  },
+  {
+    "title": "Speaker Q&A with Tenacity Capital’s Founder & General Partner, AJ Tennant",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 3:15 PM – 3:45 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:37:43.709822"
+  },
+  {
+    "title": "Fake Board Meeting Practice—Getting Your First Users",
+    "organizer": "PostHog",
+    "datetime": "Nov 18, 7:30 PM – 8:15 PM",
+    "location": "PostHog lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:37:48.832022"
+  },
+  {
+    "title": "Offstage Session with Manny Medina, Co-founder & CEO of Paid",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 11:00 AM – 11:45 AM",
+    "location": "Offstage Sessions",
+    "categories": [],
+    "status": [
+      "Startup Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:37:53.968392"
+  },
+  {
+    "title": "Speaker Q&A with Dash0’s Founder & CEO, Mirko Novakovic",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 2:30 PM – 3:00 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:37:59.098484"
+  },
+  {
+    "title": "Speaker Q&A with Musa Tariq, Ex-Marketing Lead Apple & more + Antoine Nussenbaum, Partner at Felix",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 4:00 PM – 4:30 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:38:04.221313"
+  },
+  {
+    "title": "Swappie Scaleup Office Hour",
+    "organizer": "Swappie",
+    "datetime": "Nov 18, 1:00 PM – 3:00 PM",
+    "location": "Swappie's office in Helsinki City Center",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:38:10.419441"
+  },
+  {
+    "title": "Offstage Session with Gabe Pereyra, Co-founder & President of Harvey",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 1:45 PM – 2:30 PM",
+    "location": "Offstage Sessions",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:38:15.554895"
+  },
+  {
+    "title": "Speaker Q&A with incident.io’s Co-founder & CEO, Stephen Withworth",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 1:30 PM – 2:00 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:38:20.698266"
+  },
+  {
+    "title": "Accelerate with AI: From Zero to Scale",
+    "organizer": "500 Global",
+    "datetime": "Nov 19, 4:45 PM – 6:00 PM",
+    "location": "Slush Venue / Investor Office Hours 1",
+    "categories": [],
+    "status": [
+      "Ecosystem Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:38:25.806304"
+  },
+  {
+    "title": "Molten Ventures Open Mic: Meet the Team & Ask Us Anything",
+    "organizer": "Molten Ventures",
+    "datetime": "Nov 20, 1:45 PM – 3:00 PM",
+    "location": "Slush Venue / Investor Office Hours 2",
+    "categories": [],
+    "status": [
+      "Startup Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:38:30.966502"
+  },
+  {
+    "title": "FinTech Industry Meetup",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 5:30 PM – 6:00 PM",
+    "location": "Industry Meetups Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:38:36.112657"
+  },
+  {
+    "title": "LP & GP Drinks: Blurred Reality Exhibition by Slush & Inventure",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 5:00 PM – 7:00 PM",
+    "location": "Galerie Forsblom",
+    "categories": [],
+    "status": [
+      "Investor Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:38:42.348182"
+  },
+  {
+    "title": "Supercell Scaleup Office Hour",
+    "organizer": "Supercell",
+    "datetime": "Nov 18, 4:00 PM – 6:15 PM",
+    "location": "Ruoholahti, Helsinki City Center",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:38:47.478932"
+  },
+  {
+    "title": "Aiven Scaleup Office Hour",
+    "organizer": "Aiven",
+    "datetime": "Nov 18, 2:00 PM – 4:00 PM",
+    "location": "Aiven's Office in Helsinki City Center",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:38:52.604518"
+  },
+  {
+    "title": "Offstage Session with Oana Jinga, Co-founder, Chief Commercial & Product Officer of Dexory",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 4:15 PM – 5:00 PM",
+    "location": "Offstage Sessions",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:38:57.727760"
+  },
+  {
+    "title": "Slush Afterparty",
+    "organizer": "Slush Team",
+    "datetime": "Nov 20, 6:00 PM – 11:59 PM",
+    "location": "Messukeskus",
+    "categories": [],
+    "status": [
+      "Slush Organized Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:39:02.847838"
+  },
+  {
+    "title": "Female Founder Lunch",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:00 PM – 3:00 PM",
+    "location": "Levain Merikortteli",
+    "categories": [],
+    "status": [
+      "Startup Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:39:07.981582"
+  },
+  {
+    "title": "Founder Re(DEI)fined",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 8:00 AM – 9:45 AM",
+    "location": "Startup Restaurant in Helsinki Messukeskus, Slush Main Venue",
+    "categories": [],
+    "status": [
+      "Ecosystem Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:39:20.463373"
+  },
+  {
+    "title": "Speaker Q&A with Co-Founder & Head of DoorDash Labs, Stanley Tang & CTO of Wolt, Niilo Säämänen",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 4:30 PM – 5:00 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:39:25.590751"
+  },
+  {
+    "title": "Speaker Q&A with Pear VC Partner, Pepe Agell",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 1:00 PM – 1:30 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:39:30.720701"
+  },
+  {
+    "title": "[Morning] Sauna & Ice Dipping",
+    "organizer": "Slush. Powered by Stripe.",
+    "datetime": "Nov 18, 9:30 AM – 11:30 AM",
+    "location": "Allas Pool (Katajanokanlaituri 2 A)",
+    "categories": [],
+    "status": [
+      "Ecosystem Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:39:35.880797"
+  },
+  {
+    "title": "Offstage Session with Pieter van der Does, Co-founder & co-CEO of Adyen",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 11:15 AM – 12:00 PM",
+    "location": "Offstage Sessions",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:39:41.051399"
+  },
+  {
+    "title": "Offstage Session with Qasar Younis, Co-founder & CEO of Applied Intuition",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 3:00 PM – 3:45 PM",
+    "location": "Offstage Sessions",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:39:46.172145"
+  },
+  {
+    "title": "Speaker Q&A with Portia AI’s Co-Founder & CTO, Emma Burrows",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 11:30 AM – 12:00 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:39:52.423831"
+  },
+  {
+    "title": "Science to Scale",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 2:00 PM – 4:00 PM",
+    "location": "Partner Side Event Wing, Venue 4 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Ecosystem Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:40:05.815599"
+  },
+  {
+    "title": "Platform & Comms: Networking Night + Wine 💜",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 4:00 PM – 6:00 PM",
+    "location": "TBA to confirmed guests",
+    "categories": [],
+    "status": [
+      "Investor Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:40:10.940784"
+  },
+  {
+    "title": "Frontiers of Innovation: Hard Tech Office Hours",
+    "organizer": "Lifeline Ventures",
+    "datetime": "Nov 20, 3:15 PM – 4:30 PM",
+    "location": "Slush Venue / Investor Office Hours 1",
+    "categories": [],
+    "status": [
+      "Startup Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:40:16.070951"
+  },
+  {
+    "title": "Speaker Q&A with Hostaway’s Founder & CEO, Marcus Räder",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 1:45 PM – 2:15 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:40:22.268431"
+  },
+  {
+    "title": "Offstage Session with Lucy Liu, Co-founder & President of Airwallex",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 12:30 PM – 1:15 PM",
+    "location": "Offstage Session",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:40:27.376416"
+  },
+  {
+    "title": "Speaker Q&A with EWOR Partner, Paul Müller",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 12:00 PM – 12:30 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:40:32.481774"
+  },
+  {
+    "title": "Founders Day",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 5:00 PM – 11:00 PM",
+    "location": "Cable Factory, Kaapeliaukio 3, 00180 Helsinki",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:40:37.588809"
+  },
+  {
+    "title": "Investor Day",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:00 PM – 6:00 PM",
+    "location": "Finlandia Hall, Mannerheimintie 13 e, 00100 Helsinki",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:40:42.704477"
+  },
+  {
+    "title": "[Afternoon] Sauna & Ice Dipping",
+    "organizer": "Slush. Powered by Stripe.",
+    "datetime": "Nov 18, 12:00 PM – 2:00 PM",
+    "location": "Allas Pool (Katajanokanlaituri 2 A)",
+    "categories": [],
+    "status": [
+      "Ecosystem Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:40:47.823777"
+  },
+  {
+    "title": "Offstage Session with Greg Jackson, Founder & CEO of Octopus Energy",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 1:45 PM – 2:30 PM",
+    "location": "Offstage Sessions",
+    "categories": [],
+    "status": [
+      "Startup Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:40:52.934328"
+  },
+  {
+    "title": "Female Leaders Forum: Candid Fundraising Insights with Global VCs and Female Leaders",
+    "organizer": "Spintop Ventures",
+    "datetime": "Nov 19, 2:15 PM – 3:30 PM",
+    "location": "Slush Venue / Investor Office Hours 2",
+    "categories": [],
+    "status": [
+      "Slush Organized Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:40:59.158126"
+  },
+  {
+    "title": "Q&A with Jeannette zu Fürstenberg (General Catalyst) & Charles Maddock (Strawberry Browser)",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 3:15 PM – 4:15 PM",
+    "location": "Investor Office Hours 1",
+    "categories": [],
+    "status": [
+      "Startup Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:41:04.273422"
+  },
+  {
+    "title": "LP Reception",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 5:00 PM – 7:00 PM",
+    "location": "Location will be shared with confirmed attendees only",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:41:09.398774"
+  },
+  {
+    "title": "From Founder-Led Sales to a VP of Sales",
+    "organizer": "Golden Egg Check",
+    "datetime": "Nov 20, 10:00 AM – 11:15 AM",
+    "location": "Slush Venue / Investor Office Hours 1",
+    "categories": [],
+    "status": [
+      "Ecosystem Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:41:14.517157"
+  },
+  {
+    "title": "Offstage Session with Laurent Sifre, Co-founder & CTO of H Company",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 10:00 AM – 10:45 AM",
+    "location": "Offstage Sessions",
+    "categories": [],
+    "status": [
+      "Startup Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:41:19.630890"
+  },
+  {
+    "title": "Speaker Q&As",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 10:00 AM – Nov 20, 6:00 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:41:24.746270"
+  },
+  {
+    "title": "Speaker Q&A with Tailscale’s Co-Founder & CEO, Avery Pennarun",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 3:45 PM – 4:15 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:41:30.961697"
+  },
+  {
+    "title": "Speaker Q&A with Merge’s Co-Founder & CEO, Shensi Ding",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 11:15 AM – 11:45 AM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:41:36.070759"
+  },
+  {
+    "title": "Speaker Q&A with Waffle’s Founder, Rob Snyder",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 10:45 AM – 11:15 AM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:41:41.179436"
+  },
+  {
+    "title": "Sauna & Ice Dipping",
+    "organizer": "Slush. Powered by Stripe.",
+    "datetime": "Nov 18, 9:30 AM – 2:00 PM",
+    "location": "Allas Pool (Katajanokanlaituri 2 A)",
+    "categories": [],
+    "status": [
+      "Ecosystem Activity"
+    ],
+    "scraped_at": "2025-11-17T14:41:46.282029"
+  },
+  {
+    "title": "Speaker Q&A with Shopify’s Managing Director EMEA, Deann Evans Description:",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 5:15 PM – 5:45 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:41:51.414701"
+  },
+  {
+    "title": "Slush x RAISE",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 10:30 AM – 1:30 PM",
+    "location": "Partner Side Event Wing, Venue 8",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:41:56.544536"
+  },
+  {
+    "title": "Fake Board Meeting Practice—Scaling Whats Working",
+    "organizer": "PostHog",
+    "datetime": "Nov 18, 9:30 PM – 10:15 PM",
+    "location": "PostHog lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:42:02.772963"
+  },
+  {
+    "title": "You're Probably Too Cheap: Lessons in Pricing",
+    "organizer": "13books Capital",
+    "datetime": "Nov 20, 3:30 PM – 4:45 PM",
+    "location": "Slush Venue / Investor Office Hours 2",
+    "categories": [],
+    "status": [
+      "Startup Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:42:07.889166"
+  },
+  {
+    "title": "Slush Afterworks",
+    "organizer": "The Palm",
+    "datetime": "Nov 19, 6:00 PM – 11:00 PM",
+    "location": "Katajanokanlaituri 2, 00160 Helsinki",
+    "categories": [],
+    "status": [
+      "Slush Organized Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:42:13.008761"
+  },
+  {
+    "title": "Speaker Q&A with Spark Capital’s General Partner, Arpan Shah",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 2:15 PM – 2:45 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:42:22.309810"
+  },
+  {
+    "title": "Speaker Q&A with Metropolis’s Co-Founder & Chief Integration Officer, Courtney Fukuda",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 12:15 PM – 12:45 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:42:27.417190"
+  },
+  {
+    "title": "YC Founder Meetup",
+    "organizer": "Slush. Powered by Supercell.",
+    "datetime": "Nov 20, 5:00 PM – 7:00 PM",
+    "location": "TBA to confirmed guests",
+    "categories": [],
+    "status": [
+      "Ecosystem Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:42:32.537423"
+  },
+  {
+    "title": "Investor Office Hours",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 10:30 AM – Nov 20, 5:00 PM",
+    "location": "Slush Venue / Investor Office Hours 1 & 2",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:42:38.761886"
+  },
+  {
+    "title": "Speaker Q&A with PostHog’s Co-CEO, James Hawkins",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 12:45 PM – 1:15 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:42:43.911051"
+  },
+  {
+    "title": "360° Pitch Coaching",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 3:00 PM – 5:00 PM",
+    "location": "Helsinki Skywheel",
+    "categories": [],
+    "status": [
+      "Startup Activity",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:42:49.063331"
+  },
+  {
+    "title": "Offstage Session with Jan Oberhauser, Founder & CEO of n8n",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 12:30 PM – 1:15 PM",
+    "location": "Offstage Sessions",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:42:54.216769"
+  },
+  {
+    "title": "Fake Board Meeting Practice—Validating the Problem",
+    "organizer": "PostHog",
+    "datetime": "Nov 18, 6:30 PM – 7:15 PM",
+    "location": "PostHog lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:42:59.362105"
+  },
+  {
+    "title": "ID Roundtable: University Spin-offs as Europe’s Untapped Venture Opportunity",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 3:45 PM – 4:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:43:04.509219"
+  },
+  {
+    "title": "ID Roundtable: Is Consumer tech actually back?",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 2:45 PM – 3:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:43:10.758966"
+  },
+  {
+    "title": "ID Roundtable: Contrarian vs Consensus Investing from a European perspective",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 2:45 PM – 3:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:43:15.906294"
+  },
+  {
+    "title": "DeepTech Industry Meetup",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 7:00 PM – 7:30 PM",
+    "location": "Industry Meetups Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:43:21.002063"
+  },
+  {
+    "title": "ID Roundtable: Will AI live up to its hype?",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 4:45 PM – 5:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:43:26.145270"
+  },
+  {
+    "title": "ID Roundtable: Navigating the clean transition headwind | Family-office perspective",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 3:45 PM – 4:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:43:31.299650"
+  },
+  {
+    "title": "ID Roundtable: Physical AI: From Code to Steel",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 2:45 PM – 3:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:43:36.434952"
+  },
+  {
+    "title": "ID Roundtable: Investing for Democracy: Defense & Dual-Use Tech",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 4:45 PM – 5:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:43:42.700601"
+  },
+  {
+    "title": "ID Roundtable: How is the AI revolution disrupting VCs?",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 4:45 PM – 5:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:43:47.848800"
+  },
+  {
+    "title": "A Founder’s Checklist - DD Essentials & Red Flags by Dottir",
+    "organizer": "Dottir Attorneys Ltd.",
+    "datetime": "Nov 18, 6:30 PM – 7:30 PM",
+    "location": "Dottir Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:43:52.998687"
+  },
+  {
+    "title": "ID Roundtable: Capital in a Coma - How to Wake Up Europe's Institutional Giants",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 2:45 PM – 3:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:43:58.121212"
+  },
+  {
+    "title": "Interpretability for Trust with Hoagy Cunningham (Member of Technical Staff) by Anthropic",
+    "organizer": "Anthropic",
+    "datetime": "Nov 18, 5:30 PM – 6:30 PM",
+    "location": "Anthropic Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:44:03.256047"
+  },
+  {
+    "title": "ID Roundtable: Underfunded Categories: Opportunity or Trap?",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 2:45 PM – 3:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:44:08.390784"
+  },
+  {
+    "title": "ID Roundtable: Is the Series A market still functional?",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:45 PM – 2:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:44:14.659059"
+  },
+  {
+    "title": "ID Roundtable: The Ultimate AI Stack for VCs - Best practice sharing",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:45 PM – 2:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:44:19.797460"
+  },
+  {
+    "title": "ID Roundtable: Real AI for Real Assets",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 2:45 PM – 3:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:44:24.932570"
+  },
+  {
+    "title": "ID Roundtable: Perspectives on the Nordic SaaS M&A market",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:45 PM – 2:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:44:30.056082"
+  },
+  {
+    "title": "ID Roundtable: The intersection of Agentic AI and Deeptech - where Europe wins on the world stage",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:45 PM – 2:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:44:35.204066"
+  },
+  {
+    "title": "ID Roundtable: Investing in climate adaptation tech",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 2:45 PM – 3:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:44:40.307097"
+  },
+  {
+    "title": "Zevoy Scaleup Office Hour",
+    "organizer": "Zevoy",
+    "datetime": "Nov 18, 3:00 PM – 5:00 PM",
+    "location": "Zevoy's office in Helsinki City Center",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:44:45.446961"
+  },
+  {
+    "title": "From Pitch to Term Sheet - What Founders Must Nail by Dottir",
+    "organizer": "Dottir Attorneys Ltd.",
+    "datetime": "Nov 18, 5:30 PM – 6:30 PM",
+    "location": "Dottir Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:44:51.703526"
+  },
+  {
+    "title": "Climate & Energy Industry Meetup",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 8:00 PM – 8:30 PM",
+    "location": "Industry Meetups Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:44:56.860719"
+  },
+  {
+    "title": "ID Roundtable: Direct Secondaries - early liquidity as companies stay private longer",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:45 PM – 2:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:45:01.999838"
+  },
+  {
+    "title": "ID Roundtable: Investing in defense tech in Europe",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:45 PM – 2:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:45:07.134827"
+  },
+  {
+    "title": "ID Roundtable: Alternative paths to DPI",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 3:45 PM – 4:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:45:17.516221"
+  },
+  {
+    "title": "ID Roundtable: Cross-Border Startup Building in the Fragmented Global Economy",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 2:45 PM – 3:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:45:23.745426"
+  },
+  {
+    "title": "ID Roundtable: Maturity of Deep Tech companies as asset class in Europe",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 3:45 PM – 4:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:45:28.883335"
+  },
+  {
+    "title": "How to prepare for a tech DD when fundraising by AWS",
+    "organizer": "AWS",
+    "datetime": "Nov 18, 6:30 PM – 7:10 PM",
+    "location": "AWS Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:45:34.000871"
+  },
+  {
+    "title": "ID Roundtable: Reinvention through Venturing - how Innovation drives growth and resilience",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 4:45 PM – 5:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:45:39.109774"
+  },
+  {
+    "title": "Crafting the Code You Don't Write with Daisy Hollman (Claude Code Lead) by Anthropic",
+    "organizer": "Anthropic",
+    "datetime": "Nov 18, 6:30 PM – 7:30 PM",
+    "location": "Anthropic Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:45:44.218252"
+  },
+  {
+    "title": "ID Roundtable: AI unlocking cleaner manufacturing",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:45 PM – 2:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:45:49.371981"
+  },
+  {
+    "title": "ID Roundtable: Why Europe needs more scientists in VC",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 2:45 PM – 3:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:45:55.616104"
+  },
+  {
+    "title": "Fireside chat: Factory of the future - Thinking Machines, Sustainable Systems, Infinite Scale by AWS",
+    "organizer": "AWS",
+    "datetime": "Nov 18, 5:20 PM – 5:50 PM",
+    "location": "AWS Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:46:00.721124"
+  },
+  {
+    "title": "ID Roundtable: For LPs: Why Growth Debt is Hot",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 2:45 PM – 3:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:46:05.819416"
+  },
+  {
+    "title": "ID Roundtable: The VC Game is changing: Is the Traditional Model Still Relevant?",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:45 PM – 2:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:46:10.973153"
+  },
+  {
+    "title": "ID Roundtable: Vertical SaaS investing in smaller markets: how can Founders or AI expand TAM?",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 3:45 PM – 4:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:46:16.076774"
+  },
+  {
+    "title": "Decomposing Agents with Garvan Doyle (Head of Applied AI) by Anthropic",
+    "organizer": "Anthropic",
+    "datetime": "Nov 18, 7:30 PM – 8:30 PM",
+    "location": "Anthropic Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:46:21.188265"
+  },
+  {
+    "title": "ID Roundtable: CEE Investment",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 4:45 PM – 5:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:46:26.334739"
+  },
+  {
+    "title": "Breaking Barriers: How Policy Choices Will Shape Europe's Tech Future by AWS",
+    "organizer": "AWS",
+    "datetime": "Nov 18, 6:00 PM – 6:20 PM",
+    "location": "AWS Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:46:32.504555"
+  },
+  {
+    "title": "ID Roundtable: Seed Strapping vs. Series A - trade-off's for a Seed VC",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 4:45 PM – 5:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:46:37.651492"
+  },
+  {
+    "title": "SaaS Industry Meetup",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 7:30 PM – 8:00 PM",
+    "location": "Industry Meetups Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:46:42.779997"
+  },
+  {
+    "title": "Pitch Craft & Cocktails by Netlight",
+    "organizer": "Netlight",
+    "datetime": "Nov 18, 8:00 PM – 9:00 PM",
+    "location": "AWS Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:46:47.880784"
+  },
+  {
+    "title": "AI Industry Meetup",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 6:00 PM – 6:30 PM",
+    "location": "Industry Meetups Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:46:52.983795"
+  },
+  {
+    "title": "ID Roundtable: Rise of Fund-Level Secondary Transactions in Europe: Tools, Trends, and Implications",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 3:45 PM – 4:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:46:58.090380"
+  },
+  {
+    "title": "Speaker Q&A with OpenAI’s Head of Developer Experience, Romain Huet",
+    "organizer": "Slush",
+    "datetime": "Nov 19, 3:00 PM – 3:30 PM",
+    "location": "Slush Venue / Speaker Q&A",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:47:04.351586"
+  },
+  {
+    "title": "ID Roundtable: Why Now is the Best Time to Invest in Health — How AI is Transforming Care",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 3:45 PM – 4:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:47:09.482787"
+  },
+  {
+    "title": "ID Roundtable: Building Resilience: How Space Anchors the Future of DefenceTech",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 3:45 PM – 4:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:47:14.587821"
+  },
+  {
+    "title": "ID Roundtable: Fund of Funds 2.0: Myths, Realities, and the Role in Today’s Venture Ecosystem",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 4:45 PM – 5:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:47:19.694737"
+  },
+  {
+    "title": "ID Roundtable: The KPIs That Matter at Pre-Seed to Seed Stage: From Fit to Traction",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:45 PM – 2:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:47:24.849155"
+  },
+  {
+    "title": "ESOPs, Share Issues etc. - in Plain English by Dottir",
+    "organizer": "Dottir Attorneys Ltd.",
+    "datetime": "Nov 18, 7:30 PM – 8:30 PM",
+    "location": "Dottir Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:47:29.954317"
+  },
+  {
+    "title": "Your next co-worker is an AI agent by AWS",
+    "organizer": "AWS",
+    "datetime": "Nov 18, 7:20 PM – 7:50 PM",
+    "location": "AWS Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:47:36.190089"
+  },
+  {
+    "title": "ID Roundtable: What technologies can help make shift to a decentralised energy infra more resilient",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 3:45 PM – 4:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:47:41.306961"
+  },
+  {
+    "title": "ID Roundtable: Deep Tech Venture Plays: Breakthroughs and Execution",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 4:45 PM – 5:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:47:46.458455"
+  },
+  {
+    "title": "ID Roundtable: Win win strategy between Corporate LPs and VCs",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 4:45 PM – 5:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:47:51.604098"
+  },
+  {
+    "title": "ID Roundtable: Make Health in Europe great again!",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:45 PM – 2:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:47:56.756967"
+  },
+  {
+    "title": "ID Roundtable: Focused Capital: Turning Geopolitical Change into Investment Opportunity",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 2:45 PM – 3:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:48:01.859122"
+  },
+  {
+    "title": "ID Roundtable: LP to LP honest conversations",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 3:45 PM – 4:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:48:14.614061"
+  },
+  {
+    "title": "ID Roundtable: How can European funds win LP capital abroad?",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 4:45 PM – 5:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:48:19.737843"
+  },
+  {
+    "title": "ID Roundtable: Mega Funds, Mega Premiums - and the Early-Stage Squeeze in Europe",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 3:45 PM – 4:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:48:24.867082"
+  },
+  {
+    "title": "ID Roundtable: What are LPs looking for in emerging managers?",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:45 PM – 2:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:48:29.972044"
+  },
+  {
+    "title": "ID Roundtable: Rise of Repeat Founders",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 1:45 PM – 2:30 PM",
+    "location": "Investor Day, Finlandia Hall",
+    "categories": [],
+    "status": [
+      "Investor Activity"
+    ],
+    "scraped_at": "2025-11-17T14:48:35.121726"
+  },
+  {
+    "title": "HealthTech, MedTech & Pharma Industry Meetup",
+    "organizer": "Slush",
+    "datetime": "Nov 18, 6:30 PM – 7:00 PM",
+    "location": "Industry Meetups Lounge at Founders Day",
+    "categories": [],
+    "status": [
+      "Startup Activity"
+    ],
+    "scraped_at": "2025-11-17T14:48:41.416842"
+  },
+  {
+    "title": "Airbus Kicksled",
+    "organizer": "Airbus Defence and Space",
+    "datetime": "Nov 20, 11:00 AM – 1:00 PM",
+    "location": "Partner Side Event Wing, Venue 4 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:48:46.547292"
+  },
+  {
+    "title": "Founders x Funders North - UK House at Slush",
+    "organizer": "Department for Business and Trade",
+    "datetime": "Nov 18, 12:00 PM – 5:00 PM",
+    "location": "Grand Hansa Hotel Helsinki",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:48:51.704462"
+  },
+  {
+    "title": "CEE VC Backstage @ Slush 2025",
+    "organizer": "The Recursive",
+    "datetime": "Nov 20, 4:00 PM – 6:00 PM",
+    "location": "Location after approval",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:48:56.839221"
+  },
+  {
+    "title": "Innovating for Resilient Futures: Accelerating dual-use startups in NATO DIANA 2026",
+    "organizer": "VTT Technical Research Centre of Finland",
+    "datetime": "Nov 20, 1:30 PM – 1:45 PM",
+    "location": "VTT booth 7B5",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:49:01.987693"
+  },
+  {
+    "title": "Growth Drivers for Scaling Globally",
+    "organizer": "Staria",
+    "datetime": "Nov 18, 5:00 PM – 10:00 PM",
+    "location": "Staria HQ, Mikonkatu 7, Helsinki",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:49:07.151386"
+  },
+  {
+    "title": "Pitches: Startups from leading technical research centre VTT",
+    "organizer": "VTT LaunchPad",
+    "datetime": "Nov 19, 11:00 AM – 12:00 PM",
+    "location": "VTT booth",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:49:12.305192"
+  },
+  {
+    "title": "Japan Innovation Scramble Day 2",
+    "organizer": "SusHi Tech Tokyo",
+    "datetime": "Nov 20, 9:00 AM – 6:00 PM",
+    "location": "Partner Pod Room 1",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:49:18.545943"
+  },
+  {
+    "title": "Scaling Unicorns in the rest of the world by Endeavor & The Recursive",
+    "organizer": "Endeavor Catalyst",
+    "datetime": "Nov 20, 2:00 PM – 4:00 PM",
+    "location": "Partner Side Event Wing, Venue 3 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:49:23.693793"
+  },
+  {
+    "title": "Pitches: VTT foodtech spin-offs scaling to feed the future",
+    "organizer": "VTT LaunchPad",
+    "datetime": "Nov 19, 1:00 PM – 2:00 PM",
+    "location": "VTT booth 7B5",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:49:28.819630"
+  },
+  {
+    "title": "Founders Fête - A Founder Focused Carnival @ Slush",
+    "organizer": "HubSpot for Startups",
+    "datetime": "Nov 19, 6:00 PM – 11:00 PM",
+    "location": "The Old Student House - Mannerheimintie 3, 00100 Helsinki, Finland",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:49:33.963171"
+  },
+  {
+    "title": "DeepWave: Lithuania @ Slush",
+    "organizer": "Startup Lithuania",
+    "datetime": "Nov 19, 5:00 PM – 7:00 PM",
+    "location": "Partner Side Event Wing, Venue 1 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:49:39.101087"
+  },
+  {
+    "title": "Bohemian Pitch - Czech Startups and VCs pitching",
+    "organizer": "CZECHINVEST - Technology Incubation",
+    "datetime": "Nov 20, 2:00 PM – 4:00 PM",
+    "location": "Partner Side Event Wing, Venue 6 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:49:44.211383"
+  },
+  {
+    "title": "CTO Connect Dinner - Slush Edition feat. Google DeepMind & NVIDIA",
+    "organizer": "Google Cloud",
+    "datetime": "Nov 19, 6:30 PM – 9:30 PM",
+    "location": "Allas Restaurants",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:49:50.493686"
+  },
+  {
+    "title": "Digital Markets Act: opening markets, unlocking innovation",
+    "organizer": "DMA team @ European Commission",
+    "datetime": "Nov 20, 5:00 PM – 7:00 PM",
+    "location": "Partner Side Event Wing, Venue 4 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:49:55.646083"
+  },
+  {
+    "title": "Japan Innovation Scramble Day 1",
+    "organizer": "SusHi Tech Tokyo",
+    "datetime": "Nov 19, 9:00 AM – 6:00 PM",
+    "location": "Partner Pod Room 1",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:50:00.784158"
+  },
+  {
+    "title": "Unlocking Opportunities: Türkiye Tech Visa",
+    "organizer": "Türkiye Tech Visa Program - Ministry of Industry and Technology",
+    "datetime": "Nov 20, 8:00 AM – 10:00 AM",
+    "location": "Partner Side Event Wing, Venue 2 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:50:05.927353"
+  },
+  {
+    "title": "THE POWER OF OPEN SOURCE : BUILDING GIANTS IN THE OPEN",
+    "organizer": "Hugging Face",
+    "datetime": "Nov 20, 2:30 PM – 4:30 PM",
+    "location": "Partner Side Event Wing, Venue 8 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:50:11.070273"
+  },
+  {
+    "title": "Expanding & Winning in the US with a16z, Operators & Friends and Extraordinary",
+    "organizer": "Operators & Friends",
+    "datetime": "Nov 19, 12:00 PM – 1:30 PM",
+    "location": "Partner Side Event Wing, Venue 3 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:50:16.203104"
+  },
+  {
+    "title": "International experts on: \"Talent attraction and retention\" in Finland",
+    "organizer": "Niels Marselis",
+    "datetime": "Nov 18, 8:00 AM – 10:45 AM",
+    "location": "Supercell office, Jätkäsaarenlaituri 1, 00180 Helsinki",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:50:22.493825"
+  },
+  {
+    "title": "Africa: A Billion-User Market You Can’t Afford to Miss",
+    "organizer": "Haus -Finnish Institute of Public Management",
+    "datetime": "Nov 19, 2:00 PM – 4:00 PM",
+    "location": "Partner Side Event Wing, Venue 2 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:50:27.657345"
+  },
+  {
+    "title": "EWOR Fellows X Merantix Capital Networking Hour",
+    "organizer": "EWOR",
+    "datetime": "Nov 20, 12:00 PM – 1:15 PM",
+    "location": "Investor Office Hours 2",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:50:32.801316"
+  },
+  {
+    "title": "Beyond the Code: Meet the Bulgarian Software Sector",
+    "organizer": "BSMEPA",
+    "datetime": "Nov 20, 10:00 AM – 11:30 AM",
+    "location": "Partner Pod 2",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:50:37.906115"
+  },
+  {
+    "title": "Emerging and Frontier Market Opportunities - Development Finance meets Venture Capital",
+    "organizer": "Ministry for Foreign Affairs of Finland and Business Finland",
+    "datetime": "Nov 20, 11:00 AM – 1:00 PM",
+    "location": "Partner Side Event Wing, Venue 6 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:50:43.046195"
+  },
+  {
+    "title": "Investor Happy Hour with Latvian startups",
+    "organizer": "LIAA & RITA",
+    "datetime": "Nov 20, 2:00 PM – 4:00 PM",
+    "location": "Partner Side Event Wing, Venue 7 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:50:48.161079"
+  },
+  {
+    "title": "Toast to the perfect protein with Onego Bio",
+    "organizer": "Onego Bio",
+    "datetime": "Nov 19, 4:30 PM – 9:00 PM",
+    "location": "Hämeentie 157, 00560 Helsinki",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:50:53.305202"
+  },
+  {
+    "title": "[Breakfast] From scale-up to $75bn valuation: the Revolut high-performance engine",
+    "organizer": "Revolut People",
+    "datetime": "Nov 20, 8:00 AM – 9:30 AM",
+    "location": "Partner Side Event Wing, Venue 8 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:50:59.622170"
+  },
+  {
+    "title": "AI Products: From POC to Scale",
+    "organizer": "Verda (formerly DataCrunch)",
+    "datetime": "Nov 18, 5:30 PM – 9:00 PM",
+    "location": "Kulttuurikasarmi, Narinkka 2",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:51:14.509265"
+  },
+  {
+    "title": "Poland Tech Rising: From ICT Potential to Global Impact",
+    "organizer": "Polish Investment & Trade Agency PAIH",
+    "datetime": "Nov 19, 11:00 AM – 1:00 PM",
+    "location": "Partner Side Event Wing, Venue 2 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:51:19.629287"
+  },
+  {
+    "title": "Hardware hackathon with PostHog & ElevenLabs",
+    "organizer": "PostHog",
+    "datetime": "Nov 20, 11:00 AM – 1:00 PM",
+    "location": "Partner Side Event Wing, Venue 3 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:51:24.767914"
+  },
+  {
+    "title": "Meet the hottest video games start-ups",
+    "organizer": "Games London",
+    "datetime": "Nov 20, 8:30 AM – 10:00 AM",
+    "location": "Partner Side Event Wing, Venue 4 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:51:31.012159"
+  },
+  {
+    "title": "Discovering Thailand Startup : Your Global Partner",
+    "organizer": "Royal Thai Embassy",
+    "datetime": "Nov 20, 11:00 AM – 1:00 PM",
+    "location": "Partner Side Event Wing, Venue 2 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:51:36.118326"
+  },
+  {
+    "title": "Donut Lab | Launch Event",
+    "organizer": "Donut Lab",
+    "datetime": "Nov 20, 11:15 AM – 1:00 PM",
+    "location": "Partner Side Event Wing, Venue 1 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:51:41.268475"
+  },
+  {
+    "title": "From Tech to Capital: How to Value Your Deep Tech and Software",
+    "organizer": "European Patent Office and Finnish Patent and Registration Office",
+    "datetime": "Nov 19, 2:00 PM – 3:30 PM",
+    "location": "Partner Side Event Wing, Venue 7 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:51:46.396322"
+  },
+  {
+    "title": "Pitches: VTT scaleups driving radical resource efficiency across industries",
+    "organizer": "VTT LaunchPad",
+    "datetime": "Nov 19, 2:00 PM – 3:00 PM",
+    "location": "VTT booth 7B5",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:51:51.510533"
+  },
+  {
+    "title": "BORDERLAND - Security Eastern Finland",
+    "organizer": "Business Joensuu Oy",
+    "datetime": "Nov 18, 6:00 PM – 10:00 PM",
+    "location": "Epicenter Helsinki",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:51:56.642476"
+  },
+  {
+    "title": "Build Global, Start in Estonia",
+    "organizer": "Invest Estonia",
+    "datetime": "Nov 19, 5:00 PM – 7:00 PM",
+    "location": "Partner Side Event Wing, Venue 4 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:52:02.912012"
+  },
+  {
+    "title": "Sparking The Future of Energy - Finals of The Spark Innovation Challenge",
+    "organizer": "Fortum Oyj",
+    "datetime": "Nov 19, 5:00 PM – 7:00 PM",
+    "location": "Partner Side Event Wing, Venue 8 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:52:08.037314"
+  },
+  {
+    "title": "State of European Tech",
+    "organizer": "Amazon Web Services - AWS",
+    "datetime": "Nov 19, 6:00 PM – 9:00 PM",
+    "location": "Hobo Hotel, Kluuvikatu 4, Helsinki",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:52:13.191733"
+  },
+  {
+    "title": "The Tech Policy Lounge",
+    "organizer": "Finnish Startup Community & The S9+ Coalition",
+    "datetime": "Nov 20, 11:00 AM – 1:00 PM",
+    "location": "Rautatieläisenkatu 3, 00520 Helsinki - Venue 7",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:52:18.339426"
+  },
+  {
+    "title": "The Software Singularity: Building for an AI-First Agentic Future",
+    "organizer": "Together AI",
+    "datetime": "Nov 19, 6:00 PM – 8:00 PM",
+    "location": "Partner Side Event Wing, Venue 3 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:52:23.459965"
+  },
+  {
+    "title": "Radical Creativity & AI // Breakfast Breakout 11",
+    "organizer": "Tietoevry Create",
+    "datetime": "Nov 19, 10:30 AM – 12:00 PM",
+    "location": "Partner Pod 6",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:52:28.588101"
+  },
+  {
+    "title": "The 2026 European Deep Tech Report",
+    "organizer": "Dealroom.co",
+    "datetime": "Nov 19, 8:00 AM – 9:30 AM",
+    "location": "Partner Side Event Wing, Venue 5 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:52:33.719842"
+  },
+  {
+    "title": "Nebius After Hours at Slush",
+    "organizer": "Nebius",
+    "datetime": "Nov 19, 6:00 PM – 10:00 PM",
+    "location": "Valkoinen Sali",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:52:39.926936"
+  },
+  {
+    "title": "Radical Creativity & AI // Breakfast Breakout 1",
+    "organizer": "Tietoevry Create",
+    "datetime": "Nov 19, 8:30 AM – 10:00 AM",
+    "location": "Partner Pod 6",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:52:45.044238"
+  },
+  {
+    "title": "Scaling at speed: using debt to fuel your growth",
+    "organizer": "HSBC Innovation Banking",
+    "datetime": "Nov 19, 11:00 AM – 1:00 PM",
+    "location": "Partner Side Event Wing, Venue 4 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:52:50.193543"
+  },
+  {
+    "title": "CTO Connect Mingle - Slush Edition",
+    "organizer": "Google Cloud, NVIDIA & Devoteam",
+    "datetime": "Nov 19, 10:00 PM – 11:59 PM",
+    "location": "Allas Restaurant",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:52:55.300668"
+  },
+  {
+    "title": "#musictech at Slush 2025",
+    "organizer": "Singa",
+    "datetime": "Nov 19, 4:00 PM – 9:00 PM",
+    "location": "Apollo Live Club",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:53:00.427827"
+  },
+  {
+    "title": "Spain’s Scaleup Momentum: Regional Hubs Fueling Global Innovation",
+    "organizer": "ICEX España Exportación e Inversiones",
+    "datetime": "Nov 19, 8:00 AM – 10:00 AM",
+    "location": "Partner Side Event Wing, Venue 2 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:53:05.551737"
+  },
+  {
+    "title": "Scaling Startups from Japan to the World",
+    "organizer": "Plug and Play",
+    "datetime": "Nov 19, 2:00 PM – 4:00 PM",
+    "location": "Partner Side Event Wing, Venue 1 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:53:11.749613"
+  },
+  {
+    "title": "Aiven for Startups Presents: AI Infrastructure, The Role of Open Source & Path to Production AI",
+    "organizer": "Aiven",
+    "datetime": "Nov 20, 2:00 PM – 4:00 PM",
+    "location": "Partner Side Event Wing, Venue 1 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:53:16.856921"
+  },
+  {
+    "title": "Growth Companies in the Defence Sector – Strategy & Tactics",
+    "organizer": "Hannes Snellman Attorneys Ltd",
+    "datetime": "Nov 12, 2:45 PM – 5:30 PM",
+    "location": "Hannes Snellman Attorneys Ltd, Eteläesplanadi 20, Helsinki",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Ended"
+    ],
+    "scraped_at": "2025-11-17T14:53:21.974553"
+  },
+  {
+    "title": "CMO Breakfast: Accelerate in the New Era of Media with Google DeepMind",
+    "organizer": "Google",
+    "datetime": "Nov 19, 7:30 AM – 9:30 AM",
+    "location": "Partner Side Event Wing, Venue 3 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:53:27.122291"
+  },
+  {
+    "title": "Futures of Food: The hottest tech for resilient agriculture and circular food systems",
+    "organizer": "EIT Food NE and Viikki Food Design Factory by University of Helsinki",
+    "datetime": "Nov 19, 4:30 PM – 7:30 PM",
+    "location": "Partner Side Event Wing, Venues 6 and 7 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:53:32.225331"
+  },
+  {
+    "title": "The AI growth playbook: From first user to global scale",
+    "organizer": "Stripe",
+    "datetime": "Nov 19, 11:30 AM – 1:00 PM",
+    "location": "Partner Side Event Wing, Venue 7 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:53:37.362160"
+  },
+  {
+    "title": "EIT Culture & Creativity Annual Investment Forum 2025 – powered by La French Touch",
+    "organizer": "EIT Culture & Creativity",
+    "datetime": "Nov 17, 3:00 PM – 6:30 PM",
+    "location": "Cable Factory, Kaapeliaukio 3, 00180 Helsinki",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:53:43.576441"
+  },
+  {
+    "title": "Look to Norway - where innovation meets opportunity!",
+    "organizer": "Innovation Norway",
+    "datetime": "Nov 19, 2:00 PM – 4:00 PM",
+    "location": "Partner Side Event Wing, Venue 8 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:53:48.684559"
+  },
+  {
+    "title": "Fin x Legora x Personio: Leading Change in the Age of AI",
+    "organizer": "Intercom, building Fin.ai",
+    "datetime": "Nov 19, 11:00 AM – 1:00 PM",
+    "location": "Partner Side Event Wing, Venue 1 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:53:53.824442"
+  },
+  {
+    "title": "VTT tech talk: Accelerate your innovation with VTT as your R&D partner",
+    "organizer": "VTT Technical Research Centre of Finland",
+    "datetime": "Nov 20, 2:00 PM – 3:00 PM",
+    "location": "VTT Booth 7B5",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:54:07.546588"
+  },
+  {
+    "title": "Resilience tech Slush evening",
+    "organizer": "Project A Ventures",
+    "datetime": "Nov 20, 4:00 PM – 7:00 PM",
+    "location": "Allas Restaurant",
+    "categories": [],
+    "status": [
+      "Partner Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:54:12.707018"
+  },
+  {
+    "title": "The Northern Way: Meet the Coolest Startups from Oulu",
+    "organizer": "BusinessOulu",
+    "datetime": "Nov 20, 9:00 AM – 11:00 AM",
+    "location": "Uunisaari, Pohjoinen Uunisaari 2, 00140 HELSINKI",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:54:18.887915"
+  },
+  {
+    "title": "Future-Proofing the Talent: Learning in the Age of AI",
+    "organizer": "The Recursive",
+    "datetime": "Nov 20, 1:00 PM – 2:00 PM",
+    "location": "Partner Pod 2",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:54:24.014094"
+  },
+  {
+    "title": "New Energy Challenge 2025 Finals - A decade of Energy Disrupters",
+    "organizer": "Shell",
+    "datetime": "Nov 19, 2:00 PM – 4:00 PM",
+    "location": "Partner Side Event Wing, Venue 4 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:54:29.146440"
+  },
+  {
+    "title": "Mix & Match by BBVA",
+    "organizer": "BBVA",
+    "datetime": "Nov 20, 2:00 PM – 4:00 PM",
+    "location": "Partner Side Event Wing, Venue 2 in Messukeskus",
+    "categories": [],
+    "status": [
+      "Partner Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:54:34.317186"
+  },
+  {
+    "title": "Töölo Bay 2k Morning One Run",
+    "organizer": "Scantrust BV and Pharus",
+    "datetime": "Nov 19, 7:00 AM – 9:30 AM",
+    "location": "Sokos Vaakuna Lobby",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:54:39.465913"
+  },
+  {
+    "title": "Startup Haven presents: Venture Breakfast",
+    "organizer": "Startup Haven",
+    "datetime": "Nov 18, 9:00 AM – 11:00 AM",
+    "location": "Dylan Böle",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:54:44.625949"
+  },
+  {
+    "title": "FOAK Fundamentals: Capital, Customers, Construction",
+    "organizer": "RMI - Third Derivative, TAH Foundation",
+    "datetime": "Nov 19, 2:00 PM – 4:30 PM",
+    "location": "TAH Foundation: Puistokatu 4, 00140 Helsinki, Finland",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:54:50.916015"
+  },
+  {
+    "title": "InvestED",
+    "organizer": "Helsinki Education Hub",
+    "datetime": "Nov 18, 4:00 PM – 9:00 PM",
+    "location": "University of Helsinki Main Building, Agora Hall",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:54:56.062163"
+  },
+  {
+    "title": "How to Land a Corporate Retail Giant as Your First Major Client",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 19, 1:00 PM – 1:30 PM",
+    "location": "Venture Client Track | 27pilots Booth | 7A10",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:55:01.198515"
+  },
+  {
+    "title": "Saudi Ecosystem Investor Mixer",
+    "organizer": "ministry of communications and information technology saudi arabia",
+    "datetime": "Nov 19, 6:00 PM – 9:00 PM",
+    "location": "Kruununhaka",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:55:06.318501"
+  },
+  {
+    "title": "Meetup with Kyoto City “Kyoto Innovates: Bridging Heritage and the Future”",
+    "organizer": "Deloitte Tohmatsu Venture Support_Tokyo",
+    "datetime": "Nov 20, 12:30 PM – 1:15 PM",
+    "location": "Room 1",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:55:11.457112"
+  },
+  {
+    "title": "Vantaan Energia startup scouting forum 2025",
+    "organizer": "City of Vantaa, Vantaan Energia, Innovestor",
+    "datetime": "Nov 18, 5:00 PM – 7:00 PM",
+    "location": "Vantaa Startup Runway co-working space",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:55:16.597895"
+  },
+  {
+    "title": "Founders Drinks",
+    "organizer": "Wave Ventures",
+    "datetime": "Nov 20, 6:00 PM – 7:30 PM",
+    "location": "Wave's office",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:55:22.771618"
+  },
+  {
+    "title": "Positioning Europe as the Go-To Hub for Sustainable Innovation in the Baltic Region",
+    "organizer": "GERMANY TRADE & INVEST",
+    "datetime": "Nov 20, 3:15 PM – 3:35 PM",
+    "location": "Germany Booth, inside Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:55:27.922572"
+  },
+  {
+    "title": "Scale It Up! Accelerating Climate Tech for the Built Environment",
+    "organizer": "Business Finland",
+    "datetime": "Nov 19, 12:00 PM – 3:00 PM",
+    "location": "208, Congress Wing, Helsinki Expo and Convention Center",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:55:33.085782"
+  },
+  {
+    "title": "Swiss Hour #2 | Showcasing Swiss Startups",
+    "organizer": "swisstech",
+    "datetime": "Nov 19, 3:00 PM – 4:00 PM",
+    "location": "Swisstech Booth, inside the Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:55:38.220049"
+  },
+  {
+    "title": "Amplify",
+    "organizer": "Aston Mukengedi",
+    "datetime": "Nov 20, 7:00 PM – 11:59 PM",
+    "location": "Partner Pod 1",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:55:43.352283"
+  },
+  {
+    "title": "FINTECH UNLEASHED – Scale with SME Finance",
+    "organizer": "Fintech Farm Helsinki",
+    "datetime": "Nov 19, 7:00 PM – 11:59 PM",
+    "location": "Teatteri Night Club",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:55:48.469216"
+  },
+  {
+    "title": "Sisu Launchpad - Investor Meetup",
+    "organizer": "City Of Vantaa / Business Vantaa",
+    "datetime": "Nov 18, 9:00 AM – 12:00 PM",
+    "location": "Innovation Home Kamppi, Dustin Event Arena, Kansakoulukatu 3",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:55:53.584496"
+  },
+  {
+    "title": "Bagel AI",
+    "organizer": "Google",
+    "datetime": "Nov 19, 12:40 PM – 1:00 PM",
+    "location": "Slush",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:55:59.744185"
+  },
+  {
+    "title": "SLAs for agentic applications: road to prompt reliability engineering",
+    "organizer": "Google",
+    "datetime": "Nov 21, 2:55 PM – 3:15 PM",
+    "location": "Google Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:56:04.855117"
+  },
+  {
+    "title": "Collaborate to Compete: Strengthening Europe’s Innovation Power",
+    "organizer": "Advantage Austria",
+    "datetime": "Nov 20, 1:00 PM – 1:30 PM",
+    "location": "Austria Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:56:09.968073"
+  },
+  {
+    "title": "SLUSH Chai - Bae HQ x Deel",
+    "organizer": "Bae HQ",
+    "datetime": "Nov 18, 3:00 PM – 5:00 PM",
+    "location": "Areefer’s Crafting Club",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:56:15.072743"
+  },
+  {
+    "title": "Energy Shift Forum Helsinki",
+    "organizer": "Energy Shift Capital x Helen x Climate KIC x Burson",
+    "datetime": "Nov 20, 8:30 AM – 11:00 AM",
+    "location": "Helen, Itämerenkatu 25, 00180 Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:56:20.219527"
+  },
+  {
+    "title": "Offerswap Lounge | Helsinki",
+    "organizer": "Offerswap",
+    "datetime": "Nov 19, 5:30 PM – 8:00 PM",
+    "location": "Forum Box",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:56:25.337102"
+  },
+  {
+    "title": "What startups should know before getting into the polymer industry",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 20, 2:00 PM – 2:30 PM",
+    "location": "Venture Client Track | 27pilots Booth | 7A10",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:56:31.490237"
+  },
+  {
+    "title": "Founders Spotlight: HTB, Acumino, Elyos, Thymia | Endeavor Founders building from Elsewhere",
+    "organizer": "Endeavor Catalyst",
+    "datetime": "Nov 19, 2:00 PM – 4:00 PM",
+    "location": "Endeavor Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:56:36.623226"
+  },
+  {
+    "title": "Innovating your next big thing in Finland",
+    "organizer": "Business Finland & Invest in Finland",
+    "datetime": "Nov 20, 8:00 AM – 11:00 AM",
+    "location": "208, Congress Wing, Helsinki Expo and Convention Center",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:56:41.782746"
+  },
+  {
+    "title": "Cosmote Telekom Start Up Call: Pitch Your Solution to a Leading Telecom Operator",
+    "organizer": "Endeavor Catalyst",
+    "datetime": "Nov 19, 11:30 AM – 12:30 PM",
+    "location": "Endeavor Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:56:46.903668"
+  },
+  {
+    "title": "Solving prioritized Business Needs: Equinor’s Venture Client Model",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 19, 2:00 PM – 2:30 PM",
+    "location": "Venture Client Track | 27pilots Booth | 7A10",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:56:52.020892"
+  },
+  {
+    "title": "Creative Brunch by EIT Culture & Creativity & Aalto Creatives",
+    "organizer": "EIT Culture & Creativity",
+    "datetime": "Nov 17, 11:00 AM – 2:00 PM",
+    "location": "Cable Factory, Kaapeliaukio 3, 00180 Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Ended"
+    ],
+    "scraped_at": "2025-11-17T14:57:09.449919"
+  },
+  {
+    "title": "AI-Adoption in Risk-Averse Industries",
+    "organizer": "Google",
+    "datetime": "Nov 20, 11:20 AM – 11:40 AM",
+    "location": "Google Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:57:14.565440"
+  },
+  {
+    "title": "Seeing with AI: Distance's mixed-reality technology in vehicles",
+    "organizer": "Google",
+    "datetime": "Nov 21, 12:10 PM – 12:30 PM",
+    "location": "Google Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:57:19.721444"
+  },
+  {
+    "title": "EIT Urban Mobility Investor dinner",
+    "organizer": "EIT Urban Mobility",
+    "datetime": "Nov 19, 5:30 PM – 9:00 PM",
+    "location": "Ravintola Sipuli",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:57:24.846219"
+  },
+  {
+    "title": "AAlchemy Growth Lab Builds the Bridge to Europe",
+    "organizer": "AAlchemy Ventures",
+    "datetime": "Nov 18, 4:30 PM – 7:30 PM",
+    "location": "Epicenter, Mikonkatu 9, 00100, Helsinki, Revelation Space",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:57:29.973171"
+  },
+  {
+    "title": "Meet up with Yamato Holdings “Co-Creating the Future of Logistics”",
+    "organizer": "SusHi Tech Tokyo",
+    "datetime": "Nov 19, 11:00 AM – 11:45 AM",
+    "location": "Room 1",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:57:36.140305"
+  },
+  {
+    "title": "How Holcim, Titan Cement & Kiilto Ventures Partner with Startups to Transform Building Materials",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 19, 11:00 AM – 11:30 AM",
+    "location": "Venture Client Track | 27pilots Booth | 7A10",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:57:41.252389"
+  },
+  {
+    "title": "Defending the real world: cyber for energy, health & space",
+    "organizer": "360 Capital",
+    "datetime": "Nov 19, 9:00 AM – 11:00 AM",
+    "location": "Register to see the address",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:57:46.373812"
+  },
+  {
+    "title": "Slush Dagen Efter by BTCHEL & Aalto Bitcoin",
+    "organizer": "BTCHEL & Aalto Bitcoin",
+    "datetime": "Nov 21, 11:00 AM – 3:00 PM",
+    "location": "Käpylän Kiuas",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:57:51.483960"
+  },
+  {
+    "title": "This Will Hurt: A Frank Look at How to Industrialize Europe’s DeepTech Innovations",
+    "organizer": "GERMANY TRADE & INVEST",
+    "datetime": "Nov 20, 10:00 AM – 10:20 AM",
+    "location": "Germany Booth, inside Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:57:56.644102"
+  },
+  {
+    "title": "Star Tracker Evening with Space Startups",
+    "organizer": "ESA BIC Finland",
+    "datetime": "Nov 17, 5:00 PM – 7:00 PM",
+    "location": "Aalto University Campus",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:58:01.765178"
+  },
+  {
+    "title": "Sport Finland - SLUSH side event",
+    "organizer": "Sport Finland",
+    "datetime": "Nov 18, 4:30 PM – 8:00 PM",
+    "location": "Kulttuuritehdas Korjaamo",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:58:06.930915"
+  },
+  {
+    "title": "Pillsbury @ Slush 2025 - Play & Pour Reception",
+    "organizer": "Pillsbury Law",
+    "datetime": "Nov 20, 5:00 PM – 8:00 PM",
+    "location": "Register on Luma to See Address",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:58:13.089916"
+  },
+  {
+    "title": "🧪 Deeptech Meets Biotech: An Evening of Innovation | Slush 25' Side Event",
+    "organizer": "Wind, Ananda Impact Ventures & Resistomap",
+    "datetime": "Nov 19, 5:00 PM – 7:30 PM",
+    "location": "Resistomap Oy - Elimäenkatu 15, 00510 Helsinki, Finland",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:58:18.242070"
+  },
+  {
+    "title": "Global Deep Tech Battle powered by swisstech | Cleantech",
+    "organizer": "swisstech",
+    "datetime": "Nov 19, 11:00 AM – 12:00 PM",
+    "location": "Swisstech Booth, inside Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:58:23.362864"
+  },
+  {
+    "title": "Growth-Stage Investors Networking",
+    "organizer": "Springvest",
+    "datetime": "Nov 19, 4:00 PM – 7:00 PM",
+    "location": "Helsinki City",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:58:28.492787"
+  },
+  {
+    "title": "Raising 8 million in 8 weeks? Forget AI-The real revolution is the layer beneath!",
+    "organizer": "Germany Trade & Invest",
+    "datetime": "Nov 19, 11:45 AM – 12:05 PM",
+    "location": "Germany Booth, inside Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:58:33.611672"
+  },
+  {
+    "title": "Empowering Sustainable Decisions — Meetup with Hitachi’s Carve-Out Project “SustainaVerse”",
+    "organizer": "SusHi Tech Tokyo",
+    "datetime": "Nov 19, 5:00 PM – 5:45 PM",
+    "location": "Room 1",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:58:38.730072"
+  },
+  {
+    "title": "Syncskai Launch Preview — Slush Week Edition",
+    "organizer": "Techskai Oy, Nordic Bridge Music Oy",
+    "datetime": "Nov 18, 3:30 PM – 5:30 PM",
+    "location": "Pieni Roobertinkatu 16 A, 3rd Floor, Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:58:44.902662"
+  },
+  {
+    "title": "Benefitting from Startups at Scale: How to set up a leading Venture Client Unit and Program",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 20, 12:00 PM – 12:30 PM",
+    "location": "Venture Client Track | 27pilots Booth | 7A10",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:58:50.021393"
+  },
+  {
+    "title": "Civic Action Lab",
+    "organizer": "Civic Action Team",
+    "datetime": "Nov 15, 10:00 AM – 5:00 PM",
+    "location": "Helsinki Think Company Viikki - Latokartanonkaari 3",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Ended"
+    ],
+    "scraped_at": "2025-11-17T14:58:55.149741"
+  },
+  {
+    "title": "Female Angel Investors Power Breakfast",
+    "organizer": "BACKED",
+    "datetime": "Nov 18, 8:30 AM – 10:30 AM",
+    "location": "Sofia, Sofiankatu 4 C Aleksanterinkatu 28, Unioninkatu 27 00170 Helsinki, Finland",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:59:00.332895"
+  },
+  {
+    "title": "Investor After Party - Baltic Sea Unicorns",
+    "organizer": "Finnish Business Angels Network (FiBAN)",
+    "datetime": "Nov 18, 7:00 PM – 11:00 PM",
+    "location": "Maria 01",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T14:59:05.488198"
+  },
+  {
+    "title": "NECTURE Conversations @Taidehalli",
+    "organizer": "NECTURE",
+    "datetime": "Nov 18, 5:00 PM – 7:30 PM",
+    "location": "Taidehalli/Kunsthalle Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:59:10.623243"
+  },
+  {
+    "title": "Product Demo: Venture Client Platform - Slot II",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 19, 11:30 AM – 12:00 PM",
+    "location": "Booth 7A10 - Venture Client Track",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:59:16.792984"
+  },
+  {
+    "title": "Disconnect to reconnect 🔥 Saunagus from Iceland 🇮🇸✨",
+    "organizer": "Business Iceland",
+    "datetime": "Nov 19, 9:30 AM – 10:30 AM",
+    "location": "Allas Pool",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:59:21.911884"
+  },
+  {
+    "title": "Inclusion 2.0: It's Here to Stay",
+    "organizer": "deidei",
+    "datetime": "Nov 20, 8:30 AM – 10:30 AM",
+    "location": "Paasivuorenkatu 4 A @deideiHQ",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:59:27.015138"
+  },
+  {
+    "title": "SXSW 2026 intro",
+    "organizer": "Nordic Startup News",
+    "datetime": "Nov 19, 3:30 PM – 4:13 PM",
+    "location": "HolidayInn lobby",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:59:32.133583"
+  },
+  {
+    "title": "How a CVC will help you build your FOAK",
+    "organizer": "A2A",
+    "datetime": "Nov 19, 2:30 PM – 2:50 PM",
+    "location": "A2A Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:59:37.290644"
+  },
+  {
+    "title": "Y Science Health & Pharma Finalists",
+    "organizer": "swisstech",
+    "datetime": "Nov 20, 5:00 PM – 6:00 PM",
+    "location": "swisstech Booth inside Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:59:42.419867"
+  },
+  {
+    "title": "Way x VTT: Nerds of Logistics - Developer Meetup",
+    "organizer": "Way",
+    "datetime": "Nov 17, 6:00 PM – 8:00 PM",
+    "location": "Kulttuuritehdas Korjaamo",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:59:48.628669"
+  },
+  {
+    "title": "Interract's Design Arcade",
+    "organizer": "Jason",
+    "datetime": "Nov 20, 6:00 PM – 11:59 PM",
+    "location": "Partner Pod 4",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:59:53.775356"
+  },
+  {
+    "title": "Product Demo: Venture Client Platform - Slot IV",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 19, 3:30 PM – 4:00 PM",
+    "location": "Booth 7A10 - Venture Client Track",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:00:10.513380"
+  },
+  {
+    "title": "ESA Business Incubation Centre Showcase",
+    "organizer": "swisstech",
+    "datetime": "Nov 20, 4:15 PM – 5:00 PM",
+    "location": "Swisstech Booth inside Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:00:15.646233"
+  },
+  {
+    "title": "PRE-SLUSH COCKTAILS: Against All Odds – How to Build a Deep Tech Startup",
+    "organizer": "Borenius Attorneys",
+    "datetime": "Nov 18, 6:00 PM – 8:30 PM",
+    "location": "Borenius, Eteläesplanadi 2, 00130 Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:00:21.841279"
+  },
+  {
+    "title": "Iceland x Helsinki Tech Mixer 🇮🇸🇫🇮",
+    "organizer": "Business Iceland",
+    "datetime": "Nov 18, 4:30 PM – 6:30 PM",
+    "location": "Only for accepted guests",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:00:27.004160"
+  },
+  {
+    "title": "Pre-Slush EntrepreneurSHIP with UK & European tech decision makers",
+    "organizer": "London & Partners",
+    "datetime": "Nov 17, 11:30 AM – 10:59 PM",
+    "location": "Epicenter Stockholm + Viking Line",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:00:32.163238"
+  },
+  {
+    "title": "AWS & Automat-it Aftework",
+    "organizer": "Amazon Web Services - AWS",
+    "datetime": "Nov 20, 3:00 PM – 5:00 PM",
+    "location": "AWS Booth inside Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:00:37.293402"
+  },
+  {
+    "title": "Kima x Slush: Live App Demo – Elite Training in Your Pocket",
+    "organizer": "Kima",
+    "datetime": "Nov 19, 1:00 PM – 4:00 PM",
+    "location": "Hotel Arthur",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:00:42.435444"
+  },
+  {
+    "title": "A-CH SO! Raclette Evening",
+    "organizer": "swisstech",
+    "datetime": "Nov 19, 6:30 PM – 9:00 PM",
+    "location": "Studio Skaala Oy | Bruno Granholmin kuja 3, 00510 Helsinki, Finnland",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:00:47.594641"
+  },
+  {
+    "title": "48hr VR Filming Hackathon",
+    "organizer": "DeoVR",
+    "datetime": "Nov 19, 9:00 AM – 10:00 PM",
+    "location": "XR Center",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:00:52.757765"
+  },
+  {
+    "title": "Agentic AI",
+    "organizer": "Google",
+    "datetime": "Nov 19, 1:05 PM – 1:20 PM",
+    "location": "Slush",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:00:58.951298"
+  },
+  {
+    "title": "Nordic Lounge for entrepreneurs and investors",
+    "organizer": "NORDIA Law",
+    "datetime": "Nov 19, 6:00 PM – 9:00 PM",
+    "location": "Bar Bardem, Yliopistonkatu 7, Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:01:04.107003"
+  },
+  {
+    "title": "VC & Startup Aperitivo by Blast. x Baby vc",
+    "organizer": "Blast. x Baby vc",
+    "datetime": "Nov 19, 6:00 PM – 10:00 PM",
+    "location": "Urban3/Maria 01",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:01:09.234008"
+  },
+  {
+    "title": "48forward Dinner - Slush Edition",
+    "organizer": "48forward",
+    "datetime": "Nov 19, 6:30 PM – 10:30 PM",
+    "location": "The Cock",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:01:14.375391"
+  },
+  {
+    "title": "Google for Startups Cloud Program",
+    "organizer": "Google",
+    "datetime": "Nov 19, 11:00 AM – 11:20 AM",
+    "location": "Slush",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:01:19.488645"
+  },
+  {
+    "title": "Global Ecosystem Mixer - Maria 01",
+    "organizer": "Maria 01",
+    "datetime": "Nov 18, 3:45 PM – 7:00 PM",
+    "location": "Maria 01 - Lapinlahdenkatu 16",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:01:24.609896"
+  },
+  {
+    "title": "Single @ Slush",
+    "organizer": "Winged Labs, Inc",
+    "datetime": "Nov 20, 9:00 PM – 11:00 PM",
+    "location": "Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:01:30.807816"
+  },
+  {
+    "title": "Party at the Pod",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 11:30 PM – Nov 21, 12:15 AM",
+    "location": "Main Event Area",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:01:35.915401"
+  },
+  {
+    "title": "Tokyo Metropolitan Area: Encounter Startup Ecosystem Innovators from Tokyo",
+    "organizer": "SusHi Tech Tokyo",
+    "datetime": "Nov 20, 2:30 PM – 3:30 PM",
+    "location": "Room 1",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:01:41.080898"
+  },
+  {
+    "title": "Navigating the U.S. Market: Strategic and Legal Insights for Finnish Companies",
+    "organizer": "DLA Piper Finland",
+    "datetime": "Nov 18, 3:00 PM – 5:00 PM",
+    "location": "DLA Piper office, Kanavaranta 1",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:01:46.193874"
+  },
+  {
+    "title": "Q2Slush Dinner",
+    "organizer": "EIT Global Outreach & QEurope",
+    "datetime": "Nov 19, 7:00 PM – 9:00 PM",
+    "location": "Goldfish Bar",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:01:51.329218"
+  },
+  {
+    "title": "Tokyo Metropolitan Area: Cross Paths with Japanese Startups",
+    "organizer": "SusHi Tech Tokyo",
+    "datetime": "Nov 20, 3:45 PM – 4:30 PM",
+    "location": "Room 1",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:01:56.439838"
+  },
+  {
+    "title": "GFS Cloud Program",
+    "organizer": "Google",
+    "datetime": "Nov 20, 11:00 AM – Nov 21, 11:15 AM",
+    "location": "Google Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:02:02.587252"
+  },
+  {
+    "title": "Don’t Network in the Sauna",
+    "organizer": "Tina Suomi",
+    "datetime": "Nov 19, 5:00 PM – 8:00 PM",
+    "location": "Merimiehenkatu 36d, 00150 Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:02:07.717112"
+  },
+  {
+    "title": "Norwegian Tech Warm-up",
+    "organizer": "NTNU",
+    "datetime": "Nov 18, 6:30 PM – 9:00 PM",
+    "location": "Helsinki Bryggeri",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:02:12.830012"
+  },
+  {
+    "title": "Product Demo: Venture Client Platform - Slot 1II",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 19, 2:30 PM – 3:00 PM",
+    "location": "Booth 7A10 - Venture Client Track",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:02:17.957436"
+  },
+  {
+    "title": "Innovating Behind Locked Doors: Getting Risk-Averse Industries to Adopt AI\"",
+    "organizer": "Google",
+    "datetime": "Nov 21, 11:20 AM – 11:40 AM",
+    "location": "Google Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:02:23.111839"
+  },
+  {
+    "title": "European Scaleup Strategy Forum: Navigating Beyond Early-Stage",
+    "organizer": "Start2 Group",
+    "datetime": "Nov 19, 5:00 PM – 7:02 PM",
+    "location": "Restaurant Bierhaus München",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:02:28.239860"
+  },
+  {
+    "title": "SLUSH Breakfast Club 🥐☕️ // CYKOM Social Run 👟",
+    "organizer": "CYKOM",
+    "datetime": "Nov 19, 7:00 AM – 8:30 AM",
+    "location": "Ekberg 1852",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:02:34.583090"
+  },
+  {
+    "title": "LGBTQ+ Breakfast with Founder & VC Speed Dating",
+    "organizer": "identity.vc I Backing LGBTQ+ Founders",
+    "datetime": "Nov 20, 8:00 AM – 9:45 AM",
+    "location": "Slush Venue / Investor Office Hours 2",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:02:39.744433"
+  },
+  {
+    "title": "Slush Casino Night",
+    "organizer": "Slush Team",
+    "datetime": "Nov 20, 7:00 PM – 11:00 PM",
+    "location": "LP Lounge",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:02:44.859982"
+  },
+  {
+    "title": "Shaping the Next Normal Together with Suntory",
+    "organizer": "SusHi Tech Tokyo",
+    "datetime": "Nov 19, 1:00 PM – 1:45 PM",
+    "location": "Room 1",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:02:50.017952"
+  },
+  {
+    "title": "German Pitching Stage: #Biotech #CleanTech #Energy #Food&Nutrition #Life Sciences",
+    "organizer": "German-Finnish Chamber of Commerce (AHK Finnland)",
+    "datetime": "Nov 19, 10:45 AM – 11:45 AM",
+    "location": "German Pitching Stage Booth 7A4",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:03:08.485396"
+  },
+  {
+    "title": "AI for Change Summit 2025 – Side Event on Responsible AI",
+    "organizer": "AI for Change Foundation",
+    "datetime": "Nov 20, 9:30 AM – 3:30 PM",
+    "location": "Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:03:13.651016"
+  },
+  {
+    "title": "[PRIVATE DAVOS DINNER]—Global Conversations",
+    "organizer": "Global Conversations",
+    "datetime": "Nov 20, 6:30 PM – 9:30 PM",
+    "location": "Location shared upon acceptance",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:03:18.773323"
+  },
+  {
+    "title": "Product Demo: Venture Client Platform - Slot VIII",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 20, 2:30 PM – 3:00 PM",
+    "location": "Booth 7A10 - Venture Client Track",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:03:23.928956"
+  },
+  {
+    "title": "Investors vs. Founders: Padel & Pitch",
+    "organizer": "Fit+",
+    "datetime": "Nov 18, 1:00 PM – 4:00 PM",
+    "location": "Padel X Helsinki, Konepajanpasaasi 6, 00510 Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:03:29.073438"
+  },
+  {
+    "title": "Strange Startups",
+    "organizer": "University of Arts",
+    "datetime": "Nov 18, 2:00 PM – 4:00 PM",
+    "location": "Kuvataideakatemia, Sörnäisten rantatie 19",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:03:34.188256"
+  },
+  {
+    "title": "Beyond the car: How Startups can partner with Automotive Leaders Insights from BMW",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 19, 12:00 PM – 12:30 PM",
+    "location": "Venture Client Track | 27pilots Booth | 7A10",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:03:39.307861"
+  },
+  {
+    "title": "Find Your Fin-Mate: The Fintech & Commerce Mixer",
+    "organizer": "Cover Genius & Leo Capital",
+    "datetime": "Nov 19, 9:00 PM – 11:59 PM",
+    "location": "Bar Mate",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:03:45.485043"
+  },
+  {
+    "title": "Global Growth & Circular Futures",
+    "organizer": "University of Helsinki",
+    "datetime": "Nov 17, 5:00 PM – 8:00 PM",
+    "location": "University of Helsinki Main Building",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:03:50.614944"
+  },
+  {
+    "title": "The Art of Exit - the most important event at Slush",
+    "organizer": "The Exit Academy",
+    "datetime": "Nov 19, 11:00 AM – 12:00 PM",
+    "location": "VIP Lounge - next to 203b, Slush Building",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:03:55.754345"
+  },
+  {
+    "title": "New Energy Challenge x Third Derivative Energy Mixer",
+    "organizer": "New Energy Challenge",
+    "datetime": "Nov 18, 5:00 PM – 7:00 PM",
+    "location": "Luma",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:04:00.875026"
+  },
+  {
+    "title": "Venture Clienting Sucks (Until You Get It Right)",
+    "organizer": "Advantage Austria",
+    "datetime": "Nov 20, 10:00 AM – 10:30 AM",
+    "location": "Austria Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:04:06.043593"
+  },
+  {
+    "title": "Introduction of Mitsubishi Corporation",
+    "organizer": "SusHi Tech Tokyo",
+    "datetime": "Nov 19, 10:00 AM – 10:45 AM",
+    "location": "Room 1",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:04:11.187240"
+  },
+  {
+    "title": "Vibe Creation Event for Interactive Ads",
+    "organizer": "Quicksave Interactive",
+    "datetime": "Nov 19, 4:30 PM – 6:30 PM",
+    "location": "Close to the Helsinki railway station",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:04:17.356538"
+  },
+  {
+    "title": "German Pitching Stage: #Cyber Security #Spacetech #Fintech & Insurance Tech #Artificial Intelligence",
+    "organizer": "German-Finnish Chamber of Commerce (AHK Finnland)",
+    "datetime": "Nov 20, 10:40 AM – 11:35 AM",
+    "location": "Germany Booth, inside Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:04:22.499375"
+  },
+  {
+    "title": "Art of Investing. Investing into Art.",
+    "organizer": "Siena Secondary Fund",
+    "datetime": "Nov 19, 1:30 PM – 2:30 PM",
+    "location": "Exhibitor VIP Lounge (next to Room 203B). Messukeskus Siipi.",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:04:27.631945"
+  },
+  {
+    "title": "Scaling Up European Tech Champions",
+    "organizer": "Tesi",
+    "datetime": "Nov 18, 5:00 PM – 7:30 PM",
+    "location": "HUONE Kluuvi",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:04:32.774276"
+  },
+  {
+    "title": "The winning pit stop strategy for the VC asset class with Nico",
+    "organizer": "Rosberg Ventures",
+    "datetime": "Nov 18, 4:00 PM – 4:45 PM",
+    "location": "Finlandia hall, Roundtable rooms",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:04:37.884232"
+  },
+  {
+    "title": "Deeptech Drinks & Demos with Conception X + XTX Ventures",
+    "organizer": "Conception X",
+    "datetime": "Nov 19, 5:00 PM – 8:00 PM",
+    "location": "Helsinki City Centre",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:04:43.006455"
+  },
+  {
+    "title": "Meet Fukuoka: A Startup-Friendly and Livable City in Japan",
+    "organizer": "SusHi Tech Tokyo",
+    "datetime": "Nov 19, 12:00 PM – 12:45 PM",
+    "location": "Room 1",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:04:49.265360"
+  },
+  {
+    "title": "French Tech in Helsinki",
+    "organizer": "French Institute in Finland",
+    "datetime": "Nov 20, 5:00 PM – 6:30 PM",
+    "location": "Tehtaankatu 27-29D, 00150 Helsinki / French Institute in Finland",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:04:54.425927"
+  },
+  {
+    "title": "🔥 Sauna & Startups: Pitching in the Heat ( Impact Edition)",
+    "organizer": "Homemade B.V",
+    "datetime": "Nov 18, 4:45 PM – 6:45 PM",
+    "location": "TBA ( Helsinki)",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:04:59.604863"
+  },
+  {
+    "title": "Mediation in Google Booth",
+    "organizer": "Google",
+    "datetime": "Nov 20, 10:00 AM – 10:15 AM",
+    "location": "Google booth inside Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:05:04.710466"
+  },
+  {
+    "title": "Day 2: Business Finland Happiness Lounge",
+    "organizer": "Business Finland",
+    "datetime": "Nov 20, 8:00 AM – 6:00 PM",
+    "location": "208–209, Congress Wing, Helsinki Expo and Convention Center",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:05:09.877052"
+  },
+  {
+    "title": "The BACKED Party 2025",
+    "organizer": "BACKED",
+    "datetime": "Nov 19, 10:00 PM – 11:59 PM",
+    "location": "Kaiku",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:05:15.004553"
+  },
+  {
+    "title": "Western Dynamism Breakfast - Hosted by Harbinger, ArcTern Ventures, and Maniv",
+    "organizer": "Harbinger",
+    "datetime": "Nov 20, 8:00 AM – 10:00 AM",
+    "location": "To be announced in Luma",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:05:21.205501"
+  },
+  {
+    "title": "Moon Creative Lab Inc. ＆ Lullaby Meetup -Unlocking New Value Through Mitsui & Co. Open Innovation",
+    "organizer": "SusHi Tech Tokyo",
+    "datetime": "Nov 19, 4:00 PM – 4:45 PM",
+    "location": "Room 1",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:05:26.321793"
+  },
+  {
+    "title": "A Night with Public Sector – An Evening of Co-Creation",
+    "organizer": "Sitra",
+    "datetime": "Nov 18, 4:00 PM – 8:00 PM",
+    "location": "Sitra, Ruoholahti, Itämerenkatu 11–13",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:05:31.473954"
+  },
+  {
+    "title": "AI Natives Afterwork by Shook",
+    "organizer": "Shook Digital",
+    "datetime": "Nov 18, 5:00 PM – 9:00 PM",
+    "location": "Shook Office",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:05:36.592814"
+  },
+  {
+    "title": "Harness the Power of Supercharged Ecosystems for Your Company’s Success",
+    "organizer": "Business Finland",
+    "datetime": "Nov 20, 11:30 AM – 6:00 PM",
+    "location": "208, Congress Wing, Helsinki Expo and Convention Center",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:05:41.725995"
+  },
+  {
+    "title": "Jolla: Local AI You Own and Control - Live Showcase @ Holiday Inn",
+    "organizer": "Jolla Group Oy",
+    "datetime": "Nov 19, 10:00 AM – 8:00 PM",
+    "location": "Holiday Inn Helsinki Expo",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:05:46.852407"
+  },
+  {
+    "title": "From the C-Suite: Airbus and Kone on Startups as a Strategy for Corporate Competitiveness",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 19, 3:00 PM – 3:30 PM",
+    "location": "Venture Client Track | 27pilots Booth | 7A10",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:05:51.967992"
+  },
+  {
+    "title": "Swiss Hour #1 | Showcasing Swiss Startups",
+    "organizer": "swisstech",
+    "datetime": "Nov 19, 12:00 PM – 1:00 PM",
+    "location": "Swisstech Booth, inside the Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:06:11.641142"
+  },
+  {
+    "title": "The Best-Kept Secret in the Nordics – Networking Reception",
+    "organizer": "Combient Foundry",
+    "datetime": "Nov 18, 5:00 PM – 8:00 PM",
+    "location": "Stora Enso - APPLICATION REQUIRED",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:06:16.792905"
+  },
+  {
+    "title": "Marketing Meetup",
+    "organizer": "Customer.io",
+    "datetime": "Nov 18, 5:00 PM – 7:30 PM",
+    "location": "TBA to Confirmed Attendees",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:06:21.927274"
+  },
+  {
+    "title": "Latest on Google AI",
+    "organizer": "Google",
+    "datetime": "Nov 19, 11:50 AM – 12:10 PM",
+    "location": "Slush",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:06:28.150512"
+  },
+  {
+    "title": "Official After Party @Löyly - Rebooting Play",
+    "organizer": "32F Entertainment Oy",
+    "datetime": "Nov 19, 9:00 PM – 11:59 PM",
+    "location": "Löyly",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:06:33.312262"
+  },
+  {
+    "title": "Deep Tech Founders AMA: The Realities of Fundraising & Scaling Across the Atlantic",
+    "organizer": "Drumbeat Capital",
+    "datetime": "Nov 20, 8:00 AM – 9:30 AM",
+    "location": "Slush Venue / Investor Office Hours 1",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:06:38.462408"
+  },
+  {
+    "title": "K-Startup Demo Day",
+    "organizer": "Vertical",
+    "datetime": "Nov 17, 4:15 PM – 9:00 PM",
+    "location": "Maria01",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:06:43.614511"
+  },
+  {
+    "title": "Founders & Investors Dinner with Fenwick & Failup Ventures",
+    "organizer": "Failup Ventures & Fenwick",
+    "datetime": "Nov 18, 7:00 PM – 9:30 PM",
+    "location": "Luma",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:06:48.754337"
+  },
+  {
+    "title": "Belgian Beer Night - 10th Anniversary",
+    "organizer": "Startup.Flanders, hub.brussels & Digital Wallonia",
+    "datetime": "Nov 19, 8:00 PM – 11:59 PM",
+    "location": "Belge, Kluuvikatu 5",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:06:53.898593"
+  },
+  {
+    "title": "NBG Business Seeds: How the National Bank of Greece Backs Fintech Founders",
+    "organizer": "Endeavor Catalyst",
+    "datetime": "Nov 19, 12:30 PM – 1:00 PM",
+    "location": "Endeavor Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:06:59.050482"
+  },
+  {
+    "title": "Builder's Dinner by Null Fellows",
+    "organizer": "Null Fellowship",
+    "datetime": "Nov 17, 6:30 PM – 8:30 PM",
+    "location": "Secret:)",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:07:05.229207"
+  },
+  {
+    "title": "Voyages of Startup Discoveries",
+    "organizer": "#3F",
+    "datetime": "Nov 18, 4:00 PM – 7:00 PM",
+    "location": "Business Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:07:10.426201"
+  },
+  {
+    "title": "Designing Pricing & GTM for AI | Panel & Networking @ Slush",
+    "organizer": "Alexa De La Torre",
+    "datetime": "Nov 19, 6:00 PM – 8:00 PM",
+    "location": "Ravintola Sipuli",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:07:15.563270"
+  },
+  {
+    "title": "Finishers Community Run",
+    "organizer": "Finishers",
+    "datetime": "Nov 18, 9:00 AM – 10:00 AM",
+    "location": "Kappeli – Esplanadi Park",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:07:20.718434"
+  },
+  {
+    "title": "Creative Mixer by EIT Culture & Creativity & Aalto Creatives",
+    "organizer": "EIT Culture & Creativity",
+    "datetime": "Nov 17, 6:30 PM – 9:30 PM",
+    "location": "Cable Factory, Kaapeliaukio 3, 00180 Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:07:25.869593"
+  },
+  {
+    "title": "New Nordics Healthtech Matchmaking",
+    "organizer": "Terkko Health Hub",
+    "datetime": "Nov 19, 6:00 PM – 10:00 PM",
+    "location": "Terkko Health Hub",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:07:31.001361"
+  },
+  {
+    "title": "Product Demo: Venture Client Platform - Slot VII",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 20, 11:30 AM – 12:00 PM",
+    "location": "Booth 7A10 - Venture Client Track",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:07:37.164117"
+  },
+  {
+    "title": "Creally Brunch afterSlush",
+    "organizer": "Creally",
+    "datetime": "Nov 21, 12:00 PM – 3:00 PM",
+    "location": "Shared upon acceptance",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:07:42.310903"
+  },
+  {
+    "title": "Digital citizenship and internet literacy: Empowering against online harms and cyber threats",
+    "organizer": "Google",
+    "datetime": "Nov 20, 1:30 PM – 1:50 PM",
+    "location": "Slush",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:07:47.469060"
+  },
+  {
+    "title": "Extremely Exclusive Meridian Afterparty",
+    "organizer": "Meridian",
+    "datetime": "Nov 20, 6:30 PM – 10:00 PM",
+    "location": "Partner Pod 2",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:07:52.619485"
+  },
+  {
+    "title": "Combating Disinformation in the Age of AI: Creating a Trusted and Secure Digital Society",
+    "organizer": "SusHi Tech Tokyo",
+    "datetime": "Nov 20, 11:30 AM – 12:15 PM",
+    "location": "Room 1",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:07:57.738722"
+  },
+  {
+    "title": "Investing in diverse teams",
+    "organizer": "Advantage Austria",
+    "datetime": "Nov 19, 4:00 PM – 4:30 PM",
+    "location": "Austria Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:08:02.877491"
+  },
+  {
+    "title": "German Pitching Stage: #Deep Tech",
+    "organizer": "German-Finnish Chamber of Commerce (AHK Finnland)",
+    "datetime": "Nov 20, 2:35 PM – 3:10 PM",
+    "location": "Germany Booth, inside Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:08:09.142854"
+  },
+  {
+    "title": "Ascent Advisers community afterwork & networking pre-party",
+    "organizer": "Ascent Advisers",
+    "datetime": "Nov 20, 6:00 PM – 9:00 PM",
+    "location": "Kaisaniemenkatu 1Ba, 7th floor, Helsinki, 00100",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:08:14.284044"
+  },
+  {
+    "title": "Founders Running Club @Slush",
+    "organizer": "Founders Running Club",
+    "datetime": "Nov 18, 9:00 AM – 10:30 AM",
+    "location": "Kansalaistori Square, next to Oodi",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:08:19.416788"
+  },
+  {
+    "title": "Italian Companies @ Slush 2025",
+    "organizer": "Italian Trade Agency",
+    "datetime": "Nov 20, 9:30 AM – 4:30 PM",
+    "location": "Italy Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:08:24.522307"
+  },
+  {
+    "title": "Sauna Talks: Cool Minds, Hot Ideas 🔥",
+    "organizer": "46elks",
+    "datetime": "Nov 19, 3:30 PM – 7:00 PM",
+    "location": "Pasilan saunatilat, Pasila",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:08:29.634884"
+  },
+  {
+    "title": "Introducing Microcheck Food Safety Partners - Startups4Peace winner pitch and discussions.",
+    "organizer": "Mumtaz Guran",
+    "datetime": "Nov 19, 4:30 PM – 5:00 PM",
+    "location": "TBA",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:08:34.746643"
+  },
+  {
+    "title": "Agentics Finland #3 - the Slush edition",
+    "organizer": "Teemu Linna",
+    "datetime": "Nov 18, 5:30 PM – 9:00 PM",
+    "location": "Kulttuurikasarmi, Narinkka 2",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:08:39.857671"
+  },
+  {
+    "title": "Going Green and Circular: Industrial Power Regions in Transformation",
+    "organizer": "Advantage Austria",
+    "datetime": "Nov 20, 10:30 AM – 11:00 AM",
+    "location": "Austria Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:08:46.052292"
+  },
+  {
+    "title": "Femcode Collective x Lovable: Pre-Slush diva boss pipeline",
+    "organizer": "Herizon",
+    "datetime": "Nov 17, 5:00 PM – 11:00 PM",
+    "location": "Eira",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:08:51.209018"
+  },
+  {
+    "title": "The Safety Lab: An Interactive Workshop on Psychological Safety and Emotional Intelligence.",
+    "organizer": "World of Insights",
+    "datetime": "Nov 17, 12:00 PM – 2:00 PM",
+    "location": "Luckan, Yrjönkatu 27, 00100 Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Ended"
+    ],
+    "scraped_at": "2025-11-17T15:09:10.364197"
+  },
+  {
+    "title": "Breakfast: Data-Driven Investing @ Slush",
+    "organizer": "Sunscrapers",
+    "datetime": "Nov 19, 8:00 AM – 9:30 AM",
+    "location": "Albina Restaurant & Wine Bar",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:09:16.641482"
+  },
+  {
+    "title": "Day 1: Business Finland Happiness Lounge",
+    "organizer": "Business Finland",
+    "datetime": "Nov 19, 8:00 AM – 6:00 PM",
+    "location": "208–209, Congress Center, Helsinki Expo and Convention Center",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:09:21.789659"
+  },
+  {
+    "title": "Post-SLUSH Sauna for Ukrainian Tech Leaders and Friends by PromoRepublic",
+    "organizer": "PromoRepublic",
+    "datetime": "Nov 20, 8:00 PM – 11:00 PM",
+    "location": "Historical Private Sauna in Helsinki (RSVP to see exact location)",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:09:26.909300"
+  },
+  {
+    "title": "LP VC Matchmaking - Mountside Ventures <> Slush (Day 1)",
+    "organizer": "Jon Hollis",
+    "datetime": "Nov 19, 4:00 PM – 6:00 PM",
+    "location": "at Slush (exact location TBA)",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:09:32.068217"
+  },
+  {
+    "title": "DECOI 2025",
+    "organizer": "Finnish Business Angels Network (FiBAN)",
+    "datetime": "Nov 18, 8:30 AM – 4:00 PM",
+    "location": "Valo Work & Hotel",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:09:37.224342"
+  },
+  {
+    "title": "Salsa at the Pod",
+    "organizer": "Slush",
+    "datetime": "Nov 20, 8:30 PM – 10:50 PM",
+    "location": "Main Event Area",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:09:42.371221"
+  },
+  {
+    "title": "The Investor Pitch: European Investors share on stage who they back and what they offer",
+    "organizer": "Endeavor Catalyst",
+    "datetime": "Nov 20, 10:00 AM – 12:00 PM",
+    "location": "Endeavor Booth",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:09:48.611205"
+  },
+  {
+    "title": "Product Demo: Venture Client Platform - Slot VI",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 20, 10:30 AM – 11:00 AM",
+    "location": "Booth 7A10 - Venture Client Track",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:09:53.758343"
+  },
+  {
+    "title": "InfraX: Episode 2 – Innovation Meets Infrastructure",
+    "organizer": "University of Helsinki",
+    "datetime": "Nov 19, 4:00 PM – 6:00 PM",
+    "location": "Yliopistonkatu 3, The University of Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:09:58.895160"
+  },
+  {
+    "title": "From the Nordics to Singapore: Your Gateway to Asia",
+    "organizer": "Nordic Innovation House Singapore",
+    "datetime": "Nov 20, 8:15 AM – 10:30 AM",
+    "location": "BOTTA",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:10:04.022713"
+  },
+  {
+    "title": "GPS: #Manufacturing&Materials #Property&Construction Tech # Transportation&Logistics #Dual-use",
+    "organizer": "German-Finnish Chamber of Commerce (AHK Finnland)",
+    "datetime": "Nov 20, 11:40 AM – 12:20 PM",
+    "location": "Germany Booth, inside Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:10:09.157455"
+  },
+  {
+    "title": "Rollyy Live Demo — Autonomous EV Charging in Motion",
+    "organizer": "Rollyy",
+    "datetime": "Nov 20, 3:00 PM – 5:00 PM",
+    "location": "Europark, parking by Messukeskus at Slush Slush",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:10:14.290453"
+  },
+  {
+    "title": "five.degrees x Lakestar: Meet the founders (rented a cinema)",
+    "organizer": "five.degrees",
+    "datetime": "Nov 20, 9:30 AM – 12:00 PM",
+    "location": "Cinema 10 minutes from the Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:10:19.426028"
+  },
+  {
+    "title": "AI Alternatives Session",
+    "organizer": "Literal Labs",
+    "datetime": "Nov 19, 5:00 PM – 7:00 PM",
+    "location": "Kupoli Cocktail Bar,",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:10:25.700859"
+  },
+  {
+    "title": "Fireside Chat with Swiss VCs: Spicehaus, Swisscom Ventures, VI Partners",
+    "organizer": "swisstech",
+    "datetime": "Nov 19, 4:00 PM – 5:00 PM",
+    "location": "Swisstech Booth inside Slush venue",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:10:30.865426"
+  },
+  {
+    "title": "CFO Bites",
+    "organizer": "Finnish Startup Community, Nordea, and Greenstep",
+    "datetime": "Nov 18, 8:45 AM – 10:45 AM",
+    "location": "Wolt HQ, Helsinki, Pohjoinen Rautatiekatu 21, 00100 Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:10:36.036049"
+  },
+  {
+    "title": "School Visits in Finland organized by CCE",
+    "organizer": "Council for Creative Education (CCE) Finland",
+    "datetime": "Nov 18, 8:15 AM – 1:30 PM",
+    "location": "Meeting point at Helsinki Main Railway Station",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:10:41.171427"
+  },
+  {
+    "title": "Connecting people with products, services & venues in the physical world",
+    "organizer": "Digiole",
+    "datetime": "Nov 18, 3:00 PM – 5:00 PM",
+    "location": "Helsinki XR Center. Hämeentie 135 A. 3rd Floor. 00560 Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:10:46.324765"
+  },
+  {
+    "title": "HOI (House of Impact) - Nov 17 - 18",
+    "organizer": "The Impact Office",
+    "datetime": "Nov 17, 11:00 AM – 8:00 PM",
+    "location": "Puistokatu 4",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:10:51.507953"
+  },
+  {
+    "title": "MatchXR 2025",
+    "organizer": "DIMECC OY",
+    "datetime": "Nov 18, 10:00 AM – 6:00 PM",
+    "location": "Arabia Creative Campus, 135d Hämeentie, 00560 - Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:10:57.755796"
+  },
+  {
+    "title": "CrossFit WOD with Inkef",
+    "organizer": "Inkef",
+    "datetime": "Nov 19, 8:00 AM – 9:00 AM",
+    "location": "North Engine CrossFit Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:11:02.923453"
+  },
+  {
+    "title": "Venture Client Summit",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 18, 3:00 PM – 9:00 PM",
+    "location": "Deloitte HQ: Itämerenkatu 25, Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:11:08.037605"
+  },
+  {
+    "title": "🧊 Breaking the Ice: Warm-Up Drinks (Approval Only)",
+    "organizer": "Howard Kennedy & Foras Ventures",
+    "datetime": "Nov 17, 7:00 PM – 11:00 PM",
+    "location": "Bob W Kaarti",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:11:13.207290"
+  },
+  {
+    "title": "Meaningful Connections: Curated Networking for Founders, Builders and Investors",
+    "organizer": "Health Data Avatar",
+    "datetime": "Nov 18, 5:00 PM – 7:30 PM",
+    "location": "Huutokonttori Kanttiini · Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:11:18.325559"
+  },
+  {
+    "title": "Deep tech boost – Chips & Beyond",
+    "organizer": "Business Finland & FICCC",
+    "datetime": "Nov 19, 8:00 AM – 12:00 PM",
+    "location": "208, Congress Wing, Helsinki Expo and Convention Center",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:11:23.505951"
+  },
+  {
+    "title": "Secret Insight to 10x Growth - Workshop",
+    "organizer": "The Exit Academy",
+    "datetime": "Nov 19, 12:15 PM – 1:00 PM",
+    "location": "VIP Lounge - next to 203b, Slush Building",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:11:29.753401"
+  },
+  {
+    "title": "How the EU, Germany & Finland want to enable European Innovation and the Role for Venture Clienting",
+    "organizer": "27pilots - a Deloitte Business",
+    "datetime": "Nov 19, 4:00 PM – 4:30 PM",
+    "location": "Venture Client Track | 27pilots Booth | 7A10",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:11:34.923854"
+  },
+  {
+    "title": "Neuronova Tech Preview | Unveiling H1: The World’s Lowest-Power AI Processor",
+    "organizer": "Neuronova",
+    "datetime": "Nov 18, 6:30 PM – 8:30 PM",
+    "location": "Helsinki Central Library Oodi",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:11:40.068845"
+  },
+  {
+    "title": "Navigating AI: Local Insight, Global Impact",
+    "organizer": "Tesi, Keva & GroveStreet",
+    "datetime": "Nov 19, 6:00 PM – 8:30 PM",
+    "location": "Sofia Helsinki",
+    "categories": [],
+    "status": [
+      "Community Side Event"
+    ],
+    "scraped_at": "2025-11-17T15:11:45.205626"
+  },
+  {
+    "title": "US Legal Breakfast for Startups & VCs Hosted by Venture Point Legal",
+    "organizer": "Venture Point Legal (formerly Blechynden Legal)",
+    "datetime": "Nov 21, 8:30 AM – 10:30 AM",
+    "location": "Lapland Hotels Bulevardi",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:11:50.325103"
+  },
+  {
+    "title": "Bubbles & Connections",
+    "organizer": "Helsinki Partners",
+    "datetime": "Nov 18, 5:30 PM – 7:30 PM",
+    "location": "TBA",
+    "categories": [],
+    "status": [
+      "Community Side Event",
+      "Closed"
+    ],
+    "scraped_at": "2025-11-17T15:11:55.468184"
+  }
+]

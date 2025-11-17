@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card'
-import { ArrowUpRight } from '@phosphor-icons/react'
+import { ArrowUpRightFromSquare } from 'flowbite-react-icons/outline'
 import { Startup } from '@/lib/types'
 
 interface Article {
@@ -69,7 +69,7 @@ export function StartupArticles({ startup }: StartupArticlesProps) {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute top-2 right-2 w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <ArrowUpRight size={14} weight="bold" className="text-foreground" />
+                  <ArrowUpRightFromSquare className="text-foreground w-4 h-4"  />
                 </div>
               </div>
               

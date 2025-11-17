@@ -6,8 +6,10 @@ Complete scraping and data extraction system for Slush startup profiles.
 
 - `scrape_slush_browse_remote.py` - Scrape browse page (login, get all profiles)
 - `scrape_slush_profiles_remote.py` - Scrape individual profile details
+- `scrape_slush_events.py` - **NEW** Scrape events/activities from Slush platform
 - `extract_product_market_data.py` - Extract structured product/market/competition data
 - `startup_swiper.db` - SQLite database with all startups
+- `slush_events.db` - SQLite database with all events/activities
 - `setup.sh` - Automated Docker + Selenium setup
 - `.env` - Credentials (SLUSH_EMAIL, SLUSH_PASSWORD)
 
@@ -82,7 +84,34 @@ Options:
 
 Output: Saves to `scraped_description` column in database
 
-### 3. Data Extraction
+### 3. Events/Activities Scraper 🆕
+Scrapes all events and activities from Slush platform.
+
+```bash
+python3 scrape_slush_events.py --limit 50
+```
+
+Options:
+- `--selenium-url` - Selenium Grid URL (default: http://localhost:4444)
+- `--browser` - Chrome or Firefox (default: chrome)
+- `--limit` - Number of events to scrape (default: all)
+- `--screenshots` - Save debug screenshots
+- `--json-output` - JSON output file (default: slush_events.json)
+- `--db-output` - SQLite database file (default: slush_events.db)
+
+Output:
+- JSON file with all event details
+- SQLite database with events table
+
+Event data includes:
+- Event title, description
+- Date/time, location/venue
+- Categories/tags
+- Speakers/hosts
+- Capacity information
+- Full event page text
+
+### 4. Data Extraction
 Extracts structured product/market/competition data from descriptions.
 
 ```bash

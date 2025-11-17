@@ -1,0 +1,87 @@
+[
+  {
+    "title": "Startups Supercharge: AI for Accelerated Business",
+    "organizer": "Google",
+    "datetime": "Nov 20, 10:00 AM – 12:00 PM",
+    "location": "Partner Side Event Wing, Venue 5 in Messukeskus",
+    "categories": [
+      "Artificial Intelligence",
+      "Demo",
+      "Life Sciences",
+      "Pitching",
+      "Artificial Intelligence",
+      "Demo",
+      "Life Sciences",
+      "Pitching",
+      "Life Sciences",
+      "Pitching",
+      "Fintech & Insurance Tech",
+      "Pitching",
+      "Artificial Intelligence",
+      "Demo",
+      "Deep Tech",
+      "Deep-dives"
+    ],
+    "status": [
+      "Signature Side Event",
+      "Closed",
+      "Signature Side Event",
+      "Signature Side Event",
+      "Closed",
+      "Signature Side Event",
+      "Signature Side Event",
+      "Signature Side Event",
+      "Signature Side Event",
+      "Closed",
+      "Signature Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:31:17.522303"
+  },
+  {
+    "title": "Y Science 2025",
+    "organizer": "HiLIFE - University of Helsinki",
+    "datetime": "Nov 19, 10:30 AM – 3:30 PM",
+    "location": "Partner Side Event Wing, Venue 5 and 6 in Messukeskus",
+    "categories": [
+      "Life Sciences",
+      "Pitching"
+    ],
+    "status": [
+      "Signature Side Event",
+      "Closed",
+      "Signature Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:31:18.001050"
+  },
+  {
+    "title": "Fintech & Impact: European RenAIssance",
+    "organizer": "Mastercard",
+    "datetime": "Nov 19, 4:00 PM – 7:00 PM",
+    "location": "Partner Side Event Wing, Venue 5 in Messukeskus",
+    "categories": [
+      "Fintech & Insurance Tech",
+      "Pitching"
+    ],
+    "status": [
+      "Signature Side Event",
+      "Signature Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:31:18.658238"
+  },
+  {
+    "title": "Deep Tech Unleashed",
+    "organizer": "CERN Venture Connect",
+    "datetime": "Nov 19, 11:00 AM – 1:00 PM",
+    "location": "Partner Side Event Wing, Venue 8 in Messukeskus",
+    "categories": [
+      "Deep Tech",
+      "Deep-dives"
+    ],
+    "status": [
+      "Signature Side Event",
+      "Closed",
+      "Signature Side Event"
+    ],
+    "scraped_at": "2025-11-17T14:31:19.051051"
+  }
+]

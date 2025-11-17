@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Star, Lightbulb, X } from '@phosphor-icons/react'
+import { Star, Lightbulb, Close } from 'flowbite-react-icons/outline'
 import { toast } from 'sonner'
 import { InsightsAPI } from '@/lib/notificationManager'
 
@@ -103,7 +103,7 @@ export function MeetingInsightDialog({
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Lightbulb size={24} weight="fill" className="text-yellow-500" />
+            <Lightbulb className="text-yellow-500 w-6 h-6"  />
             Share Your Insight
           </DialogTitle>
           <DialogDescription>
@@ -141,10 +141,8 @@ export function MeetingInsightDialog({
                   className="transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary rounded"
                 >
                   <Star
-                    size={32}
-                    weight={star <= rating ? 'fill' : 'regular'}
                     className={star <= rating ? 'text-yellow-500' : 'text-gray-400'}
-                  />
+                    />
                 </button>
               ))}
               {rating > 0 && (
@@ -152,7 +150,7 @@ export function MeetingInsightDialog({
                   onClick={() => setRating(0)}
                   className="ml-2 text-muted-foreground hover:text-foreground"
                 >
-                  <X size={20} />
+                  <Close className="w-5 h-5"  />
                 </button>
               )}
             </div>

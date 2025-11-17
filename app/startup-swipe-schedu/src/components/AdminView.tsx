@@ -5,17 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { 
-  ChartBar, 
-  ThumbsUp, 
-  ThumbsDown, 
-  Users, 
-  TrendUp,
-  CalendarBlank,
-  Clock,
-  Briefcase,
-  Sparkle
-} from '@phosphor-icons/react'
+import { Chart, ThumbsUp, ThumbsDown, UsersGroup, ChartLineUp, Calendar, Clock, Briefcase, WandMagicSparkles } from 'flowbite-react-icons/outline'
 
 interface AdminViewProps {
   startups: Startup[]
@@ -114,7 +104,7 @@ export function AdminView({ startups, votes, events, currentUserId }: AdminViewP
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="mb-8">
           <h2 className="text-3xl font-bold mb-2 flex items-center gap-3">
-            <ChartBar size={32} weight="duotone" className="text-primary" />
+            <Chart size={32} weight="duotone" className="text-primary" />
             Admin Dashboard
           </h2>
           <p className="text-muted-foreground">
@@ -132,7 +122,7 @@ export function AdminView({ startups, votes, events, currentUserId }: AdminViewP
             <CardContent>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Users size={24} weight="duotone" className="text-primary" />
+                  <UsersGroup className="text-primary w-6 h-6"   />
                 </div>
                 <div>
                   <div className="text-3xl font-bold">{stats.totalUsers}</div>
@@ -151,7 +141,7 @@ export function AdminView({ startups, votes, events, currentUserId }: AdminViewP
             <CardContent>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-                  <Sparkle size={24} weight="duotone" className="text-accent" />
+                  <WandMagicSparkles className="text-accent w-6 h-6"  />
                 </div>
                 <div>
                   <div className="text-3xl font-bold">{stats.totalVotes}</div>
@@ -170,7 +160,7 @@ export function AdminView({ startups, votes, events, currentUserId }: AdminViewP
             <CardContent>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
-                  <TrendUp size={24} weight="duotone" className="text-secondary" />
+                  <ChartLineUp className="text-secondary w-6 h-6"  />
                 </div>
                 <div>
                   <div className="text-3xl font-bold">{stats.overallInterestRate.toFixed(0)}%</div>
@@ -191,7 +181,7 @@ export function AdminView({ startups, votes, events, currentUserId }: AdminViewP
             <CardContent>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <CalendarBlank size={24} weight="duotone" className="text-primary" />
+                  <CalendarMonthBlank size={24} className="text-primary"  />
                 </div>
                 <div>
                   <div className="text-3xl font-bold">{stats.totalMeetings}</div>
@@ -206,7 +196,7 @@ export function AdminView({ startups, votes, events, currentUserId }: AdminViewP
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Users size={20} weight="duotone" />
+                <UsersGroup className="w-5 h-5"   />
                 User Activity
               </CardTitle>
               <CardDescription>
@@ -235,7 +225,7 @@ export function AdminView({ startups, votes, events, currentUserId }: AdminViewP
                               )}
                             </div>
                             <div className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Clock size={12} weight="duotone" />
+                              <Clock className="w-3 h-3"  />
                               {formatTimestamp(user.lastActivity)}
                             </div>
                           </div>
@@ -277,7 +267,7 @@ export function AdminView({ startups, votes, events, currentUserId }: AdminViewP
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Briefcase size={20} weight="duotone" />
+                <Briefcase className="w-5 h-5"  />
                 Startup Performance
               </CardTitle>
               <CardDescription>
@@ -295,7 +285,7 @@ export function AdminView({ startups, votes, events, currentUserId }: AdminViewP
                             {startup["Company Name"]}
                             {hasScheduledMeeting && (
                               <Badge className="text-xs gap-1">
-                                <CalendarBlank size={12} weight="fill" />
+                                <CalendarMonthBlank size={12}  />
                                 Scheduled
                               </Badge>
                             )}
@@ -305,7 +295,7 @@ export function AdminView({ startups, votes, events, currentUserId }: AdminViewP
                           </div>
                           {meetingTime && (
                             <div className="text-xs text-primary mt-1 flex items-center gap-1">
-                              <Clock size={12} weight="duotone" />
+                              <Clock className="w-3 h-3"  />
                               {new Date(meetingTime).toLocaleDateString('en-US', { 
                                 month: 'short', 
                                 day: 'numeric',
@@ -355,7 +345,7 @@ export function AdminView({ startups, votes, events, currentUserId }: AdminViewP
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Clock size={20} weight="duotone" />
+              <Clock className="w-5 h-5"  />
               Recent Activity
             </CardTitle>
             <CardDescription>

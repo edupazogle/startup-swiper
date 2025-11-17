@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Sparkle, ArrowRight } from '@phosphor-icons/react'
+import { WandMagicSparkles, ArrowRight } from 'flowbite-react-icons/outline'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 
@@ -116,7 +116,7 @@ Only recommend startups that genuinely match the user's interests.
         <Card className="p-4 bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Sparkle size={20} weight="duotone" className="text-primary" />
+              <WandMagicSparkles className="text-primary w-5 h-5"  />
               <h3 className="font-semibold text-sm">AI Recommendations</h3>
             </div>
             <Button
@@ -168,7 +168,7 @@ Only recommend startups that genuinely match the user's interests.
                           </Badge>
                         </div>
                       </div>
-                      <ArrowRight size={16} className="text-muted-foreground flex-shrink-0 mt-1" />
+                      <ArrowRight className="text-muted-foreground flex-shrink-0 mt-1 w-4 h-4"  />
                     </div>
                   </Card>
                 </motion.div>
@@ -183,7 +183,7 @@ Only recommend startups that genuinely match the user's interests.
             onClick={generateRecommendations}
             disabled={isLoading}
           >
-            <Sparkle size={14} weight={isLoading ? 'duotone' : 'fill'} className={isLoading ? 'animate-pulse' : ''} />
+            <WandMagicSparkles size={14} className={isLoading ? 'animate-pulse' : ''}  />
             {isLoading ? 'Finding more...' : 'Refresh Recommendations'}
           </Button>
         </Card>

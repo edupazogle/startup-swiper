@@ -174,10 +174,11 @@ class ChatRequest(BaseModel):
     temperature: Optional[float] = 0.7
     max_tokens: Optional[int] = None
 
-# Health Check Endpoint
+# Health Check Endpoint - supports both GET and HEAD for monitoring
 @app.get("/health")
+@app.head("/health")
 async def health_check(db: Session = Depends(get_db)):
-    """Health check endpoint for deployment platforms"""
+    """Health check endpoint for deployment platforms and monitoring services"""
     try:
         startup_count = db_queries.count_startups(db)
     except Exception as e:
@@ -2059,6 +2060,12 @@ async def whitepaper_meeting_prep_chat(
 # Conversational Insights Agent Request Models
 # ============================================
 
+class InsightsSessionStartRequest(BaseModel):
+    user_id: str
+    startup_id: str
+    startup_name: str
+    startup_description: str = ""
+
 class DebriefStartRequest(BaseModel):
     user_id: str
     startup_id: str
@@ -2092,6 +2099,37 @@ class DebriefCompleteRequest(BaseModel):
 # ============================================
 # Conversational Insights Agent Endpoints
 # ============================================
+
+@app.post("/insights/session/start")
+async def start_insights_session(
+    request: InsightsSessionStartRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Start a new insights session for a startup meeting.
+    Returns a session ID that can be used for subsequent interactions.
+    """
+    try:
+        # Generate unique session ID
+        session_id = f"insights_{request.startup_id}_{request.user_id}_{int(datetime.utcnow().timestamp())}"
+        
+        logger.info(f"✓ Started insights session: {session_id} for {request.startup_name}")
+        
+        return {
+            "success": True,
+            "session_id": session_id,
+            "startup_id": request.startup_id,
+            "startup_name": request.startup_name,
+            "user_id": request.user_id,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error starting insights session: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to start insights session: {str(e)}"
+        )
 
 @app.post("/insights/debrief/start")
 async def start_meeting_debrief(
@@ -2461,6 +2499,63 @@ def get_ai_assistant_messages_api(limit: int = 100, db: Session = Depends(get_db
     """Get AI assistant chat messages"""
     messages = db_queries.get_ai_assistant_messages(db, limit=limit)
     return {"messages": messages, "count": len(messages)}
+
+# Slush Events API endpoints
+@app.get("/api/slush-events", response_model=List[schemas.SlushEvent])
+def get_slush_events_api(
+    skip: int = 0,
+    limit: int = 100,
+    organizer: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    """
+    Get Slush events with optional filtering
+    
+    - **skip**: Number of events to skip (for pagination)
+    - **limit**: Maximum number of events to return
+    - **organizer**: Filter by organizer name (partial match)
+    """
+    if organizer:
+        events = crud.get_slush_events_by_organizer(db, organizer)
+        # Apply pagination to filtered results
+        return events[skip:skip + limit]
+    else:
+        return crud.get_slush_events(db, skip=skip, limit=limit)
+
+@app.get("/api/slush-events/{event_id}", response_model=schemas.SlushEvent)
+def get_slush_event_api(event_id: int, db: Session = Depends(get_db)):
+    """Get a specific Slush event by ID"""
+    event = crud.get_slush_event(db, event_id)
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return event
+
+@app.get("/api/slush-events/stats/summary")
+def get_slush_events_stats(db: Session = Depends(get_db)):
+    """Get statistics about Slush events"""
+    from sqlalchemy import func
+    
+    total_events = db.query(func.count(models.SlushEvent.id)).scalar()
+    
+    # Top organizers
+    top_organizers = db.query(
+        models.SlushEvent.organizer,
+        func.count(models.SlushEvent.id).label('count')
+    ).group_by(models.SlushEvent.organizer).order_by(func.count(models.SlushEvent.id).desc()).limit(10).all()
+    
+    # Events by status (flatten JSON arrays)
+    events_with_status = db.query(models.SlushEvent.status).filter(models.SlushEvent.status.isnot(None)).all()
+    status_counts = {}
+    for (status_json,) in events_with_status:
+        if status_json:
+            for status in status_json:
+                status_counts[status] = status_counts.get(status, 0) + 1
+    
+    return {
+        "total_events": total_events,
+        "top_organizers": [{"organizer": org, "count": count} for org, count in top_organizers],
+        "status_counts": status_counts
+    }
 
 if __name__ == "__main__":
     import uvicorn

@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { Plus, MapPin, Users as UsersIcon, Trash, Check, CaretLeft, CaretRight, Funnel } from '@phosphor-icons/react'
+import { CirclePlus, MapPin, UsersGroup, TrashBin, Check, AngleLeft, AngleRight, Filter } from 'flowbite-react-icons/outline'
 import { format } from 'date-fns'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -488,7 +488,7 @@ export function CalendarView({ currentUserId, currentUserName, events, onAddEven
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="gap-2 w-full md:w-auto">
-                  <Plus size={18} weight="bold" className="md:w-5 md:h-5" />
+                  <CirclePlus className="md:w-5 md:h-5 w-5 h-5"  />
                   Add Event
                 </Button>
               </DialogTrigger>
@@ -638,7 +638,7 @@ export function CalendarView({ currentUserId, currentUserName, events, onAddEven
               className="w-full flex items-center justify-between p-2.5 hover:bg-slate-50 transition-colors"
             >
               <div className="flex items-center gap-2">
-                <Funnel size={16} weight="duotone" className="text-slate-600" />
+                <Filter className="text-slate-600 w-4 h-4"  />
                 <span className="text-xs font-semibold text-slate-700">Filters</span>
                 {(selectedLocations.size > 0 || selectedCategories.size > 0) && (
                   <Badge variant="secondary" className="text-xs h-5">
@@ -646,11 +646,9 @@ export function CalendarView({ currentUserId, currentUserName, events, onAddEven
                   </Badge>
                 )}
               </div>
-              <CaretRight
-                size={14}
-                weight="bold"
+              <AngleRight
                 className={`text-slate-600 transition-transform ${showFilters ? 'rotate-90' : ''}`}
-              />
+               />
             </button>
             {showFilters && (
               <div className="p-3 border-t border-border bg-white">
@@ -714,7 +712,7 @@ export function CalendarView({ currentUserId, currentUserName, events, onAddEven
                                       </p>
                                       {event.location && (
                                         <div className="flex items-center gap-0.5">
-                                          <MapPin size={8} weight="fill" className={`flex-shrink-0 ${locationColors.text}`} />
+                                          <MapPin className={`flex-shrink-0 ${locationColors.text}`}  />
                                           <span className={`text-[7px] md:text-[9px] ${locationColors.text} font-medium truncate`}>
                                             {event.location}
                                           </span>
@@ -745,7 +743,7 @@ export function CalendarView({ currentUserId, currentUserName, events, onAddEven
                                   )}
                                   {event.location && (
                                     <Badge variant="outline" className="gap-1">
-                                      <MapPin size={12} weight="fill" />
+                                      <MapPin className="w-3 h-3"  />
                                       {event.location}
                                     </Badge>
                                   )}
@@ -766,7 +764,7 @@ export function CalendarView({ currentUserId, currentUserName, events, onAddEven
           <div className="bg-white/70 backdrop-blur-sm rounded-lg border border-border overflow-hidden">
             <div className="p-2.5">
               <div className="flex items-center gap-1.5 mb-2">
-                <MapPin size={14} weight="duotone" className="text-slate-600" />
+                <MapPin className="text-slate-600 w-4 h-4"  />
                 <h4 className="font-semibold text-xs text-slate-700">Location Legend</h4>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5">

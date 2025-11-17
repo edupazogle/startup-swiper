@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Trash } from '@phosphor-icons/react'
+import { TrashBin } from 'flowbite-react-icons/outline'
 import { Idea, IdeaCategory } from '@/lib/types'
 
 interface AddIdeaDialogProps {
@@ -210,7 +210,7 @@ export function AddIdeaDialog({ open, onOpenChange, onAdd }: AddIdeaDialogProps)
                           onClick={() => handleRemoveImage(index)}
                           className="absolute top-1 right-1 bg-destructive/80 hover:bg-destructive text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
-                          <Trash size={14} weight="bold" />
+                          <TrashBin className="w-4 h-4"  />
                         </button>
                       </div>
                     ))}

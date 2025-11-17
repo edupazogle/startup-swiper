@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useTransition } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { LoginView } from '@/components/LoginView'
+import { LoginViewDebug } from '@/components/LoginViewDebug'
 import { AuroralBackground } from '@/components/AuroralBackground'
 import { SwipeView } from '@/components/SwipeView'
 import { DashboardView } from '@/components/DashboardView'
@@ -10,6 +11,8 @@ import { AIAssistantView } from '@/components/AIAssistantView'
 import { AdminView } from '@/components/AdminView'
 import { AddStartupDialog } from '@/components/AddStartupDialog'
 import { AddIdeaDialog } from '@/components/AddIdeaDialog'
+import { ImprovedInsightsModalNew } from '@/components/ImprovedInsightsModalNew'
+import { ImprovedMeetingModalNew } from '@/components/ImprovedMeetingModalNew'
 import { PWAUpdatePrompt } from '@/components/PWAUpdatePrompt'
 import { IOSInstallPrompt } from '@/components/IOSInstallPrompt'
 import { Button } from '@/components/ui/button'
@@ -19,7 +22,18 @@ import { initialStartups } from '@/lib/initialStartups'
 import { InsightsAPI } from '@/lib/notificationManager'
 import { api } from '@/lib/api'
 import { authService } from '@/lib/authService'
-import { Swatches, Rocket, Lightbulb, CalendarBlank, UserGear, Plus, Robot, Bell, BellSlash, SignOut } from '@phosphor-icons/react'
+import { 
+  Heart, 
+  Rocket, 
+  Lightbulb, 
+  CalendarMonth, 
+  UserSettings, 
+  CirclePlus, 
+  Brain, 
+  Bell, 
+  BellRing, 
+  ArrowRightToBracket 
+} from 'flowbite-react-icons/outline'
 import { Toaster } from '@/components/ui/sonner'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -157,9 +171,12 @@ function App() {
   // We require an authenticated user; `safeUserId` is the authenticated id.
   const safeUserId = currentUserId
 
-  // Fetch votes from API (only when authenticated)
+  // Fetch votes from API (only when authenticated) - with retry backoff
   useEffect(() => {
     if (!isAuthenticated) return
+    
+    let retryCount = 0
+    const maxRetries = 2
     
     const fetchVotes = async () => {
       try {
@@ -179,8 +196,14 @@ function App() {
           console.log(`✓ Loaded ${convertedVotes.length} votes from API`)
         }
       } catch (error) {
-        console.warn('Could not fetch votes:', error)
-        setVotes([])
+        retryCount++
+        if (retryCount <= maxRetries) {
+          console.warn(`⚠️ Could not fetch votes (attempt ${retryCount}/${maxRetries}), retrying...`)
+          setTimeout(fetchVotes, 2000 * retryCount) // Exponential backoff
+        } else {
+          console.warn('⚠️ Could not fetch votes after retries, using cached data')
+          setVotes([])
+        }
       }
     }
     
@@ -424,12 +447,26 @@ function App() {
   const [currentView, setCurrentView] = useState<'swipe' | 'dashboard' | 'insights' | 'calendar' | 'ai' | 'admin'>('swipe')
   const [isAddStartupDialogOpen, setIsAddStartupDialogOpen] = useState(false)
   const [isAddIdeaDialogOpen, setIsAddIdeaDialogOpen] = useState(false)
+  
+  // Modal states - moved to App level for performance
+  const [showInsightsModal, setShowInsightsModal] = useState(false)
+  const [showMeetingModal, setShowMeetingModal] = useState(false)
+  const [selectedModalStartup, setSelectedModalStartup] = useState<Startup | null>(null)
 
   // Load categorized insights and merge with ideas
   const fetchCategorizedInsights = async () => {
     try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+      console.log('🔍 Loading categorized insights from:', `${apiUrl}/insights/categorized/all`)
+      
       // Fetch categorized insights from all categories
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/insights/categorized/all`)
+      const response = await fetch(`${apiUrl}/insights/categorized/all`)
+      
+      if (!response.ok) {
+        console.warn('⚠️ Insights API not available (expected for local dev)')
+        return
+      }
+      
       if (response.ok) {
         const byCategory = await response.json()
         
@@ -447,7 +484,7 @@ function App() {
         console.log(`  Categories populated: ${categoriesWithInsights.join(', ')}`)
       }
     } catch (error) {
-      console.warn('Failed to load categorized insights:', error)
+      console.warn('⚠️ Could not load categorized insights (API unavailable):', error)
     }
   }
 
@@ -777,35 +814,35 @@ function App() {
                           value="swipe" 
                           className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
                         >
-                          <Swatches size={27} weight="bold" />
+                          <Heart className="w-7 h-7" />
                           Swipe
                         </TabsTrigger>
                         <TabsTrigger 
                           value="dashboard" 
                           className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
                         >
-                          <Rocket size={27} weight="bold" />
+                          <Rocket className="w-7 h-7" />
                           Startups
                         </TabsTrigger>
                         <TabsTrigger 
                           value="insights" 
                           className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
                         >
-                          <Lightbulb size={27} weight="bold" />
+                          <Lightbulb className="w-7 h-7" />
                           Insights
                         </TabsTrigger>
                         <TabsTrigger 
                           value="calendar" 
                           className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
                         >
-                          <CalendarBlank size={27} weight="bold" />
+                          <CalendarMonth className="w-7 h-7" />
                           Calendar
                         </TabsTrigger>
                         <TabsTrigger 
                           value="ai" 
                           className="data-[state=active]:bg-gray-100 data-[state=active]:text-gray-900 data-[state=active]:border-b-2 data-[state=active]:border-blue-600 dark:data-[state=active]:bg-gray-700 dark:data-[state=active]:text-white dark:data-[state=active]:border-blue-500 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-colors rounded-t-lg px-6 py-4 text-base font-medium inline-flex items-center gap-3 border-b-2 border-transparent"
                         >
-                          <Robot size={27} weight="bold" />
+                          <Brain className="w-7 h-7" />
                           Concierge
                         </TabsTrigger>
                       </TabsList>
@@ -823,9 +860,9 @@ function App() {
                     >
                       <span className="sr-only">Notifications</span>
                       {notificationsEnabled ? (
-                        <Bell size={20} weight="fill" className="text-green-600 hover:text-green-700 dark:text-green-400" />
+                        <BellRing size={20} className="text-green-600 hover:text-green-700 dark:text-green-400" />
                       ) : (
-                        <BellSlash size={20} className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" />
+                        <Bell size={20} className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" />
                       )}
                     </button>
                   )}
@@ -837,7 +874,7 @@ function App() {
                     )}
                     title="Admin settings"
                   >
-                    <UserGear size={20} weight="bold" className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" />
+                    <UserSettings className="w-5 h-5 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" />
                   </button>
                   <button
                     onClick={async () => {
@@ -856,7 +893,7 @@ function App() {
                     className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title="Sign out"
                   >
-                    <SignOut size={20} className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" />
+                    <ArrowRightToBracket className="w-5 h-5 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" />
                   </button>
                 </div>
               </div>
@@ -919,6 +956,14 @@ function App() {
               currentUserId={safeUserId}
               onScheduleMeeting={handleScheduleMeeting}
               onVoteChange={handleChangeVote}
+              onOpenInsightsModal={(startup) => {
+                setSelectedModalStartup(startup)
+                setShowInsightsModal(true)
+              }}
+              onOpenMeetingModal={(startup) => {
+                setSelectedModalStartup(startup)
+                setShowMeetingModal(true)
+              }}
             />
           )}
           
@@ -967,7 +1012,7 @@ function App() {
                         : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <Swatches className="h-6 w-6" weight={currentView === 'swipe' ? 'fill' : 'bold'} />
+                    <Heart className="h-6 w-6" />
                     <span className="text-[10px] font-medium">Swipe</span>
                   </button>
                   
@@ -979,7 +1024,7 @@ function App() {
                         : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <Rocket className="h-6 w-6" weight={currentView === 'dashboard' ? 'fill' : 'bold'} />
+                    <Rocket className="h-6 w-6" />
                     <span className="text-[10px] font-medium">Startups</span>
                   </button>
                   
@@ -991,7 +1036,7 @@ function App() {
                         : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <Lightbulb className="h-6 w-6" weight={currentView === 'insights' ? 'fill' : 'bold'} />
+                    <Lightbulb className="h-6 w-6" />
                     <span className="text-[10px] font-medium">Insights</span>
                   </button>
                   
@@ -1003,7 +1048,7 @@ function App() {
                         : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <CalendarBlank className="h-6 w-6" weight={currentView === 'calendar' ? 'fill' : 'bold'} />
+                    <CalendarMonth className="h-6 w-6" />
                     <span className="text-[10px] font-medium">Calendar</span>
                   </button>
                   
@@ -1015,7 +1060,7 @@ function App() {
                         : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    <Robot className="h-6 w-6" weight={currentView === 'ai' ? 'fill' : 'bold'} />
+                    <Brain className="h-6 w-6" />
                     <span className="text-[10px] font-medium">AI</span>
                   </button>
               </div>
@@ -1065,6 +1110,29 @@ function App() {
         <Toaster />
         <PWAUpdatePrompt />
         <IOSInstallPrompt />
+        
+        {/* AI Modals - Moved to App level for performance */}
+        <ImprovedInsightsModalNew
+          isOpen={showInsightsModal}
+          onClose={() => {
+            setShowInsightsModal(false)
+            setSelectedModalStartup(null)
+          }}
+          startupId={selectedModalStartup?.id || 0}
+          startupName={selectedModalStartup?.name || selectedModalStartup?.["Company Name"] || 'Unknown'}
+          startupDescription={selectedModalStartup?.description || selectedModalStartup?.shortDescription || ''}
+          userId={currentUserId}
+        />
+
+        <ImprovedMeetingModalNew
+          isOpen={showMeetingModal}
+          onClose={() => {
+            setShowMeetingModal(false)
+            setSelectedModalStartup(null)
+          }}
+          startup={selectedModalStartup || {} as any}
+          userId={currentUserId}
+        />
       </div>
     </>
   );

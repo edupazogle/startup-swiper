@@ -832,3 +832,339 @@ def count_tier_1_with_cb_insights(db: Session) -> Dict[str, int]:
         'without_cb_insights_id': result[1] or 0,
         'total': result[2] or 0
     }
+
+
+# ============================================
+# Enhanced Startup Search Queries
+# ============================================
+
+def search_startups_by_funding_stage(
+    db: Session,
+    stage: Optional[str] = None,
+    min_amount: Optional[float] = None,
+    limit: int = 100
+) -> List[Dict]:
+    """Search startups by funding stage and/or minimum funding amount"""
+    conditions = ["1=1"]
+    params = {"limit": limit}
+    
+    if stage:
+        conditions.append("funding_stage LIKE :stage")
+        params["stage"] = f"%{stage}%"
+    
+    if min_amount:
+        conditions.append("total_funding >= :min_amount")
+        params["min_amount"] = min_amount
+    
+    where_clause = " AND ".join(conditions)
+    
+    query = text(f"""
+        SELECT * FROM startups 
+        WHERE {where_clause}
+        ORDER BY total_funding DESC
+        LIMIT :limit
+    """)
+    
+    result = db.execute(query, params)
+    return [dict(row._mapping) for row in result]
+
+
+def search_startups_by_axa_grade(
+    db: Session,
+    min_grade: Optional[str] = None,
+    tier: Optional[str] = None,
+    limit: int = 100
+) -> List[Dict]:
+    """Search startups by AXA grade and/or priority tier"""
+    conditions = ["1=1"]
+    params = {"limit": limit}
+    
+    # Grade filtering (A+, A, A-, B+, etc.)
+    if min_grade:
+        grade_order = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "F"]
+        try:
+            min_index = grade_order.index(min_grade)
+            acceptable_grades = grade_order[:min_index + 1]
+            # Build OR condition for grades
+            grade_conditions = " OR ".join([f"axa_grade = '{g}'" for g in acceptable_grades])
+            conditions.append(f"({grade_conditions})")
+        except ValueError:
+            pass  # Invalid grade, ignore filter
+    
+    if tier:
+        conditions.append("axa_priority_tier LIKE :tier")
+        params["tier"] = f"%{tier}%"
+    
+    where_clause = " AND ".join(conditions)
+    
+    query = text(f"""
+        SELECT * FROM startups 
+        WHERE {where_clause}
+        ORDER BY axa_overall_score DESC
+        LIMIT :limit
+    """)
+    
+    result = db.execute(query, params)
+    return [dict(row._mapping) for row in result]
+
+
+def search_startups_by_location(
+    db: Session,
+    country: Optional[str] = None,
+    city: Optional[str] = None,
+    limit: int = 100
+) -> List[Dict]:
+    """Search startups by country and/or city"""
+    conditions = ["1=1"]
+    params = {"limit": limit}
+    
+    if country:
+        conditions.append("company_country LIKE :country")
+        params["country"] = f"%{country}%"
+    
+    if city:
+        conditions.append("company_city LIKE :city")
+        params["city"] = f"%{city}%"
+    
+    where_clause = " AND ".join(conditions)
+    
+    query = text(f"""
+        SELECT * FROM startups 
+        WHERE {where_clause}
+        ORDER BY company_name
+        LIMIT :limit
+    """)
+    
+    result = db.execute(query, params)
+    return [dict(row._mapping) for row in result]
+
+
+def search_startups_by_value_prop(
+    db: Session,
+    query_text: str,
+    limit: int = 100
+) -> List[Dict]:
+    """Search startups by value proposition, problem solved, or target customers"""
+    query = text("""
+        SELECT * FROM startups 
+        WHERE value_proposition LIKE :query
+           OR problem_solved LIKE :query
+           OR target_customers LIKE :query
+           OR core_product LIKE :query
+        ORDER BY company_name
+        LIMIT :limit
+    """)
+    
+    params = {"query": f"%{query_text}%", "limit": limit}
+    result = db.execute(query, params)
+    return [dict(row._mapping) for row in result]
+
+
+def get_startup_funding_details(db: Session, startup_id: str) -> Optional[Dict]:
+    """Get detailed funding information for a startup"""
+    query = text("""
+        SELECT company_name, total_funding, total_equity_funding, 
+               funding_stage, last_funding_date, last_funding_date_str,
+               valuation, latest_revenue_min, latest_revenue_max,
+               revenue_date, funding_source
+        FROM startups 
+        WHERE id = :id OR company_name LIKE :name
+        LIMIT 1
+    """)
+    
+    result = db.execute(query, {"id": startup_id, "name": f"%{startup_id}%"}).first()
+    return dict(result._mapping) if result else None
+
+
+def get_similar_startups(
+    db: Session,
+    startup_id: str,
+    limit: int = 5
+) -> List[Dict]:
+    """Find similar startups based on industry, technology, and stage"""
+    # First get the reference startup
+    reference = get_startup_by_id(db, startup_id)
+    if not reference:
+        return []
+    
+    industry = reference.get('primary_industry', '')
+    stage = reference.get('funding_stage', '')
+    
+    conditions = ["id != :ref_id"]
+    params = {"ref_id": startup_id, "limit": limit}
+    
+    if industry:
+        conditions.append("primary_industry LIKE :industry")
+        params["industry"] = f"%{industry}%"
+    
+    if stage:
+        conditions.append("funding_stage LIKE :stage")
+        params["stage"] = f"%{stage}%"
+    
+    where_clause = " AND ".join(conditions)
+    
+    query = text(f"""
+        SELECT * FROM startups 
+        WHERE {where_clause}
+        ORDER BY axa_overall_score DESC
+        LIMIT :limit
+    """)
+    
+    result = db.execute(query, params)
+    return [dict(row._mapping) for row in result]
+
+
+# ============================================
+# People Enhanced Queries
+# ============================================
+
+def search_people_by_role(db: Session, title_query: str, limit: int = 100) -> List[Dict]:
+    """Search attendees by job title/role"""
+    query = text("""
+        SELECT * FROM attendees 
+        WHERE title LIKE :title
+        ORDER BY name
+        LIMIT :limit
+    """)
+    
+    params = {"title": f"%{title_query}%", "limit": limit}
+    result = db.execute(query, params)
+    return [dict(row._mapping) for row in result]
+
+
+def search_people_by_company(db: Session, company_name: str, limit: int = 100) -> List[Dict]:
+    """Search attendees by company name"""
+    query = text("""
+        SELECT * FROM attendees 
+        WHERE company_name LIKE :company
+        ORDER BY name
+        LIMIT :limit
+    """)
+    
+    params = {"company": f"%{company_name}%", "limit": limit}
+    result = db.execute(query, params)
+    return [dict(row._mapping) for row in result]
+
+
+def search_people_by_country(db: Session, country: str, limit: int = 100) -> List[Dict]:
+    """Search attendees by country"""
+    query = text("""
+        SELECT * FROM attendees 
+        WHERE country LIKE :country
+        ORDER BY name
+        LIMIT :limit
+    """)
+    
+    params = {"country": f"%{country}%", "limit": limit}
+    result = db.execute(query, params)
+    return [dict(row._mapping) for row in result]
+
+
+# ============================================
+# Meeting & Rating Queries
+# ============================================
+
+def get_meeting_prep_outline(db: Session, startup_id: str, user_id: str) -> Optional[Dict]:
+    """Get meeting prep outline for a startup and user"""
+    try:
+        from models import MeetingPrepOutline
+        
+        result = db.query(MeetingPrepOutline).filter(
+            MeetingPrepOutline.startup_id == startup_id,
+            MeetingPrepOutline.user_id == user_id
+        ).order_by(MeetingPrepOutline.updated_at.desc()).first()
+        
+        if result:
+            return {
+                'startup_name': result.startup_name,
+                'outline': result.outline,
+                'talking_points': result.talking_points,
+                'critical_questions': result.critical_questions,
+                'whitepaper_relevance': result.whitepaper_relevance,
+                'generated_at': result.generated_at.isoformat() if result.generated_at else None
+            }
+        return None
+    except Exception as e:
+        print(f"Warning: Could not get meeting prep: {e}")
+        return None
+
+
+def get_user_votes(db: Session, user_id: str, limit: int = 100) -> List[Dict]:
+    """Get all votes by a specific user"""
+    try:
+        from models import Vote
+        
+        results = db.query(Vote).filter(
+            Vote.userId == user_id
+        ).order_by(Vote.timestamp.desc()).limit(limit).all()
+        
+        return [{
+            'startup_id': v.startupId,
+            'user_name': v.userName,
+            'interested': v.interested,
+            'timestamp': v.timestamp.isoformat() if v.timestamp else None,
+            'meeting_scheduled': v.meetingScheduled
+        } for v in results]
+    except Exception as e:
+        print(f"Warning: Could not get user votes: {e}")
+        return []
+
+
+def get_startup_rating(db: Session, startup_id: str) -> Optional[Dict]:
+    """Get rating and feedback for a startup"""
+    try:
+        from models import StartupRating
+        
+        result = db.query(StartupRating).filter(
+            StartupRating.startupId == startup_id
+        ).first()
+        
+        if result:
+            return {
+                'startup_id': result.startupId,
+                'average_rating': result.averageRating,
+                'total_ratings': result.totalRatings,
+                'ratings': result.ratings,
+                'feedback': result.feedback,
+                'trending_score': result.trendingScore,
+                'last_updated': result.lastUpdated.isoformat() if result.lastUpdated else None
+            }
+        return None
+    except Exception as e:
+        print(f"Warning: Could not get startup rating: {e}")
+        return None
+
+
+def get_trending_startups(db: Session, limit: int = 10) -> List[Dict]:
+    """Get trending startups based on voting activity"""
+    try:
+        from models import StartupRating
+        
+        results = db.query(StartupRating).order_by(
+            StartupRating.trendingScore.desc()
+        ).limit(limit).all()
+        
+        if not results:
+            return []
+        
+        startup_ids = [r.startupId for r in results]
+        
+        # Get full startup details
+        if not startup_ids:
+            return []
+        
+        placeholders = ','.join([f':id{i}' for i in range(len(startup_ids))])
+        params = {f'id{i}': sid for i, sid in enumerate(startup_ids)}
+        
+        query = text(f"""
+            SELECT * FROM startups 
+            WHERE id IN ({placeholders})
+        """)
+        
+        result = db.execute(query, params)
+        return [dict(row._mapping) for row in result]
+        
+    except Exception as e:
+        # If StartupRating table doesn't exist or is empty, return empty list
+        print(f"Warning: Could not get trending startups: {e}")
+        return []

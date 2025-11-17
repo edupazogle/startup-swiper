@@ -358,3 +358,24 @@ class PushSubscription(PushSubscriptionBase):
     
     class Config:
         from_attributes = True
+
+# Slush Event schemas
+class SlushEventBase(BaseModel):
+    title: str
+    organizer: str
+    datetime: str
+    location: Optional[str] = None
+    categories: Optional[List[str]] = None
+    status: Optional[List[str]] = None
+
+class SlushEventCreate(SlushEventBase):
+    scraped_at: datetime
+
+class SlushEvent(SlushEventBase):
+    id: int
+    scraped_at: datetime
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True

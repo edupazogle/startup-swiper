@@ -6,7 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ChatMessage } from '@/lib/types'
-import { PaperPlaneRight, Robot, User, Sparkle } from '@phosphor-icons/react'
+import { PaperPlane, WandMagicSparkles, User, WandMagicSparkles } from 'flowbite-react-icons/outline'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useKV } from '@/lib/useKV'
 
@@ -112,7 +112,7 @@ Provide helpful, concise responses about startups, events, or general advice. Be
           <div className="flex items-center gap-3">
             <Avatar className="w-12 h-12 bg-primary/10">
               <AvatarFallback>
-                <Robot size={24} weight="duotone" className="text-primary" />
+                <WandMagicSparkles className="text-primary w-6 h-6"  />
               </AvatarFallback>
             </Avatar>
             <div>
@@ -127,7 +127,7 @@ Provide helpful, concise responses about startups, events, or general advice. Be
         <ScrollArea className="flex-1 p-4 md:p-6" ref={scrollRef}>
           {(!messages || messages.length === 0) && (
             <div className="flex flex-col items-center justify-center h-full text-center py-12">
-              <Sparkle size={48} weight="duotone" className="text-primary/50 mb-4" />
+              <WandMagicSparkles className="text-primary/50 mb-4 w-12 h-12"  />
               <h3 className="text-lg font-semibold mb-2">Hi {currentUserName}! 👋</h3>
               <p className="text-sm text-muted-foreground mb-6 max-w-md">
                 I'm your AI assistant. Ask me anything about startups, get recommendations, or help with scheduling.
@@ -141,7 +141,7 @@ Provide helpful, concise responses about startups, events, or general advice. Be
                     className="justify-start text-left w-full"
                     onClick={() => handleSuggestion(question)}
                   >
-                    <Sparkle size={16} weight="fill" className="mr-2 flex-shrink-0 text-primary" />
+                    <WandMagicSparkles className="mr-2 flex-shrink-0 text-primary w-4 h-4"  />
                     <span className="text-sm">{question}</span>
                   </Button>
                 ))}
@@ -163,7 +163,7 @@ Provide helpful, concise responses about startups, events, or general advice. Be
                 {message.role === 'assistant' && (
                   <Avatar className="w-8 h-8 bg-primary/10">
                     <AvatarFallback>
-                      <Robot size={18} weight="duotone" className="text-primary" />
+                      <WandMagicSparkles className="text-primary w-5 h-5"  />
                     </AvatarFallback>
                   </Avatar>
                 )}
@@ -182,7 +182,7 @@ Provide helpful, concise responses about startups, events, or general advice. Be
                 {message.role === 'user' && (
                   <Avatar className="w-8 h-8 bg-accent/10">
                     <AvatarFallback>
-                      <User size={18} weight="duotone" className="text-accent" />
+                      <User className="text-accent w-5 h-5"  />
                     </AvatarFallback>
                   </Avatar>
                 )}
@@ -198,7 +198,7 @@ Provide helpful, concise responses about startups, events, or general advice. Be
             >
               <Avatar className="w-8 h-8 bg-primary/10">
                 <AvatarFallback>
-                  <Robot size={18} weight="duotone" className="text-primary" />
+                  <WandMagicSparkles className="text-primary w-5 h-5"  />
                 </AvatarFallback>
               </Avatar>
               <Card className="p-3 md:p-4 bg-card">
@@ -227,7 +227,7 @@ Provide helpful, concise responses about startups, events, or general advice. Be
               disabled={!input.trim() || isLoading}
               size="icon"
             >
-              <PaperPlaneRight size={20} weight="fill" />
+              <PaperPlane className="w-5 h-5"  />
             </Button>
           </div>
         </div>

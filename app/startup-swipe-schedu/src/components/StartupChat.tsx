@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useKV } from '@/lib/useKV'
 import { ChatMessage as ChatMessageType } from '@/lib/types'
 import { Startup } from '@/lib/types'
-import { Sparkle, Briefcase, Users, Calendar } from '@phosphor-icons/react'
+import { WandMagicSparkles, Briefcase, UsersGroup, CalendarMonth } from 'flowbite-react-icons/outline'
 import { ConciergeChatHeader } from './ConciergeChatHeader'
 import { ChatMessageList, Message } from './ChatMessageList'
 import { ChatInputArea } from './ChatInputArea'
@@ -224,28 +224,28 @@ Founded: ${startup.dateFounded ? new Date(startup.dateFounded).getFullYear() : '
     {
       id: 'linkedin',
       label: 'LinkedIn',
-      icon: <Briefcase size={14} weight="duotone" />,
+      icon: <Briefcase className="w-4 h-4"  />,
       onClick: () => handleQuickAction('LinkedIn'),
       description: 'Write posts'
     },
     {
       id: 'startups',
       label: 'Startups',
-      icon: <Sparkle size={14} weight="duotone" />,
+      icon: <WandMagicSparkles className="w-4 h-4"  />,
       onClick: () => handleQuickAction('Startups'),
       description: 'Discover'
     },
     {
       id: 'people',
       label: 'People',
-      icon: <Users size={14} weight="duotone" />,
+      icon: <UsersGroup className="w-4 h-4"   />,
       onClick: () => handleQuickAction('People'),
       description: 'Network'
     },
     {
       id: 'calendar',
       label: 'Calendar',
-      icon: <Calendar size={14} weight="duotone" />,
+      icon: <CalendarMonth className="w-4 h-4"  />,
       onClick: () => handleQuickAction('Calendar'),
       description: 'Events'
     }
@@ -256,7 +256,7 @@ Founded: ${startup.dateFounded ? new Date(startup.dateFounded).getFullYear() : '
       <ConciergeChatHeader
         title="AI Concierge"
         subtitle={subtitle}
-        icon={<Sparkle size={20} weight="duotone" className="text-purple-500" />}
+        icon={<WandMagicSparkles className="text-purple-500 w-5 h-5"  />}
       />
 
       <ChatMessageList

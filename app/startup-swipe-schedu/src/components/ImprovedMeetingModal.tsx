@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card } from '@/components/ui/card'
-import { Briefcase, Lightbulb, Question, X, CheckCircle, ArrowClockwise, Copy } from '@phosphor-icons/react'
+import { Briefcase, Lightbulb, QuestionCircle, Close, CheckCircle, Refresh, FileCopy } from 'flowbite-react-icons/outline'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -257,7 +257,7 @@ export function ImprovedMeetingModal({
         transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
         className="mb-6"
       >
-        <Briefcase size={56} weight="fill" className="text-blue-500" />
+        <Briefcase className="text-blue-500 w-14 h-14"  />
       </motion.div>
       <p className="text-xl font-bold text-gray-700 dark:text-gray-300 mb-3">
         Preparing Your Meeting...
@@ -283,7 +283,7 @@ export function ImprovedMeetingModal({
       {/* Talking Points */}
       <div>
         <div className="flex items-center gap-3 mb-4">
-          <Lightbulb size={28} weight="fill" className="text-amber-500" />
+          <Lightbulb className="text-amber-500 w-7 h-7"  />
           <h3 className="text-xl font-bold text-gray-900 dark:text-white">Key Talking Points</h3>
         </div>
         
@@ -312,7 +312,7 @@ export function ImprovedMeetingModal({
                     onClick={() => copyToClipboard(point.description, 'Talking point')}
                     className="p-2 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
                   >
-                    <Copy size={18} className="text-amber-600 dark:text-amber-400" />
+                    <FileCopy className="text-amber-600 dark:text-amber-400 w-5 h-5"  />
                   </button>
                 </div>
               </Card>
@@ -324,7 +324,7 @@ export function ImprovedMeetingModal({
       {/* Critical Questions */}
       <div>
         <div className="flex items-center gap-3 mb-4">
-          <Question size={28} weight="fill" className="text-blue-500" />
+          <QuestionCircle className="text-blue-500 w-7 h-7"  />
           <h3 className="text-xl font-bold text-gray-900 dark:text-white">Critical Questions</h3>
         </div>
         
@@ -353,7 +353,7 @@ export function ImprovedMeetingModal({
                     onClick={() => copyToClipboard(item.question, 'Question')}
                     className="p-2 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
                   >
-                    <Copy size={18} className="text-blue-600 dark:text-blue-400" />
+                    <FileCopy className="text-blue-600 dark:text-blue-400 w-5 h-5"  />
                   </button>
                 </div>
               </Card>
@@ -382,7 +382,7 @@ export function ImprovedMeetingModal({
             disabled={isRefining || !feedback.trim()}
             className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white gap-2"
           >
-            <ArrowClockwise size={18} weight="bold" className={isRefining ? "animate-spin" : ""} />
+            <Refresh className={isRefining ? "animate-spin" : ""}  />
             {isRefining ? 'Refining...' : 'Refine Meeting Prep'}
           </Button>
           <Button
@@ -391,7 +391,7 @@ export function ImprovedMeetingModal({
             disabled={isLoading || isRefining}
             className="gap-2"
           >
-            <Briefcase size={18} weight="bold" />
+            <Briefcase className="w-5 h-5"  />
             Regenerate
           </Button>
         </div>
@@ -403,7 +403,7 @@ export function ImprovedMeetingModal({
         animate={{ opacity: 1, y: 0 }}
         className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-lg"
       >
-        <CheckCircle size={20} weight="fill" className="text-green-600 dark:text-green-400" />
+        <CheckCircle className="text-green-600 dark:text-green-400 w-5 h-5"   />
         <p className="text-sm font-semibold text-green-700 dark:text-green-300">
           Meeting prep ready! You can copy individual items or refine as needed.
         </p>
@@ -416,7 +416,7 @@ export function ImprovedMeetingModal({
       <DialogContent className="max-w-4xl p-0 gap-0 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600">
         <DialogHeader className="p-6 pb-4 border-b-2 border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30">
           <DialogTitle className="text-2xl font-bold flex items-center gap-3">
-            <Briefcase size={32} weight="fill" className="text-blue-500" />
+            <Briefcase className="text-blue-500 w-8 h-8"  />
             <div>
               <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Meeting AI

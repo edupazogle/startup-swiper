@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Bell, X, Lightbulb } from '@phosphor-icons/react'
+import { Bell, Close, Lightbulb } from 'flowbite-react-icons/outline'
 import { MeetingInsightDialog } from './MeetingInsightDialog'
 import { InsightsAPI } from '@/lib/notificationManager'
 
@@ -83,14 +83,14 @@ export function PendingInsightsNotification({ userId, onRefresh }: PendingInsigh
         <div className="p-4 flex items-start gap-4">
           <div className="flex-shrink-0 mt-1">
             <div className="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center animate-pulse">
-              <Lightbulb size={24} weight="fill" className="text-yellow-500" />
+              <Lightbulb className="text-yellow-500 w-6 h-6"  />
             </div>
           </div>
           
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <h3 className="font-semibold text-lg flex items-center gap-2">
-                <Bell size={20} weight="fill" className="text-yellow-500" />
+                <Bell className="text-yellow-500 w-5 h-5"  />
                 Share Your Insight
               </h3>
               <Button
@@ -99,7 +99,7 @@ export function PendingInsightsNotification({ userId, onRefresh }: PendingInsigh
                 onClick={handleHideBanner}
                 className="h-8 w-8 p-0 rounded-full"
               >
-                <X size={20} />
+                <Close className="w-5 h-5"  />
               </Button>
             </div>
             
@@ -119,7 +119,7 @@ export function PendingInsightsNotification({ userId, onRefresh }: PendingInsigh
                 onClick={() => handleShareInsight(insight)}
                 className="bg-yellow-500 hover:bg-yellow-600 text-black"
               >
-                <Lightbulb size={16} weight="fill" className="mr-1" />
+                <Lightbulb className="mr-1 w-4 h-4"  />
                 Share Insight
               </Button>
               

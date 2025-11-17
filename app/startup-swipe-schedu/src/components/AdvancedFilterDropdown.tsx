@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { MagnifyingGlass, Funnel, X } from '@phosphor-icons/react'
+import { Search, Filter, Close } from 'flowbite-react-icons/outline'
 import { cn } from '@/lib/utils'
 
 interface FilterOption {
@@ -86,7 +86,7 @@ export function AdvancedFilterDropdown({
         type="button"
         className="inline-flex items-center gap-2 text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 focus:ring-2 focus:outline-none focus:ring-blue-500 font-semibold rounded-lg text-sm px-4 py-2.5 transition-all"
       >
-        <Funnel className="w-4 h-4" weight="bold" />
+        <Filter className="w-4 h-4"  />
         <span className="whitespace-nowrap">{buttonLabel}</span>
         {activeCount > 0 && (
           <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-blue-600 dark:bg-blue-500 rounded-full">
@@ -124,7 +124,7 @@ export function AdvancedFilterDropdown({
         <div className="p-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <MagnifyingGlass className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+              <Search className="w-4 h-4 text-gray-500 dark:text-gray-400" />
             </div>
             <input
               type="text"
@@ -138,7 +138,7 @@ export function AdvancedFilterDropdown({
                 onClick={() => setSearchTerm('')}
                 className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
               >
-                <X className="w-4 h-4" weight="bold" />
+                <Close className="w-4 h-4"  />
               </button>
             )}
           </div>
@@ -194,7 +194,7 @@ export function AdvancedFilterDropdown({
             ))
           ) : (
             <div className="py-8 text-center">
-              <MagnifyingGlass className="w-8 h-8 mx-auto text-gray-400 dark:text-gray-500 mb-2" />
+              <Search className="w-8 h-8 mx-auto text-gray-400 dark:text-gray-500 mb-2" />
               <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">No filters match "{searchTerm}"</p>
             </div>
           )}
@@ -207,7 +207,7 @@ export function AdvancedFilterDropdown({
               onClick={handleClearAll}
               className="w-full inline-flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
             >
-              <X className="w-4 h-4" weight="bold" />
+              <Close className="w-4 h-4"  />
               Clear all filters
             </button>
           </div>

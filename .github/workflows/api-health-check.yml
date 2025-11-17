@@ -1,0 +1,208 @@
+name: API & Agents Health Check
+
+on:
+  schedule:
+    # Run every 30 minutes
+    - cron: '*/30 * * * *'
+  workflow_dispatch: # Allow manual trigger
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/api-health-check.yml'
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests httpx
+
+      - name: Check API Health
+        id: api_check
+        env:
+          API_BASE_URL: ${{ secrets.API_BASE_URL || 'https://your-api-url.com' }}
+          API_KEY: ${{ secrets.API_KEY }}
+        run: |
+          python - <<'EOF'
+          import requests
+          import sys
+          import os
+          from datetime import datetime
+
+          API_BASE_URL = os.getenv('API_BASE_URL')
+          API_KEY = os.getenv('API_KEY')
+          
+          headers = {}
+          if API_KEY:
+              headers['Authorization'] = f'Bearer {API_KEY}'
+
+          results = {
+              'api': False,
+              'insights_agent': False,
+              'meeting_agent': False,
+              'concierge_agent': False,
+              'errors': []
+          }
+
+          # Test 1: API Health Endpoint
+          try:
+              response = requests.get(f'{API_BASE_URL}/health', headers=headers, timeout=10)
+              if response.status_code == 200:
+                  results['api'] = True
+                  print(f"✅ API Health: OK")
+              else:
+                  results['errors'].append(f"API Health returned {response.status_code}")
+                  print(f"❌ API Health: FAILED ({response.status_code})")
+          except Exception as e:
+              results['errors'].append(f"API Health check failed: {str(e)}")
+              print(f"❌ API Health: ERROR - {str(e)}")
+
+          # Test 2: Insights AI Agent
+          try:
+              response = requests.post(
+                  f'{API_BASE_URL}/api/insights-agent/health',
+                  json={'test': True},
+                  headers=headers,
+                  timeout=15
+              )
+              if response.status_code in [200, 201]:
+                  results['insights_agent'] = True
+                  print(f"✅ Insights AI Agent: OK")
+              else:
+                  results['errors'].append(f"Insights AI Agent returned {response.status_code}")
+                  print(f"❌ Insights AI Agent: FAILED ({response.status_code})")
+          except Exception as e:
+              results['errors'].append(f"Insights AI Agent failed: {str(e)}")
+              print(f"❌ Insights AI Agent: ERROR - {str(e)}")
+
+          # Test 3: Meeting AI Agent
+          try:
+              response = requests.post(
+                  f'{API_BASE_URL}/api/meeting-agent/health',
+                  json={'test': True},
+                  headers=headers,
+                  timeout=15
+              )
+              if response.status_code in [200, 201]:
+                  results['meeting_agent'] = True
+                  print(f"✅ Meeting AI Agent: OK")
+              else:
+                  results['errors'].append(f"Meeting AI Agent returned {response.status_code}")
+                  print(f"❌ Meeting AI Agent: FAILED ({response.status_code})")
+          except Exception as e:
+              results['errors'].append(f"Meeting AI Agent failed: {str(e)}")
+              print(f"❌ Meeting AI Agent: ERROR - {str(e)}")
+
+          # Test 4: Concierge AI Agent
+          try:
+              response = requests.post(
+                  f'{API_BASE_URL}/api/concierge-agent/health',
+                  json={'test': True},
+                  headers=headers,
+                  timeout=15
+              )
+              if response.status_code in [200, 201]:
+                  results['concierge_agent'] = True
+                  print(f"✅ Concierge AI Agent: OK")
+              else:
+                  results['errors'].append(f"Concierge AI Agent returned {response.status_code}")
+                  print(f"❌ Concierge AI Agent: FAILED ({response.status_code})")
+          except Exception as e:
+              results['errors'].append(f"Concierge AI Agent failed: {str(e)}")
+              print(f"❌ Concierge AI Agent: ERROR - {str(e)}")
+
+          # Summary
+          all_passed = all([
+              results['api'],
+              results['insights_agent'],
+              results['meeting_agent'],
+              results['concierge_agent']
+          ])
+
+          if not all_passed:
+              print(f"\n⚠️ HEALTH CHECK FAILED")
+              print(f"Timestamp: {datetime.now().isoformat()}")
+              print(f"Errors: {len(results['errors'])}")
+              for error in results['errors']:
+                  print(f"  - {error}")
+              sys.exit(1)
+          else:
+              print(f"\n✅ ALL CHECKS PASSED")
+              print(f"Timestamp: {datetime.now().isoformat()}")
+              sys.exit(0)
+          EOF
+
+      - name: Send Email Alert on Failure
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "🚨 API Health Check Failed - Startup Rise Platform"
+          to: ${{ secrets.ALERT_EMAIL }}
+          from: GitHub Actions <${{ secrets.EMAIL_USERNAME }}>
+          body: |
+            API Health Check Failed!
+            
+            Repository: ${{ github.repository }}
+            Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Time: ${{ github.event.head_commit.timestamp }}
+            
+            Please check the workflow logs for details:
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            This is an automated alert from GitHub Actions.
+
+      - name: Send Slack Alert on Failure (Optional)
+        if: failure() && secrets.SLACK_WEBHOOK_URL != ''
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "🚨 API Health Check Failed",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚨 API Health Check Failed"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repository:*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Workflow:*\nAPI Health Check"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow Run>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

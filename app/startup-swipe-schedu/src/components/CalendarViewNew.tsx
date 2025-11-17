@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { MapPin, Clock, Funnel, X } from '@phosphor-icons/react'
+import { MapPin, Clock, Filter, Close } from 'flowbite-react-icons/outline'
 import { format } from 'date-fns'
 import { CalendarEvent, EventLocation, EventCategory } from '@/lib/types'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -139,7 +139,7 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
               onClick={() => setShowFilters(!showFilters)}
               className="gap-2 border-gray-600 bg-gray-700 hover:bg-gray-600 text-gray-200"
             >
-              <Funnel size={16} />
+              <Filter className="w-4 h-4"  />
               Filters
               {(selectedLocations.size + selectedCategories.size) > 0 && (
                 <Badge variant="secondary" className="ml-1">
@@ -155,7 +155,7 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
                 onClick={clearFilters}
                 className="gap-1"
               >
-                <X size={14} />
+                <Close className="w-4 h-4"  />
                 Clear all
               </Button>
             )}
@@ -218,17 +218,17 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
               return (
                 <div key={dayIndex} className="flex flex-col">
                   {/* Day Header */}
-                  <div className="sticky top-0 z-10 bg-white rounded-t-lg border border-b-2 border-slate-200 px-6 py-4 mb-3 shadow-sm">
-                    <h2 className="text-xl font-bold text-slate-900">{dateInfo.label}</h2>
-                    <p className="text-sm text-slate-600">{dayEvents.length} events</p>
+                  <div className="sticky top-0 z-10 bg-gray-800 rounded-t-lg border border-b-2 border-gray-700 px-6 py-4 mb-3 shadow-lg">
+                    <h2 className="text-xl font-bold text-white">{dateInfo.label}</h2>
+                    <p className="text-sm text-gray-400">{dayEvents.length} events</p>
                   </div>
                   
                   {/* Day Events */}
                   <div className="space-y-3 flex-1">
                     {dayEvents.length === 0 ? (
-                      <Card>
+                      <Card className="bg-gray-800 border-gray-700">
                         <CardContent className="py-12 text-center">
-                          <p className="text-slate-500">
+                          <p className="text-gray-400">
                             {selectedLocations.size + selectedCategories.size > 0 
                               ? 'No events match your filters'
                               : 'No events scheduled'}
@@ -243,18 +243,18 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
                         return (
                           <Card 
                             key={event.id}
-                            className="hover:shadow-md transition-shadow cursor-pointer"
+                            className="hover:shadow-xl hover:border-gray-600 transition-all cursor-pointer bg-gray-800 border-gray-700"
                             onClick={() => setSelectedEvent(event)}
                           >
                             <CardContent className="p-4">
                               <div className="flex items-start gap-3">
                                 {/* Time */}
                                 <div className="flex-shrink-0 w-16">
-                                  <div className="flex items-center gap-1 text-sm font-semibold text-slate-900">
-                                    <Clock size={14} className="text-slate-500" />
+                                  <div className="flex items-center gap-1 text-sm font-semibold text-white">
+                                    <Clock className="text-gray-400 w-4 h-4"  />
                                     {formatTime(event.startTime)}
                                   </div>
-                                  <div className="text-xs text-slate-500 mt-0.5">
+                                  <div className="text-xs text-gray-400 mt-0.5">
                                     {(() => {
                                       const start = event.startTime instanceof Date ? event.startTime : new Date(event.startTime)
                                       const end = event.endTime instanceof Date ? event.endTime : new Date(event.endTime)
@@ -271,14 +271,14 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
 
                                 {/* Content */}
                                 <div className="flex-1 min-w-0">
-                                  <h3 className="font-semibold text-slate-900 leading-tight mb-1 text-sm">
+                                  <h3 className="font-semibold text-white leading-tight mb-1 text-sm">
                                     {event.title}
                                   </h3>
                                   
-                                  <div className="flex items-center gap-2 flex-wrap text-xs text-slate-600 mb-1">
+                                  <div className="flex items-center gap-2 flex-wrap text-xs text-gray-300 mb-1">
                                     {event.location && (
                                       <div className="flex items-center gap-1">
-                                        <MapPin size={12} className="text-slate-400" />
+                                        <MapPin className="text-gray-400 w-3 h-3"  />
                                         <span className="truncate">{event.location}</span>
                                       </div>
                                     )}
@@ -291,13 +291,13 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
                                   </div>
 
                                   {event.description && (
-                                    <p className="text-xs text-slate-600 line-clamp-1">
+                                    <p className="text-xs text-gray-400 line-clamp-1">
                                       {event.description}
                                     </p>
                                   )}
                                   
                                   {isAttending && (
-                                    <Badge variant="default" className="mt-2 text-xs">
+                                    <Badge variant="default" className="mt-2 text-xs bg-green-600 text-white">
                                       Attending
                                     </Badge>
                                   )}
@@ -319,29 +319,29 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
       {/* Event Detail Modal */}
       {selectedEvent && (
         <div 
-          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedEvent(null)}
         >
           <Card 
-            className="max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            className="max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-gray-800 border-gray-700"
             onClick={(e) => e.stopPropagation()}
           >
-            <CardHeader>
-              <CardTitle>{selectedEvent.title}</CardTitle>
-              <div className="flex items-center gap-2 text-sm text-slate-600">
-                <Clock size={16} />
+            <CardHeader className="border-b border-gray-700">
+              <CardTitle className="text-white">{selectedEvent.title}</CardTitle>
+              <div className="flex items-center gap-2 text-sm text-gray-300">
+                <Clock className="w-4 h-4"  />
                 {formatTimeRange(selectedEvent.startTime, selectedEvent.endTime)}
               </div>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pt-6">
               {selectedEvent.description && (
-                <p className="text-slate-700">{selectedEvent.description}</p>
+                <p className="text-gray-300">{selectedEvent.description}</p>
               )}
               
               <div className="flex flex-wrap gap-2">
                 {selectedEvent.location && (
-                  <Badge variant="outline" className="gap-1">
-                    <MapPin size={14} />
+                  <Badge variant="outline" className="gap-1 border-gray-600 text-gray-300">
+                    <MapPin className="w-4 h-4"  />
                     {selectedEvent.location}
                   </Badge>
                 )}
@@ -354,10 +354,10 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
 
               {selectedEvent.attendees && selectedEvent.attendees.length > 0 && (
                 <div>
-                  <h4 className="font-semibold text-sm mb-2">Attendees ({selectedEvent.attendees.length})</h4>
+                  <h4 className="font-semibold text-sm mb-2 text-white">Attendees ({selectedEvent.attendees.length})</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedEvent.attendees.map((attendee, idx) => (
-                      <Badge key={idx} variant="secondary">{attendee}</Badge>
+                      <Badge key={idx} variant="secondary" className="bg-gray-700 text-gray-200">{attendee}</Badge>
                     ))}
                   </div>
                 </div>
@@ -369,13 +369,14 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
                     onToggleAttendance(selectedEvent.id)
                     setSelectedEvent(null)
                   }}
-                  className="flex-1"
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   {selectedEvent.attendees?.includes(currentUserName) ? 'Leave Event' : 'Attend Event'}
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => setSelectedEvent(null)}
+                  className="border-gray-600 text-gray-300 hover:bg-gray-700"
                 >
                   Close
                 </Button>

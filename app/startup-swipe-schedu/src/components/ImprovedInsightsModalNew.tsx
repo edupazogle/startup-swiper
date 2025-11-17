@@ -1,22 +1,28 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { TailwindModal, TailwindModalHeader, TailwindModalBody, TailwindModalTitle, TailwindModalDescription } from '@/components/ui/tailwind-modal'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Sparkle, 
-  PaperPlaneTilt, 
-  Robot, 
-  User, 
-  X,
-  Lightbulb,
-  CheckCircle,
-  Star
-} from '@phosphor-icons/react'
+import { WandMagicSparkles, PaperPlane, User, Close, Lightbulb, CheckCircle, Star } from 'flowbite-react-icons/outline'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { fetchWithCache } from '@/lib/apiCache'
+import { ModalSkeleton } from './ModalSkeleton'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+
+// Helper function to render text with bold markdown (**text**)
+const renderMessageContent = (content: string) => {
+  const parts = content.split(/(\*\*.*?\*\*)/g)
+  
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      const boldText = part.slice(2, -2)
+      return <strong key={index} className="font-semibold">{boldText}</strong>
+    }
+    return part
+  })
+}
 
 interface Message {
   id: string
@@ -42,30 +48,12 @@ export function ImprovedInsightsModalNew({
   startupName,
   startupDescription
 }: ImprovedInsightsModalNewProps) {
-  // Memoize welcome message to prevent recalculation
-  const welcomeMessage = useMemo(() => 
-    `👋 Welcome to your **${startupName}** debrief session!
-
-I'll help you capture and analyze insights from your meeting. Let's start with:
-
-• What were your key observations?
-• What stood out about their approach?
-• Any concerns or red flags?
-
-Share your thoughts, and I'll help you organize them into actionable insights.`,
-    [startupName]
-  )
-
-  const [messages, setMessages] = useState<Message[]>([{
-    id: '1',
-    role: 'assistant',
-    content: welcomeMessage,
-    timestamp: Date.now()
-  }])
+  const [messages, setMessages] = useState<Message[]>([])
   
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [sessionId, setSessionId] = useState<string | null>(null)
+  const [hasStarted, setHasStarted] = useState(false) // Track if user clicked start
   
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
@@ -101,50 +89,69 @@ Share your thoughts, and I'll help you organize them into actionable insights.`,
   // Reset on close
   useEffect(() => {
     if (!isOpen) {
-      setMessages([{
-        id: '1',
-        role: 'assistant',
-        content: welcomeMessage,
-        timestamp: Date.now()
-      }])
+      setMessages([])
       setInput('')
       setSessionId(null)
       setIsLoading(false)
+      setHasStarted(false)
       isInitialMount.current = true
     }
   }, [isOpen])
 
-  // Start session automatically
+  // Generate session ID on open (don't call API automatically)
   useEffect(() => {
     if (isOpen && !sessionId) {
-      startDebriefSession()
+      const newSessionId = `insights_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      setSessionId(newSessionId)
     }
   }, [isOpen])
 
   const startDebriefSession = async () => {
+    const apiStartTime = performance.now()
+    
     try {
-      const response = await fetch(`${API_URL}/insights/session/start`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: userId,
-          startup_id: startupId || 'unknown',
-          startup_name: startupName,
-          startup_description: startupDescription
-        })
-      })
+      const url = `${API_URL}/insights/session/start`
+      
+      const data = await fetchWithCache(
+        url,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: userId,
+            startup_id: startupId || 'unknown',
+            startup_name: startupName,
+            startup_description: startupDescription
+          })
+        },
+        `insights_session_${startupId}`,
+        300000, // Cache for 5 minutes
+        5000 // 5 second timeout
+      )
 
-      if (!response.ok) {
-        console.warn('Insights session API not available, using local mode')
+      const apiDuration = performance.now() - apiStartTime
+      console.log(`✅ Insights session API completed in ${apiDuration.toFixed(2)}ms`)
+
+      if (data.success) {
+        setSessionId(data.session_id)
+        console.log('✅ Insights session started:', data.session_id)
+      } else {
+        console.warn('⚠️ Insights session API not available, using local mode')
         setSessionId(`local_${Date.now()}`)
-        return
+      }
+    } catch (error) {
+      const apiDuration = performance.now() - apiStartTime
+      console.error(`❌ Failed to start insights session after ${apiDuration.toFixed(2)}ms:`, error)
+      
+      if (error instanceof Error) {
+        console.error('Error details:', {
+          name: error.name,
+          message: error.message,
+          stack: error.stack
+        })
       }
       
-      const data = await response.json()
-      setSessionId(data.session_id)
-      console.log('✓ Insights session started:', data.session_id)
-    } catch (error) {
-      console.warn('Insights session API not available, using local mode:', error)
+      console.warn('⚠️ Using local mode due to error')
       setSessionId(`local_${Date.now()}`)
     }
   }
@@ -209,49 +216,82 @@ Share your thoughts, and I'll help you organize them into actionable insights.`,
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent 
-        className="max-w-3xl h-[80vh] md:h-[80vh] h-screen md:rounded-lg rounded-none p-0 gap-0 flex flex-col w-full max-w-full md:max-w-3xl"
-        aria-describedby="insights-description"
-      >
-        {/* Header */}
-        <div className="flex-shrink-0 border-b border-gray-700 dark:border-gray-700 bg-gray-800 dark:bg-gray-800 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 shadow-md">
-                <Lightbulb size={20} weight="fill" className="text-white" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h2 id="insights-title" className="text-lg font-bold text-white">
-                  Insights Debrief
-                </h2>
-                <p id="insights-description" className="text-sm text-gray-300 truncate">
-                  {startupName}
-                </p>
-              </div>
+    <TailwindModal isOpen={isOpen} onClose={onClose} size="xl" className="p-0 flex flex-col h-[90vh] max-h-[90vh]">
+      {/* Header */}
+      <div className="flex-shrink-0 border-b border-gray-700 dark:border-gray-700 bg-gray-800 dark:bg-gray-800 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 shadow-md">
+              <Lightbulb className="text-white w-5 h-5"  />
             </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="hidden sm:flex items-center gap-1.5 bg-green-500/10 border-green-500/30 text-green-400">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                Recording
-              </Badge>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="h-8 w-8 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700"
-              >
-                <X size={18} />
-              </Button>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-lg font-bold text-white">
+                Insights Debrief
+              </h2>
+              <p className="text-sm text-gray-300 truncate">
+                {startupName}
+              </p>
             </div>
           </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="hidden sm:flex items-center gap-1.5 bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+              Recording
+            </Badge>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="h-8 w-8 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700"
+            >
+              <Close className="w-5 h-5"  />
+            </Button>
+          </div>
         </div>
+      </div>
 
-        {/* Messages */}
-        <div 
-          ref={messagesContainerRef}
-          className="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-4 bg-gray-50 dark:bg-gray-900"
-        >
+      {/* Messages */}
+      <div 
+        ref={messagesContainerRef}
+        className="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-4 bg-gray-50 dark:bg-gray-900"
+      >
+          {/* Welcome Screen - Before Starting Session */}
+          {!hasStarted && messages.length === 0 && (
+            <div className="h-full flex items-center justify-center">
+              <div className="max-w-md text-center space-y-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+                  <Lightbulb className="w-8 h-8 text-white" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                    AI Insights Debrief
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Start your debrief session for <span className="font-semibold text-gray-900 dark:text-white">{startupName}</span>. Share your observations and I'll help you organize them into actionable insights.
+                  </p>
+                </div>
+                <Button
+                  onClick={() => {
+                    setHasStarted(true)
+                    startDebriefSession()
+                    // Add welcome message after starting
+                    setMessages([{
+                      id: '1',
+                      role: 'assistant',
+                      content: `👋 Welcome to your **${startupName}** debrief session!\n\nI'll help you capture and analyze insights from your meeting. Let's start with:\n\n• What were your key observations?\n• What stood out about their approach?\n• Any concerns or red flags?\n\nShare your thoughts, and I'll help you organize them into actionable insights.`,
+                      timestamp: Date.now()
+                    }])
+                  }}
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-3 rounded-lg shadow-md transition-all"
+                  size="lg"
+                >
+                  <Lightbulb className="w-5 h-5 mr-2" />
+                  Start Debrief Session
+                </Button>
+              </div>
+            </div>
+          )}
+          
           {messages.map((message) => (
             <div
               key={message.id}
@@ -262,7 +302,7 @@ Share your thoughts, and I'll help you organize them into actionable insights.`,
             >
               {message.role === 'assistant' && (
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-md">
-                  <Robot size={18} weight="fill" className="text-white" />
+                  <WandMagicSparkles className="text-white w-5 h-5"  />
                 </div>
               )}
               
@@ -270,18 +310,18 @@ Share your thoughts, and I'll help you organize them into actionable insights.`,
                 className={cn(
                   "max-w-[85%] rounded-2xl px-4 py-3 shadow-sm",
                   message.role === 'user'
-                    ? 'bg-gradient-to-br from-purple-500 to-purple-600 text-white'
-                    : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700'
+                    ? 'bg-gradient-to-br from-purple-500 to-pink-600 text-white'
+                    : 'bg-white/90 backdrop-blur-sm text-gray-900 border border-gray-200/50'
                 )}
               >
                 <div className="text-sm leading-relaxed whitespace-pre-wrap break-words">
-                  {message.content}
+                  {renderMessageContent(message.content)}
                 </div>
                 <div className={cn(
                   "text-xs mt-2",
                   message.role === 'user' 
                     ? 'text-purple-100' 
-                    : 'text-gray-500 dark:text-gray-400'
+                    : 'text-gray-500'
                 )}>
                   {new Date(message.timestamp).toLocaleTimeString([], { 
                     hour: '2-digit', 
@@ -291,8 +331,8 @@ Share your thoughts, and I'll help you organize them into actionable insights.`,
               </div>
 
               {message.role === 'user' && (
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                  <User size={18} weight="fill" className="text-gray-600 dark:text-gray-300" />
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
+                  <User className="text-white w-5 h-5"  />
                 </div>
               )}
             </div>
@@ -301,7 +341,7 @@ Share your thoughts, and I'll help you organize them into actionable insights.`,
           {isLoading && (
             <div className="flex gap-3 justify-start">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-md">
-                <Robot size={18} weight="fill" className="text-white" />
+                <WandMagicSparkles className="text-white w-5 h-5"  />
               </div>
               <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-4 py-3 shadow-sm">
                 <div className="flex items-center gap-2">
@@ -326,23 +366,22 @@ Share your thoughts, and I'll help you organize them into actionable insights.`,
               onKeyDown={handleKeyDown}
               placeholder="Share your insights..."
               disabled={isLoading}
-              className="flex-1 min-h-[44px] max-h-[120px] resize-none rounded-xl border-gray-300 dark:border-gray-600 focus:border-purple-500 dark:focus:border-purple-500 focus:ring-purple-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+              className="flex-1 min-h-[44px] max-h-[120px] resize-none rounded-xl border-2 border-gray-300 dark:border-gray-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
               rows={1}
               style={{ height: '44px' }}
             />
             <Button
               onClick={handleSend}
               disabled={!input.trim() || isLoading || !sessionId}
-              className="h-11 w-11 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+              className="h-11 w-11 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
             >
-              <PaperPlaneTilt size={20} weight="fill" />
+              <PaperPlane size={20} weight="fill" />
             </Button>
           </div>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
             Press Enter to send, Shift+Enter for new line
           </p>
         </div>
-      </DialogContent>
-    </Dialog>
+    </TailwindModal>
   )
 }

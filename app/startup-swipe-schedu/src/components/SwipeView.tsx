@@ -6,7 +6,7 @@ import { AIRecommendations } from './AIRecommendations'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
-import { X, Heart, Users, Rocket, Sparkle } from '@phosphor-icons/react'
+import { Close, Heart, UsersGroup, Rocket, WandMagicSparkles } from 'flowbite-react-icons/outline'
 import { Startup, Vote } from '@/lib/types'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -212,7 +212,7 @@ export function SwipeView({ startups, votes, currentUserId, currentUserName, onV
             You've reviewed all available startups. Check the dashboard to see team preferences and coordinate meetings.
           </p>
           <Badge variant="secondary" className="text-base px-4 py-2 gap-2">
-            <Users size={20} weight="fill" />
+            <UsersGroup className="w-5 h-5"   />
             <span>{safeFinnishedUsers.length} {safeFinnishedUsers.length === 1 ? 'attendee has' : 'attendees have'} Finnished</span>
           </Badge>
         </div>
@@ -280,7 +280,7 @@ export function SwipeView({ startups, votes, currentUserId, currentUserName, onV
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-4 xl:p-6 flex-shrink-0">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base xl:text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                  <Rocket size={20} weight="duotone" className="text-blue-600 dark:text-blue-500" />
+                  <Rocket className="text-blue-600 dark:text-blue-500 w-5 h-5"  />
                   Your Progress
                 </h3>
                 <Badge variant="secondary" className="text-sm font-medium">
@@ -302,12 +302,12 @@ export function SwipeView({ startups, votes, currentUserId, currentUserName, onV
             {safeFinnishedUsers.length > 0 && (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-4 xl:p-6 flex-shrink-0">
                 <h3 className="text-base xl:text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <Users size={20} weight="duotone" className="text-blue-600 dark:text-blue-500" />
+                  <UsersGroup className="text-blue-600 dark:text-blue-500 w-5 h-5"   />
                   Team Status
                 </h3>
                 <div className="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
                   <div className="flex-shrink-0 w-12 h-12 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center">
-                    <Users size={24} weight="fill" className="text-white" />
+                    <UsersGroup className="text-white w-6 h-6"   />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">
@@ -324,7 +324,7 @@ export function SwipeView({ startups, votes, currentUserId, currentUserName, onV
             {/* Swipe Phase Info */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-4 xl:p-6 flex-shrink-0">
               <h3 className="text-base xl:text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                <Sparkle size={20} weight="duotone" className="text-blue-600 dark:text-blue-500" />
+                <WandMagicSparkles className="text-blue-600 dark:text-blue-500 w-5 h-5"  />
                 {swipeCount < 20 ? 'Phase 1: Discovery' : 'Phase 2: Personalized'}
               </h3>
               <p className="text-xs xl:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">

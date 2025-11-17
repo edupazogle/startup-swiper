@@ -81,17 +81,23 @@
 }
 
 .auroral-northern-intense {
-  position: absolute;
+  position: fixed;
   left: -50%;
   top: -50%;
   width: 200%;
   height: 200%;
-  animation-name: aura;
-  animation-duration: 10s;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
   background: linear-gradient(10deg, #b7a841 20%, #a1006a 40%, #371d40 60%);
+}
+
+/* Fixed version for concierge - no animation */
+.auroral-northern-intense-fixed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(10deg, #b7a841 20%, #a1006a 40%, #371d40 60%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .auroral-northern-dimmed {

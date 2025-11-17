@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { Moon, Sun } from '@phosphor-icons/react'
+import { Moon, Sun } from 'flowbite-react-icons/outline'
 
 const THEMES = [
   'corporate',
@@ -56,7 +56,7 @@ export function ThemeSwitcher() {
         onClick={toggleDarkLight}
         className="h-8 w-8"
       >
-        {theme === 'dark' ? <Sun size={16} weight="duotone" /> : <Moon size={16} weight="duotone" />}
+        {theme === 'dark' ? <Sun className="w-4 h-4"  /> : <Moon className="w-4 h-4"  />}
       </Button>
     </div>
   )

@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Startup, Vote } from '@/lib/types'
-import { Heart, X, ArrowCounterClockwise } from '@phosphor-icons/react'
+import { Heart, Close, Refresh } from 'flowbite-react-icons/outline'
 
 interface HistoryViewProps {
   startups: Startup[]
@@ -22,7 +22,7 @@ export function HistoryView({ startups, votes, currentUserId, onChangeVote }: Hi
     return (
       <div className="h-full flex items-center justify-center p-4 md:p-8">
         <div className="text-center max-w-md">
-          <ArrowCounterClockwise size={48} className="md:w-16 md:h-16 text-muted-foreground mx-auto mb-3 md:mb-4" />
+          <Refresh className="md:w-16 md:h-16 text-muted-foreground mx-auto mb-3 md:mb-4 w-12 h-12"  />
           <h2 className="text-xl md:text-2xl font-semibold mb-2 md:mb-3">No History Yet</h2>
           <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
             Start swiping on startups to build your voting history.
@@ -73,13 +73,13 @@ export function HistoryView({ startups, votes, currentUserId, onChangeVote }: Hi
                         <div className="flex items-center gap-2 flex-shrink-0">
                           {vote.interested ? (
                             <Badge className="bg-accent text-accent-foreground text-[10px] md:text-xs">
-                              <Heart weight="fill" size={12} className="mr-0.5 md:mr-1 md:w-3.5 md:h-3.5" />
+                              <Heart className="mr-0.5 md:mr-1 md:w-3.5 md:h-3.5 w-3 h-3"   />
                               <span className="hidden md:inline">Interested</span>
                               <span className="md:hidden">Yes</span>
                             </Badge>
                           ) : (
                             <Badge variant="outline" className="text-muted-foreground text-[10px] md:text-xs">
-                              <X weight="bold" size={12} className="mr-0.5 md:mr-1 md:w-3.5 md:h-3.5" />
+                              <Close size={12} className="mr-0.5 md:mr-1 md:w-3.5 md:h-3.5"  />
                               <span className="hidden md:inline">Passed</span>
                               <span className="md:hidden">No</span>
                             </Badge>
@@ -97,7 +97,7 @@ export function HistoryView({ startups, votes, currentUserId, onChangeVote }: Hi
                         onClick={() => onChangeVote(String(startup.id), !vote.interested)}
                         className="text-[10px] md:text-xs h-7 md:h-8 px-2 md:px-3"
                       >
-                        <ArrowCounterClockwise size={12} className="mr-1 md:w-3.5 md:h-3.5" />
+                        <Refresh className="mr-1 md:w-3.5 md:h-3.5 w-3 h-3"  />
                         Change to {vote.interested ? 'Pass' : 'Interested'}
                       </Button>
                     </div>

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
-import { Sparkle, Clock } from '@phosphor-icons/react'
+import { WandMagicSparkles, Clock } from 'flowbite-react-icons/outline'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 
@@ -82,7 +82,7 @@ Return as JSON:
         size="sm"
         className="w-full gap-2"
       >
-        <Sparkle size={16} weight={isLoading ? 'duotone' : 'fill'} className={isLoading ? 'animate-pulse' : ''} />
+        <WandMagicSparkles size={16} className={isLoading ? 'animate-pulse' : ''}  />
         {isLoading ? 'Finding optimal times...' : 'Suggest Meeting Times'}
       </Button>
     )
@@ -92,7 +92,7 @@ Return as JSON:
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Sparkle size={16} weight="duotone" className="text-primary" />
+          <WandMagicSparkles className="text-primary w-4 h-4"  />
           <span className="text-sm font-semibold">Suggested Times</span>
         </div>
         <Button
@@ -127,7 +127,7 @@ Return as JSON:
                   }}
                 >
                   <div className="flex items-start gap-3">
-                    <Clock size={18} weight="duotone" className="text-primary flex-shrink-0 mt-0.5" />
+                    <Clock className="text-primary flex-shrink-0 mt-0.5 w-5 h-5"  />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-semibold text-sm">

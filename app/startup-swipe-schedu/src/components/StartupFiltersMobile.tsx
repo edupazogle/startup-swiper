@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { X, FunnelSimple, MagnifyingGlass, CaretDown, CaretUp } from '@phosphor-icons/react'
+import { Close, Filter, Search, AngleDown, AngleUp } from 'flowbite-react-icons/outline'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -94,11 +94,10 @@ export function StartupFiltersMobile(props: StartupFiltersMobileProps) {
         activeFilterCount > 0 && "text-primary"
       )}
     >
-      <FunnelSimple 
-        size={18} 
-        weight={activeFilterCount > 0 ? "fill" : "regular"}
+      <FilterSimple 
+        size={18}
         className="transition-all"
-      />
+       />
       <span className="hidden sm:inline">Filters</span>
       {activeFilterCount > 0 && (
         <Badge 
@@ -155,9 +154,9 @@ export function StartupFiltersMobile(props: StartupFiltersMobileProps) {
               )}
             </div>
             {isExpanded ? (
-              <CaretUp size={16} className="text-muted-foreground group-hover:text-foreground transition-colors" />
+              <AngleUp className="text-muted-foreground group-hover:text-foreground transition-colors w-4 h-4"  />
             ) : (
-              <CaretDown size={16} className="text-muted-foreground group-hover:text-foreground transition-colors" />
+              <AngleDown className="text-muted-foreground group-hover:text-foreground transition-colors w-4 h-4"  />
             )}
           </button>
           
@@ -176,10 +175,9 @@ export function StartupFiltersMobile(props: StartupFiltersMobileProps) {
         <div className="pb-4 space-y-3">
           {/* Search */}
           <div className="relative">
-            <MagnifyingGlass 
-              size={16} 
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
-            />
+            <Search 
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4"
+             />
             <Input
               type="text"
               placeholder="Search startups..."
@@ -197,7 +195,7 @@ export function StartupFiltersMobile(props: StartupFiltersMobileProps) {
               onClick={clearAllFilters}
               className="w-full text-xs"
             >
-              <X size={14} className="mr-1" />
+              <Close className="mr-1 w-4 h-4"  />
               Clear {activeFilterCount} filter{activeFilterCount !== 1 ? 's' : ''}
             </Button>
           )}
@@ -367,7 +365,7 @@ export function StartupFiltersMobile(props: StartupFiltersMobileProps) {
         <DrawerContent className="max-h-[85vh]">
           <DrawerHeader className="text-left border-b">
             <DrawerTitle className="flex items-center gap-2">
-              <FunnelSimple size={20} weight="duotone" />
+              <FilterSimple size={20}  />
               Filters & Sort
             </DrawerTitle>
           </DrawerHeader>
@@ -388,7 +386,7 @@ export function StartupFiltersMobile(props: StartupFiltersMobileProps) {
       <SheetContent side="left" className="w-80 sm:w-96">
         <SheetHeader className="border-b pb-4 mb-4">
           <SheetTitle className="flex items-center gap-2">
-            <FunnelSimple size={20} weight="duotone" />
+            <FilterSimple size={20}  />
             Filters & Sort
           </SheetTitle>
         </SheetHeader>

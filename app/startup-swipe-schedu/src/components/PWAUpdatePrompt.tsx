@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import { Button } from '@/components/ui/button'
-import { ArrowsClockwise, X } from '@phosphor-icons/react'
+import { Refresh, Close } from 'flowbite-react-icons/outline'
 
 export function PWAUpdatePrompt() {
   const [showPrompt, setShowPrompt] = useState(false)
@@ -38,7 +38,7 @@ export function PWAUpdatePrompt() {
       <div className="bg-card border rounded-lg shadow-lg p-4">
         <div className="flex items-start gap-3">
           <div className="rounded-md bg-primary/10 p-2 flex-shrink-0">
-            <ArrowsClockwise size={20} weight="bold" className="text-primary" />
+            <Refresh className="text-primary w-5 h-5"  />
           </div>
           <div className="flex-1">
             <h3 className="font-semibold text-sm mb-1 text-foreground">
@@ -75,7 +75,7 @@ export function PWAUpdatePrompt() {
             className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
             aria-label="Close"
           >
-            <X size={16} />
+            <Close className="w-4 h-4"  />
           </button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Copy, Check } from '@phosphor-icons/react'
+import { FileCopy, Check } from 'flowbite-react-icons/outline'
 
 interface ChatMessageProps {
   role: 'user' | 'assistant'
@@ -88,9 +88,9 @@ export function ChatMessage({
             title="Copy message"
           >
             {copied ? (
-              <Check size={16} className="text-green-500" />
+              <Check className="text-green-500 w-4 h-4"  />
             ) : (
-              <Copy size={16} className="text-muted-foreground" />
+              <FileCopy className="text-muted-foreground w-4 h-4"  />
             )}
           </button>
         )}

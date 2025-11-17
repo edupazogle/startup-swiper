@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, Share } from '@phosphor-icons/react'
+import { Close, ShareAll } from 'flowbite-react-icons/outline'
 import { Button } from '@/components/ui/button'
 
 export function IOSInstallPrompt() {
@@ -54,7 +54,7 @@ export function IOSInstallPrompt() {
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">1️⃣</span>
-                  <span>Tap the <Share weight="fill" className="inline w-4 h-4" /> Share button below</span>
+                  <span>Tap the <ShareAll className="inline w-4 h-4"  /> Share button below</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-lg">2️⃣</span>
@@ -82,7 +82,7 @@ export function IOSInstallPrompt() {
             className="text-white/80 hover:text-white transition-colors"
             aria-label="Close"
           >
-            <X weight="bold" className="w-5 h-5" />
+            <Close className="w-5 h-5"  />
           </button>
         </div>
       </div>

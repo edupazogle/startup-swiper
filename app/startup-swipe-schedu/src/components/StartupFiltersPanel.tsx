@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { X, FunnelSimple, MagnifyingGlass } from '@phosphor-icons/react'
+import { Close, Filter, Search } from 'flowbite-react-icons/outline'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -184,11 +184,9 @@ export function StartupFiltersPanel({
       <div className="flex flex-col gap-3">
         {/* Search Bar */}
         <div className="relative">
-          <MagnifyingGlass 
-            size={16} 
-            weight="duotone" 
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground pointer-events-none"
-          />
+          <Search 
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground pointer-events-none w-4 h-4"
+           />
           <Input
             type="text"
             placeholder="Search startups..."
@@ -209,7 +207,7 @@ export function StartupFiltersPanel({
           className="w-full justify-between"
         >
           <span className="flex items-center gap-2">
-            <FunnelSimple size={16} weight="duotone" />
+            <FilterSimple size={16}  />
             Filters
           </span>
           {activeFilterCount > 0 && (
@@ -246,7 +244,7 @@ export function StartupFiltersPanel({
       <div className="p-4 md:p-6 border-b bg-card sticky top-0 z-10 space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="flex items-center gap-2 text-sm md:text-base font-bold text-foreground">
-            <FunnelSimple size={18} weight="duotone" />
+            <FilterSimple size={18}  />
             Filters & Search
           </h3>
           <div className="flex items-center gap-3">
@@ -258,7 +256,7 @@ export function StartupFiltersPanel({
                 onClick={clearAllFilters}
                 className="text-xs text-muted-foreground hover:text-foreground"
               >
-                <X size={14} className="mr-1" />
+                <Close className="mr-1 w-4 h-4"  />
                 Clear All
               </Button>
             )}
@@ -267,11 +265,9 @@ export function StartupFiltersPanel({
 
         {/* Search Bar */}
         <div className="relative">
-          <MagnifyingGlass 
-            size={16} 
-            weight="duotone" 
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground pointer-events-none"
-          />
+          <Search 
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground pointer-events-none w-4 h-4"
+           />
           <Input
             type="text"
             placeholder="Search by startup name..."

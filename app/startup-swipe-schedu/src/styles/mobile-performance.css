@@ -1,0 +1,79 @@
+/* Mobile performance optimizations */
+
+/* Reduce animation complexity on mobile */
+@media (max-width: 768px) {
+  /* Faster, simpler animations */
+  .dialog-overlay {
+    animation: fadeIn 150ms ease-out !important;
+  }
+
+  .dialog-content {
+    animation: slideUp 200ms ease-out !important;
+  }
+
+  /* Disable complex transforms on scroll */
+  .modal-content {
+    will-change: auto !important;
+  }
+
+  /* Optimize backdrop blur for better performance */
+  .backdrop-blur-md {
+    backdrop-filter: blur(4px) !important;
+  }
+
+  .backdrop-blur-sm {
+    backdrop-filter: blur(2px) !important;
+  }
+}
+
+/* Touch-friendly loading states */
+.touch-none {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Optimize skeleton animations for mobile */
+@media (max-width: 768px) {
+  .animate-pulse {
+    animation-duration: 1.5s !important;
+  }
+
+  .animate-bounce {
+    animation-duration: 0.8s !important;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Hardware acceleration hints */
+.hw-accelerate {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Prevent layout shifts during loading */
+.prevent-layout-shift {
+  min-height: 200px;
+  content-visibility: auto;
+}

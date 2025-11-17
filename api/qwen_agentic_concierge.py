@@ -118,6 +118,52 @@ class ToolRegistry:
                     'focus': 'Optional: Specific aspect (funding/competitors/technology/market)'
                 },
                 'function': self._advanced_research
+            },
+            'search_events': {
+                'description': 'Search for Slush events by title or organizer name. Use this to find specific events or events hosted by companies.',
+                'parameters': {
+                    'query': 'Search query for event title or organizer',
+                    'limit': 'Maximum results (default: 10)'
+                },
+                'function': self._search_events
+            },
+            'search_events_by_organizer': {
+                'description': 'Find all events organized by a specific company or organization.',
+                'parameters': {
+                    'organizer': 'Company/organization name hosting events',
+                    'limit': 'Maximum results (default: 10)'
+                },
+                'function': self._search_events_by_organizer
+            },
+            'search_events_by_date': {
+                'description': 'Find events happening on a specific date (e.g., "Nov 19", "Nov 20", "November 19").',
+                'parameters': {
+                    'date_query': 'Date string to search for',
+                    'limit': 'Maximum results (default: 10)'
+                },
+                'function': self._search_events_by_date
+            },
+            'search_events_by_category': {
+                'description': 'Find events by category or topic (e.g., "AI", "Demo", "Networking", "Fintech").',
+                'parameters': {
+                    'category': 'Category or topic name',
+                    'limit': 'Maximum results (default: 10)'
+                },
+                'function': self._search_events_by_category
+            },
+            'get_event_details': {
+                'description': 'Get comprehensive details about a specific Slush event including location, time, status, and categories.',
+                'parameters': {
+                    'title': 'Event title or partial title'
+                },
+                'function': self._get_event_details
+            },
+            'get_all_event_organizers': {
+                'description': 'Get a list of all companies/organizations hosting events at Slush, with event counts.',
+                'parameters': {
+                    'limit': 'Maximum organizers to return (default: 20)'
+                },
+                'function': self._get_all_event_organizers
             }
         }
     
@@ -311,6 +357,195 @@ Optimized query:"""
             logger.error(f"ChatCBI error: {e}")
             return f"❌ Error performing advanced research: {str(e)}\n\nPlease verify CB Insights credentials."
     
+    @traceable(name="search_events", tags=["tool", "database", "events"])
+    def _search_events(self, query: str, limit: int = 10) -> str:
+        """Search Slush events by title or organizer"""
+        from models import SlushEvent
+        
+        try:
+            events = self.db.query(SlushEvent).filter(
+                (SlushEvent.title.ilike(f"%{query}%")) |
+                (SlushEvent.organizer.ilike(f"%{query}%"))
+            ).limit(limit).all()
+            
+            if not events:
+                return f"No events found matching '{query}'"
+            
+            output = [f"Found {len(events)} event(s):\n"]
+            for event in events:
+                title = event.title
+                organizer = event.organizer
+                datetime = event.datetime
+                location = event.location or "Location TBA"
+                status = ", ".join(event.status) if event.status else "Open"
+                
+                output.append(f"- **{title}**")
+                output.append(f"  Organized by: {organizer}")
+                output.append(f"  When: {datetime}")
+                output.append(f"  Where: {location}")
+                output.append(f"  Status: {status}\n")
+            
+            return '\n'.join(output)
+        except Exception as e:
+            return f"Error: {str(e)}"
+    
+    @traceable(name="search_events_by_organizer", tags=["tool", "database", "events"])
+    def _search_events_by_organizer(self, organizer: str, limit: int = 10) -> str:
+        """Search Slush events by organizer"""
+        from models import SlushEvent
+        
+        try:
+            events = self.db.query(SlushEvent).filter(
+                SlushEvent.organizer.ilike(f"%{organizer}%")
+            ).limit(limit).all()
+            
+            if not events:
+                return f"No events found organized by '{organizer}'"
+            
+            output = [f"Found {len(events)} event(s) organized by {organizer}:\n"]
+            for event in events:
+                title = event.title
+                datetime = event.datetime
+                location = event.location or "Location TBA"
+                status = ", ".join(event.status) if event.status else "Open"
+                
+                output.append(f"- **{title}**")
+                output.append(f"  When: {datetime}")
+                output.append(f"  Where: {location}")
+                output.append(f"  Status: {status}\n")
+            
+            return '\n'.join(output)
+        except Exception as e:
+            return f"Error: {str(e)}"
+    
+    @traceable(name="search_events_by_date", tags=["tool", "database", "events"])
+    def _search_events_by_date(self, date_query: str, limit: int = 10) -> str:
+        """Search Slush events by date"""
+        from models import SlushEvent
+        
+        try:
+            events = self.db.query(SlushEvent).filter(
+                SlushEvent.datetime.ilike(f"%{date_query}%")
+            ).limit(limit).all()
+            
+            if not events:
+                return f"No events found for '{date_query}'"
+            
+            output = [f"Found {len(events)} event(s) on {date_query}:\n"]
+            for event in events:
+                title = event.title
+                organizer = event.organizer
+                datetime = event.datetime
+                location = event.location or "Location TBA"
+                categories = ", ".join(event.categories) if event.categories else "General"
+                
+                output.append(f"- **{title}**")
+                output.append(f"  By: {organizer}")
+                output.append(f"  Time: {datetime}")
+                output.append(f"  Location: {location}")
+                output.append(f"  Categories: {categories}\n")
+            
+            return '\n'.join(output)
+        except Exception as e:
+            return f"Error: {str(e)}"
+    
+    @traceable(name="search_events_by_category", tags=["tool", "database", "events"])
+    def _search_events_by_category(self, category: str, limit: int = 10) -> str:
+        """Search Slush events by category"""
+        from models import SlushEvent
+        from sqlalchemy import cast, String
+        
+        try:
+            events = self.db.query(SlushEvent).filter(
+                cast(SlushEvent.categories, String).ilike(f"%{category}%")
+            ).limit(limit).all()
+            
+            if not events:
+                return f"No events found in category '{category}'"
+            
+            output = [f"Found {len(events)} event(s) in category {category}:\n"]
+            for event in events:
+                title = event.title
+                organizer = event.organizer
+                datetime = event.datetime
+                location = event.location or "Location TBA"
+                
+                output.append(f"- **{title}**")
+                output.append(f"  By: {organizer}")
+                output.append(f"  When: {datetime}")
+                output.append(f"  Where: {location}\n")
+            
+            return '\n'.join(output)
+        except Exception as e:
+            return f"Error: {str(e)}"
+    
+    @traceable(name="get_event_details", tags=["tool", "database", "events"])
+    def _get_event_details(self, title: str) -> str:
+        """Get detailed information about a Slush event"""
+        from models import SlushEvent
+        
+        try:
+            event = self.db.query(SlushEvent).filter(
+                SlushEvent.title.ilike(f"%{title}%")
+            ).first()
+            
+            if not event:
+                return f"No event found: '{title}'"
+            
+            output = [f"# {event.title}\n"]
+            output.append(f"**Organized by:** {event.organizer}")
+            output.append(f"**Date & Time:** {event.datetime}")
+            output.append(f"**Location:** {event.location or 'Location TBA'}")
+            
+            if event.categories and len(event.categories) > 0:
+                output.append(f"**Categories:** {', '.join(event.categories)}")
+            
+            if event.status and len(event.status) > 0:
+                output.append(f"**Status:** {', '.join(event.status)}")
+            
+            if event.insight:
+                output.append(f"\n**Insights:** {event.insight}")
+            
+            if event.tags and len(event.tags) > 0:
+                output.append(f"**Tags:** {', '.join(event.tags)}")
+            
+            if event.rating:
+                output.append(f"**Rating:** {'⭐' * event.rating}")
+            
+            if event.followUp:
+                output.append("**Follow-up:** Yes ✓")
+            
+            return '\n'.join(output)
+        except Exception as e:
+            return f"Error: {str(e)}"
+    
+    @traceable(name="get_all_event_organizers", tags=["tool", "database", "events"])
+    def _get_all_event_organizers(self, limit: int = 20) -> str:
+        """Get list of all event organizers at Slush"""
+        from models import SlushEvent
+        from sqlalchemy import func
+        
+        try:
+            organizers = self.db.query(
+                SlushEvent.organizer,
+                func.count(SlushEvent.id).label('event_count')
+            ).group_by(SlushEvent.organizer)\
+             .order_by(func.count(SlushEvent.id).desc())\
+             .limit(limit)\
+             .all()
+            
+            if not organizers:
+                return "No event organizers found"
+            
+            output = [f"Found {len(organizers)} event organizer(s):\n"]
+            for org, count in organizers:
+                plural = "event" if count == 1 else "events"
+                output.append(f"- **{org}** ({count} {plural})")
+            
+            return '\n'.join(output)
+        except Exception as e:
+            return f"Error: {str(e)}"
+    
     def get_tools_description(self) -> str:
         """Get formatted description of all tools"""
         lines = ["**Available Tools:**\n"]
@@ -408,6 +643,13 @@ Final Answer: [Your comprehensive response based on REAL observations]
 - **People search**: 
   - Use `search_people` to find specific individuals by name (e.g., "Eduardo Paz")
   - Use `search_attendees` for broader searches by company or role
+- **Event search**: 
+  - Use `search_events` to find events by title or organizer
+  - Use `search_events_by_organizer` to see all events hosted by a company
+  - Use `search_events_by_date` to find events on specific dates (e.g., "Nov 19", "Nov 20")
+  - Use `search_events_by_category` to find events by topic (AI, Demo, Networking, etc.)
+  - Use `get_event_details` for comprehensive information about a specific event
+  - Use `get_all_event_organizers` to see which companies are hosting events
 - **Advanced research**: Use `advanced_research` for deep market intelligence via CB Insights ChatCBI:
   - Competitive analysis
   - Market intelligence

@@ -7,7 +7,8 @@ import { Card } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { PaperPlaneRight, LinkedinLogo, Sparkle, Copy, ShareNetwork, User } from '@phosphor-icons/react'
+import { PaperPlane, WandMagicSparkles, FileCopy, ShareNodes, User } from 'flowbite-react-icons/outline'
+import { Linkedin } from 'flowbite-react-icons/solid'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -192,7 +193,7 @@ IMPORTANT:
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-              <LinkedinLogo size={24} weight="duotone" className="text-primary" />
+              <Linkedin className="text-primary w-6 h-6"  />
             </div>
             <div>
               <h2 className="text-xl md:text-2xl font-semibold">FrankAI - LinkedIn Expert</h2>
@@ -206,7 +207,7 @@ IMPORTANT:
         <ScrollArea className="flex-1 p-4 md:p-6" ref={scrollRef}>
           {(!messages || messages.length === 0) && (
             <div className="flex flex-col items-center justify-center h-full text-center py-12">
-              <Sparkle size={48} weight="duotone" className="text-primary/50 mb-4" />
+              <WandMagicSparkles className="text-primary/50 mb-4 w-12 h-12"  />
               <h3 className="text-lg font-semibold mb-2">Ready to Capture the Slush Energy 🚀</h3>
               <p className="text-sm text-muted-foreground mb-6 max-w-md">
                 Describe your experience - who you met, what panel you saw, the insight you had - and I'll transform it into an engaging LinkedIn post with proper tagging, hooks, and hashtags
@@ -219,7 +220,7 @@ IMPORTANT:
                     className="justify-start text-left h-auto py-3 px-4"
                     onClick={() => handleQuickAction(prompt)}
                   >
-                    <Sparkle size={16} weight="fill" className="mr-2 flex-shrink-0 text-primary" />
+                    <WandMagicSparkles className="mr-2 flex-shrink-0 text-primary w-4 h-4"  />
                     <span className="text-sm">{prompt}</span>
                   </Button>
                 ))}
@@ -240,7 +241,7 @@ IMPORTANT:
               >
               {message.role === 'assistant' && (
                 <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                  <LinkedinLogo size={18} weight="duotone" className="text-primary" />
+                  <Linkedin className="text-primary w-5 h-5"  />
                 </div>
               )}
               <Card
@@ -253,7 +254,7 @@ IMPORTANT:
                 {message.role === 'assistant' && (
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <Badge variant="secondary" className="gap-1">
-                      <Sparkle size={14} weight="fill" />
+                      <WandMagicSparkles className="w-4 h-4"  />
                       AI Generated
                     </Badge>
                     <div className="flex gap-2">
@@ -263,7 +264,7 @@ IMPORTANT:
                         onClick={() => handleCopyMessage(message.content)}
                         className="gap-2"
                       >
-                        <Copy size={16} weight="bold" />
+                        <FileCopy className="w-4 h-4"  />
                         Copy
                       </Button>
                       <Button
@@ -272,7 +273,7 @@ IMPORTANT:
                         onClick={() => handleShareOnLinkedIn(message.content)}
                         className="gap-2"
                       >
-                        <ShareNetwork size={16} weight="bold" />
+                        <ShareAllNetwork size={16}  />
                         {!isMobile && "Share"}
                       </Button>
                     </div>
@@ -285,7 +286,7 @@ IMPORTANT:
               </Card>
               {message.role === 'user' && (
                 <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
-                  <User size={18} weight="duotone" className="text-accent" />
+                  <User className="text-accent w-5 h-5"  />
                 </div>
               )}
             </motion.div>
@@ -299,7 +300,7 @@ IMPORTANT:
               className="flex gap-3 mb-4"
             >
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                <LinkedinLogo size={18} weight="duotone" className="text-primary" />
+                <Linkedin className="text-primary w-5 h-5"  />
               </div>
               <Card className="p-3 md:p-4 bg-card">
                 <div className="flex gap-1">
@@ -332,7 +333,7 @@ IMPORTANT:
               disabled={!input.trim() || isLoading}
               size="icon"
             >
-              <PaperPlaneRight size={20} weight="fill" />
+              <PaperPlane className="w-5 h-5"  />
             </Button>
           </div>
         </div>

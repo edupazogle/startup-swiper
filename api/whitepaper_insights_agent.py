@@ -18,22 +18,14 @@ class WhitepaperInsightsAgent:
 
     def __init__(self):
         self.system_prompts = {
-            "outline_generator": """You are an AXA whitepaper analyst creating structured meeting prep outlines.
-Your role is to generate concise, actionable outlines of:
-1. KEY TALKING POINTS - 3-4 strategic points tied to whitepaper themes
-2. CRITICAL QUESTIONS - 3-4 questions to ask the startup
-3. WHITEPAPER RELEVANCE - Which sections this startup impacts
+            "outline_generator": """You're an AXA analyst preparing for a startup meeting. Generate a practical meeting brief with:
+- 3 key talking points about strategic fit and business value
+- 3 critical questions to ask during the meeting
+- Whitepaper section relevance
 
-Format as a clear, scannable outline with bullet points.
-Keep it focused and executive-friendly.""",
+Be specific to the startup's actual capabilities and how they align with AXA's insurance business.""",
 
-            "outline_adapter": """You are an expert at refining meeting prep outlines based on analyst feedback.
-When the analyst provides feedback (observations, concerns, additional context):
-1. Update the talking points to reflect their insights
-2. Adjust questions based on what matters most to them
-3. Enhance whitepaper relevance mapping
-
-Generate an UPDATED OUTLINE that incorporates their feedback while maintaining structure."""
+            "outline_adapter": """You're refining a meeting brief based on analyst feedback. Update the talking points and questions to reflect their insights while keeping the same structure."""
         }
 
         self.whitepaper_sections = {
@@ -67,37 +59,32 @@ Generate an UPDATED OUTLINE that incorporates their feedback while maintaining s
         
         funding = startup_data.get('total_funding', 'Unknown')
         
-        prompt = f"""Create a meeting prep outline for {startup_name}.
+        prompt = f"""Generate a meeting prep outline for {startup_name}.
 
-STARTUP PROFILE:
-• Name: {startup_name}
-• Description: {startup_description}
-• Technologies: {tech_summary}
-• Funding: ${funding}M
-• Category: {startup_data.get('category', 'AI/Enterprise')}
+{startup_name}
+{startup_description}
+Technologies: {tech_summary}
+Funding: ${funding}M | Category: {startup_data.get('category', 'AI/Enterprise')}
 
-CRITICAL REQUIREMENTS:
-- Generate EXACTLY 3 talking points (not 4, not 2)
-- Generate EXACTLY 3 critical questions (not 4, not 2)
-- Each talking point must be highly specific to this startup and relevant to AXA's insurance business
-- Each question must probe for actionable intelligence about partnership potential, technical capability, or business fit
-- Points and questions must be substantive and challenging, not generic
+Create exactly 3 talking points and 3 questions:
+- Talking points: Specific strategic insights about how this startup fits AXA's insurance business
+- Questions: Probing questions about capabilities, team, and partnership potential
 
-OUTLINE FORMAT (use this exact structure):
+Use this format:
 
 ═══════════════════════════════════════════════════════
 MEETING PREP: {startup_name}
 ═══════════════════════════════════════════════════════
 
 📌 KEY TALKING POINTS:
-  1. [Specific to {startup_name}, tied to AXA's insurance priorities]
-  2. [Specific to {startup_name}, addresses business/ROI impact]
-  3. [Specific to {startup_name}, explores team/execution/partnership fit]
+  1. [Point about strategic fit]
+  2. [Point about business value/ROI]
+  3. [Point about execution/partnership]
 
 ❓ CRITICAL QUESTIONS:
-  1. [Probing question about core capability or business model]
-  2. [Probing question about team, experience, or execution]
-  3. [Probing question about AXA fit, integration, or partnership potential]
+  1. [Question about capabilities]
+  2. [Question about team/execution]
+  3. [Question about AXA integration]
 
 🎯 WHITEPAPER RELEVANCE:
   • Section 1 (AI: Present and Future): [relevance]
@@ -105,13 +92,7 @@ MEETING PREP: {startup_name}
   • Section 7 (Make or Buy): [relevance]
   • Section 10 (Startups): [relevance]
 
-═══════════════════════════════════════════════════════
-
-QUALITY CRITERIA:
-- Points: 2-3 sentences, specific, actionable, tied to {startup_name}'s actual value proposition
-- Questions: Specific, challenging, designed to uncover partnership/integration potential with AXA
-- All content must assume the reader is evaluating this for strategic fit with AXA insurance operations
-- Avoid generic startup language - be specific to what you know about their technology and market"""
+═══════════════════════════════════════════════════════"""
 
         try:
             response = await simple_llm_call_async(
@@ -162,28 +143,17 @@ MEETING PREP: {startup_name}
         """
         Generate adapted outline based on analyst feedback
         """
-        prompt = f"""You are refining a meeting prep outline based on analyst feedback.
+        prompt = f"""Update this meeting prep outline based on analyst feedback.
 
-STARTUP: {startup_name}
-DESCRIPTION: {startup_description}
+STARTUP: {startup_name} - {startup_description}
 
-ORIGINAL OUTLINE:
+CURRENT OUTLINE:
 {previous_outline}
 
-ANALYST FEEDBACK/OBSERVATIONS:
+ANALYST FEEDBACK:
 {user_feedback}
 
-Please create an UPDATED OUTLINE that:
-1. Incorporates their feedback and observations
-2. Focuses on areas they highlighted as important
-3. Maintains the same outline structure
-4. Keeps all points sharp and actionable
-5. Strengthens whitepaper relevance based on feedback
-
-Use the same format as before with sections for:
-- KEY TALKING POINTS (updated based on feedback)
-- CRITICAL QUESTIONS (refined based on feedback)
-- WHITEPAPER RELEVANCE (enhanced based on feedback)"""
+Generate an updated outline that incorporates their insights while keeping the same format (talking points, questions, whitepaper relevance)."""
 
         try:
             response = await simple_llm_call_async(

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { PaperPlaneRight } from '@phosphor-icons/react'
+import { PaperPlane } from 'flowbite-react-icons/outline'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -87,7 +87,7 @@ export function ChatInputArea({
           aria-label="Send message"
           aria-disabled={!value.trim() || isLoading}
         >
-          <PaperPlaneRight size={14} weight="fill" />
+          <PaperPlane className="w-4 h-4"  />
         </Button>
       </div>
       <p className="text-[10px] text-muted-foreground px-1">

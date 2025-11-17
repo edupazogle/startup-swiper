@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card } from '@/components/ui/card'
-import { Sparkle, PaperPlaneRight, Star, X, ArrowRight, CheckCircle } from '@phosphor-icons/react'
+import { WandMagicSparkles, PaperPlane, Star, Close, ArrowRight, CheckCircle } from 'flowbite-react-icons/outline'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -261,7 +261,7 @@ export function ImprovedInsightsModal({
         transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
         className="mb-6"
       >
-        <Sparkle size={48} weight="fill" className="text-yellow-500" />
+        <WandMagicSparkles className="text-yellow-500 w-12 h-12"  />
       </motion.div>
       <p className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
         Generating AI Insights...
@@ -352,7 +352,7 @@ export function ImprovedInsightsModal({
             disabled={!currentMessage.trim() || isLoading}
             className="bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-white px-4"
           >
-            <PaperPlaneRight size={20} weight="fill" />
+            <PaperPlane className="w-5 h-5"  />
           </Button>
         </div>
         <div className="mt-3 flex justify-end">
@@ -362,7 +362,7 @@ export function ImprovedInsightsModal({
             className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white gap-2"
           >
             Continue to Questions
-            <ArrowRight size={16} weight="bold" />
+            <ArrowRight className="w-4 h-4"  />
           </Button>
         </div>
       </div>
@@ -408,10 +408,8 @@ export function ImprovedInsightsModal({
                     className="transition-transform hover:scale-110"
                   >
                     <Star
-                      size={24}
-                      weight={star <= (ratings[idx] || 0) ? "fill" : "regular"}
                       className={star <= (ratings[idx] || 0) ? "text-yellow-500" : "text-gray-300 dark:text-gray-600"}
-                    />
+                      />
                   </button>
                 ))}
               </div>
@@ -458,7 +456,7 @@ export function ImprovedInsightsModal({
         animate={{ scale: 1 }}
         transition={{ type: "spring", duration: 0.5 }}
       >
-        <CheckCircle size={80} weight="fill" className="text-green-500 mb-6" />
+        <CheckCircle className="text-green-500 mb-6 w-20 h-20"   />
       </motion.div>
       <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
         Insights Saved!
@@ -480,7 +478,7 @@ export function ImprovedInsightsModal({
       <DialogContent className="max-w-4xl p-0 gap-0 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle className="text-2xl font-bold flex items-center gap-3">
-            <Sparkle size={28} weight="fill" className="text-yellow-500" />
+            <WandMagicSparkles className="text-yellow-500 w-7 h-7"  />
             <span className="bg-gradient-to-r from-yellow-600 to-amber-600 bg-clip-text text-transparent">
               Insights AI
             </span>

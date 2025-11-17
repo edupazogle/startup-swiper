@@ -2,16 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useKV } from '@/lib/useKV'
 import { ChatMessage as ChatMessageType } from '@/lib/types'
 import { Startup } from '@/lib/types'
-import { 
-  Sparkle as SparkleIcon, 
-  PaperPlaneTilt, 
-  Robot, 
-  User,
-  Lightning,
-  Briefcase,
-  CalendarDots,
-  Users as UsersIcon
-} from '@phosphor-icons/react'
+import { WandMagicSparkles, PaperPlane, User, Briefcase, CalendarMonth, UsersGroup } from 'flowbite-react-icons/outline'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
@@ -161,68 +152,32 @@ Stage: ${startup.maturity || 'N/A'}
     if (isLoading) return
     
     setInput(prompt)
-    setIsLoading(true)
-
-    const userMessage: Message = {
-      role: 'user',
-      content: prompt
-    }
-
-    setMessages(prev => [...prev, userMessage])
-
-    try {
-      const stream = await (window as any).spark.llm.stream({
-        messages: [...messages, userMessage]
-      })
-
-      let responseContent = ''
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: ''
-      }
-
-      setMessages(prev => [...prev, assistantMessage])
-
-      for await (const chunk of stream) {
-        responseContent += chunk.choices[0]?.delta?.content || ''
-        setMessages(prev => {
-          const newMessages = [...prev]
-          newMessages[newMessages.length - 1] = {
-            ...assistantMessage,
-            content: responseContent
-          }
-          return newMessages
-        })
-      }
-    } catch (error) {
-      console.error('Error getting AI response:', error)
-      setMessages(prev => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: 'Sorry, I encountered an error. Please try again.'
-        }
-      ])
-    } finally {
-      setInput('')
-      setIsLoading(false)
-    }
+    // Trigger send immediately
+    setTimeout(() => {
+      const btn = document.querySelector('[data-send-button]') as HTMLButtonElement
+      if (btn) btn.click()
+    }, 0)
   }
 
   const quickActions = [
-    { icon: Lightning, label: 'Quick Insights', prompt: 'Give me quick insights about the startups I\'ve shown interest in', color: 'yellow' },
+    { icon: WandMagicSparkles, label: 'Quick Insights', prompt: 'Give me quick insights about the startups I\'ve shown interest in', color: 'yellow' },
     { icon: Briefcase, label: 'Investment Analysis', prompt: 'Analyze the investment potential of my interested startups', color: 'blue' },
-    { icon: UsersIcon, label: 'Team Overview', prompt: 'Give me an overview of the team sizes and locations of startups I like', color: 'purple' },
-    { icon: CalendarDots, label: 'Meeting Prep', prompt: 'Help me prepare for my upcoming meetings at Slush', color: 'green' }
+    { icon: UsersGroup, label: 'Team Overview', prompt: 'Give me an overview of the team sizes and locations of startups I like', color: 'purple' },
+    { icon: CalendarMonth, label: 'Meeting Prep', prompt: 'Help me prepare for my upcoming meetings at Slush', color: 'green' }
   ]
 
   return (
-    <div className="h-full w-full flex flex-col bg-gray-50 dark:bg-gray-900">
-      {/* Header */}
-      <div className="flex-shrink-0 border-b border-gray-700/50 bg-gray-800/80 backdrop-blur-sm px-4 py-4 md:px-6">
+    <div className="h-full w-full flex flex-col relative overflow-hidden">
+      {/* Auroral Background - Fixed and static, no animation */}
+      <div className="absolute inset-0 z-0 auroral-northern-intense-fixed"></div>
+      
+      {/* Content */}
+      <div className="relative z-10 h-full w-full flex flex-col">
+        {/* Header */}
+        <div className="flex-shrink-0 border-b border-gray-700/50 bg-gray-800/80 backdrop-blur-sm px-4 py-4 md:px-6 relative">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 shadow-md">
-            <SparkleIcon size={20} weight="fill" className="text-white" />
+            <WandMagicSparkles size={20} className="text-white"  />
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white truncate">
@@ -242,7 +197,8 @@ Stage: ${startup.maturity || 'N/A'}
       {/* Messages */}
       <div 
         ref={messagesContainerRef}
-        className="flex-1 min-h-0 overflow-y-auto px-4 py-4 md:px-6 space-y-4"
+        className="flex-1 overflow-y-auto px-4 py-4 md:px-6 space-y-4"
+        style={{ minHeight: 0 }}
       >
         {messages.map((message) => (
           <div
@@ -254,7 +210,7 @@ Stage: ${startup.maturity || 'N/A'}
           >
             {message.role === 'assistant' && (
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-md">
-                <Robot size={18} weight="fill" className="text-white" />
+                <WandMagicSparkles className="text-white w-5 h-5"  />
               </div>
             )}
             
@@ -286,7 +242,7 @@ Stage: ${startup.maturity || 'N/A'}
 
             {message.role === 'user' && (
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                <User size={18} weight="fill" className="text-gray-600 dark:text-gray-300" />
+                <User className="text-gray-600 dark:text-gray-300 w-5 h-5"  />
               </div>
             )}
           </div>
@@ -295,7 +251,7 @@ Stage: ${startup.maturity || 'N/A'}
         {isLoading && (
           <div className="flex gap-3 md:gap-4 justify-start animate-in fade-in slide-in-from-bottom-2 duration-300">
             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-md">
-              <Robot size={18} weight="fill" className="text-white animate-pulse" />
+              <WandMagicSparkles className="text-white animate-pulse w-5 h-5"  />
             </div>
             <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-2 border-blue-200 dark:border-blue-800/50 rounded-2xl px-5 py-3.5 shadow-sm">
               <div className="flex items-center gap-2">
@@ -312,7 +268,7 @@ Stage: ${startup.maturity || 'N/A'}
       </div>
 
       {/* Input Area */}
-      <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-4 md:px-6">
+      <div className="flex-shrink-0 border-t border-gray-700/50 bg-gray-800/80 backdrop-blur-sm px-4 py-4 md:px-6 relative">
         {/* Quick Actions - Show only when no messages */}
         {messages.length <= 1 && (
           <div className="flex flex-wrap gap-2 mb-3">
@@ -324,7 +280,7 @@ Stage: ${startup.maturity || 'N/A'}
                 onClick={() => handleQuickAction(action.prompt)}
                 className="gap-2 text-xs"
               >
-                <action.icon size={14} weight="duotone" />
+                <action.icon size={14} />
                 {action.label}
               </Button>
             ))}
@@ -339,21 +295,20 @@ Stage: ${startup.maturity || 'N/A'}
             onKeyDown={handleKeyDown}
             placeholder="Type your message..."
             disabled={isLoading}
-            className="flex-1 min-h-[44px] max-h-[120px] resize-none rounded-xl border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+            className="flex-1 min-h-[44px] max-h-[120px] resize-none rounded-xl border-gray-600/50 focus:border-blue-500 focus:ring-blue-500 bg-gray-900/50 backdrop-blur-sm text-white placeholder:text-gray-400"
             rows={1}
             style={{ height: '44px' }}
           />
           <Button
             onClick={handleSend}
+            data-send-button
             disabled={!input.trim() || isLoading}
             className="h-11 w-11 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
           >
-            <PaperPlaneTilt size={20} weight="fill" />
+            <PaperPlane size={20} />
           </Button>
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-          Press Enter to send, Shift+Enter for new line
-        </p>
+      </div>
       </div>
     </div>
   )

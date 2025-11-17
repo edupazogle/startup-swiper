@@ -1,5 +1,5 @@
 import { Idea, IdeaCategory } from '@/lib/types'
-import { Lightbulb, PencilSimple } from '@phosphor-icons/react'
+import { Lightbulb, Pen } from 'flowbite-react-icons/outline'
 import { useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
@@ -226,7 +226,7 @@ export function InsightsView({ ideas, onIdeaUpdated }: InsightsViewProps) {
                     <div className="space-y-3 h-[40vh] md:h-[45vh] overflow-y-auto pr-2">
                       {categoryIdeas.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-6 md:py-8 text-center">
-                          <Lightbulb size={28} className="text-gray-400 mb-2" />
+                          <Lightbulb className="text-gray-400 mb-2 w-7 h-7"  />
                           <p className="text-xs text-gray-600 italic">
                             No insights yet. Be the first!
                           </p>
@@ -242,7 +242,7 @@ export function InsightsView({ ideas, onIdeaUpdated }: InsightsViewProps) {
                               className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md bg-white/80 hover:bg-white shadow-sm"
                               title="Edit insight"
                             >
-                              <PencilSimple size={14} weight="bold" className="text-gray-700" />
+                              <Pen className="text-gray-700 w-4 h-4"  />
                             </button>
                             
                             <h5 className="font-semibold text-gray-900 text-sm mb-2 pr-8">

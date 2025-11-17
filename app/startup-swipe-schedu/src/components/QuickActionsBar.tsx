@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Sparkle, Users, Calendar, Briefcase } from '@phosphor-icons/react'
+import { WandMagicSparkles, UsersGroup, CalendarMonth, Briefcase } from 'flowbite-react-icons/outline'
 
 export interface QuickAction {
   id: string

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Sparkle, TrendUp, Target, Lightbulb } from '@phosphor-icons/react'
+import { WandMagicSparkles, ChartLineUp, CirclePlus, Lightbulb } from 'flowbite-react-icons/outline'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 import { FeedbackChatModal } from '@/components/FeedbackChatModal'
@@ -82,13 +82,13 @@ Keep each insight under 100 characters.
   const getIcon = (type: string) => {
     switch (type) {
       case 'strength':
-        return <TrendUp size={16} weight="duotone" className="text-green-500" />
+        return <ChartLineUp className="text-green-500 w-4 h-4"  />
       case 'opportunity':
-        return <Target size={16} weight="duotone" className="text-blue-500" />
+        return <CirclePlus className="text-blue-500 w-4 h-4"  />
       case 'recommendation':
-        return <Lightbulb size={16} weight="duotone" className="text-yellow-500" />
+        return <Lightbulb className="text-yellow-500 w-4 h-4"  />
       default:
-        return <Sparkle size={16} weight="duotone" className="text-primary" />
+        return <WandMagicSparkles className="text-primary w-4 h-4"  />
     }
   }
 
@@ -115,7 +115,7 @@ Keep each insight under 100 characters.
           size="sm"
           className="w-full gap-2"
         >
-          <Sparkle size={16} weight="fill" />
+          <WandMagicSparkles className="w-4 h-4"  />
           Generate AI Insights
         </Button>
         
@@ -138,7 +138,7 @@ Keep each insight under 100 characters.
     <div className="space-y-2">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <Sparkle size={18} weight="duotone" className="text-primary" />
+          <WandMagicSparkles className="text-primary w-5 h-5"  />
           <span className="text-sm font-semibold">AI Insights</span>
         </div>
         <Button

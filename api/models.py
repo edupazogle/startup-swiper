@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, JSON, Text, Float
 from sqlalchemy.ext.declarative import declarative_base
-from datetime import datetime
+from datetime import datetime as dt
 
 Base = declarative_base()
 
@@ -13,8 +13,8 @@ class User(Base):
     full_name = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=dt.utcnow)
+    updated_at = Column(DateTime, default=dt.utcnow, onupdate=dt.utcnow)
 
 class RefreshToken(Base):
     __tablename__ = "refresh_tokens"
@@ -23,7 +23,7 @@ class RefreshToken(Base):
     user_id = Column(Integer, nullable=False, index=True)
     token = Column(String, unique=True, nullable=False, index=True)
     expires_at = Column(DateTime, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=dt.utcnow)
     revoked = Column(Boolean, default=False)
 
 class CalendarEvent(Base):
@@ -46,7 +46,7 @@ class LinkedInChatMessage(Base):
     id = Column(Integer, primary_key=True, index=True)
     role = Column(String, nullable=False)
     content = Column(Text, nullable=False)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=dt.utcnow)
 
 class AdminUser(Base):
     __tablename__ = "admin_user"
@@ -63,7 +63,7 @@ class Vote(Base):
     userId = Column(String, name="user_id", nullable=False)
     userName = Column(String, name="user_name", nullable=False)
     interested = Column(Boolean, nullable=False)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=dt.utcnow)
     meetingScheduled = Column(Boolean, name="meeting_scheduled", default=False)
 
 class AuroralInfo(Base):
@@ -83,7 +83,7 @@ class Idea(Base):
     category = Column(String, nullable=False)
     description = Column(Text, nullable=False)
     tags = Column(JSON)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=dt.utcnow)
 
 class StartupRating(Base):
     __tablename__ = "startup_ratings"
@@ -93,7 +93,7 @@ class StartupRating(Base):
     totalRatings = Column(Integer, default=0)
     ratings = Column(JSON)
     feedback = Column(JSON)
-    lastUpdated = Column(DateTime, default=datetime.utcnow)
+    lastUpdated = Column(DateTime, default=dt.utcnow)
     trendingScore = Column(Integer, default=0)
 
 class FinishedUser(Base):
@@ -101,7 +101,7 @@ class FinishedUser(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     userId = Column(Integer, unique=True, nullable=False)
-    finishedAt = Column(DateTime, default=datetime.utcnow)
+    finishedAt = Column(DateTime, default=dt.utcnow)
 
 class AIChatMessage(Base):
     __tablename__ = "ai_chat_messages"
@@ -109,7 +109,7 @@ class AIChatMessage(Base):
     id = Column(Integer, primary_key=True, index=True)
     role = Column(String, nullable=False)
     content = Column(Text, nullable=False)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=dt.utcnow)
 
 class UserEvent(Base):
     __tablename__ = "user_events"
@@ -117,7 +117,7 @@ class UserEvent(Base):
     id = Column(Integer, primary_key=True, index=True)
     eventType = Column(String, nullable=False)
     data = Column(JSON)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=dt.utcnow)
 
 class AIAssistantMessage(Base):
     __tablename__ = "ai_assistant_messages"
@@ -125,7 +125,7 @@ class AIAssistantMessage(Base):
     id = Column(Integer, primary_key=True, index=True)
     role = Column(String, nullable=False)
     content = Column(Text, nullable=False)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=dt.utcnow)
 
 class CurrentUserId(Base):
     __tablename__ = "current_user_id"
@@ -138,7 +138,7 @@ class DataVersion(Base):
     
     id = Column(Integer, primary_key=True, default=1)
     version = Column(String, nullable=False)
-    updatedAt = Column(DateTime, default=datetime.utcnow)
+    updatedAt = Column(DateTime, default=dt.utcnow)
 
 class MeetingInsight(Base):
     __tablename__ = "meeting_insights"
@@ -148,12 +148,27 @@ class MeetingInsight(Base):
     userId = Column(String, nullable=False, index=True)
     startupId = Column(String, nullable=True)
     startupName = Column(String, nullable=True)
-    insight = Column(Text, nullable=False)
-    tags = Column(JSON)  # Array of insight tags/categories
+
+class SlushEvent(Base):
+    __tablename__ = "slush_events"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False, index=True)
+    organizer = Column(String, nullable=False, index=True)
+    datetime = Column(String, nullable=False)
+    location = Column(String, nullable=True)
+    categories = Column(JSON, nullable=True)  # List of category tags
+    status = Column(JSON, nullable=True)  # List of status tags (e.g., "Signature Side Event", "Closed")
+    scraped_at = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, default=dt.utcnow)
+    updated_at = Column(DateTime, default=dt.utcnow, onupdate=dt.utcnow)
+    # Optional fields for user insights/notes
+    insight = Column(Text, nullable=True)
+    tags = Column(JSON, nullable=True)  # Array of insight tags/categories
     rating = Column(Integer, nullable=True)  # Optional rating 1-5
     followUp = Column(Boolean, default=False)  # Whether user wants to follow up
     structured_qa = Column(JSON, nullable=True)  # Structured Q&A pairs for editing
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, nullable=True)
 
 class FeedbackSession(Base):
     __tablename__ = "feedback_sessions"
@@ -168,9 +183,9 @@ class FeedbackSession(Base):
     conversation_history = Column(JSON, default=[])  # Chat history
     current_question_index = Column(Integer, default=0)
     status = Column(String, default="in_progress")  # in_progress, completed, abandoned
-    started_at = Column(DateTime, default=datetime.utcnow)
+    started_at = Column(DateTime, default=dt.utcnow)
     completed_at = Column(DateTime, nullable=True)
-    last_interaction = Column(DateTime, default=datetime.utcnow)
+    last_interaction = Column(DateTime, default=dt.utcnow)
     
 class NotificationQueue(Base):
     __tablename__ = "notification_queue"
@@ -184,7 +199,7 @@ class NotificationQueue(Base):
     sentAt = Column(DateTime, nullable=True)
     dismissed = Column(Boolean, default=False)
     insightSubmitted = Column(Boolean, default=False)
-    createdAt = Column(DateTime, default=datetime.utcnow)
+    createdAt = Column(DateTime, default=dt.utcnow)
 
 class PushSubscription(Base):
     __tablename__ = "push_subscriptions"
@@ -196,8 +211,8 @@ class PushSubscription(Base):
     auth = Column(String, nullable=False)  # Authentication secret
     userAgent = Column(String, nullable=True)
     active = Column(Boolean, default=True)
-    createdAt = Column(DateTime, default=datetime.utcnow)
-    lastUsed = Column(DateTime, default=datetime.utcnow)
+    createdAt = Column(DateTime, default=dt.utcnow)
+    lastUsed = Column(DateTime, default=dt.utcnow)
 
 class Attendee(Base):
     __tablename__ = "attendees"
@@ -220,8 +235,8 @@ class Attendee(Base):
     company_linkedin = Column(String, nullable=True)
     company_description = Column(Text, nullable=True)
     profile_link = Column(String, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=dt.utcnow)
+    updated_at = Column(DateTime, default=dt.utcnow, onupdate=dt.utcnow)
 
 class CategorizedInsight(Base):
     """
@@ -265,8 +280,8 @@ class CategorizedInsight(Base):
     feedback_session_id = Column(Integer, index=True)
     
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=dt.utcnow)
+    updated_at = Column(DateTime, default=dt.utcnow, onupdate=dt.utcnow)
 
 
 class MeetingPrepOutline(Base):
@@ -289,8 +304,8 @@ class MeetingPrepOutline(Base):
     whitepaper_relevance = Column(JSON)  # Dict of section -> relevance
     
     # Metadata
-    generated_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    generated_at = Column(DateTime, default=dt.utcnow)
+    updated_at = Column(DateTime, default=dt.utcnow, onupdate=dt.utcnow)
 
 
 class DebriefSession(Base):
@@ -323,6 +338,6 @@ class DebriefSession(Base):
     status = Column(String, default="in_progress")  # in_progress, awaiting_feedback, completed
     
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=dt.utcnow)
+    updated_at = Column(DateTime, default=dt.utcnow, onupdate=dt.utcnow)
     completed_at = Column(DateTime, nullable=True)
