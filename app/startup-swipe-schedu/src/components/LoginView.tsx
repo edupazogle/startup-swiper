@@ -196,6 +196,18 @@ export function LoginView({ onLogin }: LoginViewProps) {
               )}
             </button>
 
+            {/* Mobile Cache Clear Link */}
+            <div className="text-center">
+              <a
+                href="/clear-mobile-cache.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 underline"
+              >
+                📱 Having login issues on mobile? Clear cache here
+              </a>
+            </div>
+
             {/* Sign Up Link */}
             <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center">
               Not registered?{' '}
