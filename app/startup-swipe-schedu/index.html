@@ -25,6 +25,31 @@
 <body>
     <div id="root"></div>
     <script type="module" src="./src/main.tsx"></script>
+    
+    <!-- Unregister old service workers -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            // Register our self-unregistering service worker
+            navigator.serviceWorker.register('/sw.js')
+                .then(function(registration) {
+                    console.log('Self-unregistering SW registered');
+                })
+                .catch(function(error) {
+                    console.log('SW registration failed:', error);
+                });
+            
+            // Also immediately try to unregister all existing workers
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for (let registration of registrations) {
+                    registration.unregister().then(function(success) {
+                        if (success) {
+                            console.log('Unregistered old service worker');
+                        }
+                    });
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>
