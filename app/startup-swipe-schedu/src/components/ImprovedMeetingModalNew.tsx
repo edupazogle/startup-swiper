@@ -159,6 +159,12 @@ export function ImprovedMeetingModalNew({
     setIsGenerating(true)
     mark('apiCall')
     
+    // Show informative toast
+    toast.loading('Generating meeting outline... This may take up to 60 seconds.', { 
+      id: 'outline-generation',
+      duration: 60000 
+    })
+    
     const apiStartTime = performance.now()
 
     try {
@@ -171,7 +177,7 @@ export function ImprovedMeetingModalNew({
       
       const url = `${API_URL}/whitepaper/meeting-prep/start?${params}`
       
-      // Use cached fetch with 10 second timeout
+      // Use cached fetch with 60 second timeout (LLM generation takes time)
       const cacheKey = `meeting_outline_${startupId}`
       const data = await fetchWithCache(
         url,
@@ -181,7 +187,7 @@ export function ImprovedMeetingModalNew({
         },
         cacheKey,
         1800000, // Cache for 30 minutes
-        10000 // 10 second timeout
+        60000 // 60 second timeout for LLM generation
       )
       
       const apiDuration = performance.now() - apiStartTime
@@ -197,14 +203,18 @@ export function ImprovedMeetingModalNew({
         
         // Don't add assistant message, just show toast
         setMessages([])
-        toast.success('Meeting outline generated!')
+        toast.success('Meeting outline generated!', { id: 'outline-generation' })
       } else {
         console.error('❌ API returned non-success:', data)
+        toast.dismiss('outline-generation')
         throw new Error(data.error || 'Failed to generate outline')
       }
     } catch (error) {
       const apiDuration = performance.now() - apiStartTime
       console.error(`❌ Failed to generate initial outline after ${apiDuration.toFixed(2)}ms:`, error)
+      
+      // Dismiss loading toast
+      toast.dismiss('outline-generation')
       
       if (error instanceof Error) {
         console.error('Error details:', {
@@ -214,7 +224,7 @@ export function ImprovedMeetingModalNew({
         })
         
         if (error.message === 'Request timeout') {
-          toast.error('Request timed out. Please try again.')
+          toast.error('Request timed out. The outline generation is taking longer than expected. Please try again.')
         } else {
           toast.error(`Failed to generate meeting outline: ${error.message}`)
         }
@@ -528,10 +538,10 @@ export function ImprovedMeetingModalNew({
           <Button
             onClick={() => setIsDebriefModalOpen(true)}
             disabled={!parsedOutline}
-            size=\"sm\"
-            className=\"gap-2 flex-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white\"
+            size="sm"
+            className="gap-2 flex-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white"
           >
-            <Messages className=\"w-4 h-4\" />
+            <Messages className="w-4 h-4" />
             Start Post-Meeting Debrief
           </Button>
         </div>

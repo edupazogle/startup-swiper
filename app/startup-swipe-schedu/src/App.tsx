@@ -11,7 +11,7 @@ import { AIAssistantView } from '@/components/AIAssistantView'
 import { AdminView } from '@/components/AdminView'
 import { AddStartupDialog } from '@/components/AddStartupDialog'
 import { AddIdeaDialog } from '@/components/AddIdeaDialog'
-import { ImprovedInsightsModalNew } from '@/components/ImprovedInsightsModalNew'
+import { FeedbackChatModal } from '@/components/FeedbackChatModal'
 import { ImprovedMeetingModalNew } from '@/components/ImprovedMeetingModalNew'
 // import { PWAUpdatePrompt } from '@/components/PWAUpdatePrompt' // DISABLED - PWA removed
 import { IOSInstallPrompt } from '@/components/IOSInstallPrompt'
@@ -1115,13 +1115,13 @@ function App() {
         <IOSInstallPrompt />
         
         {/* AI Modals - Moved to App level for performance */}
-        <ImprovedInsightsModalNew
+        <FeedbackChatModal
           isOpen={showInsightsModal}
           onClose={() => {
             setShowInsightsModal(false)
             setSelectedModalStartup(null)
           }}
-          startupId={selectedModalStartup?.id || 0}
+          startupId={String(selectedModalStartup?.id || 0)}
           startupName={selectedModalStartup?.name || selectedModalStartup?.["Company Name"] || 'Unknown'}
           startupDescription={selectedModalStartup?.description || selectedModalStartup?.shortDescription || ''}
           userId={currentUserId}

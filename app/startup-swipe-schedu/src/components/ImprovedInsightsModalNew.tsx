@@ -113,7 +113,7 @@ export function ImprovedInsightsModalNew({
     const apiStartTime = performance.now()
     
     try {
-      const url = `${API_URL}/insights/session/start`
+      const url = `${API_URL}/insights/debrief/start`
       
       const data = await fetchWithCache(
         url,
@@ -124,10 +124,10 @@ export function ImprovedInsightsModalNew({
             user_id: userId,
             startup_id: startupId || 'unknown',
             startup_name: startupName,
-            startup_description: startupDescription
+            meeting_prep_outline: 'Meeting insights debrief'
           })
         },
-        `insights_session_${startupId}`,
+        `insights_debrief_${startupId}`,
         300000, // Cache for 5 minutes
         5000 // 5 second timeout
       )
@@ -174,12 +174,19 @@ export function ImprovedInsightsModalNew({
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${API_URL}/insights/debrief/message`, {
+      const response = await fetch(`${API_URL}/insights/debrief/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           session_id: sessionId,
-          user_message: userMessage.content
+          user_message: userMessage.content,
+          startup_name: startupName,
+          meeting_prep_outline: 'Meeting insights debrief',
+          conversation_history: messages.map(m => ({
+            role: m.role,
+            content: m.content,
+            timestamp: new Date(m.timestamp).toISOString()
+          }))
         })
       })
 
@@ -190,7 +197,7 @@ export function ImprovedInsightsModalNew({
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.response,
+        content: data.message || data.response,
         timestamp: Date.now()
       }
 
