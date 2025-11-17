@@ -115,6 +115,9 @@ jobs:
             pkill -f 'uvicorn.*8000' || true
             sleep 2
             
+            # Create logs directory if it doesn't exist
+            mkdir -p /home/appuser/startup-swiper/logs
+            
             # Start API in background
             cd /home/appuser/startup-swiper/api
             nohup /home/appuser/startup-swiper/.venv/bin/uvicorn main:app \
@@ -122,13 +125,16 @@ jobs:
               --port 8000 \
               > /home/appuser/startup-swiper/logs/api.log 2>&1 &
             
-            sleep 3
+            sleep 5
             
             # Verify API is running
             if curl -sf http://localhost:8000/health > /dev/null; then
               echo "✅ API is running"
             else
-              echo "❌ API failed to start"
+              echo "❌ API failed to start. Last 30 lines of log:"
+              tail -30 /home/appuser/startup-swiper/logs/api.log || echo "No log file found"
+              echo "Checking if API process exists:"
+              ps aux | grep uvicorn | grep -v grep || echo "No uvicorn process found"
               exit 1
             fi
           EOF
