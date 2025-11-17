@@ -8,7 +8,10 @@ import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_URL = import.meta.env.VITE_API_URL || 
+  (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai' 
+    ? 'https://tilyn.ai' 
+    : 'http://localhost:8000')
 
 // Helper function to render text with bold markdown (**text**)
 const renderMessageContent = (content: string) => {

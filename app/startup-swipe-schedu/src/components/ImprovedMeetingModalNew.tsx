@@ -10,7 +10,10 @@ import { fetchWithCache, apiCache } from '@/lib/apiCache'
 import { OutlineSkeleton } from './ModalSkeleton'
 import { usePerformanceMonitor } from '@/lib/performance'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_URL = import.meta.env.VITE_API_URL || 
+  (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai' 
+    ? 'https://tilyn.ai' 
+    : 'http://localhost:8000')
 
 interface Message {
   id: string

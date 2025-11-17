@@ -9,7 +9,10 @@ import { ChatInputArea } from './ChatInputArea'
 import { QuickActionsBar, QuickAction } from './QuickActionsBar'
 import { formatMessageTime, deduplicateMessages } from '@/lib/chatUtils'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_URL = import.meta.env.VITE_API_URL || 
+  (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai' 
+    ? 'https://tilyn.ai' 
+    : 'http://localhost:8000')
 
 interface StartupChatProps {
   startup?: Startup

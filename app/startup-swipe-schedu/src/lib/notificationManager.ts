@@ -3,7 +3,10 @@
  * Handles PWA push notification subscriptions and permissions
  */
 
-const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 
+  (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai' 
+    ? 'https://tilyn.ai' 
+    : 'http://localhost:8000');
 
 export class NotificationManager {
   private userId: string;

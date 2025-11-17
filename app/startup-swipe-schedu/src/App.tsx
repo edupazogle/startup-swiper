@@ -456,7 +456,10 @@ function App() {
   // Load categorized insights and merge with ideas
   const fetchCategorizedInsights = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+      const apiUrl = import.meta.env.VITE_API_URL || 
+        (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai' 
+          ? 'https://tilyn.ai' 
+          : 'http://localhost:8000')
       console.log('🔍 Loading categorized insights from:', `${apiUrl}/insights/categorized/all`)
       
       // Fetch categorized insights from all categories

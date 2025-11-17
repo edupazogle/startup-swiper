@@ -7,7 +7,7 @@ import { authService } from './authService'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 
   (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai' 
-    ? 'https://tilyn.ai/api' 
+    ? 'https://tilyn.ai' 
     : 'http://localhost:8000')
 
 // Type definitions

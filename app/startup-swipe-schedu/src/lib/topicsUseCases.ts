@@ -3,7 +3,9 @@
  * Manages hierarchical topic/use case data fetching
  */
 
-const API_BASE = 'http://localhost:8000'
+const API_BASE = (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai') 
+  ? 'https://tilyn.ai' 
+  : 'http://localhost:8000'
 
 export interface UseCase {
   id: number

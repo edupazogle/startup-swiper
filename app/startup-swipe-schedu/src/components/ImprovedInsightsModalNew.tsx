@@ -9,7 +9,10 @@ import { cn } from '@/lib/utils'
 import { fetchWithCache } from '@/lib/apiCache'
 import { ModalSkeleton } from './ModalSkeleton'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_URL = import.meta.env.VITE_API_URL || 
+  (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai' 
+    ? 'https://tilyn.ai' 
+    : 'http://localhost:8000')
 
 // Helper function to render text with bold markdown (**text**)
 const renderMessageContent = (content: string) => {

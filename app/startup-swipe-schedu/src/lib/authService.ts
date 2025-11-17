@@ -293,7 +293,7 @@ class AuthService {
     
     // For production deployment on tilyn.ai
     if (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai') {
-      return 'https://tilyn.ai/api'
+      return 'https://tilyn.ai'
     }
     
     // Local development fallback
