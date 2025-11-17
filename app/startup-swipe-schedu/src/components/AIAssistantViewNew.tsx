@@ -19,6 +19,19 @@ import { cn } from '@/lib/utils'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
+// Helper function to render text with bold markdown (**text**)
+const renderMessageContent = (content: string) => {
+  const parts = content.split(/(\*\*.*?\*\*)/g)
+  
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      const boldText = part.slice(2, -2)
+      return <strong key={index} className="font-semibold">{boldText}</strong>
+    }
+    return part
+  })
+}
+
 interface AIAssistantViewNewProps {
   startup?: Startup
 }
@@ -254,7 +267,7 @@ Stage: ${startup.maturity || 'N/A'}
               )}
             >
               <div className="text-sm md:text-base leading-relaxed whitespace-pre-wrap break-words">
-                {message.content}
+                {renderMessageContent(message.content)}
               </div>
               {message.timestamp && (
                 <div className={cn(

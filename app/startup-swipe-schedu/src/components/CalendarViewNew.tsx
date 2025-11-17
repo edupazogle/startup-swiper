@@ -125,11 +125,11 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
   }
 
   return (
-    <div className="h-full w-full overflow-hidden flex flex-col bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="h-full w-full overflow-hidden flex flex-col bg-gray-900">
       {/* Header */}
-      <div className="flex-shrink-0 border-b bg-white/80 backdrop-blur-sm shadow-sm">
+      <div className="flex-shrink-0 border-b border-gray-700 bg-gray-800 shadow-lg">
         <div className="max-w-full mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold text-slate-900 mb-4">Event Schedule - Nov 19-20, 2025</h1>
+          <h1 className="text-2xl font-bold text-white mb-4">Event Schedule - Nov 19-20, 2025</h1>
 
           {/* Filter Bar */}
           <div className="flex items-center gap-2 flex-wrap">
@@ -137,7 +137,7 @@ export function CalendarView({ events, currentUserName, onToggleAttendance, onDe
               variant="outline"
               size="sm"
               onClick={() => setShowFilters(!showFilters)}
-              className="gap-2"
+              className="gap-2 border-gray-600 bg-gray-700 hover:bg-gray-600 text-gray-200"
             >
               <Funnel size={16} />
               Filters
