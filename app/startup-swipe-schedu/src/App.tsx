@@ -13,7 +13,7 @@ import { AddStartupDialog } from '@/components/AddStartupDialog'
 import { AddIdeaDialog } from '@/components/AddIdeaDialog'
 import { ImprovedInsightsModalNew } from '@/components/ImprovedInsightsModalNew'
 import { ImprovedMeetingModalNew } from '@/components/ImprovedMeetingModalNew'
-import { PWAUpdatePrompt } from '@/components/PWAUpdatePrompt'
+// import { PWAUpdatePrompt } from '@/components/PWAUpdatePrompt' // DISABLED - PWA removed
 import { IOSInstallPrompt } from '@/components/IOSInstallPrompt'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -1111,7 +1111,7 @@ function App() {
         )}
         
         <Toaster />
-        <PWAUpdatePrompt />
+        {/* <PWAUpdatePrompt /> */} {/* DISABLED - PWA removed */}
         <IOSInstallPrompt />
         
         {/* AI Modals - Moved to App level for performance */}

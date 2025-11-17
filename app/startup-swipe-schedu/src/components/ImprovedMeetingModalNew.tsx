@@ -3,12 +3,13 @@ import { TailwindModal, TailwindModalHeader, TailwindModalBody, TailwindModalTit
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { Briefcase, PaperPlane, WandMagicSparkles, User, Close, Lightbulb, QuestionCircle, CirclePlus, Refresh } from 'flowbite-react-icons/outline'
+import { Briefcase, PaperPlane, WandMagicSparkles, User, Close, Lightbulb, QuestionCircle, CirclePlus, Refresh, Messages } from 'flowbite-react-icons/outline'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { fetchWithCache, apiCache } from '@/lib/apiCache'
 import { OutlineSkeleton } from './ModalSkeleton'
 import { usePerformanceMonitor } from '@/lib/performance'
+import { FeedbackChatModal } from './FeedbackChatModal'
 
 const API_URL = import.meta.env.VITE_API_URL || 
   (typeof window !== 'undefined' && window.location.hostname === 'tilyn.ai' 
@@ -60,6 +61,7 @@ export function ImprovedMeetingModalNew({
     questions: string[]
     whitepaperRelevance: string
   } | null>(null)
+  const [isDebriefModalOpen, setIsDebriefModalOpen] = useState(false)
   
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
@@ -510,19 +512,43 @@ export function ImprovedMeetingModalNew({
           </div>
         )}
 
-      {/* Footer with Regenerate Button */}
+      {/* Footer with Action Buttons */}
       <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-4">
-        <Button
-          onClick={regenerateOutline}
-          disabled={isLoading || isGenerating || !parsedOutline}
-          variant="outline"
-          size="sm"
-          className="gap-2 w-full"
-        >
-          <Refresh className="w-4 h-4"  />
-          {isGenerating ? 'Regenerating...' : 'Regenerate Outline'}
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            onClick={regenerateOutline}
+            disabled={isLoading || isGenerating || !parsedOutline}
+            variant="outline"
+            size="sm"
+            className="gap-2 flex-1"
+          >
+            <Refresh className="w-4 h-4"  />
+            {isGenerating ? 'Regenerating...' : 'Regenerate Outline'}
+          </Button>
+          <Button
+            onClick={() => setIsDebriefModalOpen(true)}
+            disabled={!parsedOutline}
+            size=\"sm\"
+            className=\"gap-2 flex-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white\"
+          >
+            <Messages className=\"w-4 h-4\" />
+            Start Post-Meeting Debrief
+          </Button>
+        </div>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+          After your meeting, use the debrief to capture insights and learnings
+        </p>
       </div>
+
+      {/* Feedback Chat Modal for Debrief */}
+      <FeedbackChatModal
+        isOpen={isDebriefModalOpen}
+        onClose={() => setIsDebriefModalOpen(false)}
+        userId={userId}
+        startupId={startupId}
+        startupName={startupName}
+        startupDescription={startupDescription}
+      />
     </TailwindModal>
   )
 }
