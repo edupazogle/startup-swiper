@@ -203,8 +203,7 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
         <motion.div
           className="absolute inset-0 bg-gradient-to-br from-red-500/30 to-red-600/30 flex items-center justify-center backdrop-blur-md z-20 pointer-events-none rounded-lg"
           style={{ opacity: leftOverlayOpacity }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: leftOverlayOpacity }}
+          initial={false}
           aria-hidden="true"
         >
           <div className="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-6 border-2 border-red-500">
@@ -218,8 +217,7 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
         <motion.div
           className="absolute inset-0 bg-gradient-to-br from-green-500/30 to-emerald-600/30 flex items-center justify-center backdrop-blur-md z-20 pointer-events-none rounded-lg"
           style={{ opacity: rightOverlayOpacity }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: rightOverlayOpacity }}
+          initial={false}
           aria-hidden="true"
         >
           <div className="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-6 border-2 border-green-500">

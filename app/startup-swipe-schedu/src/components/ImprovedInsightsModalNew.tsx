@@ -134,14 +134,18 @@ Share your thoughts, and I'll help you organize them into actionable insights.`,
         })
       })
 
-      if (!response.ok) throw new Error('Failed to start session')
+      if (!response.ok) {
+        console.warn('Insights session API not available, using local mode')
+        setSessionId(`local_${Date.now()}`)
+        return
+      }
       
       const data = await response.json()
       setSessionId(data.session_id)
       console.log('✓ Insights session started:', data.session_id)
     } catch (error) {
-      console.error('Failed to start insights session:', error)
-      toast.error('Failed to start debrief session')
+      console.warn('Insights session API not available, using local mode:', error)
+      setSessionId(`local_${Date.now()}`)
     }
   }
 
