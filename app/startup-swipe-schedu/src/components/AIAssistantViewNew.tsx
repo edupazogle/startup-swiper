@@ -144,11 +144,63 @@ Stage: ${startup.maturity || 'N/A'}
     }
   }
 
+  const handleQuickAction = async (prompt: string) => {
+    if (isLoading) return
+    
+    setInput(prompt)
+    setIsLoading(true)
+
+    const userMessage: Message = {
+      role: 'user',
+      content: prompt
+    }
+
+    setMessages(prev => [...prev, userMessage])
+
+    try {
+      const stream = await (window as any).spark.llm.stream({
+        messages: [...messages, userMessage]
+      })
+
+      let responseContent = ''
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: ''
+      }
+
+      setMessages(prev => [...prev, assistantMessage])
+
+      for await (const chunk of stream) {
+        responseContent += chunk.choices[0]?.delta?.content || ''
+        setMessages(prev => {
+          const newMessages = [...prev]
+          newMessages[newMessages.length - 1] = {
+            ...assistantMessage,
+            content: responseContent
+          }
+          return newMessages
+        })
+      }
+    } catch (error) {
+      console.error('Error getting AI response:', error)
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: 'Sorry, I encountered an error. Please try again.'
+        }
+      ])
+    } finally {
+      setInput('')
+      setIsLoading(false)
+    }
+  }
+
   const quickActions = [
-    { icon: Lightning, label: 'Quick Insights', color: 'yellow' },
-    { icon: Briefcase, label: 'Investment Analysis', color: 'blue' },
-    { icon: UsersIcon, label: 'Team Overview', color: 'purple' },
-    { icon: CalendarDots, label: 'Meeting Prep', color: 'green' }
+    { icon: Lightning, label: 'Quick Insights', prompt: 'Give me quick insights about the startups I\'ve shown interest in', color: 'yellow' },
+    { icon: Briefcase, label: 'Investment Analysis', prompt: 'Analyze the investment potential of my interested startups', color: 'blue' },
+    { icon: UsersIcon, label: 'Team Overview', prompt: 'Give me an overview of the team sizes and locations of startups I like', color: 'purple' },
+    { icon: CalendarDots, label: 'Meeting Prep', prompt: 'Help me prepare for my upcoming meetings at Slush', color: 'green' }
   ]
 
   return (
@@ -173,26 +225,6 @@ Stage: ${startup.maturity || 'N/A'}
           </Badge>
         </div>
       </div>
-
-      {/* Quick Actions */}
-      {messages.length <= 1 && (
-        <div className="flex-shrink-0 px-4 py-3 md:px-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
-          <div className="flex flex-wrap gap-2">
-            {quickActions.map((action) => (
-              <Button
-                key={action.label}
-                variant="outline"
-                size="sm"
-                onClick={() => setInput(action.label)}
-                className="gap-2 text-xs"
-              >
-                <action.icon size={14} weight="duotone" />
-                {action.label}
-              </Button>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Messages */}
       <div 
@@ -268,6 +300,24 @@ Stage: ${startup.maturity || 'N/A'}
 
       {/* Input Area */}
       <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-4 md:px-6">
+        {/* Quick Actions - Show only when no messages */}
+        {messages.length <= 1 && (
+          <div className="flex flex-wrap gap-2 mb-3">
+            {quickActions.map((action) => (
+              <Button
+                key={action.label}
+                variant="outline"
+                size="sm"
+                onClick={() => handleQuickAction(action.prompt)}
+                className="gap-2 text-xs"
+              >
+                <action.icon size={14} weight="duotone" />
+                {action.label}
+              </Button>
+            ))}
+          </div>
+        )}
+        
         <div className="flex gap-2 md:gap-3 items-end">
           <Textarea
             ref={textareaRef}

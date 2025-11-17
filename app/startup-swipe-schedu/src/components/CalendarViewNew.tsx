@@ -22,25 +22,25 @@ const SLUSH_DATES = [
   { date: new Date(2025, 10, 20), label: 'Thu, Nov 20' }
 ]
 
-const LOCATION_COLORS: Record<EventLocation, { bg: string; text: string; dot: string }> = {
-  'Founder stage': { bg: 'bg-purple-50', text: 'text-purple-900', dot: 'bg-purple-600' },
-  'Impact stage': { bg: 'bg-emerald-50', text: 'text-emerald-900', dot: 'bg-emerald-600' },
-  'Builder stage': { bg: 'bg-blue-50', text: 'text-blue-900', dot: 'bg-blue-600' },
-  'Startup stage': { bg: 'bg-orange-50', text: 'text-orange-900', dot: 'bg-orange-600' },
-  'Meeting': { bg: 'bg-slate-50', text: 'text-slate-900', dot: 'bg-slate-600' },
-  'Venture clienting': { bg: 'bg-pink-50', text: 'text-pink-900', dot: 'bg-pink-600' }
+const LOCATION_COLORS: Record<EventLocation, { bg: string; text: string; dot: string; border: string }> = {
+  'Founder stage': { bg: 'bg-purple-900/20 dark:bg-purple-900/40', text: 'text-purple-300', dot: 'bg-purple-500', border: 'border-purple-700/50' },
+  'Impact stage': { bg: 'bg-emerald-900/20 dark:bg-emerald-900/40', text: 'text-emerald-300', dot: 'bg-emerald-500', border: 'border-emerald-700/50' },
+  'Builder stage': { bg: 'bg-blue-900/20 dark:bg-blue-900/40', text: 'text-blue-300', dot: 'bg-blue-500', border: 'border-blue-700/50' },
+  'Startup stage': { bg: 'bg-orange-900/20 dark:bg-orange-900/40', text: 'text-orange-300', dot: 'bg-orange-500', border: 'border-orange-700/50' },
+  'Meeting': { bg: 'bg-slate-800/50 dark:bg-slate-800/70', text: 'text-slate-300', dot: 'bg-slate-500', border: 'border-slate-700/50' },
+  'Venture clienting': { bg: 'bg-pink-900/20 dark:bg-pink-900/40', text: 'text-pink-300', dot: 'bg-pink-500', border: 'border-pink-700/50' }
 }
 
 const CATEGORY_COLORS: Record<EventCategory, string> = {
-  'Agentic AI': 'bg-violet-100 text-violet-900 border-violet-300',
-  'Agentic': 'bg-violet-100 text-violet-900 border-violet-300',
-  'AI': 'bg-cyan-100 text-cyan-900 border-cyan-300',
-  'Great speakers': 'bg-amber-100 text-amber-900 border-amber-300',
-  'Venture': 'bg-green-100 text-green-900 border-green-300',
-  'Health': 'bg-rose-100 text-rose-900 border-rose-300',
-  'Software development': 'bg-sky-100 text-sky-900 border-sky-300',
-  'DeepTech computing': 'bg-indigo-100 text-indigo-900 border-indigo-300',
-  'Slush 100': 'bg-yellow-100 text-yellow-900 border-yellow-300'
+  'Agentic AI': 'bg-violet-900/30 text-violet-300 border-violet-700/50',
+  'Agentic': 'bg-violet-900/30 text-violet-300 border-violet-700/50',
+  'AI': 'bg-cyan-900/30 text-cyan-300 border-cyan-700/50',
+  'Great speakers': 'bg-amber-900/30 text-amber-300 border-amber-700/50',
+  'Venture': 'bg-green-900/30 text-green-300 border-green-700/50',
+  'Health': 'bg-rose-900/30 text-rose-300 border-rose-700/50',
+  'Software development': 'bg-sky-900/30 text-sky-300 border-sky-700/50',
+  'DeepTech computing': 'bg-indigo-900/30 text-indigo-300 border-indigo-700/50',
+  'Slush 100': 'bg-yellow-900/30 text-yellow-300 border-yellow-700/50'
 }
 
 export function CalendarView({ events, currentUserName, onToggleAttendance, onDeleteEvent }: CalendarViewProps) {
