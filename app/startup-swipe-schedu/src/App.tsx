@@ -918,7 +918,9 @@ function App() {
           )}
           
           {currentView === 'ai' && (
-            <AIAssistantView />
+            <div className="h-full w-full overflow-hidden">
+              <AIAssistantView />
+            </div>
           )}
           
           {currentView === 'admin' && (

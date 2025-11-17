@@ -239,7 +239,7 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <h1 className="text-2xl md:text-3xl font-extrabold leading-tight tracking-tight mb-3 text-gray-900 dark:text-white">
+                <h1 className="text-2xl md:text-3xl font-extrabold leading-tight tracking-tight mb-3 text-white">
                   {displayName}
                 </h1>
                 <div className="flex flex-wrap gap-x-4 gap-y-3" role="group" aria-label="Startup categories and attributes">
@@ -470,10 +470,10 @@ export function SwipeableCard({ startup, onSwipe, isProcessing = false }: Swipea
               {(startup.axa_business_leverage || startup.axaBusinessLeverage) && (
                 <section aria-labelledby="opportunity-heading">
                   <div className="flex items-center gap-2 mb-3">
-                    <Briefcase size={20} className="text-green-600 dark:text-green-400" weight="duotone" aria-hidden="true" />
-                    <h3 id="opportunity-heading" className="text-sm font-extrabold text-green-700 dark:text-green-300 uppercase tracking-wider">Business Opportunity for AXA</h3>
+                    <Briefcase size={20} className="text-blue-600 dark:text-blue-400" weight="duotone" aria-hidden="true" />
+                    <h3 id="opportunity-heading" className="text-sm font-extrabold text-blue-700 dark:text-blue-300 uppercase tracking-wider">Business Opportunity for AXA</h3>
                   </div>
-                  <div className="text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 p-4 rounded-xl border-2 border-green-200 dark:border-green-800/50 shadow-sm">
+                  <div className="text-sm leading-relaxed text-gray-900 dark:text-gray-100 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 p-4 rounded-xl border-2 border-blue-200 dark:border-blue-800/50 shadow-sm">
                     <p>{startup.axa_business_leverage || startup.axaBusinessLeverage}</p>
                   </div>
                 </section>
